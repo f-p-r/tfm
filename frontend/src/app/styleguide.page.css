@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+section {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--tw-color-neutral-medium);
+}
+
+section:last-child {
+  border-bottom: none;
+}

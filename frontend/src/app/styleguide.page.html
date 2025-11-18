@@ -1,0 +1,183 @@
+<div class="p-6 md:p-10">
+  <section class="mb-16">
+    <h1 class="h1 mb-6">Guía de Estilo</h1>
+    <p class="p">
+      Esta página documenta la identidad visual del proyecto, incluyendo tipografía,
+      colores, componentes y patrones de interfaz utilizados en toda la aplicación.
+    </p>
+  </section>
+
+  <!-- Tipografía -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Tipografía</h2>
+
+    <p class="p mb-6">
+      El proyecto utiliza <strong>Inter</strong> para texto e <strong>Inter Tight</strong> para titulares,
+      ofreciendo equilibrio entre claridad, modernidad y un toque dinámico coherente
+      con la temática de asociaciones y torneos.
+    </p>
+
+    <!-- Escala tipográfica -->
+    <div class="space-y-8">
+      <div>
+        <div class="h1">H1 – Título principal</div>
+        <p class="text-neutral-medium mt-1 text-sm">Inter Tight · 4xl · bold</p>
+      </div>
+
+      <div>
+        <div class="h2">H2 – Sección</div>
+        <p class="text-neutral-medium mt-1 text-sm">Inter Tight · 3xl · semibold</p>
+      </div>
+
+      <div>
+        <div class="h3">H3 – Subtítulo</div>
+        <p class="text-neutral-medium mt-1 text-sm">Inter Tight · 2xl · semibold</p>
+      </div>
+
+      <div>
+        <p class="p">P – Párrafo de texto normal. Inter · base · normal</p>
+        <p class="text-neutral-medium text-sm mt-1">
+          Ideal para textos largos, formularios y listados.
+        </p>
+      </div>
+    </div>
+
+    <!-- Pesos -->
+    <h3 class="h3 mt-12 mb-4">Pesos de texto</h3>
+    <div class="space-y-3">
+      <p class="font-light">Light</p>
+      <p class="font-normal">Regular</p>
+      <p class="font-medium">Medium</p>
+      <p class="font-semibold">Semibold</p>
+      <p class="font-bold">Bold</p>
+    </div>
+  </section>
+
+  <!-- Colores -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Colores</h2>
+
+    <p class="p mb-6">
+      La paleta combina profesionalidad (azul), energía lúdica (dorado) y frescura (turquesa),
+      manteniendo equilibrio entre un entorno institucional y una plataforma social y dinámica.
+    </p>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+      <div class="p-6 rounded-lg bg-brand-primary text-white">Primary<br>#1B4F72</div>
+      <div class="p-6 rounded-lg bg-brand-secondary text-neutral-dark">Secondary<br>#F4CB42</div>
+      <div class="p-6 rounded-lg bg-brand-accent text-white">Accent<br>#48C9B0</div>
+      <div class="p-6 rounded-lg bg-neutral-light text-neutral-dark border">Neutral Light<br>#F7F9FA</div>
+      <div class="p-6 rounded-lg bg-neutral-medium text-neutral-dark border">Neutral Medium<br>#D5D8DC</div>
+      <div class="p-6 rounded-lg bg-neutral-dark text-white">Neutral Dark<br>#2C3E50</div>
+    </div>
+  </section>
+
+  <!-- Botones -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Botones</h2>
+
+    <div class="space-y-6">
+      <div>
+        <p class="p mb-2 font-semibold">Botón primario</p>
+        <button class="px-4 py-2 rounded-lg bg-brand-primary text-white hover:bg-brand-accent transition">
+          Acción principal
+        </button>
+      </div>
+
+      <div>
+        <p class="p mb-2 font-semibold">Botón secundario</p>
+        <button
+          class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition">
+          Acción secundaria
+        </button>
+      </div>
+
+      <div>
+        <p class="p mb-2 font-semibold">Botón deshabilitado</p>
+        <button disabled class="px-4 py-2 rounded-lg bg-neutral-medium text-neutral-dark cursor-not-allowed opacity-60">
+          Deshabilitado
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Inputs -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Inputs / Formularios</h2>
+
+    <div class="space-y-6 max-w-md">
+      <div>
+        <label class="block mb-1 font-semibold">Nombre de la asociación</label>
+        <input type="text"
+          class="w-full p-2 border border-neutral-medium rounded focus:ring-2 focus:ring-brand-primary" />
+      </div>
+
+      <div>
+        <label class="block mb-1 font-semibold">Modalidad</label>
+        <select class="w-full p-2 border border-neutral-medium rounded focus:ring-2 focus:ring-brand-primary">
+          <option>Mus</option>
+          <option>Tute</option>
+          <option>Brisca</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block mb-1 font-semibold">Descripción</label>
+        <textarea
+          class="w-full p-2 border border-neutral-medium rounded h-24 focus:ring-2 focus:ring-brand-primary"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Cards / Contenedores</h2>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="p-6 bg-white rounded-lg border border-neutral-medium shadow-sm">
+        <h3 class="h3 mb-2">Asociación Cultural El Naipe</h3>
+        <p class="p">Fundada en 1985. Organización de torneos locales de Tute y Mus.</p>
+      </div>
+
+      <div class="p-6 bg-white rounded-lg border border-neutral-medium shadow-sm">
+        <h3 class="h3 mb-2">Torneo Provincial de Mus</h3>
+        <p class="p">Fecha: 12 de mayo. Modalidad abierta. Inscripción gratuita.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Espaciado -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Sistema de Espaciado</h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+      <div class="p-2 bg-neutral-light border text-center">p-2</div>
+      <div class="p-4 bg-neutral-light border text-center">p-4</div>
+      <div class="p-6 bg-neutral-light border text-center">p-6</div>
+      <div class="p-8 bg-neutral-light border text-center">p-8</div>
+      <div class="p-10 bg-neutral-light border text-center">p-10</div>
+      <div class="p-12 bg-neutral-light border text-center">p-12</div>
+    </div>
+  </section>
+
+  <!-- Layout -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Ejemplo de Layout</h2>
+
+    <div class="border border-neutral-medium rounded-lg grid md:grid-cols-3">
+      <aside class="p-4 bg-neutral-light border-r border-neutral-medium">
+        <p class="p font-semibold">Sidebar</p>
+        <ul class="mt-2 space-y-1">
+          <li class="p text-neutral-dark">Inicio</li>
+          <li class="p text-neutral-dark">Asociaciones</li>
+          <li class="p text-neutral-dark">Torneos</li>
+        </ul>
+      </aside>
+
+      <main class="p-6 md:col-span-2">
+        <h3 class="h3 mb-2">Contenido principal</h3>
+        <p class="p">Aquí va el contenido principal del layout.</p>
+      </main>
+    </div>
+  </section>
+</div>

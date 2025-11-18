@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer utilities {
+  /* Ejemplo inicial de botón */
+  .custom-btn {
+    @apply px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-secondary transition;
+  }
+}
+
+/* Tipografía personalizada */
+@layer base {
+  html {
+    @apply font-sans text-neutral-dark;
+  }
+
+  h1, .h1 {
+    @apply font-display text-4xl font-bold text-neutral-dark;
+  }
+
+  h2, .h2 {
+    @apply font-display text-3xl font-semibold text-neutral-dark;
+  }
+
+  h3, .h3 {
+    @apply font-display text-2xl font-semibold text-neutral-dark;
+  }
+
+  p, .p {
+    @apply text-base leading-relaxed text-neutral-dark;
+  }
+}
+
