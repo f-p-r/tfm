@@ -2,6 +2,17 @@
 
 use Laravel\Sanctum\Sanctum;
 
+$frontendHost = env('FRONTEND_HOST');
+if (! $frontendHost) {
+    $parsed = parse_url((string) env('FRONTEND_URL', ''));
+    $frontendHost = $parsed['host'] ?? null;
+}
+$frontendEntries = [];
+if ($frontendHost) {
+    // Include domain without port to cover variable ports; also common 80/443
+    $frontendEntries = [$frontendHost, $frontendHost.':80', $frontendHost.':443'];
+}
+
 return [
 
     /*
@@ -16,10 +27,11 @@ return [
     */
 
     'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s',
-        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
+        '%s%s%s',
+        // Include common local dev hosts; add Angular default :4200
+        'localhost,localhost:3000,localhost:4200,127.0.0.1,127.0.0.1:8000,::1',
+        $frontendHost ? ','.implode(',', $frontendEntries) : '',
         Sanctum::currentApplicationUrlWithPort(),
-        // Sanctum::currentRequestHost(),
     ))),
 
     /*

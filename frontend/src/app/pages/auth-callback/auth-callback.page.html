@@ -1,0 +1,23 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+  <div class="max-w-md w-full text-center space-y-6">
+    <div class="flex justify-center">
+      @if (status() === 'processing') {
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+      } @else if (status() === 'success') {
+        <svg class="h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      } @else {
+        <svg class="h-16 w-16 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      }
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900">
+        {{ message() }}
+      </h2>
+    </div>
+  </div>
+</div>

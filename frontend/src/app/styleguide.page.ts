@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-styleguide',
-  standalone: true,
   templateUrl: './styleguide.page.html',
   styleUrl: './styleguide.page.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StyleguidePage {}

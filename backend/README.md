@@ -21,6 +21,62 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## SPA Auth + Social Login Setup
+
+- **Sanctum (cookie, stateful):** Ensure `EnsureFrontendRequestsAreStateful` is enabled in [bootstrap/app.php](bootstrap/app.php). CORS must allow your SPA origin and credentials in [config/cors.php](config/cors.php) for paths `api/*` and `sanctum/csrf-cookie`.
+- **Stateful domains:** Adjust [config/sanctum.php](config/sanctum.php) to include your SPA host (e.g., `localhost:4200`).
+- **Socialite providers:** Configure [config/services.php](config/services.php) with Google/Facebook keys and callback URLs.
+- **Security hardening:** Social callback validates CSRF `state` and restricts redirects to allowed frontends via `ALLOWED_FRONTEND_URLS`.
+
+### Environment Variables
+
+- **Frontend:** `FRONTEND_URL`, `ALLOWED_FRONTEND_URLS` (comma-separated). Example: `http://localhost:4200`.
+- **Google:** `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URL` (default: `${APP_URL}/api/auth/google/callback`).
+- **Facebook:** `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET`, `FACEBOOK_REDIRECT_URL` (default: `${APP_URL}/api/auth/facebook/callback`).
+- **Sessions (optional cross-site):** Consider `SESSION_DOMAIN`, `SESSION_SAME_SITE=none`, and `SESSION_SECURE_COOKIE=true` for HTTPS.
+
+### Quick Start
+
+1. Copy `.env.example` to `.env` and fill provider keys.
+2. Install deps and run migrations.
+3. Start server and test the flow.
+
+#### Commands
+
+```powershell
+Push-Location "c:\master\tfm-src\backend"
+composer install
+php artisan migrate --force
+php artisan serve
+vendor\bin\phpunit --testdox tests/Feature/SocialAuthTest.php
+```
+
+### SPA Flow
+
+- `GET /sanctum/csrf-cookie` with credentials.
+- `GET /api/auth/google/redirect` (or `facebook`).
+- After provider auth, backend redirects to `FRONTEND_URL/auth/callback?provider=...&ok=1`.
+- `GET /api/auth/me` returns authenticated user.
+
+## Provider Setup (Google & Facebook)
+
+See detailed steps in [docs/social-providers.md](docs/social-providers.md). Summary:
+
+- **Google**
+	- Create a project in Google Cloud Console and configure OAuth consent screen.
+	- Create OAuth 2.0 Client (type Web Application).
+	- Authorized redirect URI: `${APP_URL}/api/auth/google/callback`.
+	- Authorized JavaScript origins: your `FRONTEND_URL` (e.g., `http://localhost:4200`).
+	- Set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` and optionally `GOOGLE_REDIRECT_URL`.
+
+- **Facebook**
+	- Create an app in Meta for Developers (Facebook Login).
+	- Configure Valid OAuth Redirect URIs: `${APP_URL}/api/auth/facebook/callback`.
+	- App Domains / Site URL: your backend `APP_URL` and frontend domain.
+	- Set `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET` and optionally `FACEBOOK_REDIRECT_URL`.
+
+Ensure `ALLOWED_FRONTEND_URLS` includes your `FRONTEND_URL` to allow safe redirects.
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.

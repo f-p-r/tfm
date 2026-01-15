@@ -1,6 +1,6 @@
 # Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.10.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.
 
 ## Development server
 
@@ -36,23 +36,43 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Running unit tests
+## Testing (Vitest)
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Angular 21 uses [Vitest](https://vitest.dev/) as the default unit test runner.
+
+### Run tests
 
 ```bash
+npm test
+# or
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Tests run in watch mode by default. For CI environments or one-off test runs, use:
 
 ```bash
-ng e2e
+ng test --no-watch
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Configuration
+
+- **Test builder**: `@angular/build:unit-test` (configured in [angular.json](angular.json))
+- **Test environment**: [jsdom](https://github.com/jsdom/jsdom) (fast DOM simulation in Node.js, SSR-safe)
+- **Optional config**: [vitest-base.config.ts](vitest-base.config.ts) for advanced Vitest options
+- **TypeScript types**: `vitest/globals` (see [tsconfig.spec.json](tsconfig.spec.json))
+
+### Migration from Karma/Jasmine
+
+This project was migrated from Karma/Jasmine to Vitest following the [official Angular migration guide](https://angular.dev/guide/testing/migrating-to-vitest).
+
+**Key changes:**
+- Replaced `@angular/build:karma` with `@angular/build:unit-test`
+- Removed Karma, Jasmine, and related dependencies
+- Upgraded to Vitest 4 and jsdom 27
+- Updated `tsconfig.spec.json` to use `vitest/globals` types
+- Test syntax remains compatible (Jasmine→Vitest schematic applied)
+
+All tests now run faster in Node.js with jsdom, eliminating the need for a browser.
 
 ## Additional Resources
 
