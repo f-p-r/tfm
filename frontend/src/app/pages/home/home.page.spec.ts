@@ -1,18 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HomePage } from './home.page';
 
-import { StyleguidePage } from './styleguide.page';
-
-describe('StyleguidePage', () => {
-  let component: StyleguidePage;
-  let fixture: ComponentFixture<StyleguidePage>;
+describe('HomePage', () => {
+  let component: HomePage;
+  let fixture: ComponentFixture<HomePage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StyleguidePage]
-    })
-    .compileComponents();
+      imports: [HomePage],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(StyleguidePage);
+    fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

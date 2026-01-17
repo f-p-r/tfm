@@ -160,7 +160,75 @@
     </div>
   </section>
 
-  <!-- Layout -->
+  <!-- Layout y Navegación (tokens ds-*) -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Layout y Navegación (tokens ds-*)</h2>
+
+    <p class="p mb-6">
+      Los tokens <code>ds-*</code> proporcionan clases utilitarias reutilizables para
+      estructurar páginas y barras de navegación con un enfoque mobile-first y consistente.
+    </p>
+
+    <h3 class="h3 mb-4">Tokens disponibles</h3>
+    <ul class="list-disc list-inside space-y-2 mb-8 text-neutral-dark">
+      <li><code>.ds-main</code> — Wrapper global de la app (min-h-dvh + fondo base)</li>
+      <li><code>.ds-page</code> — Padding de página mobile-first (p-6 md:p-10)</li>
+      <li><code>.ds-container</code> — Contenedor centrado estándar (max-w-6xl)</li>
+      <li><code>.ds-container-narrow</code> — Contenedor estrecho para formularios (max-w-lg)</li>
+      <li><code>.ds-nav</code> — Barra de navegación superior sticky</li>
+      <li><code>.ds-nav-inner</code> — Alineación interna de navbar (flex + justify-between)</li>
+      <li><code>.ds-nav-brand</code> — Zona de logo/título</li>
+      <li><code>.ds-nav-links</code> — Enlaces desktop (ocultos en móvil)</li>
+      <li><code>.ds-nav-link</code> — Estilo de link individual</li>
+      <li><code>.ds-nav-actions</code> — Zona derecha (login/avatar)</li>
+      <li><code>.ds-nav-toggle</code> — Botón hamburguesa (solo móvil)</li>
+      <li><code>.ds-nav-mobile</code> — Panel de navegación móvil</li>
+      <li><code>.ds-nav-mobile-list</code> — Lista de enlaces móvil</li>
+      <li><code>.ds-nav-mobile-link</code> — Link individual en móvil</li>
+    </ul>
+
+    <h3 class="h3 mb-4">Ejemplo: App Shell completo</h3>
+    <p class="p mb-4 text-sm text-neutral-dark">
+      Vista previa de cómo se combinan los tokens para crear la estructura típica de la aplicación.
+      El menú móvil se muestra expandido en este ejemplo para facilitar su visualización.
+    </p>
+
+    <!-- Demo visual del app shell -->
+    <div class="border border-neutral-medium rounded-lg overflow-hidden">
+      <!-- Navbar simulada -->
+      <app-navbar
+        brandLabel="Styleguide"
+        brandPath="/"
+        [links]="[
+          { label: 'Home', path: '/' },
+          { label: 'Login', path: '/login' },
+          { label: 'Styleguide', path: '/styleguide' }
+        ]"
+      ></app-navbar>
+
+      <!-- Contenido principal -->
+      <div class="ds-main">
+        <div class="ds-page">
+          <div class="ds-container">
+            <h3 class="h3 mb-4">Contenido de ejemplo22</h3>
+            <p class="p mb-4">
+              Este bloque utiliza <code>.ds-main</code> (wrapper), <code>.ds-page</code> (padding),
+              y <code>.ds-container</code> (centrado con max-width).
+            </p>
+
+            <div class="ds-container-narrow border border-neutral-medium rounded-lg p-6 bg-white">
+              <p class="p text-sm text-neutral-dark">
+                Este recuadro usa <code>.ds-container-narrow</code> ideal para formularios
+                o contenido que requiere un ancho más reducido.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Layout antiguo -->
   <section class="mb-16">
     <h2 class="h2 mb-8">Ejemplo de Layout</h2>
 

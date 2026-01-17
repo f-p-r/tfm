@@ -1,10 +1,98 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Colores */
+  --color-brand-primary: #1B4F72;
+  --color-brand-secondary: #F4CB42;
+  --color-brand-accent: #48C9B0;
+
+  --color-neutral-light: #F7F9FA;
+  --color-neutral-medium: #D5D8DC;
+  --color-neutral-dark: #2C3E50;
+
+  /* Tipografías */
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Inter Tight", "Inter", sans-serif;
+}
+
 @layer utilities {
   /* Ejemplo inicial de botón */
   .custom-btn {
     @apply px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-secondary transition;
+  }
+
+  /* === Layout y Contenedores === */
+
+  /* Wrapper global de la aplicación */
+  .ds-main {
+    @apply min-h-dvh bg-neutral-light;
+  }
+
+  /* Padding de página mobile-first */
+  .ds-page {
+    @apply p-6 md:p-10;
+  }
+
+  /* Contenedor centrado estándar */
+  .ds-container {
+    @apply mx-auto w-full max-w-6xl;
+  }
+
+  /* Contenedor centrado estrecho para formularios */
+  .ds-container-narrow {
+    @apply mx-auto w-full max-w-lg;
+  }
+
+  /* === Navegación === */
+
+  /* Barra de navegación superior */
+  .ds-nav {
+    @apply sticky top-0 z-50 bg-white border-b border-neutral-medium h-16;
+  }
+
+  /* Contenedor interno de la barra de navegación */
+  .ds-nav-inner {
+    @apply flex items-center justify-between gap-3 h-full;
+  }
+
+  /* Zona de marca/logo */
+  .ds-nav-brand {
+    @apply flex items-center gap-2 font-display text-xl font-bold text-brand-primary;
+  }
+
+  /* Enlaces de navegación desktop */
+  .ds-nav-links {
+    @apply hidden md:flex items-center gap-1;
+  }
+
+  /* Estilo individual de link de navegación */
+  .ds-nav-link {
+    @apply px-3 py-2 rounded-md text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary;
+  }
+
+  /* Zona de acciones (login, avatar, etc.) */
+  .ds-nav-actions {
+    @apply flex items-center gap-2;
+  }
+
+  /* Botón hamburguesa para móvil */
+  .ds-nav-toggle {
+    @apply md:hidden p-2 rounded-md hover:bg-neutral-light focus-visible:outline-2 focus-visible:outline-brand-primary text-neutral-dark;
+  }
+
+  /* Panel de navegación móvil */
+  .ds-nav-mobile {
+    @apply md:hidden bg-white border-b border-neutral-medium;
+  }
+
+  /* Lista de enlaces móvil */
+  .ds-nav-mobile-list {
+    @apply flex flex-col divide-y divide-neutral-medium;
+  }
+
+  /* Link individual en móvil */
+  .ds-nav-mobile-link {
+    @apply px-6 py-3 text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary;
   }
 }
 

@@ -1,0 +1,46 @@
+<nav class="ds-nav" aria-label="Navegación principal">
+  <div class="ds-nav-inner">
+    <div class="ds-nav-brand">
+      <a [routerLink]="brandPath()">
+        {{ brandLabel() }}
+      </a>
+    </div>
+
+    <div class="ds-nav-links">
+      @for (link of links(); track link.path) {
+        <a class="ds-nav-link" [routerLink]="link.path" routerLinkActive="is-active">
+          {{ link.label }}
+        </a>
+      }
+    </div>
+
+    <div class="ds-nav-actions">
+      <button
+        type="button"
+        class="ds-nav-toggle"
+        aria-label="Abrir menú"
+        [attr.aria-expanded]="isOpen()"
+        (click)="toggle()"
+      >
+        ☰
+      </button>
+    </div>
+  </div>
+
+  @if (isOpen()) {
+    <div class="ds-nav-mobile">
+      <div class="ds-nav-mobile-list">
+        @for (link of links(); track link.path) {
+          <a
+            class="ds-nav-mobile-link"
+            [routerLink]="link.path"
+            routerLinkActive="is-active"
+            (click)="close()"
+          >
+            {{ link.label }}
+          </a>
+        }
+      </div>
+    </div>
+  }
+</nav>
