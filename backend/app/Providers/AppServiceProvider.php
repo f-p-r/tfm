@@ -2,12 +2,15 @@
 
 namespace App\Providers;
 
+use App\Models\News;
+use App\Policies\NewsPolicy;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Registrar cualquier servicio de aplicación.
      */
     public function register(): void
     {
@@ -15,10 +18,11 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap cualquier servicio de aplicación.
      */
     public function boot(): void
     {
-        //
+        // Registrar políticas
+        Gate::policy(News::class, NewsPolicy::class);
     }
 }

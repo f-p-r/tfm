@@ -21,14 +21,7 @@ class SocialAuthController extends Controller
             return response()->json(['message' => 'Provider not supported'], 422);
         }
 
-        // Generate CSRF state/nonce and store in session; pass it to provider
-        $state = bin2hex(random_bytes(16));
-        Session::put($this->stateSessionKey($provider), $state);
-
-        return Socialite::driver($provider)
-            ->stateless() // We'll validate our own state
-            ->with(['state' => $state])
-            ->redirect();
+        return Socialite::driver($provider)->redirect();
     }
 
     public function callback(Request $request, string $provider)
@@ -45,15 +38,9 @@ class SocialAuthController extends Controller
             return Redirect::to($this->frontendBase().'/auth/callback?provider='.$provider.'&ok=0&error='.urlencode($providerError));
         }
 
-        // Validate CSRF state/nonce
-        $expected = Session::pull($this->stateSessionKey($provider)); // pull clears it
-        $received = $request->string('state')->toString();
-        if (! $expected || ! hash_equals((string) $expected, (string) $received)) {
-            return Redirect::to($this->frontendBase().'/auth/callback?provider='.$provider.'&ok=0&error=invalid_state');
-        }
-
+        // Socialite 5.x validates state automatically
         try {
-            $socialUser = Socialite::driver($provider)->stateless()->user();
+            $socialUser = Socialite::driver($provider)->user();
         } catch (\Throwable $e) {
             return Redirect::to($this->frontendBase().'/auth/callback?provider='.$provider.'&ok=0&error=provider_exception');
         }
@@ -101,11 +88,6 @@ class SocialAuthController extends Controller
         $request->session()->regenerate();
 
         return Redirect::to($this->frontendBase().'/auth/callback?provider='.$provider.'&ok=1');
-    }
-
-    private function stateSessionKey(string $provider): string
-    {
-        return 'oauth_state_'.strtolower($provider);
     }
 
     private function frontendBase(): string
