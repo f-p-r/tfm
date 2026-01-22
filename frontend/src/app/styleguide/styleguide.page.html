@@ -72,59 +72,64 @@
     </div>
   </section>
 
-  <!-- Botones -->
+  <!-- Botones + Inputs en filas separadas y responsive -->
   <section class="mb-16">
-    <h2 class="h2 mb-8">Botones</h2>
+    <h2 class="h2 mb-8">Botones e Inputs</h2>
 
-    <div class="space-y-6">
+    <div class="space-y-10">
+      <!-- Fila de botones -->
       <div>
-        <p class="p mb-2 font-semibold">Botón primario</p>
-        <button class="px-4 py-2 rounded-lg bg-brand-primary text-white hover:bg-brand-accent transition">
-          Acción principal
-        </button>
+        <h3 class="h3 mb-4">Botones</h3>
+        <div class="flex flex-wrap gap-4">
+          <div class="flex flex-col gap-2 min-w-[200px]">
+            <p class="p font-semibold">Botón primario</p>
+            <button class="px-4 py-2 rounded-lg bg-brand-primary text-white hover:bg-brand-accent transition">
+              Acción principal
+            </button>
+          </div>
+
+          <div class="flex flex-col gap-2 min-w-[200px]">
+            <p class="p font-semibold">Botón secundario</p>
+            <button
+              class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition">
+              Acción secundaria
+            </button>
+          </div>
+
+          <div class="flex flex-col gap-2 min-w-[200px]">
+            <p class="p font-semibold">Botón deshabilitado</p>
+            <button disabled class="px-4 py-2 rounded-lg bg-neutral-medium text-neutral-dark cursor-not-allowed opacity-60">
+              Deshabilitado
+            </button>
+          </div>
+        </div>
       </div>
 
+      <!-- Fila de inputs -->
       <div>
-        <p class="p mb-2 font-semibold">Botón secundario</p>
-        <button
-          class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition">
-          Acción secundaria
-        </button>
-      </div>
+        <h3 class="h3 mb-4">Inputs / Formularios</h3>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold">Nombre de la asociación</label>
+            <input type="text"
+              class="w-full p-2 border border-neutral-medium rounded focus:ring-2 focus:ring-brand-primary" />
+          </div>
 
-      <div>
-        <p class="p mb-2 font-semibold">Botón deshabilitado</p>
-        <button disabled class="px-4 py-2 rounded-lg bg-neutral-medium text-neutral-dark cursor-not-allowed opacity-60">
-          Deshabilitado
-        </button>
-      </div>
-    </div>
-  </section>
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold">Modalidad</label>
+            <select class="w-full p-2 border border-neutral-medium rounded focus:ring-2 focus:ring-brand-primary">
+              <option>Mus</option>
+              <option>Tute</option>
+              <option>Brisca</option>
+            </select>
+          </div>
 
-  <!-- Inputs -->
-  <section class="mb-16">
-    <h2 class="h2 mb-8">Inputs / Formularios</h2>
-
-    <div class="space-y-6 max-w-md">
-      <div>
-        <label class="block mb-1 font-semibold">Nombre de la asociación</label>
-        <input type="text"
-          class="w-full p-2 border border-neutral-medium rounded focus:ring-2 focus:ring-brand-primary" />
-      </div>
-
-      <div>
-        <label class="block mb-1 font-semibold">Modalidad</label>
-        <select class="w-full p-2 border border-neutral-medium rounded focus:ring-2 focus:ring-brand-primary">
-          <option>Mus</option>
-          <option>Tute</option>
-          <option>Brisca</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block mb-1 font-semibold">Descripción</label>
-        <textarea
-          class="w-full p-2 border border-neutral-medium rounded h-24 focus:ring-2 focus:ring-brand-primary"></textarea>
+          <div class="flex flex-col gap-2 sm:col-span-2 lg:col-span-1">
+            <label class="font-semibold">Descripción</label>
+            <textarea
+              class="w-full p-2 border border-neutral-medium rounded h-24 focus:ring-2 focus:ring-brand-primary"></textarea>
+          </div>
+        </div>
       </div>
     </div>
   </section>

@@ -1,0 +1,58 @@
+<!-- Versión desktop -->
+@if (variant() === 'desktop') {
+  @if (!isAuthenticated()) {
+    <!-- No autenticado: mostrar "Entrar" -->
+    <a routerLink="/login" class="ds-nav-link">Entrar</a>
+  } @else {
+    <!-- Autenticado: mostrar dropdown -->
+    <div class="relative">
+      <button
+        type="button"
+        (click)="toggle()"
+        [attr.aria-expanded]="isOpen()"
+        class="ds-nav-link"
+      >
+        {{ displayName() }}
+      </button>
+
+      @if (isOpen()) {
+        <div class="absolute right-0 mt-2 w-48 bg-white border border-neutral-medium rounded-md shadow-lg z-50">
+          <div class="py-1">
+            <a
+              routerLink="/me"
+              (click)="close()"
+              class="block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors"
+            >
+              Mis datos
+            </a>
+            <button
+              type="button"
+              (click)="logout()"
+              class="w-full text-left block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors"
+            >
+              Cerrar sesión
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+}
+
+<!-- Versión mobile -->
+@if (variant() === 'mobile') {
+  @if (!isAuthenticated()) {
+    <!-- No autenticado: mostrar "Entrar" -->
+    <a routerLink="/login" class="ds-nav-mobile-link">Entrar</a>
+  } @else {
+    <!-- Autenticado: mostrar opciones en línea -->
+    <a routerLink="/me" class="ds-nav-mobile-link">Mis datos</a>
+    <button
+      type="button"
+      (click)="logout()"
+      class="ds-nav-mobile-link w-full text-left"
+    >
+      Cerrar sesión
+    </button>
+  }
+}

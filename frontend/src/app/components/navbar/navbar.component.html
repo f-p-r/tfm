@@ -3,18 +3,35 @@
     <!-- Brand / Logo -->
     <a routerLink="/" class="ds-nav-brand">Naipeando</a>
 
-    <!-- Desktop Links -->
+    <!-- Enlaces / controles desktop -->
     <div class="ds-nav-links">
-      <a routerLink="/games" class="ds-nav-link">Juegos</a>
+      <!-- Selector de juegos (desktop) -->
+      <label class="sr-only" for="desktop-games">Seleccionar juego</label>
+      <select
+        id="desktop-games"
+        [value]="gamesStore.selectedGame() ?? ''"
+        (change)="onDesktopGameChange($event)"
+        class="ds-nav-link"
+      >
+        <option value="">Todos los juegos</option>
+        @for (g of gamesStore.sortedGames(); track g) {
+          <option [value]="g">{{ g }}</option>
+        }
+      </select>
+
+      <!-- Resto de enlaces desktop -->
       <a routerLink="/associations" class="ds-nav-link">Asociaciones</a>
       <a routerLink="/events" class="ds-nav-link">Eventos</a>
       <a routerLink="/news" class="ds-nav-link">Noticias</a>
       <a routerLink="/help" class="ds-nav-link">?</a>
     </div>
 
-    <!-- Actions -->
+    <!-- Acciones -->
     <div class="ds-nav-actions">
-      <a routerLink="/login" class="ds-nav-link">Usuario</a>
+      <!-- Menú de usuario (desktop) -->
+      <app-user-menu variant="desktop"></app-user-menu>
+
+      <!-- Botón hamburguesa (mobile) -->
       <button
         type="button"
         class="ds-nav-toggle"
@@ -29,16 +46,32 @@
     </div>
   </div>
 
-  <!-- Mobile Menu Panel -->
+  <!-- Panel de menú móvil -->
   @if (mobileMenuOpen()) {
     <div class="ds-nav-mobile">
       <div class="ds-nav-mobile-list">
-        <a routerLink="/games" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Juegos</a>
+        <!-- Selector de juegos (mobile) -->
+        <div class="border-b border-neutral-medium">
+          <label for="mobile-games-select" class="sr-only">Seleccionar juego</label>
+          <select
+            id="mobile-games-select"
+            [value]="gamesStore.selectedGame() ?? ''"
+            (change)="selectGameMobile($any($event.target).value === '' || $any($event.target).value === 'Todos los juegos' ? null : $any($event.target).value)"
+            class="w-full px-4 md:px-6 py-3 border-0 focus:ring-2 focus:ring-brand-primary text-neutral-dark"
+          >
+            <option value="" [selected]="!gamesStore.selectedGame()">Todos los juegos</option>
+            @for (g of gamesStore.sortedGames(); track g) {
+              <option [value]="g" [selected]="gamesStore.selectedGame() === g">{{ g }}</option>
+            }
+          </select>
+        </div>
         <a routerLink="/associations" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Asociaciones</a>
         <a routerLink="/events" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Eventos</a>
         <a routerLink="/news" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Noticias</a>
         <a routerLink="/help" class="ds-nav-mobile-link" (click)="closeMobileMenu()">?</a>
-        <a routerLink="/login" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Usuario</a>
+
+        <!-- Menú de usuario (mobile) -->
+        <app-user-menu variant="mobile"></app-user-menu>
       </div>
     </div>
   }

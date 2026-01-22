@@ -6,6 +6,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { AuthStore } from '../../core/auth/auth.store';
 import { isLaravelValidationError } from '../../core/auth/laravel-validation-error';
 import { environment } from '../../../environments/environment';
+import { User } from '../../core/auth/user.model';
 
 @Component({
   selector: 'app-login-page',
@@ -42,11 +43,11 @@ export class LoginPage {
     const { username, password } = this.form.getRawValue();
 
     this.authService.login(username, password).subscribe({
-      next: (user) => {
+      next: (user: User) => {
         this.authStore.setUser(user);
         this.router.navigate(['/']);
       },
-      error: (error) => {
+      error: (error: { status: number; message?: string; errors?: Record<string, string[]> }) => {
         this.isSubmitting.set(false);
 
         if (error.status === 401) {

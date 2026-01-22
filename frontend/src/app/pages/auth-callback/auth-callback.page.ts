@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, inject, signal } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { AuthStore } from '../../core/auth/auth.store';
+import { User } from '../../core/auth/user.model';
 
 @Component({
   selector: 'app-auth-callback-page',
@@ -31,7 +32,7 @@ export class AuthCallbackPage implements OnInit {
     }
 
     this.authService.me().subscribe({
-      next: (user) => {
+      next: (user: User) => {
         this.authStore.setUser(user);
         this.status.set('success');
         this.message.set('Autenticación exitosa. Redirigiendo...');

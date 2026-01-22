@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AssociationController;
 use App\Http\Controllers\TournamentController;
+use App\Http\Controllers\MediaController;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -20,3 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('associations', AssociationController::class);
     Route::apiResource('tournaments', TournamentController::class);
 });
+
+// Media endpoints (public). To protect again, wrap these two routes in the auth:sanctum group above.
+Route::get('media', [MediaController::class, 'index']);
+Route::post('media/upload', [MediaController::class, 'uploadFake']);
