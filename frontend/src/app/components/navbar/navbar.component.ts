@@ -10,11 +10,11 @@ import { filter } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent {
-  readonly brandLabel = input<string>('App');
-  readonly brandPath = input<string>('/');
-  readonly links = input<Array<{ label: string; path: string }>>([]);
+  readonly mode = input<'portal' | 'game' | 'association'>('portal');
+  readonly contextName = input<string | undefined>(undefined);
+  readonly showAdmin = input<boolean>(false);
 
-  readonly isOpen = signal(false);
+  readonly mobileMenuOpen = signal(false);
 
   private readonly router = inject(Router);
 
@@ -24,14 +24,21 @@ export class NavbarComponent {
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         takeUntilDestroyed(),
       )
-      .subscribe(() => this.close());
+      .subscribe(() => this.closeMobileMenu());
   }
 
-  toggle(): void {
-    this.isOpen.update((current) => !current);
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update((current) => !current);
   }
 
-  close(): void {
-    this.isOpen.set(false);
+  closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false);
+  }
+
+  get displayName(): string {
+    if (this.mode() === 'portal') {
+      return 'Portal';
+    }
+    return this.contextName() || 'Portal';
   }
 }

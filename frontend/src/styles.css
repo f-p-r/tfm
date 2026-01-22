@@ -52,7 +52,7 @@
 
   /* Contenedor interno de la barra de navegación */
   .ds-nav-inner {
-    @apply flex items-center justify-between gap-3 h-full;
+    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-6xl pr-4 md:pr-6;
   }
 
   /* Zona de marca/logo */
@@ -85,14 +85,14 @@
     @apply md:hidden bg-white border-b border-neutral-medium;
   }
 
-  /* Lista de enlaces móvil */
+  /* Lista de enlaces móvil con centrado y ancho máximo */
   .ds-nav-mobile-list {
-    @apply flex flex-col divide-y divide-neutral-medium;
+    @apply flex flex-col divide-y divide-neutral-medium mx-auto w-full max-w-6xl;
   }
 
   /* Link individual en móvil */
   .ds-nav-mobile-link {
-    @apply px-6 py-3 text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary;
+    @apply px-4 md:px-6 py-3 text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary;
   }
 }
 

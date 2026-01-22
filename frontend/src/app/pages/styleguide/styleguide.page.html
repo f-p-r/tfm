@@ -196,15 +196,7 @@
     <!-- Demo visual del app shell -->
     <div class="border border-neutral-medium rounded-lg overflow-hidden">
       <!-- Navbar simulada -->
-      <app-navbar
-        brandLabel="Styleguide"
-        brandPath="/"
-        [links]="[
-          { label: 'Home', path: '/' },
-          { label: 'Login', path: '/login' },
-          { label: 'Styleguide', path: '/styleguide' }
-        ]"
-      ></app-navbar>
+      <app-navbar mode="portal"></app-navbar>
 
       <!-- Contenido principal -->
       <div class="ds-main">
@@ -246,6 +238,208 @@
         <h3 class="h3 mb-2">Contenido principal</h3>
         <p class="p">Aquí va el contenido principal del layout.</p>
       </main>
+    </div>
+  </section>
+
+  <!-- Prototipo: Navegación contextual -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Prototipo: Navegación contextual (Juego/Asociación)</h2>
+
+    <p class="p mb-6">
+      Este prototipo demuestra cómo se comporta la navegación en contextos específicos (juegos, asociaciones).
+      En <strong>desktop</strong> se muestra un navbar global reducido + navbar contextual (dos niveles).
+      En <strong>mobile</strong> solo aparece un header contextual único (sin duplicidad de navbars).
+    </p>
+
+    <!-- Frame DESKTOP -->
+    <div class="mb-8">
+      <h3 class="h3 mb-4">Vista Desktop</h3>
+      <div class="border-2 border-brand-primary rounded-lg overflow-hidden">
+        <!-- Navbar global reducido (mock) -->
+        <nav class="ds-nav hidden md:block">
+          <div class="ds-nav-inner px-6">
+            <div class="ds-nav-brand">Portal</div>
+            <div class="ds-nav-links">
+              <a href="#" class="ds-nav-link">Cambiar juego</a>
+              <a href="#" class="ds-nav-link">Eventos</a>
+              <a href="#" class="ds-nav-link">Noticias</a>
+            </div>
+            <div class="ds-nav-actions">
+              <button class="px-3 py-1.5 rounded-md bg-brand-primary text-white text-sm">Usuario</button>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Navbar contextual (solo desktop) -->
+        <nav class="ds-nav hidden md:block border-t border-neutral-medium">
+          <div class="ds-nav-inner px-6">
+            <div class="ds-nav-brand text-lg">Mus - Liga Regional</div>
+            <div class="ds-nav-links">
+              <a href="#" class="ds-nav-link">Inicio</a>
+              <a href="#" class="ds-nav-link">Noticias</a>
+              <a href="#" class="ds-nav-link">Eventos</a>
+              <a href="#" class="ds-nav-link">Rankings</a>
+              <a href="#" class="ds-nav-link">Administración</a>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Header contextual mobile (solo móvil) -->
+        <nav class="ds-nav md:hidden">
+          <div class="ds-nav-inner px-4">
+            <div class="flex items-center gap-3">
+              <button class="p-1 hover:bg-neutral-light rounded" aria-label="Volver">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <div class="font-display font-bold text-brand-primary">Mus - Liga Regional</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="px-2 py-1 rounded text-xs bg-brand-primary text-white">Usuario</button>
+              <button class="ds-nav-toggle" aria-label="Menú">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Panel menú móvil (siempre visible en prototipo) -->
+        <!-- Nota: En producción esto se controla con signal de toggle -->
+        <div class="ds-nav-mobile">
+          <div class="ds-nav-mobile-list">
+            <a href="#" class="ds-nav-mobile-link">Inicio</a>
+            <a href="#" class="ds-nav-mobile-link">Noticias</a>
+            <a href="#" class="ds-nav-mobile-link">Eventos</a>
+            <a href="#" class="ds-nav-mobile-link">Rankings</a>
+            <a href="#" class="ds-nav-mobile-link">Administración</a>
+            <a href="#" class="ds-nav-mobile-link border-t-2 border-neutral-dark">Cambiar juego</a>
+            <a href="#" class="ds-nav-mobile-link">Ir al portal</a>
+          </div>
+        </div>
+
+        <!-- Contenido de página dummy -->
+        <div class="ds-main">
+          <div class="ds-page">
+            <div class="ds-container">
+              <h3 class="h3 mb-4">Bienvenido al contexto de Mus</h3>
+              <p class="p mb-4">
+                Este es el contenido de ejemplo dentro del contexto de juego/asociación.
+                Aquí se mostrarían noticias, eventos, rankings y demás información específica.
+              </p>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div class="p-4 bg-white border border-neutral-medium rounded-lg">
+                  <h4 class="font-semibold mb-2">Próximo evento</h4>
+                  <p class="text-sm text-neutral-dark">Torneo clasificatorio - 25 de enero</p>
+                </div>
+                <div class="p-4 bg-white border border-neutral-medium rounded-lg">
+                  <h4 class="font-semibold mb-2">Última noticia</h4>
+                  <p class="text-sm text-neutral-dark">Nuevas normas de clasificación publicadas</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frame MOBILE -->
+    <div>
+      <h3 class="h3 mb-4">Vista Mobile (ancho forzado)</h3>
+      <div class="border-2 border-brand-accent rounded-lg overflow-hidden flex justify-center bg-neutral-light">
+        <div class="max-w-[390px] w-full bg-white">
+          <!-- El mismo markup que arriba, responsive se encarga de mostrar/ocultar -->
+
+          <!-- Navbar global reducido (oculto en mobile) -->
+          <nav class="ds-nav hidden md:block">
+            <div class="ds-nav-inner px-6">
+              <div class="ds-nav-brand">Portal</div>
+              <div class="ds-nav-links">
+                <a href="#" class="ds-nav-link">Cambiar juego</a>
+                <a href="#" class="ds-nav-link">Eventos</a>
+                <a href="#" class="ds-nav-link">Noticias</a>
+              </div>
+              <div class="ds-nav-actions">
+                <button class="px-3 py-1.5 rounded-md bg-brand-primary text-white text-sm">Usuario</button>
+              </div>
+            </div>
+          </nav>
+
+          <!-- Navbar contextual (oculto en mobile) -->
+          <nav class="ds-nav hidden md:block border-t border-neutral-medium">
+            <div class="ds-nav-inner px-6">
+              <div class="ds-nav-brand text-lg">Mus - Liga Regional</div>
+              <div class="ds-nav-links">
+                <a href="#" class="ds-nav-link">Inicio</a>
+                <a href="#" class="ds-nav-link">Noticias</a>
+                <a href="#" class="ds-nav-link">Eventos</a>
+                <a href="#" class="ds-nav-link">Rankings</a>
+                <a href="#" class="ds-nav-link">Administración</a>
+              </div>
+            </div>
+          </nav>
+
+          <!-- Header contextual mobile (visible en mobile) -->
+          <nav class="ds-nav md:hidden">
+            <div class="ds-nav-inner px-4">
+              <div class="flex items-center gap-3">
+                <button class="p-1 hover:bg-neutral-light rounded" aria-label="Volver">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <div class="font-display font-bold text-brand-primary">Mus - Liga Regional</div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="px-2 py-1 rounded text-xs bg-brand-primary text-white">Usuario</button>
+                <button class="ds-nav-toggle" aria-label="Menú">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </nav>
+
+          <!-- Panel menú móvil -->
+          <div class="ds-nav-mobile">
+            <div class="ds-nav-mobile-list">
+              <a href="#" class="ds-nav-mobile-link">Inicio</a>
+              <a href="#" class="ds-nav-mobile-link">Noticias</a>
+              <a href="#" class="ds-nav-mobile-link">Eventos</a>
+              <a href="#" class="ds-nav-mobile-link">Rankings</a>
+              <a href="#" class="ds-nav-mobile-link">Administración</a>
+              <a href="#" class="ds-nav-mobile-link border-t-2 border-neutral-dark">Cambiar juego</a>
+              <a href="#" class="ds-nav-mobile-link">Ir al portal</a>
+            </div>
+          </div>
+
+          <!-- Contenido de página dummy (mismo) -->
+          <div class="ds-main">
+            <div class="ds-page">
+              <div class="ds-container">
+                <h3 class="h3 mb-4">Bienvenido al contexto de Mus</h3>
+                <p class="p mb-4">
+                  Este es el contenido de ejemplo dentro del contexto de juego/asociación.
+                  Aquí se mostrarían noticias, eventos, rankings y demás información específica.
+                </p>
+                <div class="space-y-4">
+                  <div class="p-4 bg-white border border-neutral-medium rounded-lg">
+                    <h4 class="font-semibold mb-2">Próximo evento</h4>
+                    <p class="text-sm text-neutral-dark">Torneo clasificatorio - 25 de enero</p>
+                  </div>
+                  <div class="p-4 bg-white border border-neutral-medium rounded-lg">
+                    <h4 class="font-semibold mb-2">Última noticia</h4>
+                    <p class="text-sm text-neutral-dark">Nuevas normas de clasificación publicadas</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </div>

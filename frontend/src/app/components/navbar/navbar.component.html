@@ -1,45 +1,44 @@
 <nav class="ds-nav" aria-label="Navegación principal">
   <div class="ds-nav-inner">
-    <div class="ds-nav-brand">
-      <a [routerLink]="brandPath()">
-        {{ brandLabel() }}
-      </a>
-    </div>
+    <!-- Brand / Logo -->
+    <a routerLink="/" class="ds-nav-brand">Naipeando</a>
 
+    <!-- Desktop Links -->
     <div class="ds-nav-links">
-      @for (link of links(); track link.path) {
-        <a class="ds-nav-link" [routerLink]="link.path" routerLinkActive="is-active">
-          {{ link.label }}
-        </a>
-      }
+      <a routerLink="/games" class="ds-nav-link">Juegos</a>
+      <a routerLink="/associations" class="ds-nav-link">Asociaciones</a>
+      <a routerLink="/events" class="ds-nav-link">Eventos</a>
+      <a routerLink="/news" class="ds-nav-link">Noticias</a>
+      <a routerLink="/help" class="ds-nav-link">?</a>
     </div>
 
+    <!-- Actions -->
     <div class="ds-nav-actions">
+      <a routerLink="/login" class="ds-nav-link">Usuario</a>
       <button
         type="button"
         class="ds-nav-toggle"
-        aria-label="Abrir menú"
-        [attr.aria-expanded]="isOpen()"
-        (click)="toggle()"
+        aria-label="Menú"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        (click)="toggleMobileMenu()"
       >
-        ☰
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
       </button>
     </div>
   </div>
 
-  @if (isOpen()) {
+  <!-- Mobile Menu Panel -->
+  @if (mobileMenuOpen()) {
     <div class="ds-nav-mobile">
       <div class="ds-nav-mobile-list">
-        @for (link of links(); track link.path) {
-          <a
-            class="ds-nav-mobile-link"
-            [routerLink]="link.path"
-            routerLinkActive="is-active"
-            (click)="close()"
-          >
-            {{ link.label }}
-          </a>
-        }
+        <a routerLink="/games" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Juegos</a>
+        <a routerLink="/associations" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Asociaciones</a>
+        <a routerLink="/events" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Eventos</a>
+        <a routerLink="/news" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Noticias</a>
+        <a routerLink="/help" class="ds-nav-mobile-link" (click)="closeMobileMenu()">?</a>
+        <a routerLink="/login" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Usuario</a>
       </div>
     </div>
   }
