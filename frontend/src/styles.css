@@ -96,8 +96,14 @@
   }
 }
 
-/* Tipografía personalizada */
+
 @layer base {
+  /* Cursor pointer para botones */
+  button {
+    @apply cursor-pointer;
+  }
+
+  /* Tipografía personalizada */
   html {
     @apply font-sans text-neutral-dark;
   }

@@ -9,23 +9,37 @@ export interface ContentDTO {
   segments: SegmentDTO[];
 }
 
+export interface RichImageDTO {
+  mediaId?: number;
+  url: string;
+  alt?: string;
+}
+
+export interface CarouselImageDTO {
+  mediaId?: number;
+  url: string;
+  alt?: string;
+}
+
 export interface RichSegmentDTO {
   id: string;
   order: number;
   type: 'rich';
   textHtml?: string;
+  image?: RichImageDTO;
+  imagePlacement?: 'top' | 'left' | 'right';
+  imageWidth?: number;
+  imageMaxHeightPx?: number;
+  // Campos heredados para compatibilidad con prototipos anteriores
   imageUrl?: string;
   imageMediaId?: number;
   imageAlt?: string;
-  imagePlacement?: 'top' | 'left' | 'right';
-  imageWidth?: number; // porcentaje (25, 33, 50, 66, 75, 100)
-  imageMaxHeightPx?: number; // altura máxima opcional para la imagen
 }
 
 export interface CarouselSegmentDTO {
   id: string;
   order: number;
   type: 'carousel';
-  images: { url: string; alt?: string }[];
-  maxHeightPx?: number; // altura máxima opcional para las imágenes
+  images: CarouselImageDTO[];
+  maxHeightPx?: number;
 }

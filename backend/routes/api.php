@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tournaments', TournamentController::class);
 });
 
-// Media endpoints (public). To protect again, wrap these two routes in the auth:sanctum group above.
+// Media endpoints (sin autenticación por ahora)
 Route::get('media', [MediaController::class, 'index']);
-Route::post('media/upload', [MediaController::class, 'uploadFake']);
+Route::post('media/upload-fake', [MediaController::class, 'uploadFake']);
+Route::post('media/upload', [MediaController::class, 'upload']);

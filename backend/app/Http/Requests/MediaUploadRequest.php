@@ -20,7 +20,13 @@ class MediaUploadRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => ['required', 'file'],
+            'file' => [
+                'required',
+                'file',
+                'image',
+                'mimes:jpeg,png,webp',
+                'max:15360', // 15MB en KB
+            ],
             'scopeType' => ['required', 'string', 'in:global,association,game'],
             'scopeId' => [
                 function ($attribute, $value, $fail) {
@@ -33,6 +39,9 @@ class MediaUploadRequest extends FormRequest
                     }
                 },
             ],
+            'fileName' => ['nullable', 'string', 'max:255'],
+            'filename' => ['nullable', 'string', 'max:255'],
+            'alt' => ['nullable', 'string', 'max:500'],
         ];
     }
 
@@ -41,8 +50,10 @@ class MediaUploadRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
+        $fileNameInput = $this->input('filename') ?? $this->input('fileName');
         $this->merge([
             'scopeType' => strtolower($this->input('scopeType')),
+            'filename' => $fileNameInput,
         ]);
     }
 

@@ -6,8 +6,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ContentDTO, SegmentDTO, RichSegmentDTO, CarouselSegmentDTO } from '../content-segments-demo/content-segments.dto';
 import { ContentRendererComponent } from '../content-segments-demo/content-renderer.component';
 import { quillModules } from '../quill.config';
-import { MediaApiService, MediaItem } from '../shared/media-api.service';
-import { HttpClientModule } from '@angular/common/http';
+import { MediaPickerComponent } from '../../components/media/media-picker.component';
+import { MediaItem } from '../../components/media/media.models';
 
 // URL fija para imágenes del prototipo
 const IMAGE_URL = 'https://lawebdeperez.es/frameworks_a3/img/landing1.jpg';
@@ -16,7 +16,7 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
 @Component({
   selector: 'app-content-segments-editor-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, QuillModule, HttpClientModule, ContentRendererComponent],
+  imports: [CommonModule, ReactiveFormsModule, QuillModule, ContentRendererComponent, MediaPickerComponent],
   template: `
     <main class="ds-main">
       <div class="ds-page">
@@ -31,7 +31,7 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
             <div class="flex flex-wrap items-center gap-3">
               <button type="button" (click)="addRich()" class="px-4 py-2 rounded-lg bg-brand-primary text-white hover:bg-brand-accent transition">Añadir segmento texto/imagen</button>
               <button type="button" (click)="addCarousel()" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition">Añadir carrusel</button>
-              <button type="button" (click)="openPreview()" class="px-4 py-2 rounded-lg bg-neutral-dark text-white hover:bg-brand-primary transition">Ver</button>
+              <button type="button" (click)="openPreview()" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition">Ver</button>
             </div>
           </section>
 
@@ -42,14 +42,14 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                   <div class="font-display font-semibold text-brand-primary">#{{ seg.order }} · {{ seg.type }}</div>
                   @if (editingId() === seg.id) {
                     <div class="flex flex-wrap items-center gap-2">
-                      <button type="button" class="px-3 py-1.5 rounded-lg bg-brand-primary text-white hover:bg-brand-accent transition" (click)="saveEdit()">Guardar</button>
-                      <button type="button" class="px-3 py-1.5 rounded-lg border border-neutral-medium text-neutral-dark hover:bg-neutral-light transition" (click)="discardEdit()">Descartar</button>
+                      <button type="button" class="px-4 py-2 rounded-lg bg-brand-primary text-white hover:bg-brand-accent transition" (click)="saveEdit()">Guardar</button>
+                      <button type="button" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition" (click)="discardEdit()">Descartar</button>
                     </div>
                   } @else {
                     <div class="flex flex-wrap items-center gap-2">
-                      <button type="button" class="px-3 py-1.5 rounded-lg border border-neutral-medium hover:bg-neutral-light transition" (click)="moveUp(seg.id)">↑</button>
-                      <button type="button" class="px-3 py-1.5 rounded-lg border border-neutral-medium hover:bg-neutral-light transition" (click)="moveDown(seg.id)">↓</button>
-                      <button type="button" class="px-3 py-1.5 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition" (click)="startEdit(seg.id)">Editar</button>
+                      <button type="button" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition" (click)="moveUp(seg.id)">↑</button>
+                      <button type="button" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition" (click)="moveDown(seg.id)">↓</button>
+                      <button type="button" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition" (click)="startEdit(seg.id)">Editar</button>
                       <button type="button" class="px-3 py-1.5 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 transition" (click)="remove(seg.id)">Eliminar</button>
                     </div>
                   }
@@ -59,10 +59,9 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                   @if (editingDraft(); as draft) {
                     <div class="mt-4 border-t border-neutral-medium pt-4 grid gap-4">
                       @if (draft.type === 'rich') {
-                        <!-- Edición de RICH -->
                         <div class="grid md:grid-cols-2 gap-4">
                           <label class="grid gap-1">
-                            <span class="text-sm text-neutral-dark font-semibold">Placement</span>
+                            <span class="text-sm text-neutral-dark font-semibold">Posicionamiento</span>
                             <select class="border border-neutral-medium rounded px-3 py-2 focus:ring-2 focus:ring-brand-primary" [value]="draft.imagePlacement ?? 'top'" (change)="onRichPlacementChange(draft.id, $event)">
                               <option value="top">top</option>
                               <option value="left">left</option>
@@ -70,8 +69,9 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                             </select>
                           </label>
                           <label class="grid gap-1">
-                            <span class="text-sm text-neutral-dark font-semibold">widthPreset</span>
+                            <span class="text-sm text-neutral-dark font-semibold">Ancho (%)</span>
                             <select class="border border-neutral-medium rounded px-3 py-2 focus:ring-2 focus:ring-brand-primary" [value]="draft.imageWidth ?? 50" (change)="onRichWidthChange(draft.id, $event)">
+                              <option [value]="10">10</option>
                               <option [value]="25">25</option>
                               <option [value]="33">33</option>
                               <option [value]="50">50</option>
@@ -81,69 +81,62 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                             </select>
                           </label>
                           <div class="grid gap-2">
-                            <button
-                              type="button"
-                              class="px-3 py-2 rounded-lg border border-neutral-medium bg-neutral-light hover:bg-white text-left transition"
-                              (click)="toggleImageSelector()"
-                            >
-                              {{ draft.imageUrl ? fileName(draft.imageUrl) : 'Añadir imagen' }}
-                            </button>
-
-                            @if (imageSelectorOpen()) {
-                              <div class="border border-neutral-medium rounded-lg p-3 bg-neutral-light space-y-3">
-                                <div class="flex flex-wrap items-center justify-between gap-2">
-                                  <div class="text-sm font-semibold text-neutral-dark">Seleccionar imagen</div>
-                                  <button type="button" class="px-3 py-1.5 rounded-lg border border-neutral-medium text-neutral-dark opacity-60" disabled>Subir imagen</button>
-                                </div>
-
-                                @if (mediaLoading()) {
-                                  <div class="text-sm text-neutral-dark">Cargando imágenes…</div>
-                                } @else if (mediaError()) {
-                                  <div class="text-sm text-red-600">No se pudieron cargar imágenes.</div>
-                                } @else {
-                                  <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                    @for (item of mediaItems(); track item.id) {
-                                      <button
-                                        type="button"
-                                        class="border border-neutral-medium rounded-lg overflow-hidden bg-white hover:ring-2 hover:ring-brand-primary"
-                                        (click)="openImageModal(item)"
-                                      >
-                                        <img [src]="item.url" alt="" class="w-full h-28 object-cover" />
-                                        <div class="p-2 text-xs text-neutral-dark truncate">{{ fileName(item.url) }}</div>
-                                      </button>
-                                    }
-                                  </div>
-                                  @if (!mediaItems().length) {
-                                    <div class="text-sm text-neutral-dark">No hay imágenes disponibles.</div>
-                                  }
-                                }
-
-                                @if (draft.imageUrl) {
-                                  <button
-                                    type="button"
-                                    class="px-3 py-1.5 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 transition"
-                                    (click)="removeImage()"
-                                  >Quitar imagen</button>
-                                }
+                            @if (draft.image?.url ?? draft.imageUrl) {
+                              <div class="border border-neutral-medium rounded-lg p-3 bg-neutral-light flex flex-col items-center gap-2 cursor-pointer hover:bg-white transition" (click)="toggleRichPicker()">
+                                <img [src]="draft.image?.url ?? draft.imageUrl" alt="" class="w-32 h-28 object-cover rounded" />
+                                <div class="text-xs text-neutral-dark text-center truncate max-w-xs">{{ draft.image ? fileName(draft.image.url) : fileName(draft.imageUrl ?? '') }}</div>
                               </div>
+                            } @else {
+                              <button
+                                type="button"
+                                class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition"
+                                (click)="toggleRichPicker()"
+                              >
+                                Añadir imagen
+                              </button>
+                            }
+
+                            @if (richPickerOpen()) {
+                              <div class="border border-neutral-medium rounded-lg p-3 bg-neutral-light space-y-3">
+                                <app-media-picker
+                                  [scopeType]="'association'"
+                                  [scopeId]="1"
+                                  [includeGlobal]="true"
+                                  [mode]="'single'"
+                                  (pick)="onRichMediaPicked($event)"
+                                  (uploadSuccess)="onRichMediaPicked($event)"
+                                  (error)="onMediaPickerError($event)"
+                                ></app-media-picker>
+                              </div>
+                            }
+
+                            @if (draft.image?.url ?? draft.imageUrl) {
+                              <button
+                                type="button"
+                                class="px-3 py-1.5 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 transition"
+                                (click)="removeImage()"
+                              >Quitar imagen</button>
+                            }
+
+                            @if (pickerError()) {
+                              <div class="text-sm text-red-600">{{ pickerError() }}</div>
                             }
                           </div>
                         </div>
-                          <div class="grid gap-1">
-                            <span class="text-sm text-neutral-dark font-semibold">textHtml</span>
-                            <div class="quill-shell">
-                              <quill-editor
-                                class="quill-editor-block"
-                                [modules]="quillModules"
-                                [formControl]="quillControl"
-                                theme="snow"
-                              ></quill-editor>
-                            </div>
+                        <div class="grid gap-1">
+                          <span class="text-sm text-neutral-dark font-semibold">textHtml</span>
+                          <div class="quill-shell">
+                            <quill-editor
+                              class="quill-editor-block"
+                              [modules]="quillModules"
+                              [formControl]="quillControl"
+                              theme="snow"
+                            ></quill-editor>
                           </div>
+                        </div>
                       }
 
                       @if (draft.type === 'carousel') {
-                        <!-- Edición de CAROUSEL -->
                         <div class="grid md:grid-cols-2 gap-4">
                           <label class="grid gap-1">
                             <span class="text-sm text-neutral-dark font-semibold">numImages (1..6)</span>
@@ -154,6 +147,51 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                             <input class="border border-neutral-medium rounded px-3 py-2 focus:ring-2 focus:ring-brand-primary" type="number" [value]="draft.maxHeightPx ?? ''" (input)="onCarouselMaxHeightChange(draft.id, $event)" />
                           </label>
                         </div>
+
+                        <div class="border border-neutral-medium rounded-lg p-3 bg-neutral-light space-y-3">
+                          <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="text-sm font-semibold text-neutral-dark">Imagenes del carrusel</div>
+                            <button
+                              type="button"
+                              class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition"
+                              (click)="toggleCarouselPicker()"
+                            >
+                              Añadir imagen
+                            </button>
+                          </div>
+
+                          @if (carouselPickerOpen()) {
+                            <app-media-picker
+                              [scopeType]="'global'"
+                              [scopeId]="null"
+                              [includeGlobal]="true"
+                              [mode]="'multi'"
+                              (pick)="onCarouselMediaPicked($event)"
+                              (uploadSuccess)="onCarouselMediaPicked($event)"
+                              (error)="onMediaPickerError($event)"
+                            ></app-media-picker>
+                          }
+
+                          @if (draft.images.length) {
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                              @for (img of draft.images; track $index) {
+                                <div class="border border-neutral-medium rounded-lg overflow-hidden bg-white flex flex-col">
+                                  <img [src]="img.url" alt="" class="w-full h-28 object-cover" />
+                                  <div class="flex items-center justify-between gap-2 px-2 py-1.5 text-xs text-neutral-dark">
+                                    <span class="truncate">{{ fileName(img.url) }}</span>
+                                    <button type="button" class="text-red-700 hover:text-red-500" (click)="removeCarouselImage($index)">Eliminar</button>
+                                  </div>
+                                </div>
+                              }
+                            </div>
+                          } @else {
+                            <div class="text-sm text-neutral-dark">El carrusel no tiene imagenes.</div>
+                          }
+
+                          @if (pickerError()) {
+                            <div class="text-sm text-red-600">{{ pickerError() }}</div>
+                          }
+                        </div>
                       }
                     </div>
                   }
@@ -162,22 +200,6 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                 @if (editingId() !== seg.id) {
                   <div class="mt-4 border-t border-neutral-medium pt-4">
                     <app-content-renderer [content]="singleContent(seg)"></app-content-renderer>
-                  </div>
-                }
-
-                @if (modalImage(); as modal) {
-                  <div class="modal-backdrop" (click)="closeImageModal()"></div>
-                  <div class="modal-card" role="dialog" aria-modal="true" aria-label="Vista previa de imagen">
-                    <div class="modal-surface">
-                      <div class="modal-body">
-                        <img [src]="modal.url" alt="" class="max-h-[70vh] max-w-full object-contain" />
-                        <div class="text-sm text-neutral-dark break-all">{{ fileName(modal.url) }}</div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="px-4 py-2 rounded-lg bg-brand-primary text-white hover:bg-brand-accent transition" (click)="confirmImage(modal)">Seleccionar</button>
-                        <button type="button" class="px-4 py-2 rounded-lg border border-neutral-medium text-neutral-dark hover:bg-neutral-light transition" (click)="closeImageModal()">Cancelar</button>
-                      </div>
-                    </div>
                   </div>
                 }
               </article>
@@ -194,11 +216,9 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
 export class ContentSegmentsEditorPage {
   readonly quillModules = quillModules;
   readonly quillControl = new FormControl<string>('', { nonNullable: true });
-  readonly mediaItems = signal<MediaItem[]>([]);
-  readonly mediaLoading = signal(false);
-  readonly mediaError = signal<string | null>(null);
-  readonly imageSelectorOpen = signal(false);
-  readonly modalImage = signal<MediaItem | null>(null);
+  readonly richPickerOpen = signal(false);
+  readonly carouselPickerOpen = signal(false);
+  readonly pickerError = signal<string | null>(null);
   // Estado principal de contenido en memoria
   readonly content = signal<ContentDTO>({
     schemaVersion: 1,
@@ -211,7 +231,7 @@ export class ContentSegmentsEditorPage {
   readonly editingId = signal<string | null>(null);
   readonly editingDraft = signal<SegmentDTO | null>(null);
 
-  constructor(private readonly mediaApi: MediaApiService) {
+  constructor() {
     this.quillControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
       const draft = this.editingDraft();
       if (!draft || draft.type !== 'rich') return;
@@ -247,20 +267,31 @@ export class ContentSegmentsEditorPage {
     const c = this.content();
     const arr = c.segments.filter(s => s.id !== id);
     this.renormalizeAndSet(arr);
-    if (this.editingId() === id) this.editingId.set(null);
+    if (this.editingId() === id) {
+      this.editingId.set(null);
+      this.editingDraft.set(null);
+      this.richPickerOpen.set(false);
+      this.carouselPickerOpen.set(false);
+      this.pickerError.set(null);
+    }
   }
 
   startEdit(id: string): void {
     const seg = this.content().segments.find(s => s.id === id);
     if (!seg) return;
-    if (seg.type === 'rich') {
-      this.quillControl.setValue(seg.textHtml ?? '', { emitEvent: false });
-      this.imageSelectorOpen.set(false);
+    this.pickerError.set(null);
+    this.richPickerOpen.set(false);
+    this.carouselPickerOpen.set(false);
+    const normalized = seg.type === 'rich' && !seg.image && seg.imageUrl
+      ? { ...seg, image: { url: seg.imageUrl, mediaId: seg.imageMediaId, alt: seg.imageAlt } }
+      : seg;
+    if (normalized.type === 'rich') {
+      this.quillControl.setValue(normalized.textHtml ?? '', { emitEvent: false });
     } else {
       this.quillControl.setValue('', { emitEvent: false });
     }
     this.editingId.set(id);
-    this.editingDraft.set(this.cloneSeg(seg));
+    this.editingDraft.set(this.cloneSeg(normalized));
   }
 
   saveEdit(): void {
@@ -270,13 +301,18 @@ export class ContentSegmentsEditorPage {
     const c = this.content();
     const arr = c.segments.map(s => (s.id === id ? { ...draft } : s));
     this.content.set({ ...c, segments: arr });
+    this.richPickerOpen.set(false);
+    this.carouselPickerOpen.set(false);
+    this.pickerError.set(null);
     this.editingId.set(null);
     this.editingDraft.set(null);
   }
 
   discardEdit(): void {
     this.quillControl.setValue('', { emitEvent: false });
-    this.imageSelectorOpen.set(false);
+    this.richPickerOpen.set(false);
+    this.carouselPickerOpen.set(false);
+    this.pickerError.set(null);
     this.editingId.set(null);
     this.editingDraft.set(null);
   }
@@ -325,19 +361,23 @@ export class ContentSegmentsEditorPage {
     this.onRichChange(id, { imageWidth: isNaN(n) ? 50 : n });
   }
 
-  onRichHasImageChange(id: string, ev: Event): void {
-    // Eliminado: se reemplazó por selector de imágenes
-  }
-
-  onRichTextChange(id: string, ev: Event): void {
-    // Ya no se usa textarea; Quill actualiza directamente mediante quillControl
-  }
-
   // Edición CAROUSEL
   onCarouselNum(id: string, n: number): void {
+    const draft = this.currentCarouselDraft();
+    if (!draft || draft.id !== id) return;
     const count = Math.max(1, Math.min(6, Math.floor(n)));
-    const images = Array.from({ length: count }, (_, i) => ({ url: IMAGE_URL, alt: `Slide ${i + 1}` }));
-    this.onCarouselChange(id, { images });
+    const next = [...(draft.images ?? [])];
+
+    if (next.length > count) {
+      next.length = count;
+    } else {
+      while (next.length < count) {
+        const idx = next.length + 1;
+        next.push({ url: IMAGE_URL, alt: `Slide ${idx}` });
+      }
+    }
+
+    this.onCarouselChange(id, { images: next });
   }
 
   onCarouselNumInput(id: string, ev: Event): void {
@@ -368,54 +408,61 @@ export class ContentSegmentsEditorPage {
     window.open('/prototypes/content-segments-preview', '_blank');
   }
 
-  toggleImageSelector(): void {
-    const next = !this.imageSelectorOpen();
-    this.imageSelectorOpen.set(next);
-    if (next && !this.mediaItems().length) {
-      this.loadMedia();
-    }
+  toggleRichPicker(): void {
+    this.pickerError.set(null);
+    this.richPickerOpen.set(!this.richPickerOpen());
+    this.carouselPickerOpen.set(false);
   }
 
-  loadMedia(): void {
-    this.mediaLoading.set(true);
-    this.mediaError.set(null);
-    this.mediaApi.listAssociationMedia(1, true).subscribe({
-      next: (items) => {
-        this.mediaItems.set(items ?? []);
-        this.mediaLoading.set(false);
-      },
-      error: () => {
-        this.mediaLoading.set(false);
-        this.mediaError.set('error');
-      },
-    });
+  toggleCarouselPicker(): void {
+    this.pickerError.set(null);
+    this.carouselPickerOpen.set(!this.carouselPickerOpen());
+    this.richPickerOpen.set(false);
   }
 
-  selectImage(item: MediaItem): void {
-    const draft = this.editingDraft();
-    if (!draft || draft.type !== 'rich') return;
-    this.editingDraft.set({ ...draft, imageUrl: item.url, imageMediaId: item.id, imageAlt: draft.imageAlt ?? '' });
-    this.imageSelectorOpen.set(false);
+  onMediaPickerError(message: string): void {
+    this.pickerError.set(message);
+  }
+
+  onRichMediaPicked(item: MediaItem): void {
+    const draft = this.currentRichDraft();
+    if (!draft) return;
+    const image = { mediaId: item.id, url: item.url, alt: draft.image?.alt ?? draft.imageAlt ?? '' };
+    this.editingDraft.set({ ...draft, image, imageUrl: image.url, imageMediaId: image.mediaId, imageAlt: image.alt });
+    this.richPickerOpen.set(false);
+    this.pickerError.set(null);
+  }
+
+  onCarouselMediaPicked(item: MediaItem): void {
+    const draft = this.currentCarouselDraft();
+    if (!draft) return;
+    const images = [...draft.images, { url: item.url, mediaId: item.id }];
+    this.editingDraft.set({ ...draft, images });
+    this.pickerError.set(null);
   }
 
   removeImage(): void {
+    const draft = this.currentRichDraft();
+    if (!draft) return;
+    this.editingDraft.set({ ...draft, image: undefined, imageUrl: undefined, imageMediaId: undefined, imageAlt: undefined });
+    this.richPickerOpen.set(false);
+  }
+
+  removeCarouselImage(index: number): void {
+    const draft = this.currentCarouselDraft();
+    if (!draft) return;
+    const images = draft.images.filter((_, i) => i !== index);
+    this.editingDraft.set({ ...draft, images });
+  }
+
+  private currentRichDraft(): RichSegmentDTO | null {
     const draft = this.editingDraft();
-    if (!draft || draft.type !== 'rich') return;
-    this.editingDraft.set({ ...draft, imageUrl: undefined, imageMediaId: undefined });
-    this.imageSelectorOpen.set(false);
+    return draft && draft.type === 'rich' ? draft : null;
   }
 
-  openImageModal(item: MediaItem): void {
-    this.modalImage.set(item);
-  }
-
-  closeImageModal(): void {
-    this.modalImage.set(null);
-  }
-
-  confirmImage(item: MediaItem): void {
-    this.selectImage(item);
-    this.modalImage.set(null);
+  private currentCarouselDraft(): CarouselSegmentDTO | null {
+    const draft = this.editingDraft();
+    return draft && draft.type === 'carousel' ? draft : null;
   }
 
   fileName(url: string): string {

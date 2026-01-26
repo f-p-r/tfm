@@ -35,8 +35,7 @@ export class ContentSegmentsDemoPage {
           <h2 class="text-2xl font-bold mb-3">Segmento 1: Imagen arriba</h2>
           <p class="text-gray-700">Este es un bloque con imagen en top.</p>
         `,
-        imageUrl: IMAGE_URL,
-        imageAlt: 'Imagen demo',
+        image: { url: IMAGE_URL, alt: 'Imagen demo' },
         imagePlacement: 'top',
       },
       {
@@ -68,8 +67,7 @@ export class ContentSegmentsDemoPage {
           <p class="text-gray-700">Para observar claramente el comportamiento, este párrafo añade más contenido. En dispositivos móviles, el diseño se apila de forma natural (la imagen primero y el texto debajo), mientras que en escritorio el texto rodea la imagen hasta superarla en altura, quedando todo el bloque limpio gracias al clearfix final. Esto permite composiciones ricas sin necesidad de maquetados complejos.</p>
           <p class="text-gray-700">Sigue leyendo: este es aún más texto de ejemplo que debería terminar bajando por debajo del final de la imagen, confirmando que el layout responde correctamente y que el texto no se corta ni solapa. Ideal para artículos con resúmenes ilustrados o secciones destacadas con fotografía.</p>
         `,
-        imageUrl: IMAGE_URL,
-        imageAlt: 'Imagen izquierda 50%',
+        image: { url: IMAGE_URL, alt: 'Imagen izquierda 50%' },
         imagePlacement: 'left',
         imageWidth: 50,
       },
@@ -83,8 +81,7 @@ export class ContentSegmentsDemoPage {
           <p class="text-gray-700">Añadimos suficiente texto de demostración para asegurar que el flujo pasa el borde inferior de la imagen: esto valida el float y el clearfix, evitando solapes y manteniendo una lectura cómoda en diferentes tamaños de pantalla.</p>
           <p class="text-gray-700">Más contenido de ejemplo: la composición resultante es útil para destacar imágenes relevantes mientras el texto se desarrolla en paralelo en dispositivos grandes, sin sacrificar la legibilidad en móviles.</p>
         `,
-        imageUrl: IMAGE_URL,
-        imageAlt: 'Imagen derecha 50%',
+        image: { url: IMAGE_URL, alt: 'Imagen derecha 50%' },
         imagePlacement: 'right',
         imageWidth: 50,
       },

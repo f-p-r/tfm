@@ -8,6 +8,9 @@ use App\Http\Resources\MediaItemResource;
 use App\Models\Media;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class MediaController extends Controller
 {
@@ -91,5 +94,148 @@ class MediaController extends Controller
         return response()->json([
             'item' => new MediaItemResource($media),
         ]);
+    }
+
+    /**
+     * Upload real: guarda la imagen y crea el registro en la base de datos.
+     */
+    public function upload(MediaUploadRequest $request): JsonResponse
+    {
+        try {
+            $scopeType = $request->getScopeType();
+            $scopeId = $request->getScopeId();
+            $file = $request->file('file');
+
+            Log::info('Upload iniciado', [
+                'scopeType' => $scopeType,
+                'scopeId' => $scopeId,
+                'file' => $file ? 'presente' : 'ausente',
+            ]);
+
+            // Verificar que el archivo existe
+            if (! $file) {
+                Log::warning('No se recibió archivo');
+                return response()->json([
+                    'message' => 'No se recibió ningún archivo.',
+                    'error' => 'missing_file',
+                ], 400);
+            }
+
+            if (! $file->isValid()) {
+                Log::warning('Archivo no válido', ['error' => $file->getErrorMessage()]);
+                return response()->json([
+                    'message' => 'El archivo no es válido.',
+                    'error' => 'invalid_file',
+                    'details' => $file->getErrorMessage(),
+                ], 400);
+            }
+
+            Log::info('Archivo válido, generando nombre');
+
+            // Generar nombre del archivo
+            $filename = $this->generateFilename($request, $file);
+
+            Log::info('Nombre generado', ['filename' => $filename]);
+
+            // Guardar el archivo en storage/app/public/media usando el disco público
+            $path = Storage::disk('public')->putFileAs('media', $file, $filename);
+
+            Log::info('Archivo guardado', ['path' => $path]);
+
+            if (! $path) {
+                Log::error('putFileAs devolvió null');
+                return response()->json([
+                    'message' => 'Error al guardar el archivo: putFileAs devolvió null.',
+                    'error' => 'store_failed',
+                ], 500);
+            }
+
+            // Verificar que el archivo se guardó correctamente
+            $exists = Storage::disk('public')->exists($path);
+            Log::info('Verificación de existencia', ['exists' => $exists, 'path' => $path]);
+
+            if (! $exists) {
+                return response()->json([
+                    'message' => 'El archivo se guardó pero no se puede verificar su existencia.',
+                    'error' => 'file_not_found',
+                    'path' => $path,
+                ], 500);
+            }
+
+            // Construir URL relativa para la base de datos
+            $url = '/storage/media/' . $filename;
+
+            // Crear registro en la base de datos
+            $media = Media::create([
+                'scope_type' => $scopeType,
+                'scope_id' => $scopeId,
+                'url' => $url,
+                'created_by' => $request->user()?->id ?? 1,
+            ]);
+
+            Log::info('Media creada en BD', ['id' => $media->id]);
+
+            return response()->json([
+                'item' => new MediaItemResource($media),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Excepción en upload', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            return response()->json([
+                'message' => 'Error al procesar el archivo.',
+                'error' => 'exception',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Generar nombre de archivo sanitizado o único.
+     */
+    private function generateFilename(MediaUploadRequest $request, $file): string
+    {
+        $extension = $file->getClientOriginalExtension();
+        $desiredFilename = $request->input('filename');
+
+        if ($desiredFilename) {
+            // Sanitizar el nombre proporcionado
+            $sanitized = $this->sanitizeFilename($desiredFilename);
+            // Asegurar que tenga extensión
+            if (! Str::endsWith($sanitized, '.' . $extension)) {
+                $sanitized .= '.' . $extension;
+            }
+            return $sanitized;
+        }
+
+        // Fallback: usar el nombre original del archivo
+        if ($file->getClientOriginalName()) {
+            return $this->sanitizeFilename($file->getClientOriginalName());
+        }
+
+        // Último recurso: generar nombre único
+        return time() . '_' . Str::random(10) . '.' . $extension;
+    }
+
+    /**
+     * Sanitizar nombre de archivo.
+     */
+    private function sanitizeFilename(string $filename): string
+    {
+        // Eliminar extensión si existe para procesarla por separado
+        $info = pathinfo($filename);
+        $name = $info['filename'] ?? $filename;
+        $extension = $info['extension'] ?? '';
+
+        // Reemplazar espacios y caracteres especiales
+        $name = Str::slug($name, '_');
+
+        // Limitar longitud
+        $name = Str::limit($name, 200, '');
+
+        // Añadir extensión si existía
+        return $extension ? $name . '.' . $extension : $name;
     }
 }
