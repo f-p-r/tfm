@@ -43,6 +43,12 @@ export const routes: Routes = [
             (m) => m.ContentSegmentsPreviewPage,
           ),
       },
+      {
+        // Prototipo help-demo: demostración del sistema de ayuda
+        path: 'help-demo',
+        loadComponent: () =>
+          import('./prototypes/help-demo/help-demo.page').then((m) => m.HelpDemoPage),
+      },
       { path: '**', component: PrototypeHostPage },
     ],
   },

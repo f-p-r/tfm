@@ -25,7 +25,7 @@
 
   /* Botón primario - acción principal */
   .ds-btn-primary {
-    @apply  border border-brand-primary bg-brand-primary text-white hover:bg-brand-accent hover:border-brand-accent transition;
+    @apply border border-brand-primary bg-brand-primary text-white hover:bg-brand-accent hover:border-brand-accent transition;
   }
 
   /* Botón secundario - acción alternativa */
@@ -49,35 +49,33 @@
   }
 
   /* === Formularios / Inputs === */
-.ds-field {
-  @apply flex flex-col gap-2;
-}
+  .ds-field {
+    @apply flex flex-col gap-2;
+  }
 
-.ds-label {
-  @apply font-semibold text-neutral-dark;
-}
+  .ds-label {
+    @apply font-semibold text-neutral-dark;
+  }
 
-/* Base común para controles */
-.ds-input,
-.ds-select,
-.ds-textarea {
-  @apply w-full px-3 py-2 rounded-lg border border-neutral-medium bg-white text-neutral-dark
-    placeholder:text-neutral-medium
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
-}
+  /* Base común para controles */
+  .ds-input,
+  .ds-select,
+  .ds-textarea {
+    @apply w-full px-3 py-2 rounded-lg border border-neutral-medium bg-white text-neutral-dark placeholder:text-neutral-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
+  }
 
-.ds-help {
-  @apply text-sm text-neutral-medium;
-}
+  .ds-help {
+    @apply text-sm text-neutral-medium;
+  }
 
-.ds-error {
-  @apply text-sm text-red-700;
-}
+  .ds-error {
+    @apply text-sm text-red-700;
+  }
 
-/* Estado de error para el control (se añade además de ds-input/ds-select/ds-textarea) */
-.ds-control-error {
-  @apply border-red-300 focus-visible:ring-red-500;
-}
+  /* Estado de error para el control (se añade además de ds-input/ds-select/ds-textarea) */
+  .ds-control-error {
+    @apply border-red-300 focus-visible:ring-red-500;
+  }
 
 
 
@@ -154,10 +152,71 @@
   .ds-nav-mobile-link {
     @apply px-4 md:px-6 py-3 text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary;
   }
+
+  /* === Ayuda === */
+
+  /* Botón pequeño reutilizable (para "Cerrar" en el popover) */
+  .ds-btn-sm {
+    @apply px-2 py-1 text-xs rounded-lg;
+  }
+
+  /* Label con icono de ayuda al lado (opcional) */
+  .ds-label-with-help {
+    @apply inline-flex items-center gap-1.5;
+  }
+
+  /* Icono de ayuda (ⓘ) */
+  .ds-help-i {
+    @apply inline-flex items-center justify-center select-none cursor-pointer;
+    @apply w-5 h-5 rounded-full;
+    @apply border border-neutral-medium bg-white;
+    @apply text-[13px] font-bold leading-none text-brand-primary;
+    @apply hover:bg-neutral-light;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
+  }
+
+  /* Toggle global: ocultos por defecto, visibles cuando el usuario lo activa */
+  .ds-help-i {
+    @apply hidden;
+  }
+
+  body.help-icons-on .ds-help-i {
+    @apply inline-flex;
+  }
+
+  /* label con ayuda */
+  .ds-label-with-help {
+    @apply inline-flex items-center gap-2;
+  }
+
+  /* Popover */
+  .ds-popover {
+    @apply fixed max-w-xs;
+    @apply bg-white border border-neutral-medium rounded-xl;
+    @apply p-3 text-sm text-neutral-dark leading-relaxed;
+    z-index: 1000;
+    /* mejor directo: evita depender de classes arbitrarias */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    /* sombra consistente en todos los builds */
+  }
+
+  .ds-popover-title {
+    @apply font-semibold mb-1;
+  }
+
+  .ds-popover-text {
+    @apply text-sm;
+  }
+
+  .ds-popover-actions {
+    @apply mt-2 flex justify-end gap-1;
+  }
+
 }
 
 
 @layer base {
+
   /* Cursor pointer para botones */
   button {
     @apply cursor-pointer;
@@ -168,20 +227,23 @@
     @apply font-sans text-neutral-dark;
   }
 
-  h1, .h1 {
+  h1,
+  .h1 {
     @apply font-display text-4xl font-bold text-neutral-dark;
   }
 
-  h2, .h2 {
+  h2,
+  .h2 {
     @apply font-display text-3xl font-semibold text-neutral-dark;
   }
 
-  h3, .h3 {
+  h3,
+  .h3 {
     @apply font-display text-2xl font-semibold text-neutral-dark;
   }
 
-  p, .p {
+  p,
+  .p {
     @apply text-base leading-relaxed text-neutral-dark;
   }
 }
-

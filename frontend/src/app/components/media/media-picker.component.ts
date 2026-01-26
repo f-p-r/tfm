@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { input, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -37,6 +37,10 @@ import { MediaItem, MediaScopeType } from './media.models';
 
         @if (errorMessage()) {
           <div class="text-sm text-red-600">{{ errorMessage() }}</div>
+        }
+
+        @if (displayedInfo()) {
+          <div class="text-sm text-green-700">{{ displayedInfo() }}</div>
         }
 
         @if (loading()) {
@@ -88,8 +92,12 @@ export class MediaPickerComponent {
   readonly pageSize = input(60);
   readonly allowUpload = input(true);
   readonly mode = input<'single' | 'multi'>('single');
+  readonly infoMessage = input<string | null>(null);
+  readonly showInfo = signal(true);
+  readonly displayedInfo = computed(() => this.showInfo() && this.modalItem() === null ? this.infoMessage() : null);
 
   readonly close = output<void>();
+  readonly interact = output<void>();
 
   readonly pick = output<MediaItem>();
   readonly uploadSuccess = output<MediaItem>();
@@ -102,6 +110,13 @@ export class MediaPickerComponent {
   readonly modalItem = signal<MediaItem | null>(null);
 
   constructor() {
+    effect(() => {
+      const msg = this.infoMessage();
+      if (msg) {
+        this.showInfo.set(true);
+      }
+    });
+
     effect(() => {
       const scopeType = this.scopeType();
       const scopeId = this.scopeId();
@@ -116,6 +131,7 @@ export class MediaPickerComponent {
   }
 
   openFilePicker(el: HTMLInputElement): void {
+    this.onInteract();
     el.click();
   }
 
@@ -131,6 +147,12 @@ export class MediaPickerComponent {
   }
 
   openImageModal(item: MediaItem): void {
+    this.onInteract();
+    if (this.mode() === 'single') {
+      this.emitPick(item);
+      this.onClose();
+      return;
+    }
     this.modalItem.set(item);
   }
 
@@ -141,12 +163,17 @@ export class MediaPickerComponent {
   confirmPick(item: MediaItem): void {
     this.pick.emit(item);
     this.closeImageModal();
-    this.onClose();
   }
 
   onClose(): void {
     this.closeImageModal();
+    this.showInfo.set(false);
     this.close.emit();
+  }
+
+  onInteract(): void {
+    this.showInfo.set(false);
+    this.interact.emit();
   }
 
   private loadMedia(scopeType: MediaScopeType, scopeId: number | null, includeGlobal: boolean | null, pageSize: number | null): void {

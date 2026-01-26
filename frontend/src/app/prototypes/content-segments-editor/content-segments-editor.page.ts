@@ -173,8 +173,9 @@ const DEFAULT_CAROUSEL_HEIGHT = 300; // Altura por defecto del carrusel en px
                               [scopeId]="1"
                               [includeGlobal]="true"
                               [mode]="'multi'"
-                              (pick)="onCarouselMediaPicked($event); toggleCarouselPicker()"
-                              (uploadSuccess)="onCarouselMediaPicked($event); toggleCarouselPicker()"
+                              [infoMessage]="pickerInfo()"
+                              (pick)="onCarouselMediaPicked($event)"
+                              (uploadSuccess)="onCarouselMediaPicked($event)"
                               (error)="onMediaPickerError($event)"
                               (close)="toggleCarouselPicker()"
                             ></app-media-picker>
@@ -227,6 +228,7 @@ export class ContentSegmentsEditorPage {
   readonly richPickerOpen = signal(false);
   readonly carouselPickerOpen = signal(false);
   readonly pickerError = signal<string | null>(null);
+  readonly pickerInfo = signal<string | null>(null);
   // Estado principal de contenido en memoria
   readonly content = signal<ContentDTO>({
     schemaVersion: 1,
@@ -421,18 +423,21 @@ export class ContentSegmentsEditorPage {
 
   toggleRichPicker(): void {
     this.pickerError.set(null);
+    this.pickerInfo.set(null);
     this.richPickerOpen.set(!this.richPickerOpen());
     this.carouselPickerOpen.set(false);
   }
 
   toggleCarouselPicker(): void {
     this.pickerError.set(null);
+    this.pickerInfo.set(null);
     this.carouselPickerOpen.set(!this.carouselPickerOpen());
     this.richPickerOpen.set(false);
   }
 
   onMediaPickerError(message: string): void {
     this.pickerError.set(message);
+    this.pickerInfo.set(null);
   }
 
   onRichMediaPicked(item: MediaItem): void {
@@ -442,6 +447,7 @@ export class ContentSegmentsEditorPage {
     this.editingDraft.set({ ...draft, image, imageUrl: image.url, imageMediaId: image.mediaId, imageAlt: image.alt });
     this.richPickerOpen.set(false);
     this.pickerError.set(null);
+    this.pickerInfo.set(null);
   }
 
   onCarouselMediaPicked(item: MediaItem): void {
@@ -450,6 +456,7 @@ export class ContentSegmentsEditorPage {
     const images = [...draft.images, { url: item.url, mediaId: item.id }];
     this.editingDraft.set({ ...draft, images });
     this.pickerError.set(null);
+    this.pickerInfo.set(`Imagen ${this.fileName(item.url)} añadida`);
   }
 
   removeImage(): void {

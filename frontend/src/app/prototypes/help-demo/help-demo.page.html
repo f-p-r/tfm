@@ -1,0 +1,131 @@
+<app-navbar mode="portal"></app-navbar>
+
+<div class="p-6 md:p-10 max-w-2xl mx-auto">
+  <h1 class="h1 mb-6">Demo Sistema de Ayuda</h1>
+  <p class="p mb-8">
+    Este formulario demuestra el sistema de ayuda contextual. En desktop, pasa el ratón sobre
+    los campos o usa Tab para ver la ayuda. En móvil, activa los iconos ⓘ desde el panel de
+    ayuda (botón "?" en la barra de navegación).
+  </p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Campo Email -->
+    <div class="ds-field">
+      <div class="ds-label-with-help">
+        <label for="email" class="ds-label">Email</label>
+        <app-help-i
+          title="Email"
+          text="Introduce tu dirección de correo electrónico. Debe ser válida y será usada para notificaciones."
+        />
+      </div>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        class="ds-input"
+        [class.ds-control-error]="email.invalid && email.touched"
+        helpHover
+        helpTitle="Email"
+        helpText="Introduce tu dirección de correo electrónico. Debe ser válida y será usada para notificaciones."
+        placeholder="tu@email.com"
+      />
+      @if (email.invalid && email.touched) {
+        <p class="ds-error">
+          @if (email.errors?.['required']) {
+            El email es obligatorio.
+          } @else if (email.errors?.['email']) {
+            Introduce un email válido.
+          }
+        </p>
+      }
+    </div>
+
+    <!-- Campo Privacy (checkbox) -->
+    <div class="ds-field">
+      <div class="flex items-start gap-3">
+        <input
+          id="privacy"
+          type="checkbox"
+          formControlName="privacy"
+          class="mt-1 w-4 h-4 text-brand-primary border-neutral-medium rounded focus:ring-2 focus:ring-brand-primary"
+          [class.border-red-500]="privacy.invalid && privacy.touched"
+          helpHover
+          helpTitle="Privacidad"
+          helpText="Debes aceptar la política de privacidad para continuar. Tus datos serán tratados conforme a la normativa vigente."
+        />
+        <div class="flex-1">
+          <div class="ds-label-with-help">
+            <label for="privacy" class="ds-label cursor-pointer">
+              Acepto la política de privacidad
+            </label>
+            <app-help-i
+              title="Privacidad"
+              text="Debes aceptar la política de privacidad para continuar. Tus datos serán tratados conforme a la normativa vigente."
+            />
+          </div>
+          @if (privacy.invalid && privacy.touched) {
+            <p class="ds-error">
+              Debes aceptar la política de privacidad.
+            </p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Campo Description (textarea) -->
+    <div class="ds-field">
+      <div class="ds-label-with-help">
+        <label for="description" class="ds-label">Descripción</label>
+        <app-help-i
+          title="Descripción"
+          text="Escribe una descripción detallada de tu solicitud. Mínimo 10 caracteres para proporcionar contexto suficiente."
+        />
+      </div>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="ds-textarea"
+        [class.ds-control-error]="description.invalid && description.touched"
+        helpHover
+        helpTitle="Descripción"
+        helpText="Escribe una descripción detallada de tu solicitud. Mínimo 10 caracteres para proporcionar contexto suficiente."
+        rows="4"
+        placeholder="Describe tu solicitud aquí..."
+      ></textarea>
+      <p class="ds-help">Mínimo 10 caracteres.</p>
+      @if (description.invalid && description.touched) {
+        <p class="ds-error">
+          @if (description.errors?.['required']) {
+            La descripción es obligatoria.
+          } @else if (description.errors?.['minlength']) {
+            La descripción debe tener al menos 10 caracteres (actual: {{ description.value?.length || 0 }}).
+          }
+        </p>
+      }
+    </div>
+
+    <!-- Botones -->
+    <div class="flex gap-4">
+      <button type="submit" class="ds-btn ds-btn-primary">
+        Enviar
+      </button>
+      <button type="button" class="ds-btn ds-btn-secondary" (click)="form.reset()" helpHover [helpTitle]="'Guardar'" [helpText]="'Guarda los cambios del formulario actual.'">
+        Limpiar
+      </button>
+        <app-help-i
+        title="Guardar"
+        text="Guarda los cambios del formulario actual."
+      ></app-help-i>
+    </div>
+  </form>
+
+  <!-- Estado del formulario (debug) -->
+  <div class="mt-8 p-4 bg-neutral-light rounded-lg text-sm">
+    <p class="font-semibold mb-2">Estado del formulario:</p>
+    <ul class="space-y-1 text-neutral-dark">
+      <li><strong>Válido:</strong> {{ form.valid ? 'Sí' : 'No' }}</li>
+      <li><strong>Touched:</strong> {{ form.touched ? 'Sí' : 'No' }}</li>
+      <li><strong>Pristine:</strong> {{ form.pristine ? 'Sí' : 'No' }}</li>
+    </ul>
+  </div>
+</div>

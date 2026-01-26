@@ -23,7 +23,7 @@
       <a routerLink="/associations" class="ds-nav-link">Asociaciones</a>
       <a routerLink="/events" class="ds-nav-link">Eventos</a>
       <a routerLink="/news" class="ds-nav-link">Noticias</a>
-      <a routerLink="/help" class="ds-nav-link">?</a>
+      <button type="button" class="ds-nav-link" (click)="openHelp()" aria-label="Ayuda">?</button>
     </div>
 
     <!-- Acciones -->
@@ -68,7 +68,7 @@
         <a routerLink="/associations" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Asociaciones</a>
         <a routerLink="/events" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Eventos</a>
         <a routerLink="/news" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Noticias</a>
-        <a routerLink="/help" class="ds-nav-mobile-link" (click)="closeMobileMenu()">?</a>
+        <button type="button" class="ds-nav-mobile-link text-left" (click)="openHelp()">?</button>
 
         <!-- Menú de usuario (mobile) -->
         <app-user-menu variant="mobile"></app-user-menu>
@@ -76,3 +76,5 @@
     </div>
   }
 </nav>
+
+<app-help-panel [isOpen]="helpOpen()" (close)="closeHelp()" />

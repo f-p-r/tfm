@@ -4,10 +4,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { GamesStore } from '../../core/games/games.store';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
+import { HelpPanelComponent } from '../../shared/help/help-panel/help-panel.component';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterModule, UserMenuComponent],
+  imports: [RouterModule, UserMenuComponent, HelpPanelComponent],
   templateUrl: './navbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -18,6 +19,7 @@ export class NavbarComponent {
 
   readonly mobileMenuOpen = signal(false);
   readonly gamesQuery = signal('');
+  readonly helpOpen = signal(false);
 
   private readonly router = inject(Router);
   readonly gamesStore = inject(GamesStore);
@@ -77,5 +79,14 @@ export class NavbarComponent {
       this.router.navigateByUrl(`/games/${slug}`);
     }
     this.closeMobileMenu();
+  }
+
+  openHelp(): void {
+    this.helpOpen.set(true);
+    this.closeMobileMenu();
+  }
+
+  closeHelp(): void {
+    this.helpOpen.set(false);
   }
 }

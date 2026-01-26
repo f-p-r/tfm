@@ -1,0 +1,6 @@
+/* Label con ayuda - layout horizontal */
+.ds-label-with-help {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

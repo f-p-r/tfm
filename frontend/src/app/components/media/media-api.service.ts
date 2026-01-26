@@ -1,3 +1,14 @@
+/**
+ * Servicio para gestionar la API de medios (imágenes y archivos).
+ *
+ * Proporciona métodos para:
+ * - Listar medios filtrados por alcance (association, game, global)
+ * - Subir nuevos archivos multimedia
+ * - Normalizar URLs relativas a absolutas según el entorno
+ *
+ * El servicio maneja automáticamente la conversión de URLs relativas del backend
+ * a URLs absolutas basadas en environment.apiBaseUrl.
+ */
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
