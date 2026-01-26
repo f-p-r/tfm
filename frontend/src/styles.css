@@ -16,10 +16,70 @@
 }
 
 @layer utilities {
-  /* Ejemplo inicial de botón */
-  .custom-btn {
-    @apply px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-secondary transition;
+  /* === Botones === */
+
+  /* Botón, definición de tamaños estándar*/
+  .ds-btn {
+    @apply px-3 py-1.5 rounded-lg;
   }
+
+  /* Botón primario - acción principal */
+  .ds-btn-primary {
+    @apply  border border-brand-primary bg-brand-primary text-white hover:bg-brand-accent hover:border-brand-accent transition;
+  }
+
+  /* Botón secundario - acción alternativa */
+  .ds-btn-secondary {
+    @apply border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition;
+  }
+
+  /* Botón de peligro - acciones destructivas */
+  .ds-btn-danger {
+    @apply border border-red-200 text-red-700 hover:bg-red-50 transition;
+  }
+
+  /* Botón deshabilitado */
+  .ds-btn-disabled {
+    @apply border border-neutral-medium bg-neutral-medium text-neutral-dark cursor-not-allowed opacity-60;
+  }
+
+  /* Botón de selección de imagen en grid */
+  .ds-btn-img-grid {
+    @apply border border-neutral-200 rounded-lg overflow-hidden bg-white hover:ring-2 hover:ring-brand-primary transition;
+  }
+
+  /* === Formularios / Inputs === */
+.ds-field {
+  @apply flex flex-col gap-2;
+}
+
+.ds-label {
+  @apply font-semibold text-neutral-dark;
+}
+
+/* Base común para controles */
+.ds-input,
+.ds-select,
+.ds-textarea {
+  @apply w-full px-3 py-2 rounded-lg border border-neutral-medium bg-white text-neutral-dark
+    placeholder:text-neutral-medium
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
+}
+
+.ds-help {
+  @apply text-sm text-neutral-medium;
+}
+
+.ds-error {
+  @apply text-sm text-red-700;
+}
+
+/* Estado de error para el control (se añade además de ds-input/ds-select/ds-textarea) */
+.ds-control-error {
+  @apply border-red-300 focus-visible:ring-red-500;
+}
+
+
 
   /* === Layout y Contenedores === */
 

@@ -9,9 +9,9 @@ import { quillModules } from '../quill.config';
 import { MediaPickerComponent } from '../../components/media/media-picker.component';
 import { MediaItem } from '../../components/media/media.models';
 
-// URL fija para imágenes del prototipo
-const IMAGE_URL = 'https://lawebdeperez.es/frameworks_a3/img/landing1.jpg';
+// Constantes de configuración
 const PREVIEW_KEY = 'contentSegmentsPreview:current';
+const DEFAULT_CAROUSEL_HEIGHT = 300; // Altura por defecto del carrusel en px
 
 @Component({
   selector: 'app-content-segments-editor-page',
@@ -29,9 +29,9 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
 
           <section>
             <div class="flex flex-wrap items-center gap-3">
-              <button type="button" (click)="addRich()" class="px-4 py-2 rounded-lg bg-brand-primary text-white hover:bg-brand-accent transition">Añadir segmento texto/imagen</button>
-              <button type="button" (click)="addCarousel()" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition">Añadir carrusel</button>
-              <button type="button" (click)="openPreview()" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition">Ver</button>
+              <button type="button" (click)="addRich()" class="ds-btn ds-btn-primary">Añadir segmento texto/imagen</button>
+              <button type="button" (click)="addCarousel()" class="ds-btn ds-btn-primary">Añadir carrusel</button>
+              <button type="button" (click)="openPreview()" class="ds-btn ds-btn-secondary">Ver</button>
             </div>
           </section>
 
@@ -39,17 +39,17 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
             @for (seg of segments(); track seg.id) {
               <article class="border border-neutral-medium rounded-lg p-4 bg-white shadow-sm">
                 <div class="flex flex-wrap items-center gap-2 justify-between">
-                  <div class="font-display font-semibold text-brand-primary">#{{ seg.order }} · {{ seg.type }}</div>
+                  <div class="font-display font-semibold text-brand-primary">#{{ seg.order }} · @if (seg.type === 'rich') { Texto/Imagen } @else if (seg.type === 'carousel') { Carrusel }</div>
                   @if (editingId() === seg.id) {
                     <div class="flex flex-wrap items-center gap-2">
-                      <button type="button" class="px-4 py-2 rounded-lg bg-brand-primary text-white hover:bg-brand-accent transition" (click)="saveEdit()">Guardar</button>
-                      <button type="button" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition" (click)="discardEdit()">Descartar</button>
+                      <button type="button" class="ds-btn ds-btn-primary" (click)="saveEdit()">Guardar</button>
+                      <button type="button" class="ds-btn ds-btn-secondary" (click)="discardEdit()">Descartar</button>
                     </div>
                   } @else {
                     <div class="flex flex-wrap items-center gap-2">
-                      <button type="button" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition" (click)="moveUp(seg.id)">↑</button>
-                      <button type="button" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition" (click)="moveDown(seg.id)">↓</button>
-                      <button type="button" class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition" (click)="startEdit(seg.id)">Editar</button>
+                      <button type="button" class="ds-btn ds-btn-secondary" (click)="moveUp(seg.id)">↑</button>
+                      <button type="button" class="ds-btn ds-btn-secondary" (click)="moveDown(seg.id)">↓</button>
+                      <button type="button" class="ds-btn ds-btn-secondary" (click)="startEdit(seg.id)">Editar</button>
                       <button type="button" class="px-3 py-1.5 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 transition" (click)="remove(seg.id)">Eliminar</button>
                     </div>
                   }
@@ -60,17 +60,17 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                     <div class="mt-4 border-t border-neutral-medium pt-4 grid gap-4">
                       @if (draft.type === 'rich') {
                         <div class="grid md:grid-cols-2 gap-4">
-                          <label class="grid gap-1">
-                            <span class="text-sm text-neutral-dark font-semibold">Posicionamiento</span>
-                            <select class="border border-neutral-medium rounded px-3 py-2 focus:ring-2 focus:ring-brand-primary" [value]="draft.imagePlacement ?? 'top'" (change)="onRichPlacementChange(draft.id, $event)">
-                              <option value="top">top</option>
-                              <option value="left">left</option>
-                              <option value="right">right</option>
+                          <div class="ds-field">
+                            <label class="ds-label">Posicionamiento</label>
+                            <select class="ds-select" [value]="draft.imagePlacement ?? 'top'" (change)="onRichPlacementChange(draft.id, $event)">
+                              <option value="top">Arriba</option>
+                              <option value="left">Izquierda</option>
+                              <option value="right">Derecha</option>
                             </select>
-                          </label>
-                          <label class="grid gap-1">
-                            <span class="text-sm text-neutral-dark font-semibold">Ancho (%)</span>
-                            <select class="border border-neutral-medium rounded px-3 py-2 focus:ring-2 focus:ring-brand-primary" [value]="draft.imageWidth ?? 50" (change)="onRichWidthChange(draft.id, $event)">
+                          </div>
+                          <div class="ds-field">
+                            <label class="ds-label">Ancho (%)</label>
+                            <select class="ds-select" [value]="draft.imageWidth ?? 50" (change)="onRichWidthChange(draft.id, $event)">
                               <option [value]="10">10</option>
                               <option [value]="25">25</option>
                               <option [value]="33">33</option>
@@ -79,8 +79,8 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                               <option [value]="75">75</option>
                               <option [value]="100">100</option>
                             </select>
-                          </label>
-                          <div class="grid gap-2">
+                          </div>
+                          <div class="grid gap-2 md:col-span-2">
                             @if (draft.image?.url ?? draft.imageUrl) {
                               <div class="border border-neutral-medium rounded-lg p-3 bg-neutral-light flex flex-col items-center gap-2 cursor-pointer hover:bg-white transition" (click)="toggleRichPicker()">
                                 <img [src]="draft.image?.url ?? draft.imageUrl" alt="" class="w-32 h-28 object-cover rounded" />
@@ -89,7 +89,7 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                             } @else {
                               <button
                                 type="button"
-                                class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition"
+                                class="ds-btn ds-btn-secondary w-fit"
                                 (click)="toggleRichPicker()"
                               >
                                 Añadir imagen
@@ -97,17 +97,16 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                             }
 
                             @if (richPickerOpen()) {
-                              <div class="border border-neutral-medium rounded-lg p-3 bg-neutral-light space-y-3">
-                                <app-media-picker
-                                  [scopeType]="'association'"
-                                  [scopeId]="1"
-                                  [includeGlobal]="true"
-                                  [mode]="'single'"
-                                  (pick)="onRichMediaPicked($event)"
-                                  (uploadSuccess)="onRichMediaPicked($event)"
-                                  (error)="onMediaPickerError($event)"
-                                ></app-media-picker>
-                              </div>
+                              <app-media-picker
+                                [scopeType]="'association'"
+                                [scopeId]="1"
+                                [includeGlobal]="true"
+                                [mode]="'single'"
+                                (pick)="onRichMediaPicked($event); toggleRichPicker()"
+                                (uploadSuccess)="onRichMediaPicked($event); toggleRichPicker()"
+                                (error)="onMediaPickerError($event)"
+                                (close)="toggleRichPicker()"
+                              ></app-media-picker>
                             }
 
                             @if (draft.image?.url ?? draft.imageUrl) {
@@ -124,7 +123,7 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                           </div>
                         </div>
                         <div class="grid gap-1">
-                          <span class="text-sm text-neutral-dark font-semibold">textHtml</span>
+                          <span class="text-sm text-neutral-dark font-semibold">Texto</span>
                           <div class="quill-shell">
                             <quill-editor
                               class="quill-editor-block"
@@ -137,43 +136,52 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
                       }
 
                       @if (draft.type === 'carousel') {
-                        <div class="grid md:grid-cols-2 gap-4">
-                          <label class="grid gap-1">
-                            <span class="text-sm text-neutral-dark font-semibold">numImages (1..6)</span>
-                            <input class="border border-neutral-medium rounded px-3 py-2 focus:ring-2 focus:ring-brand-primary" type="number" min="1" max="6" [value]="draft.images.length" (input)="onCarouselNumInput(draft.id, $event)" />
-                          </label>
-                          <label class="grid gap-1">
-                            <span class="text-sm text-neutral-dark font-semibold">maxHeightPx (opcional)</span>
-                            <input class="border border-neutral-medium rounded px-3 py-2 focus:ring-2 focus:ring-brand-primary" type="number" [value]="draft.maxHeightPx ?? ''" (input)="onCarouselMaxHeightChange(draft.id, $event)" />
-                          </label>
+                        <div class="grid md:grid-cols-3 gap-4">
+                          <div class="ds-field">
+                            <label class="ds-label">Altura (px)</label>
+                            <input class="ds-input" type="number" min="1" [value]="draft.height" (input)="onCarouselHeightChange(draft.id, $event)" />
+                          </div>
+                          <div class="ds-field">
+                            <label class="ds-label">Imágenes visibles</label>
+                            <select class="ds-select" [value]="draft.imagesPerView" (change)="onCarouselImagesPerViewChange(draft.id, $event)">
+                              <option [value]="1">1</option>
+                              <option [value]="2">2</option>
+                              <option [value]="3">3</option>
+                              <option [value]="4">4</option>
+                              <option [value]="5">5</option>
+                              <option [value]="6">6</option>
+                            </select>
+                          </div>
+                          <div class="ds-field">
+                            <label class="ds-label">Retardo (s)</label>
+                            <input class="ds-input" type="number" min="0" placeholder="0 desactiva el autoavance" (input)="onCarouselDelayChange(draft.id, $event)" />
+                          </div>
                         </div>
 
                         <div class="border border-neutral-medium rounded-lg p-3 bg-neutral-light space-y-3">
-                          <div class="flex flex-wrap items-center justify-between gap-2">
-                            <div class="text-sm font-semibold text-neutral-dark">Imagenes del carrusel</div>
-                            <button
-                              type="button"
-                              class="px-4 py-2 rounded-lg border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition"
-                              (click)="toggleCarouselPicker()"
-                            >
-                              Añadir imagen
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            class="ds-btn ds-btn-secondary w-fit"
+                            (click)="toggleCarouselPicker()"
+                          >
+                            Añadir imagen
+                          </button>
 
                           @if (carouselPickerOpen()) {
                             <app-media-picker
-                              [scopeType]="'global'"
-                              [scopeId]="null"
+                              [scopeType]="'association'"
+                              [scopeId]="1"
                               [includeGlobal]="true"
                               [mode]="'multi'"
-                              (pick)="onCarouselMediaPicked($event)"
-                              (uploadSuccess)="onCarouselMediaPicked($event)"
+                              (pick)="onCarouselMediaPicked($event); toggleCarouselPicker()"
+                              (uploadSuccess)="onCarouselMediaPicked($event); toggleCarouselPicker()"
                               (error)="onMediaPickerError($event)"
+                              (close)="toggleCarouselPicker()"
                             ></app-media-picker>
                           }
 
                           @if (draft.images.length) {
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
                               @for (img of draft.images; track $index) {
                                 <div class="border border-neutral-medium rounded-lg overflow-hidden bg-white flex flex-col">
                                   <img [src]="img.url" alt="" class="w-full h-28 object-cover" />
@@ -326,21 +334,30 @@ export class ContentSegmentsEditorPage {
       id,
       order,
       type: 'rich',
-      textHtml: '<h3 class="text-xl font-semibold mb-2">Nuevo segmento rich</h3><p class="text-gray-700">Texto de ejemplo.</p>',
+      textHtml: '',
       imagePlacement: 'top',
       imageWidth: 50,
       // sin imagen por defecto
     };
     this.content.set({ ...c, segments: [...c.segments, seg] });
+    this.startEdit(id);
   }
 
   addCarousel(): void {
     const c = this.content();
     const id = this.newId('carousel');
     const order = c.segments.length + 1;
-    const images = Array.from({ length: 3 }, (_, i) => ({ url: IMAGE_URL, alt: `Slide ${i + 1}` }));
-    const seg: CarouselSegmentDTO = { id, order, type: 'carousel', images };
+    const seg: CarouselSegmentDTO = {
+      id,
+      order,
+      type: 'carousel',
+      images: [],
+      height: DEFAULT_CAROUSEL_HEIGHT,
+      imagesPerView: 3,
+      delaySeconds: 0
+    };
     this.content.set({ ...c, segments: [...c.segments, seg] });
+    this.startEdit(id);
   }
 
   // Edición RICH
@@ -362,34 +379,28 @@ export class ContentSegmentsEditorPage {
   }
 
   // Edición CAROUSEL
-  onCarouselNum(id: string, n: number): void {
-    const draft = this.currentCarouselDraft();
-    if (!draft || draft.id !== id) return;
-    const count = Math.max(1, Math.min(6, Math.floor(n)));
-    const next = [...(draft.images ?? [])];
-
-    if (next.length > count) {
-      next.length = count;
-    } else {
-      while (next.length < count) {
-        const idx = next.length + 1;
-        next.push({ url: IMAGE_URL, alt: `Slide ${idx}` });
-      }
-    }
-
-    this.onCarouselChange(id, { images: next });
-  }
-
-  onCarouselNumInput(id: string, ev: Event): void {
-    const raw = (ev.target as HTMLInputElement | null)?.value ?? '1';
-    const n = Number(raw);
-    this.onCarouselNum(id, n);
-  }
-
-  onCarouselMaxHeightChange(id: string, ev: Event): void {
+  onCarouselHeightChange(id: string, ev: Event): void {
     const raw = (ev.target as HTMLInputElement | null)?.value ?? '';
     const n = Number(raw);
-    this.onCarouselChange(id, { maxHeightPx: isNaN(n) ? undefined : n });
+    if (!isNaN(n) && n > 0) {
+      this.onCarouselChange(id, { height: n });
+    }
+  }
+
+  onCarouselImagesPerViewChange(id: string, ev: Event): void {
+    const raw = (ev.target as HTMLSelectElement | null)?.value ?? '';
+    const n = Number(raw);
+    if (!isNaN(n) && n >= 1 && n <= 6) {
+      this.onCarouselChange(id, { imagesPerView: n });
+    }
+  }
+
+  onCarouselDelayChange(id: string, ev: Event): void {
+    const raw = (ev.target as HTMLInputElement | null)?.value ?? '0';
+    const n = Number(raw);
+    if (!isNaN(n) && n >= 0) {
+      this.onCarouselChange(id, { delaySeconds: n });
+    }
   }
 
   onCarouselChange(id: string, patch: Partial<CarouselSegmentDTO>): void {

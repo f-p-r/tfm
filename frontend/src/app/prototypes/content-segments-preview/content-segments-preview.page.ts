@@ -16,7 +16,7 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
           <p class="text-xs uppercase tracking-widest text-gray-500">Prototipo</p>
           <h1 class="text-3xl font-semibold text-gray-900 mt-2">contentSegmentsPreview</h1>
         </div>
-        <a class="px-3 py-2 rounded bg-gray-900 text-white hover:bg-black" href="/prototypes/content-segments-editor">Volver al editor</a>
+        <button type="button" class="ds-btn ds-btn-secondary" (click)="closeWindow()">Cerrar</button>
       </header>
 
       @if (content; as c) {
@@ -33,6 +33,10 @@ export class ContentSegmentsPreviewPage {
 
   constructor() {
     this.content = this.load();
+  }
+
+  closeWindow(): void {
+    window.close();
   }
 
   private load(): ContentDTO | null {

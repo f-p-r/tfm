@@ -10,66 +10,71 @@ import { MediaItem, MediaScopeType } from './media.models';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <section class="space-y-3">
-      <div class="flex items-center justify-between gap-3">
-        <div class="text-sm font-semibold text-neutral-800">Seleccionar imagen</div>
-        @if (allowUpload()) {
-          <div class="flex items-center gap-2">
-            @if (uploading()) {
-              <span class="text-sm text-neutral-600">Subiendo...</span>
+    <div class="fixed inset-0 z-40 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="onClose()"></div>
+
+      <div class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col gap-4 p-4" (click)="$event.stopPropagation()">
+        <div class="flex items-center justify-between gap-3">
+          <h3 class="text-lg font-semibold text-neutral-800">Seleccionar imagen</h3>
+          <div class="flex items-center gap-2 flex-wrap justify-end">
+            @if (allowUpload()) {
+              @if (uploading()) {
+                <span class="text-sm text-neutral-600">Subiendo...</span>
+              }
+              <button
+                type="button"
+                class="ds-btn ds-btn-secondary"
+                (click)="openFilePicker(fileInput)"
+                [disabled]="uploading()"
+              >
+                Subir imagen
+              </button>
+              <input #fileInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, fileInput)" />
             }
-            <button
-              type="button"
-              class="px-3 py-1.5 rounded-lg border border-neutral-300 text-neutral-800 hover:bg-neutral-100 transition"
-              (click)="openFilePicker(fileInput)"
-              [disabled]="uploading()"
-            >
-              Subir imagen
-            </button>
-            <input #fileInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, fileInput)" />
+            <button type="button" class="ds-btn ds-btn-secondary" (click)="onClose()">Cerrar</button>
+          </div>
+        </div>
+
+        @if (errorMessage()) {
+          <div class="text-sm text-red-600">{{ errorMessage() }}</div>
+        }
+
+        @if (loading()) {
+          <div class="text-sm text-neutral-700">Cargando imagenes...</div>
+        } @else {
+          <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
+            @for (item of items(); track item.id) {
+              <button
+                type="button"
+                class="ds-btn-img-grid"
+                (click)="openImageModal(item)"
+              >
+                <img [src]="item.url" alt="" class="w-full h-28 object-cover" />
+                <div class="p-2 text-xs text-neutral-700 truncate">{{ fileName(item.url) }}</div>
+              </button>
+            }
+          </div>
+          @if (!items().length && !errorMessage()) {
+            <div class="text-sm text-neutral-700">No hay imágenes disponibles.</div>
+          }
+        }
+
+        @if (modalItem()) {
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeImageModal()"></div>
+            <div class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col gap-4 p-4">
+              <div class="flex-1 flex items-center justify-center overflow-auto">
+                <img [src]="modalItem()?.url" alt="" class="max-h-[70vh] max-w-full object-contain" />
+              </div>
+              <div class="flex items-center justify-center gap-16 pb-2">
+                <button type="button" class="ds-btn ds-btn-primary" (click)="confirmPick(modalItem()!)">Seleccionar</button>
+                <button type="button" class="ds-btn ds-btn-secondary" (click)="closeImageModal()">Cancelar</button>
+              </div>
+            </div>
           </div>
         }
       </div>
-
-      @if (errorMessage()) {
-        <div class="text-sm text-red-600">{{ errorMessage() }}</div>
-      }
-
-      @if (loading()) {
-        <div class="text-sm text-neutral-700">Cargando imagenes...</div>
-      } @else {
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-          @for (item of items(); track item.id) {
-            <button
-              type="button"
-              class="border border-neutral-200 rounded-lg overflow-hidden bg-white hover:ring-2 hover:ring-brand-primary transition"
-              (click)="openImageModal(item)"
-            >
-              <img [src]="item.url" alt="" class="w-full h-28 object-cover" />
-              <div class="p-2 text-xs text-neutral-700 truncate">{{ fileName(item.url) }}</div>
-            </button>
-          }
-        </div>
-        @if (!items().length && !errorMessage()) {
-          <div class="text-sm text-neutral-700">No hay imágenes disponibles.</div>
-        }
-      }
-
-      @if (modalItem()) {
-        <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeImageModal()"></div>
-          <div class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col gap-4 p-4">
-            <div class="flex-1 flex items-center justify-center overflow-auto">
-              <img [src]="modalItem()?.url" alt="" class="max-h-[70vh] max-w-full object-contain" />
-            </div>
-            <div class="flex items-center justify-center gap-16 pb-2">
-              <button type="button" class="px-5 py-2.5 rounded-lg bg-brand-primary text-white hover:bg-brand-accent transition" (click)="confirmPick(modalItem()!)">Seleccionar</button>
-              <button type="button" class="px-5 py-2.5 rounded-lg border border-neutral-300 text-neutral-800 hover:bg-neutral-100 transition" (click)="closeImageModal()">Cancelar</button>
-            </div>
-          </div>
-        </div>
-      }
-    </section>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -83,6 +88,8 @@ export class MediaPickerComponent {
   readonly pageSize = input(60);
   readonly allowUpload = input(true);
   readonly mode = input<'single' | 'multi'>('single');
+
+  readonly close = output<void>();
 
   readonly pick = output<MediaItem>();
   readonly uploadSuccess = output<MediaItem>();
@@ -134,6 +141,12 @@ export class MediaPickerComponent {
   confirmPick(item: MediaItem): void {
     this.pick.emit(item);
     this.closeImageModal();
+    this.onClose();
+  }
+
+  onClose(): void {
+    this.closeImageModal();
+    this.close.emit();
   }
 
   private loadMedia(scopeType: MediaScopeType, scopeId: number | null, includeGlobal: boolean | null, pageSize: number | null): void {

@@ -47,6 +47,8 @@ export class ContentSegmentsDemoPage {
           { url: IMAGE_URL, alt: 'Slide 2' },
           { url: IMAGE_URL, alt: 'Slide 3' },
         ],
+        height: 300,
+        imagesPerView: 3,
       },
       {
         id: 'seg-3',

@@ -41,5 +41,7 @@ export interface CarouselSegmentDTO {
   order: number;
   type: 'carousel';
   images: CarouselImageDTO[];
-  maxHeightPx?: number;
+  height: number; // Altura obligatoria en px
+  imagesPerView: number; // Número de imágenes visibles a la vez (1-6)
+  delaySeconds?: number; // Retardo en segundos para autoavanzar (0 o undefined = sin auto)
 }

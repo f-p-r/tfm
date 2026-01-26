@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { StyleguidePage } from './styleguide.page';
 
 describe('StyleguidePage', () => {
@@ -7,7 +8,7 @@ describe('StyleguidePage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StyleguidePage],
+      imports: [StyleguidePage, RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(StyleguidePage);
