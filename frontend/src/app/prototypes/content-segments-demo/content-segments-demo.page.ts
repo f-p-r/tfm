@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ContentRendererComponent } from './content-renderer.component';
-import { ContentDTO } from './content-segments.dto';
+import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
+import { ContentDTO } from '../../shared/content/content-segments.dto';
 
 const IMAGE_URL = 'https://lawebdeperez.es/frameworks_a3/img/landing1.jpg';
 

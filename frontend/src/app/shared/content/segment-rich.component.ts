@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RichImageDTO, RichSegmentDTO } from '../content-segments.dto';
+import { RichImageDTO, RichSegmentDTO } from './content-segments.dto';
 
 @Component({
   selector: 'app-segment-rich',
-  standalone: true,
   imports: [CommonModule],
   template: `
     @if (segment(); as seg) {

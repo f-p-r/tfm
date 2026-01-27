@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ContentDTO } from './content-segments.dto';
-import { SegmentRichComponent } from './components/segment-rich.component';
-import { SegmentCarouselComponent } from './components/segment-carousel.component';
+import { SegmentRichComponent } from './segment-rich.component';
+import { SegmentCarouselComponent } from './segment-carousel.component';
 
 @Component({
   selector: 'app-content-renderer',
-  standalone: true,
   imports: [CommonModule, SegmentRichComponent, SegmentCarouselComponent],
   template: `
     <section class="flex flex-col gap-8">

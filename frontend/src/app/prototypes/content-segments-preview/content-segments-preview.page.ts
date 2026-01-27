@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContentRendererComponent } from '../content-segments-demo/content-renderer.component';
-import { ContentDTO } from '../content-segments-demo/content-segments.dto';
+import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
+import { ContentDTO } from '../../shared/content/content-segments.dto';
 
 const PREVIEW_KEY = 'contentSegmentsPreview:current';
 
