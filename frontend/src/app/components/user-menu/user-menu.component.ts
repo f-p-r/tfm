@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, signal, inject, input, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, input, computed, ElementRef, effect } from '@angular/core';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs/operators';
+import { filter, fromEvent } from 'rxjs';
 import { AuthStore } from '../../core/auth/auth.store';
 import { AuthService } from '../../core/auth/auth.service';
 
@@ -19,6 +19,7 @@ export class UserMenuComponent {
   private readonly authStore = inject(AuthStore);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly elementRef = inject(ElementRef);
 
   // Exponer señales del store para el template
   readonly user = this.authStore.user;
@@ -38,6 +39,15 @@ export class UserMenuComponent {
         takeUntilDestroyed()
       )
       .subscribe(() => this.close());
+
+    // Cerrar dropdown al hacer clic fuera del componente
+    fromEvent<MouseEvent>(document, 'click')
+      .pipe(takeUntilDestroyed())
+      .subscribe((event) => {
+        if (this.isOpen() && !this.elementRef.nativeElement.contains(event.target)) {
+          this.close();
+        }
+      });
   }
 
   toggle(): void {

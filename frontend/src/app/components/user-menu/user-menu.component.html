@@ -16,8 +16,8 @@
       </button>
 
       @if (isOpen()) {
-        <div class="absolute right-0 mt-2 w-48 bg-white border border-neutral-medium rounded-md shadow-lg z-50">
-          <div class="py-1">
+        <div class="absolute right-0 w-auto bg-white border border-neutral-medium rounded-md shadow-lg z-50">
+          <div class="py-1 whitespace-nowrap">
             <a
               routerLink="/me"
               (click)="close()"
@@ -45,14 +45,33 @@
     <!-- No autenticado: mostrar "Entrar" -->
     <a routerLink="/login" class="ds-nav-mobile-link">Entrar</a>
   } @else {
-    <!-- Autenticado: mostrar opciones en línea -->
-    <a routerLink="/me" class="ds-nav-mobile-link">Mis datos</a>
+    <!-- Autenticado: mostrar dropdown igual que en desktop -->
     <button
       type="button"
-      (click)="logout()"
+      (click)="toggle()"
+      [attr.aria-expanded]="isOpen()"
       class="ds-nav-mobile-link w-full text-left"
     >
-      Cerrar sesión
+      {{ displayName() }}
     </button>
+
+    @if (isOpen()) {
+      <div class="border-t border-neutral-medium bg-neutral-light/30 inline-block w-auto">
+        <a
+          routerLink="/me"
+          (click)="close()"
+          class="block px-8 py-2 text-sm text-neutral-dark hover:bg-neutral-light transition-colors whitespace-nowrap"
+        >
+          Mis datos
+        </a>
+        <button
+          type="button"
+          (click)="logout()"
+          class="w-full text-left block px-8 py-2 text-sm text-neutral-dark hover:bg-neutral-light transition-colors whitespace-nowrap"
+        >
+          Cerrar sesión
+        </button>
+      </div>
+    }
   }
 }
