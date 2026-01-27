@@ -11,11 +11,35 @@ class RoleGrant extends Model
     /** @use HasFactory<\Database\Factories\RoleGrantFactory> */
     use HasFactory;
 
+    // Constantes de scope type
+    public const SCOPE_GLOBAL = 1;
+    public const SCOPE_ASSOCIATION = 2;
+    public const SCOPE_GAME = 3;
+
+    // Mapeo string -> integer
+    public const SCOPE_TYPES = [
+        'global' => self::SCOPE_GLOBAL,
+        'association' => self::SCOPE_ASSOCIATION,
+        'game' => self::SCOPE_GAME,
+    ];
+
+    // Mapeo integer -> string
+    public const SCOPE_TYPE_NAMES = [
+        self::SCOPE_GLOBAL => 'global',
+        self::SCOPE_ASSOCIATION => 'association',
+        self::SCOPE_GAME => 'game',
+    ];
+
     protected $fillable = [
         'user_id',
         'role_id',
         'scope_type',
         'scope_id',
+    ];
+
+    protected $casts = [
+        'scope_type' => 'integer',
+        'scope_id' => 'integer',
     ];
 
     /**
@@ -32,5 +56,21 @@ class RoleGrant extends Model
     public function role(): BelongsTo
     {
         return $this->belongsTo(\Spatie\Permission\Models\Role::class);
+    }
+
+    /**
+     * Obtener el nombre del scope type.
+     */
+    public function getScopeTypeName(): string
+    {
+        return self::SCOPE_TYPE_NAMES[$this->scope_type] ?? 'unknown';
+    }
+
+    /**
+     * Convertir string de scope type a entero.
+     */
+    public static function scopeTypeToInt(string $scopeType): ?int
+    {
+        return self::SCOPE_TYPES[strtolower($scopeType)] ?? null;
     }
 }

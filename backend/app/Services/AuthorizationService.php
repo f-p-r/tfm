@@ -18,7 +18,7 @@ class AuthorizationService
     public function userHasPermissionInScope(
         User $user,
         string $permission,
-        string $scopeType,
+        int $scopeType,
         ?int $scopeId
     ): bool {
         // Cargar roles y permisos evitando N+1: roles con sus permisos
@@ -29,14 +29,7 @@ class AuthorizationService
         foreach ($roleGrants as $grant) {
             $role = $grant->role;
 
-            // 1. Si es un grant global, aplica a cualquier scope
-            if ($grant->scope_type === 'global') {
-                if ($role->hasPermissionTo($permission)) {
-                    return true;
-                }
-            }
-
-            // 2. Si es un grant exactamente en el scope solicitado
+            // Verificar coincidencia EXACTA del scope (scope_type y scope_id)
             if ($grant->scope_type === $scopeType && $grant->scope_id === $scopeId) {
                 if ($role->hasPermissionTo($permission)) {
                     return true;
@@ -58,13 +51,13 @@ class AuthorizationService
     public function getScopeForContent(?int $associationId, ?int $gameId): array
     {
         if ($associationId) {
-            return ['scope_type' => 'association', 'scope_id' => $associationId];
+            return ['scope_type' => RoleGrant::SCOPE_ASSOCIATION, 'scope_id' => $associationId];
         }
 
         if ($gameId) {
-            return ['scope_type' => 'game', 'scope_id' => $gameId];
+            return ['scope_type' => RoleGrant::SCOPE_GAME, 'scope_id' => $gameId];
         }
 
-        return ['scope_type' => 'global', 'scope_id' => null];
+        return ['scope_type' => RoleGrant::SCOPE_GLOBAL, 'scope_id' => null];
     }
 }

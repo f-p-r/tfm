@@ -6,6 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AssociationController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\GameController;
+use App\Http\Controllers\AuthzController;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -19,6 +21,9 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('associations', AssociationController::class);
+
+    // Authorization query endpoint
+    Route::post('authz/query', [AuthzController::class, 'query']);
     Route::apiResource('tournaments', TournamentController::class);
 });
 
@@ -26,3 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('media', [MediaController::class, 'index']);
 Route::post('media/upload-fake', [MediaController::class, 'uploadFake']);
 Route::post('media/upload', [MediaController::class, 'upload']);
+
+// Games endpoints (sin autenticación por ahora)
+Route::get('games', [GameController::class, 'index']);
+Route::post('games', [GameController::class, 'store']);
+Route::get('games/{game}', [GameController::class, 'show']);
+Route::put('games/{game}', [GameController::class, 'update']);
+Route::patch('games/{game}', [GameController::class, 'update']);

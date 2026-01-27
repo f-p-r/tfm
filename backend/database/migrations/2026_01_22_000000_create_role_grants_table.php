@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
-            $table->string('scope_type'); // global, association, game
+            $table->unsignedTinyInteger('scope_type'); // 1=global, 2=association, 3=game
             $table->unsignedInteger('scope_id')->nullable();
             $table->timestamps();
 
