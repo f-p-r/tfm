@@ -23,12 +23,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { AuthzQueryRequest, AuthzQueryResponse } from './authz.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthzApiService {
   private readonly http = inject(HttpClient);
-  private readonly endpoint = '/api/authz/query';
+  private readonly endpoint = `${environment.apiBaseUrl}/api/authz/query`;
 
   /**
    * Consulta permisos efectivos del usuario para un alcance y lista de permisos.

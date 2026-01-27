@@ -1,4 +1,7 @@
-import { MediaScopeType } from './media.models';
+/**
+ * Tipo string para los scopes de la aplicación.
+ */
+export type WebScopeType = 'global' | 'association' | 'game';
 
 /**
  * Valores numéricos para los scopes (alcances) de la aplicación.
@@ -11,9 +14,9 @@ export enum WebScope {
 }
 
 /**
- * Mapeo de string a número para convertir MediaScopeType a valor numérico.
+ * Mapeo de string a número para convertir WebScopeType a valor numérico.
  */
-export const WEB_SCOPE_VALUE: Record<MediaScopeType, number> = {
+export const WEB_SCOPE_VALUE: Record<WebScopeType, number> = {
   'global': WebScope.GLOBAL,
   'association': WebScope.ASSOCIATION,
   'game': WebScope.GAME,
@@ -22,7 +25,7 @@ export const WEB_SCOPE_VALUE: Record<MediaScopeType, number> = {
 /**
  * Mapeo inverso: de número a string.
  */
-export const WEB_SCOPE_NAME: Record<number, MediaScopeType | undefined> = {
+export const WEB_SCOPE_NAME: Record<number, WebScopeType | undefined> = {
   [WebScope.GLOBAL]: 'global',
   [WebScope.ASSOCIATION]: 'association',
   [WebScope.GAME]: 'game',

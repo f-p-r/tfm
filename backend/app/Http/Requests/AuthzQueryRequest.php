@@ -23,9 +23,9 @@ class AuthzQueryRequest extends FormRequest
     {
         return [
             'scopeType' => ['required', 'integer', Rule::in(ScopeType::values())],
-            'scopeIds' => ['required', 'array'],
+            'scopeIds' => ['present', 'array'],
             'scopeIds.*' => ['integer', 'min:1'],
-            'permissions' => ['required', 'array'],
+            'permissions' => ['present', 'array'],
             'permissions.*' => ['string'],
             'breakdown' => ['required', 'boolean'],
         ];

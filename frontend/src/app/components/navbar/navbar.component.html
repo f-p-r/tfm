@@ -23,6 +23,9 @@
       <a routerLink="/associations" class="ds-nav-link">Asociaciones</a>
       <a routerLink="/events" class="ds-nav-link">Eventos</a>
       <a routerLink="/news" class="ds-nav-link">Noticias</a>
+      @if (canSeeAdmin()) {
+        <a routerLink="/admin" class="ds-nav-link">Admin</a>
+      }
       <button type="button" class="ds-nav-link" (click)="openHelp()" aria-label="Ayuda">?</button>
     </div>
 
@@ -68,6 +71,9 @@
         <a routerLink="/associations" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Asociaciones</a>
         <a routerLink="/events" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Eventos</a>
         <a routerLink="/news" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Noticias</a>
+        @if (canSeeAdmin()) {
+          <a routerLink="/admin" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Admin</a>
+        }
         <button type="button" class="ds-nav-mobile-link text-left" (click)="openHelp()">?</button>
 
         <!-- Menú de usuario (mobile) -->
