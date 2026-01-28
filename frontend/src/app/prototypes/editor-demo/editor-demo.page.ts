@@ -7,8 +7,8 @@ import { QuillModule, QuillEditorComponent } from 'ngx-quill';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Quill from 'quill';
 import { editorDemoQuillModules } from '../quill.config';
-import { InternalLinkBlot } from './internal-link.blot';
-import { LinkSelectorComponent, type InternalLinkDestination } from './link-selector.component';
+import { InternalLinkBlot } from '../../shared/content/internal-link.blot';
+import { LinkSelectorComponent, type InternalLinkDestination } from '../../shared/content/link-selector.component';
 
 // Registrar el custom blot ANTES de que se inicialice el componente
 Quill.register(InternalLinkBlot);

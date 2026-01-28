@@ -24,8 +24,6 @@ const IMAGE_URL = 'https://lawebdeperez.es/frameworks_a3/img/landing1.jpg';
 export class ContentSegmentsDemoPage {
   readonly content: ContentDTO = {
     schemaVersion: 1,
-    templateId: 1,
-    status: 'draft',
     segments: [
       {
         id: 'seg-1',

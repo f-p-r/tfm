@@ -4,8 +4,6 @@ export type SegmentDTO = RichSegmentDTO | CarouselSegmentDTO;
 
 export interface ContentDTO {
   schemaVersion: 1;
-  templateId: number;
-  status: 'draft' | 'published';
   segments: SegmentDTO[];
 }
 
@@ -30,10 +28,6 @@ export interface RichSegmentDTO {
   imagePlacement?: 'top' | 'left' | 'right';
   imageWidth?: number;
   imageMaxHeightPx?: number;
-  // Campos heredados para compatibilidad con prototipos anteriores
-  imageUrl?: string;
-  imageMediaId?: number;
-  imageAlt?: string;
 }
 
 export interface CarouselSegmentDTO {

@@ -1,22 +1,28 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { QuillModule } from 'ngx-quill';
+import { QuillModule, QuillEditorComponent } from 'ngx-quill';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import Quill from 'quill';
 import { ContentDTO, SegmentDTO, RichSegmentDTO, CarouselSegmentDTO } from '../../shared/content/content-segments.dto';
 import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
 import { quillModules } from '../quill.config';
 import { MediaPickerComponent } from '../../components/media/media-picker.component';
 import { MediaItem } from '../../components/media/media.models';
+import { InternalLinkBlot } from '../../shared/content/internal-link.blot';
+import { LinkSelectorComponent, type InternalLinkDestination } from '../../shared/content/link-selector.component';
 
 // Constantes de configuración
 const PREVIEW_KEY = 'contentSegmentsPreview:current';
 const DEFAULT_CAROUSEL_HEIGHT = 300; // Altura por defecto del carrusel en px
 
+// Registrar el custom blot ANTES de que se inicialice el componente
+Quill.register(InternalLinkBlot);
+
 @Component({
   selector: 'app-content-segments-editor-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, QuillModule, ContentRendererComponent, MediaPickerComponent],
+  imports: [CommonModule, ReactiveFormsModule, QuillModule, ContentRendererComponent, MediaPickerComponent, LinkSelectorComponent],
   template: `
     <main class="ds-main">
       <div class="ds-page">
@@ -81,10 +87,10 @@ const DEFAULT_CAROUSEL_HEIGHT = 300; // Altura por defecto del carrusel en px
                             </select>
                           </div>
                           <div class="grid gap-2 md:col-span-2">
-                            @if (draft.image?.url ?? draft.imageUrl) {
+                            @if (draft.image; as image) {
                               <div class="border border-neutral-medium rounded-lg p-3 bg-neutral-light flex flex-col items-center gap-2 cursor-pointer hover:bg-white transition" (click)="toggleRichPicker()">
-                                <img [src]="draft.image?.url ?? draft.imageUrl" alt="" class="w-32 h-28 object-cover rounded" />
-                                <div class="text-xs text-neutral-dark text-center truncate max-w-xs">{{ draft.image ? fileName(draft.image.url) : fileName(draft.imageUrl ?? '') }}</div>
+                                <img [src]="image.url" alt="" class="w-32 h-28 object-cover rounded" />
+                                <div class="text-xs text-neutral-dark text-center truncate max-w-xs">{{ fileName(image.url) }}</div>
                               </div>
                             } @else {
                               <button
@@ -109,7 +115,7 @@ const DEFAULT_CAROUSEL_HEIGHT = 300; // Altura por defecto del carrusel en px
                               ></app-media-picker>
                             }
 
-                            @if (draft.image?.url ?? draft.imageUrl) {
+                            @if (draft.image) {
                               <button
                                 type="button"
                                 class="px-3 py-1.5 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 transition"
@@ -126,8 +132,9 @@ const DEFAULT_CAROUSEL_HEIGHT = 300; // Altura por defecto del carrusel en px
                           <span class="text-sm text-neutral-dark font-semibold">Texto</span>
                           <div class="quill-shell">
                             <quill-editor
+                              #editor
                               class="quill-editor-block"
-                              [modules]="quillModules"
+                              [modules]="modules"
                               [formControl]="quillControl"
                               theme="snow"
                             ></quill-editor>
@@ -214,6 +221,14 @@ const DEFAULT_CAROUSEL_HEIGHT = 300; // Altura por defecto del carrusel en px
               </article>
             }
           </section>
+
+          <!-- Selector de enlaces internos -->
+          @if (showLinkSelector()) {
+            <app-link-selector
+              (select)="onLinkSelected($event)"
+              (cancel)="onLinkCanceled()"
+            ></app-link-selector>
+          }
         </div>
       </div>
     </main>
@@ -223,17 +238,39 @@ const DEFAULT_CAROUSEL_HEIGHT = 300; // Altura por defecto del carrusel en px
   encapsulation: ViewEncapsulation.None, // necesario para que los estilos de Quill apliquen a la toolbar e iconos
 })
 export class ContentSegmentsEditorPage {
-  readonly quillModules = quillModules;
+  readonly quillEditor = viewChild<QuillEditorComponent>('editor');
+
+  // Configuración dinámica con handler para enlaces internos
+  readonly modules = {
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, 4, false] }],
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ align: [] }],
+        ['blockquote'],
+        ['link'],
+        ['internal-link'],
+        ['clean'],
+      ],
+      handlers: {
+        'internal-link': () => {
+          this.openLinkSelector();
+        },
+      },
+    },
+  };
+
   readonly quillControl = new FormControl<string>('', { nonNullable: true });
   readonly richPickerOpen = signal(false);
   readonly carouselPickerOpen = signal(false);
   readonly pickerError = signal<string | null>(null);
   readonly pickerInfo = signal<string | null>(null);
+  readonly showLinkSelector = signal(false);
+  private savedSelection: any = null;
   // Estado principal de contenido en memoria
   readonly content = signal<ContentDTO>({
     schemaVersion: 1,
-    templateId: 1,
-    status: 'draft',
     segments: [],
   });
 
@@ -292,16 +329,13 @@ export class ContentSegmentsEditorPage {
     this.pickerError.set(null);
     this.richPickerOpen.set(false);
     this.carouselPickerOpen.set(false);
-    const normalized = seg.type === 'rich' && !seg.image && seg.imageUrl
-      ? { ...seg, image: { url: seg.imageUrl, mediaId: seg.imageMediaId, alt: seg.imageAlt } }
-      : seg;
-    if (normalized.type === 'rich') {
-      this.quillControl.setValue(normalized.textHtml ?? '', { emitEvent: false });
+    if (seg.type === 'rich') {
+      this.quillControl.setValue(seg.textHtml ?? '', { emitEvent: false });
     } else {
       this.quillControl.setValue('', { emitEvent: false });
     }
     this.editingId.set(id);
-    this.editingDraft.set(this.cloneSeg(normalized));
+    this.editingDraft.set(this.cloneSeg(seg));
   }
 
   saveEdit(): void {
@@ -443,8 +477,8 @@ export class ContentSegmentsEditorPage {
   onRichMediaPicked(item: MediaItem): void {
     const draft = this.currentRichDraft();
     if (!draft) return;
-    const image = { mediaId: item.id, url: item.url, alt: draft.image?.alt ?? draft.imageAlt ?? '' };
-    this.editingDraft.set({ ...draft, image, imageUrl: image.url, imageMediaId: image.mediaId, imageAlt: image.alt });
+    const image = { mediaId: item.id, url: item.url, alt: draft.image?.alt ?? '' };
+    this.editingDraft.set({ ...draft, image });
     this.richPickerOpen.set(false);
     this.pickerError.set(null);
     this.pickerInfo.set(null);
@@ -462,7 +496,7 @@ export class ContentSegmentsEditorPage {
   removeImage(): void {
     const draft = this.currentRichDraft();
     if (!draft) return;
-    this.editingDraft.set({ ...draft, image: undefined, imageUrl: undefined, imageMediaId: undefined, imageAlt: undefined });
+    this.editingDraft.set({ ...draft, image: undefined });
     this.richPickerOpen.set(false);
   }
 
@@ -471,6 +505,53 @@ export class ContentSegmentsEditorPage {
     if (!draft) return;
     const images = draft.images.filter((_, i) => i !== index);
     this.editingDraft.set({ ...draft, images });
+  }
+
+  // Métodos para enlaces internos
+  openLinkSelector(): void {
+    const editor = this.quillEditor()?.quillEditor;
+    if (!editor) return;
+
+    // Guardar la selección actual
+    this.savedSelection = editor.getSelection();
+    this.showLinkSelector.set(true);
+  }
+
+  onLinkSelected(destination: InternalLinkDestination): void {
+    const editor = this.quillEditor()?.quillEditor;
+    if (!editor || !this.savedSelection) {
+      this.showLinkSelector.set(false);
+      return;
+    }
+
+    // Restaurar la selección
+    editor.setSelection(this.savedSelection.index, this.savedSelection.length);
+
+    const range = this.savedSelection;
+
+    if (range.length > 0) {
+      // Hay texto seleccionado: convertirlo en enlace
+      editor.formatText(range.index, range.length, 'internal-link', destination);
+    } else {
+      // No hay selección: insertar el label como enlace
+      editor.insertText(range.index, destination.label);
+      editor.formatText(range.index, destination.label.length, 'internal-link', destination);
+      editor.setSelection(range.index + destination.label.length, 0);
+    }
+
+    // Forzar actualización del HTML
+    setTimeout(() => {
+      const htmlContent = editor.root.innerHTML;
+      this.quillControl.setValue(htmlContent);
+    }, 0);
+
+    this.showLinkSelector.set(false);
+    this.savedSelection = null;
+  }
+
+  onLinkCanceled(): void {
+    this.showLinkSelector.set(false);
+    this.savedSelection = null;
   }
 
   private currentRichDraft(): RichSegmentDTO | null {
@@ -511,8 +592,6 @@ export class ContentSegmentsEditorPage {
   singleContent(seg: SegmentDTO): ContentDTO {
     return {
       schemaVersion: 1,
-      templateId: this.content().templateId,
-      status: this.content().status,
       segments: [seg],
     };
   }

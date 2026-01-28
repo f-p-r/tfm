@@ -69,8 +69,6 @@ export class SegmentRichComponent {
 
   imageFor(seg: RichSegmentDTO | null): RichImageDTO | null {
     if (!seg) return null;
-    if (seg.image) return seg.image;
-    if (seg.imageUrl) return { url: seg.imageUrl, mediaId: seg.imageMediaId, alt: seg.imageAlt };
-    return null;
+    return seg.image ?? null;
   }
 }
