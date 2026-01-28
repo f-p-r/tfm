@@ -6,6 +6,7 @@
   </header>
 
   <quill-editor
+    #editor
     [modules]="modules"
     [formControl]="control"
     theme="snow"
@@ -44,5 +45,12 @@
         <button type="button" class="btn" (click)="closeExportModal()">Cerrar</button>
       </footer>
     </div>
+  }
+
+  @if (showLinkSelector()) {
+    <app-link-selector
+      (select)="onLinkSelected($event)"
+      (cancel)="onLinkCanceled()"
+    />
   }
 </section>

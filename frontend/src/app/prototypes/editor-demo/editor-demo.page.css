@@ -47,6 +47,21 @@ quill-editor .ql-toolbar {
   border-radius: 10px 10px 0 0;
 }
 
+/* Botón personalizado para enlaces internos */
+.ql-toolbar .ql-internal-link::before {
+  content: '🔗';
+  filter: brightness(0) saturate(100%);
+}
+
+.ql-toolbar .ql-internal-link {
+  width: auto !important;
+  padding: 0 0.5rem;
+}
+
+.ql-toolbar .ql-internal-link:hover::before {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(3082%) hue-rotate(196deg) brightness(98%) contrast(101%);
+}
+
 .prose {
   max-width: 65ch;
 }

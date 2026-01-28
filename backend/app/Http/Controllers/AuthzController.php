@@ -19,14 +19,19 @@ class AuthzController extends Controller
      */
     public function query(Request $request): JsonResponse
     {
-        // Log raw request data for debugging
-        Log::info('AuthzController::query - Raw request', [
-            'all' => $request->all(),
-            'json' => $request->json()->all(),
-            'content' => $request->getContent(),
-            'content_type' => $request->header('Content-Type'),
-            'user_id' => $request->user()?->id,
-        ]);
+        // DEBUG: Cambiar a true para activar logging de requests (útil para debugging)
+        // Logs en: storage/logs/laravel.log
+        $enableDebugLogging = false;
+
+        if ($enableDebugLogging) {
+            Log::info('AuthzController::query - Raw request', [
+                'all' => $request->all(),
+                'json' => $request->json()->all(),
+                'content' => $request->getContent(),
+                'content_type' => $request->header('Content-Type'),
+                'user_id' => $request->user()?->id,
+            ]);
+        }
 
         // Validate manually to capture errors
         $validator = validator($request->all(), [
@@ -39,9 +44,11 @@ class AuthzController extends Controller
         ]);
 
         if ($validator->fails()) {
-            Log::error('AuthzController::query - Validation failed', [
-                'errors' => $validator->errors()->toArray(),
-            ]);
+            if ($enableDebugLogging) {
+                Log::error('AuthzController::query - Validation failed', [
+                    'errors' => $validator->errors()->toArray(),
+                ]);
+            }
             return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()
