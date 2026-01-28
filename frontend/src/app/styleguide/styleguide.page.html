@@ -191,6 +191,175 @@
     </div>
   </section>
 
+  <!-- Menú desplegable -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Menús desplegables</h2>
+
+    <p class="p mb-6">
+      Los menús desplegables se utilizan para acciones de usuario como perfiles, configuración o navegación contextual.
+      Utilizan las clases <code>ds-menu-*</code> y se posicionan de forma absoluta respecto a su contenedor padre.
+    </p>
+
+    <h3 class="h3 mb-4">Estructura y funcionamiento</h3>
+    <p class="p mb-6 ">
+      El componente consta de un botón disparador y un panel desplegable que se posiciona de forma absoluta.
+      La clase <code>.ds-menu</code> establece el contexto de posicionamiento relativo.
+      En producción, la visibilidad del panel se controla mediante señales de estado que responden a la interacción del usuario.
+    </p>
+
+    <ul class="list-disc list-inside space-y-2 mb-8">
+      <li>
+        <code>.ds-menu-panel</code> — El panel se alinea a la <strong>derecha</strong> del botón disparador.
+        Ideal para menús de usuario ubicados en la esquina superior derecha de la navegación.
+      </li>
+      <li>
+        <code>.ds-menu-panel-left</code> — El panel se alinea a la <strong>izquierda</strong> del botón disparador.
+        Útil para menús ubicados en el lado izquierdo de la interfaz o en barras laterales.
+      </li>
+    </ul>
+
+    <div class="flex gap-32 mb-48">
+      <!-- Menú izquierda -->
+      <div class="ds-menu">
+        <button type="button" class="ds-nav-link" aria-expanded="true">
+          opciones
+        </button>
+
+        <div class="ds-menu-panel-left">
+          <div class="ds-menu-list">
+            <a routerLink="/config" class="ds-menu-item">Configuración</a>
+            <a routerLink="/settings" class="ds-menu-item">Preferencias</a>
+
+            <div class="ds-menu-separator"></div>
+
+            <button type="button" class="ds-menu-item">
+              Ver más
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menú derecha -->
+      <div class="ds-menu">
+        <button type="button" class="ds-nav-link" aria-expanded="true">
+          admin
+        </button>
+
+        <div class="ds-menu-panel">
+          <div class="ds-menu-list">
+            <a routerLink="/me" class="ds-menu-item">Mis datos</a>
+            <a routerLink="/admin" class="ds-menu-item">Panel Admin</a>
+
+            <div class="ds-menu-separator"></div>
+
+            <button type="button" class="ds-menu-item ds-menu-item-danger">
+              Cerrar sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sistema de ayuda contextual -->
+  <section class="mb-16">
+    <h2 class="h2 mb-8">Sistema de ayuda contextual</h2>
+
+    <p class="p mb-6">
+      El sistema de ayuda proporciona información contextual a los usuarios mediante tooltips al hacer hover
+      o iconos interactivos (ⓘ). Los iconos se muestran u ocultan globalmente mediante un toggle controlado
+      desde el componente de navegación.
+    </p>
+
+    <h3 class="h3 mb-4">Clases disponibles</h3>
+    <ul class="list-disc list-inside space-y-2 mb-8 text-sm">
+      <li><code>.ds-label-with-help</code> — Contenedor flex para label + icono de ayuda</li>
+      <li><code>.ds-help-i</code> — Icono de ayuda (ⓘ) con estilos de botón circular</li>
+      <li><code>.ds-btn-sm</code> — Botón pequeño reutilizable</li>
+      <li><code>.ds-popover</code> — Panel flotante de ayuda</li>
+      <li><code>.ds-popover-title</code> — Título del popover</li>
+      <li><code>.ds-popover-text</code> — Texto del popover</li>
+      <li><code>.ds-popover-actions</code> — Contenedor de acciones del popover</li>
+    </ul>
+
+    <h3 class="h3 mb-4">Funcionamiento</h3>
+    <div class="space-y-4 mb-8 text-sm">
+      <div class="p-4 bg-neutral-light rounded-lg">
+        <p class="font-semibold mb-2">Ayuda al hacer hover</p>
+        <p class="text-neutral-dark">
+          Mediante la directiva <code>helpHover</code> con atributo <code>helpKey</code>,
+          los elementos muestran un popover al pasar el ratón por encima. Ideal para desktop.
+        </p>
+      </div>
+      <div class="p-4 bg-neutral-light rounded-lg">
+        <p class="font-semibold mb-2">Ayuda mediante icono ⓘ</p>
+        <p class="text-neutral-dark">
+          El componente <code>&lt;app-help-i&gt;</code> muestra un icono circular que al pulsarlo
+          despliega el popover. Los iconos se activan/desactivan globalmente con la clase
+          <code>help-icons-on</code> en el body, controlada desde el toggle de ayuda en la navegación.
+        </p>
+      </div>
+    </div>
+
+    <h3 class="h3 mb-4">Ejemplos visuales</h3>
+
+    <div class="max-w-2xl space-y-6 help-icons-on">
+      <!-- Label con icono -->
+      <div class="ds-field">
+        <div class="ds-label-with-help">
+          <label class="ds-label">Campo con icono de ayuda</label>
+          <button
+            type="button"
+            class="ds-help-i"
+          >
+            ⓘ
+          </button>
+        </div>
+        <input type="email" class="ds-input" placeholder="ejemplo@email.com" />
+        <p class="ds-help text-xs text-neutral-dark">
+          💡 En producción: usa <code>&lt;app-help-i helpKey="tuClave" /&gt;</code>
+        </p>
+        <p class="text-xs text-neutral-dark mt-2">
+          ⚠️ El icono se muestra aquí con estilos, pero no es interactivo. Los popovers reales
+          requieren componentes Angular y servicios de posicionamiento dinámico que no están
+          disponibles en esta página estática.
+        </p>
+      </div>
+
+      <!-- Ejemplo de popover (maqueta estática) -->
+      <div class="relative mt-8">
+        <p class="ds-label mb-2">Ejemplo de popover (vista estática):</p>
+        <div class="ds-popover" style="position: static;">
+          <div class="ds-popover-title">Email de contacto</div>
+          <p class="ds-popover-text">
+            Introduce tu dirección de email principal. Se usará para enviarte
+            notificaciones y recuperar tu contraseña si es necesario.
+          </p>
+          <div class="ds-popover-actions">
+            <button class="ds-btn-sm ds-btn-secondary">Cerrar</button>
+          </div>
+        </div>
+        <p class="text-xs text-neutral-dark mt-2">
+          👆 Así se ve el popover real cuando se despliega al interactuar con los iconos o campos con ayuda. El botón es opcional
+        </p>
+      </div>
+
+      <!-- Nota técnica -->
+      <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
+        <p class="font-semibold text-blue-900 mb-2">ℹ️ Implementación completa</p>
+        <p class="text-blue-800 mb-2">
+          Para ver el sistema de ayuda funcionando completamente con interactividad real,
+          consulta el prototipo en <a href="/prototypes/help-demo" class="underline font-semibold">prototypes/help-demo</a>.
+        </p>
+        <p class="text-blue-800">
+          El prototipo incluye las directivas <code class="bg-blue-100 px-1 rounded">helpHover</code>,
+          el componente <code class="bg-blue-100 px-1 rounded">&lt;app-help-i&gt;</code>, servicios de
+          posicionamiento dinámico, y muestra popovers estilizados como el ejemplo anterior.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <!-- Layout y Navegación (tokens ds-*) -->
   <section class="mb-16">
     <h2 class="h2 mb-8">Layout y Navegación (tokens ds-*)</h2>
@@ -272,205 +441,5 @@
     </div>
   </section>
 
-  <!-- Prototipo: Navegación contextual -->
-  <section class="mb-16">
-    <h2 class="h2 mb-8">Prototipo: Navegación contextual (Juego/Asociación)</h2>
 
-    <p class="p mb-6">
-      Este prototipo demuestra cómo se comporta la navegación en contextos específicos (juegos, asociaciones).
-      En <strong>desktop</strong> se muestra un navbar global reducido + navbar contextual (dos niveles).
-      En <strong>mobile</strong> solo aparece un header contextual único (sin duplicidad de navbars).
-    </p>
-
-    <!-- Frame DESKTOP -->
-    <div class="mb-8">
-      <h3 class="h3 mb-4">Vista Desktop</h3>
-      <div class="border-2 border-brand-primary rounded-lg overflow-hidden">
-        <!-- Navbar global reducido (mock) -->
-        <nav class="ds-nav hidden md:block">
-          <div class="ds-nav-inner px-6">
-            <div class="ds-nav-brand">Portal</div>
-            <div class="ds-nav-links">
-              <a href="#" class="ds-nav-link">Cambiar juego</a>
-              <a href="#" class="ds-nav-link">Eventos</a>
-              <a href="#" class="ds-nav-link">Noticias</a>
-            </div>
-            <div class="ds-nav-actions">
-              <button class="px-3 py-1.5 rounded-md bg-brand-primary text-white text-sm">Usuario</button>
-            </div>
-          </div>
-        </nav>
-
-        <!-- Navbar contextual (solo desktop) -->
-        <nav class="ds-nav hidden md:block border-t border-neutral-medium">
-          <div class="ds-nav-inner px-6">
-            <div class="ds-nav-brand text-lg">Mus - Liga Regional</div>
-            <div class="ds-nav-links">
-              <a href="#" class="ds-nav-link">Inicio</a>
-              <a href="#" class="ds-nav-link">Noticias</a>
-              <a href="#" class="ds-nav-link">Eventos</a>
-              <a href="#" class="ds-nav-link">Rankings</a>
-              <a href="#" class="ds-nav-link">Administración</a>
-            </div>
-          </div>
-        </nav>
-
-        <!-- Header contextual mobile (solo móvil) -->
-        <nav class="ds-nav md:hidden">
-          <div class="ds-nav-inner px-4">
-            <div class="flex items-center gap-3">
-              <button class="p-1 hover:bg-neutral-light rounded" aria-label="Volver">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <div class="font-display font-bold text-brand-primary">Mus - Liga Regional</div>
-            </div>
-            <div class="flex items-center gap-2">
-              <button class="px-2 py-1 rounded text-xs bg-brand-primary text-white">Usuario</button>
-              <button class="ds-nav-toggle" aria-label="Menú">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </nav>
-
-        <!-- Panel menú móvil (siempre visible en prototipo) -->
-        <!-- Nota: En producción esto se controla con signal de toggle -->
-        <div class="ds-nav-mobile">
-          <div class="ds-nav-mobile-list">
-            <a href="#" class="ds-nav-mobile-link">Inicio</a>
-            <a href="#" class="ds-nav-mobile-link">Noticias</a>
-            <a href="#" class="ds-nav-mobile-link">Eventos</a>
-            <a href="#" class="ds-nav-mobile-link">Rankings</a>
-            <a href="#" class="ds-nav-mobile-link">Administración</a>
-            <a href="#" class="ds-nav-mobile-link border-t-2 border-neutral-dark">Cambiar juego</a>
-            <a href="#" class="ds-nav-mobile-link">Ir al portal</a>
-          </div>
-        </div>
-
-        <!-- Contenido de página dummy -->
-        <div class="ds-main">
-          <div class="ds-page">
-            <div class="ds-container">
-              <h3 class="h3 mb-4">Bienvenido al contexto de Mus</h3>
-              <p class="p mb-4">
-                Este es el contenido de ejemplo dentro del contexto de juego/asociación.
-                Aquí se mostrarían noticias, eventos, rankings y demás información específica.
-              </p>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-4 bg-white border border-neutral-medium rounded-lg">
-                  <h4 class="font-semibold mb-2">Próximo evento</h4>
-                  <p class="text-sm text-neutral-dark">Torneo clasificatorio - 25 de enero</p>
-                </div>
-                <div class="p-4 bg-white border border-neutral-medium rounded-lg">
-                  <h4 class="font-semibold mb-2">Última noticia</h4>
-                  <p class="text-sm text-neutral-dark">Nuevas normas de clasificación publicadas</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Frame MOBILE -->
-    <div>
-      <h3 class="h3 mb-4">Vista Mobile (ancho forzado)</h3>
-      <div class="border-2 border-brand-accent rounded-lg overflow-hidden flex justify-center bg-neutral-light">
-        <div class="max-w-[390px] w-full bg-white">
-          <!-- El mismo markup que arriba, responsive se encarga de mostrar/ocultar -->
-
-          <!-- Navbar global reducido (oculto en mobile) -->
-          <nav class="ds-nav hidden md:block">
-            <div class="ds-nav-inner px-6">
-              <div class="ds-nav-brand">Portal</div>
-              <div class="ds-nav-links">
-                <a href="#" class="ds-nav-link">Cambiar juego</a>
-                <a href="#" class="ds-nav-link">Eventos</a>
-                <a href="#" class="ds-nav-link">Noticias</a>
-              </div>
-              <div class="ds-nav-actions">
-                <button class="px-3 py-1.5 rounded-md bg-brand-primary text-white text-sm">Usuario</button>
-              </div>
-            </div>
-          </nav>
-
-          <!-- Navbar contextual (oculto en mobile) -->
-          <nav class="ds-nav hidden md:block border-t border-neutral-medium">
-            <div class="ds-nav-inner px-6">
-              <div class="ds-nav-brand text-lg">Mus - Liga Regional</div>
-              <div class="ds-nav-links">
-                <a href="#" class="ds-nav-link">Inicio</a>
-                <a href="#" class="ds-nav-link">Noticias</a>
-                <a href="#" class="ds-nav-link">Eventos</a>
-                <a href="#" class="ds-nav-link">Rankings</a>
-                <a href="#" class="ds-nav-link">Administración</a>
-              </div>
-            </div>
-          </nav>
-
-          <!-- Header contextual mobile (visible en mobile) -->
-          <nav class="ds-nav md:hidden">
-            <div class="ds-nav-inner px-4">
-              <div class="flex items-center gap-3">
-                <button class="p-1 hover:bg-neutral-light rounded" aria-label="Volver">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <div class="font-display font-bold text-brand-primary">Mus - Liga Regional</div>
-              </div>
-              <div class="flex items-center gap-2">
-                <button class="px-2 py-1 rounded text-xs bg-brand-primary text-white">Usuario</button>
-                <button class="ds-nav-toggle" aria-label="Menú">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </nav>
-
-          <!-- Panel menú móvil -->
-          <div class="ds-nav-mobile">
-            <div class="ds-nav-mobile-list">
-              <a href="#" class="ds-nav-mobile-link">Inicio</a>
-              <a href="#" class="ds-nav-mobile-link">Noticias</a>
-              <a href="#" class="ds-nav-mobile-link">Eventos</a>
-              <a href="#" class="ds-nav-mobile-link">Rankings</a>
-              <a href="#" class="ds-nav-mobile-link">Administración</a>
-              <a href="#" class="ds-nav-mobile-link border-t-2 border-neutral-dark">Cambiar juego</a>
-              <a href="#" class="ds-nav-mobile-link">Ir al portal</a>
-            </div>
-          </div>
-
-          <!-- Contenido de página dummy (mismo) -->
-          <div class="ds-main">
-            <div class="ds-page">
-              <div class="ds-container">
-                <h3 class="h3 mb-4">Bienvenido al contexto de Mus</h3>
-                <p class="p mb-4">
-                  Este es el contenido de ejemplo dentro del contexto de juego/asociación.
-                  Aquí se mostrarían noticias, eventos, rankings y demás información específica.
-                </p>
-                <div class="space-y-4">
-                  <div class="p-4 bg-white border border-neutral-medium rounded-lg">
-                    <h4 class="font-semibold mb-2">Próximo evento</h4>
-                    <p class="text-sm text-neutral-dark">Torneo clasificatorio - 25 de enero</p>
-                  </div>
-                  <div class="p-4 bg-white border border-neutral-medium rounded-lg">
-                    <h4 class="font-semibold mb-2">Última noticia</h4>
-                    <p class="text-sm text-neutral-dark">Nuevas normas de clasificación publicadas</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 </div>

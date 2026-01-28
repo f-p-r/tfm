@@ -153,6 +153,49 @@
     @apply px-4 md:px-6 py-3 text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary;
   }
 
+  /* === Menús desplegables (acciones / usuario / admin) === */
+
+  .ds-menu {
+    @apply relative inline-block;
+  }
+
+  /** === Menú desplegable === */
+
+  /* Panel flotante: alineado a la derecha y tamaño según contenido. En vista móvil alinea a la izquierda */
+  .ds-menu-panel {
+    @apply absolute left-0 md:right-0 md:left-auto min-w-max rounded-lg border border-neutral-medium bg-white shadow-lg;
+  }
+
+  /* Idem alineado a la izquierda, para posiciones iniciales demasiado a la izquierda que puedan hacer que el menú se salga de la pantalla */
+  .ds-menu-panel-left {
+    @apply absolute left-0 min-w-max rounded-lg border border-neutral-medium bg-white shadow-lg;
+  }
+  /* Idem alineado a la izquierda */
+
+  /* Lista de items */
+  .ds-menu-list {
+    @apply py-1 whitespace-nowrap;
+  }
+
+  /* Item base (sirve para <a> o <button>) */
+  .ds-menu-item {
+    @apply block w-full px-4 py-2 text-left text-sm text-neutral-dark transition-colors hover:bg-neutral-light hover:text-brand-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
+  }
+
+  /* Variantes */
+  .ds-menu-item-danger {
+    @apply text-red-700 hover:text-red-800;
+  }
+
+  .ds-menu-item-disabled {
+    @apply cursor-not-allowed opacity-60 hover:bg-transparent hover:text-neutral-dark;
+  }
+
+  /* Separador */
+  .ds-menu-separator {
+    @apply my-1 border-t border-neutral-medium;
+  }
+
   /* === Ayuda === */
 
   /* Botón pequeño reutilizable (para "Cerrar" en el popover) */
@@ -180,7 +223,7 @@
     @apply hidden;
   }
 
-  body.help-icons-on .ds-help-i {
+  .help-icons-on .ds-help-i {
     @apply inline-flex;
   }
 
