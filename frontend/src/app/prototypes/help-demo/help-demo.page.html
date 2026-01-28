@@ -13,10 +13,7 @@
     <div class="ds-field">
       <div class="ds-label-with-help">
         <label for="email" class="ds-label">Email</label>
-        <app-help-i
-          title="Email"
-          text="Introduce tu dirección de correo electrónico. Debe ser válida y será usada para notificaciones."
-        />
+        <app-help-i helpKey="email" />
       </div>
       <input
         id="email"
@@ -25,8 +22,7 @@
         class="ds-input"
         [class.ds-control-error]="email.invalid && email.touched"
         helpHover
-        helpTitle="Email"
-        helpText="Introduce tu dirección de correo electrónico. Debe ser válida y será usada para notificaciones."
+        helpKey="email"
         placeholder="tu@email.com"
       />
       @if (email.invalid && email.touched) {
@@ -50,18 +46,14 @@
           class="mt-1 w-4 h-4 text-brand-primary border-neutral-medium rounded focus:ring-2 focus:ring-brand-primary"
           [class.border-red-500]="privacy.invalid && privacy.touched"
           helpHover
-          helpTitle="Privacidad"
-          helpText="Debes aceptar la política de privacidad para continuar. Tus datos serán tratados conforme a la normativa vigente."
+          helpKey="privacy"
         />
         <div class="flex-1">
           <div class="ds-label-with-help">
             <label for="privacy" class="ds-label cursor-pointer">
               Acepto la política de privacidad
             </label>
-            <app-help-i
-              title="Privacidad"
-              text="Debes aceptar la política de privacidad para continuar. Tus datos serán tratados conforme a la normativa vigente."
-            />
+            <app-help-i helpKey="privacy" />
           </div>
           @if (privacy.invalid && privacy.touched) {
             <p class="ds-error">
@@ -76,10 +68,7 @@
     <div class="ds-field">
       <div class="ds-label-with-help">
         <label for="description" class="ds-label">Descripción</label>
-        <app-help-i
-          title="Descripción"
-          text="Escribe una descripción detallada de tu solicitud. Mínimo 10 caracteres para proporcionar contexto suficiente."
-        />
+        <app-help-i helpKey="description" />
       </div>
       <textarea
         id="description"
@@ -87,8 +76,7 @@
         class="ds-textarea"
         [class.ds-control-error]="description.invalid && description.touched"
         helpHover
-        helpTitle="Descripción"
-        helpText="Escribe una descripción detallada de tu solicitud. Mínimo 10 caracteres para proporcionar contexto suficiente."
+        helpKey="description"
         rows="4"
         placeholder="Describe tu solicitud aquí..."
       ></textarea>
@@ -109,13 +97,16 @@
       <button type="submit" class="ds-btn ds-btn-primary">
         Enviar
       </button>
-      <button type="button" class="ds-btn ds-btn-secondary" (click)="form.reset()" helpHover [helpTitle]="'Guardar'" [helpText]="'Guarda los cambios del formulario actual.'">
+      <button
+        type="button"
+        class="ds-btn ds-btn-secondary"
+        (click)="form.reset()"
+        helpHover
+        helpKey="clear"
+      >
         Limpiar
       </button>
-        <app-help-i
-        title="Guardar"
-        text="Guarda los cambios del formulario actual."
-      ></app-help-i>
+      <app-help-i helpKey="clear" />
     </div>
   </form>
 

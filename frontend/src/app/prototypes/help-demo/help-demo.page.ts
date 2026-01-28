@@ -4,6 +4,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HelpIComponent } from '../../shared/help/help-i/help-i.component';
 import { HelpHoverDirective } from '../../shared/help/help-hover.directive';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { HelpContentService } from '../../shared/help/help-content.service';
+import { HELP_DEMO_PACK } from './help-demo.pack';
 
 @Component({
   selector: 'app-help-demo',
@@ -15,6 +17,12 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
 })
 export class HelpDemoPage {
   private fb = inject(FormBuilder);
+  private helpContent = inject(HelpContentService);
+
+  constructor() {
+    // Establecer el pack de ayuda para esta pantalla
+    this.helpContent.setPack(HELP_DEMO_PACK);
+  }
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
