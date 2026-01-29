@@ -26,7 +26,7 @@ export class MediaApiService {
     const pageSize = params.pageSize ?? 60;
 
     let httpParams = new HttpParams()
-      .set('scopeType', params.scopeType)
+      .set('scopeType', String(params.scopeType))
       .set('includeGlobal', String(includeGlobal))
       .set('page', String(page))
       .set('pageSize', String(pageSize));
@@ -40,10 +40,10 @@ export class MediaApiService {
       .pipe(map((res) => ({ ...res, items: (res.items ?? []).map((item) => this.normalizeItem(item)) })));
   }
 
-  uploadMedia(file: File, scopeType: MediaListParams['scopeType'], scopeId?: number | null): Observable<MediaItem> {
+  uploadMedia(file: File, scopeType: number, scopeId?: number | null): Observable<MediaItem> {
     const formData = new FormData();
     formData.append('file', file, file.name);
-    formData.append('scopeType', scopeType);
+    formData.append('scopeType', String(scopeType));
     if (scopeId !== undefined && scopeId !== null) {
       formData.append('scopeId', String(scopeId));
     }

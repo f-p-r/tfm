@@ -1,10 +1,8 @@
-export type MediaScopeType = 'global' | 'association' | 'game';
-
 export interface MediaItem {
   id: number;
   url: string;
   createdAt: string;
-  scopeType: MediaScopeType;
+  scopeType: number;
   scopeId: number | null;
 }
 
@@ -16,7 +14,7 @@ export interface MediaListResponse {
 }
 
 export interface MediaListParams {
-  scopeType: MediaScopeType;
+  scopeType: number;
   scopeId?: number | null;
   includeGlobal?: boolean;
   page?: number;

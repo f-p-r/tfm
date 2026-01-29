@@ -9,6 +9,7 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer.
 import { quillModules } from '../quill.config';
 import { MediaPickerComponent } from '../../components/media/media-picker.component';
 import { MediaItem } from '../../components/media/media.models';
+import { WebScope } from '../../core/web-scope.constants';
 import { InternalLinkBlot } from '../../shared/content/internal-link.blot';
 import { LinkSelectorComponent, type InternalLinkDestination } from '../../shared/content/link-selector.component';
 
@@ -104,7 +105,7 @@ Quill.register(InternalLinkBlot);
 
                             @if (richPickerOpen()) {
                               <app-media-picker
-                                [scopeType]="'association'"
+                                [scopeType]="WebScope.ASSOCIATION"
                                 [scopeId]="1"
                                 [includeGlobal]="true"
                                 [mode]="'single'"
@@ -176,7 +177,7 @@ Quill.register(InternalLinkBlot);
 
                           @if (carouselPickerOpen()) {
                             <app-media-picker
-                              [scopeType]="'association'"
+                              [scopeType]="WebScope.ASSOCIATION"
                               [scopeId]="1"
                               [includeGlobal]="true"
                               [mode]="'multi'"
@@ -238,6 +239,7 @@ Quill.register(InternalLinkBlot);
   encapsulation: ViewEncapsulation.None, // necesario para que los estilos de Quill apliquen a la toolbar e iconos
 })
 export class ContentSegmentsEditorPage {
+  readonly WebScope = WebScope;
   readonly quillEditor = viewChild<QuillEditorComponent>('editor');
 
   // Configuración dinámica con handler para enlaces internos

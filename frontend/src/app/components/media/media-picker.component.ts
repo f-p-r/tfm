@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { input, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MediaApiService } from './media-api.service';
-import { MediaItem, MediaScopeType } from './media.models';
+import { MediaItem } from './media.models';
+import { WebScope } from '../../core/web-scope.constants';
 
 @Component({
   selector: 'app-media-picker',
@@ -86,7 +87,7 @@ export class MediaPickerComponent {
   private readonly mediaApi = inject(MediaApiService);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly scopeType = input<MediaScopeType>();
+  readonly scopeType = input<number>();
   readonly scopeId = input<number | null>(null);
   readonly includeGlobal = input(true);
   readonly pageSize = input(60);
@@ -124,7 +125,7 @@ export class MediaPickerComponent {
       const pageSize = this.pageSize();
 
       if (!scopeType) return;
-      if (scopeType !== 'global' && (scopeId === null || scopeId === undefined)) return;
+      if (scopeType !== WebScope.GLOBAL && (scopeId === null || scopeId === undefined)) return;
 
       this.loadMedia(scopeType, scopeId ?? null, includeGlobal, pageSize);
     });
@@ -176,7 +177,7 @@ export class MediaPickerComponent {
     this.interact.emit();
   }
 
-  private loadMedia(scopeType: MediaScopeType, scopeId: number | null, includeGlobal: boolean | null, pageSize: number | null): void {
+  private loadMedia(scopeType: number, scopeId: number | null, includeGlobal: boolean | null, pageSize: number | null): void {
     this.loading.set(true);
     this.errorMessage.set(null);
 
@@ -200,7 +201,7 @@ export class MediaPickerComponent {
     const scopeType = this.scopeType();
     const scopeId = this.scopeId();
     if (!scopeType) return;
-    if (scopeType !== 'global' && (scopeId === null || scopeId === undefined)) {
+    if (scopeType !== WebScope.GLOBAL && (scopeId === null || scopeId === undefined)) {
       this.errorMessage.set('Falta scopeId para subir la imagen');
       this.error.emit('Falta scopeId para subir la imagen');
       return;

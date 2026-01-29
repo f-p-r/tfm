@@ -15,6 +15,7 @@ export enum WebScope {
 
 /**
  * Mapeo de string a número para convertir WebScopeType a valor numérico.
+ * @deprecated Use WebScope enum directly instead of string types.
  */
 export const WEB_SCOPE_VALUE: Record<WebScopeType, number> = {
   'global': WebScope.GLOBAL,

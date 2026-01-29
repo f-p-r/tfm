@@ -27,11 +27,27 @@ class MediaUploadRequest extends FormRequest
                 'mimes:jpeg,png,webp',
                 'max:15360', // 15MB en KB
             ],
-            'scopeType' => ['required', 'string', 'in:global,association,game'],
+            'scopeType' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    // Permitir string o entero
+                    if (is_string($value) && !in_array(strtolower($value), ['global', 'association', 'game'])) {
+                        $fail('El campo scopeType debe ser global, association, game, 1, 2 o 3.');
+                    }
+                    if (is_numeric($value) && !in_array((int)$value, [1, 2, 3])) {
+                        $fail('El campo scopeType debe ser global, association, game, 1, 2 o 3.');
+                    }
+                    if (!is_string($value) && !is_numeric($value)) {
+                        $fail('El campo scopeType debe ser un string o entero.');
+                    }
+                },
+            ],
             'scopeId' => [
                 function ($attribute, $value, $fail) {
-                    $scopeType = strtolower($this->input('scopeType'));
-                    if ($scopeType !== 'global' && is_null($value)) {
+                    $scopeType = $this->input('scopeType');
+                    $scopeTypeInt = \App\Models\Media::scopeTypeToInt($scopeType);
+
+                    if ($scopeTypeInt !== \App\Models\Media::SCOPE_GLOBAL && is_null($value)) {
                         $fail('El campo scopeId es requerido cuando scopeType no es global.');
                     }
                     if (! is_null($value) && ! is_numeric($value)) {
@@ -46,13 +62,20 @@ class MediaUploadRequest extends FormRequest
     }
 
     /**
-     * Normalizar scopeType a minúsculas.
+     * Preparar datos para validación.
      */
     protected function prepareForValidation(): void
     {
+        $scopeType = $this->input('scopeType');
+
+        // Solo normalizar a minúsculas si es string
+        if (is_string($scopeType)) {
+            $scopeType = strtolower($scopeType);
+        }
+
         $fileNameInput = $this->input('filename') ?? $this->input('fileName');
         $this->merge([
-            'scopeType' => strtolower($this->input('scopeType')),
+            'scopeType' => $scopeType,
             'filename' => $fileNameInput,
         ]);
     }

@@ -75,6 +75,13 @@ class RoleGrant extends Model
         if (is_int($scopeType)) {
             return $scopeType;
         }
+
+        // Si es string numérico, convertir a entero
+        if (is_numeric($scopeType)) {
+            return (int)$scopeType;
+        }
+
+        // Si es string de nombre (global, association, game), mapear
         return self::SCOPE_TYPES[strtolower($scopeType)] ?? null;
     }
 }

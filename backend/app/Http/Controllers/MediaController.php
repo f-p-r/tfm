@@ -25,6 +25,13 @@ class MediaController extends Controller
         $page = $request->getPage();
         $pageSize = 20;
 
+        Log::info('MediaController::index', [
+            'scopeType' => $scopeType,
+            'scopeId' => $scopeId,
+            'includeGlobal' => $includeGlobal,
+            'page' => $page
+        ]);
+
         // Construir query base
         $query = Media::query();
 
