@@ -33,7 +33,7 @@ class AuthzController extends Controller
             ]);
         }
 
-        // Validate manually to capture errors
+        // Valido manualmente para poder loggear errores en debug
         $validator = validator($request->all(), [
             'scopeType' => ['required', 'integer', 'in:1,2,3'],
             'scopeIds' => ['present', 'array'],

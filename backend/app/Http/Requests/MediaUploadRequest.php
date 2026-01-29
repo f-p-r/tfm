@@ -62,7 +62,7 @@ class MediaUploadRequest extends FormRequest
      */
     public function getScopeType(): int
     {
-        $scopeType = strtolower($this->input('scopeType', 'global'));
+        $scopeType = $this->input('scopeType', 'global');
         return \App\Models\Media::scopeTypeToInt($scopeType) ?? \App\Models\Media::SCOPE_GLOBAL;
     }
 

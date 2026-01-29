@@ -68,9 +68,13 @@ class RoleGrant extends Model
 
     /**
      * Convertir string de scope type a entero.
+     * Si ya es entero, lo devuelve directamente.
      */
-    public static function scopeTypeToInt(string $scopeType): ?int
+    public static function scopeTypeToInt(string|int $scopeType): ?int
     {
+        if (is_int($scopeType)) {
+            return $scopeType;
+        }
         return self::SCOPE_TYPES[strtolower($scopeType)] ?? null;
     }
 }
