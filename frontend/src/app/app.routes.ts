@@ -6,6 +6,9 @@ import { StyleguidePage } from './styleguide/styleguide.page';
 import { PrototypeHostPage } from './prototypes/prototype-host.page';
 import { GamePage } from './pages/games/game/game.page';
 import { gameBySlugGuard } from './guards/game-by-slug.guard';
+import { AssociationsPage } from './pages/associations/associations.page';
+import { AssociationPage } from './pages/associations/association/association.page';
+import { associationBySlugGuard } from './core/associations/association-by-slug.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomePage },
@@ -15,6 +18,10 @@ export const routes: Routes = [
 
   // Ruta de juegos (sin ID en URL)
   { path: 'juegos/:slug', component: GamePage, canActivate: [gameBySlugGuard] },
+
+  // Rutas de asociaciones (sin ID en URL)
+  { path: 'asociaciones', component: AssociationsPage },
+  { path: 'asociaciones/:slug', component: AssociationPage, canActivate: [associationBySlugGuard] },
   {
     path: 'prototypes',
     children: [

@@ -49,7 +49,7 @@ export class NavbarComponent {
   });
 
   readonly navItems = computed<NavItem[]>(() => [
-    { label: 'Asociaciones', type: 'link', route: '/associations' },
+    { label: 'Asociaciones', type: 'link', route: '/asociaciones' },
     { label: 'Eventos', type: 'link', route: '/events' },
     { label: 'Noticias', type: 'link', route: '/news' },
     { label: 'Admin', type: 'link', route: '/admin', condition: () => this.canSeeAdmin() },
