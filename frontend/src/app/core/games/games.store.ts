@@ -1,9 +1,11 @@
-import { inject, Injectable, signal, computed } from '@angular/core';
+import { inject, Injectable, signal, computed, effect } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { tap, shareReplay, catchError } from 'rxjs/operators';
 import { GamesApiService } from './games-api.service';
 import { Game } from './games.models';
 import { slugify } from '../../shared/utils/slugify';
+import { ContextStore } from '../context/context.store';
+import { WebScope } from '../web-scope.constants';
 
 /** Tiempo de vida de la caché de juegos en milisegundos (5 minutos) */
 const GAMES_TTL_MS = 5 * 60 * 1000; // 5 min
@@ -11,6 +13,7 @@ const GAMES_TTL_MS = 5 * 60 * 1000; // 5 min
 @Injectable({ providedIn: 'root' })
 export class GamesStore {
   private readonly gamesApi = inject(GamesApiService);
+  private readonly contextStore = inject(ContextStore);
 
   /** Lista de juegos cargados (solo activos: disabled=false) */
   readonly games = signal<Game[]>([]);
@@ -28,10 +31,24 @@ export class GamesStore {
   readonly lastFetchedAt = signal<number | null>(null);
 
   /** ID del juego seleccionado actualmente */
-  private readonly selectedGameId = signal<number | null>(null);
+  readonly selectedGameId = signal<number | null>(null);
 
   /** Observable in-flight para deduplicar peticiones simultáneas */
   private inFlight$?: Observable<Game[]>;
+
+  constructor() {
+    // Sincronizar selectedGameId con el contexto actual
+    effect(() => {
+      const scopeType = this.contextStore.scopeType();
+      const scopeId = this.contextStore.scopeId();
+
+      if (scopeType === WebScope.GAME && scopeId !== null) {
+        this.selectedGameId.set(scopeId);
+      } else if (scopeType === WebScope.GLOBAL) {
+        this.selectedGameId.set(null);
+      }
+    });
+  }
 
   /** Lista de juegos ordenada alfabéticamente por nombre */
   readonly sortedGames = computed(() => {
