@@ -85,4 +85,13 @@ class GameController extends Controller
         $game->delete();
         return response()->json(null, 204);
     }
+
+    /**
+     * Get the associations related to a game.
+     */
+    public function associations(Game $game): JsonResponse
+    {
+        $associations = $game->associations;
+        return response()->json($associations);
+    }
 }

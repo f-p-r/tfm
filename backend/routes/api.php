@@ -20,6 +20,9 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
+    
+    // Association by slug (must be before apiResource)
+    Route::get('associations/by-slug/{slug}', [AssociationController::class, 'bySlug']);
     Route::apiResource('associations', AssociationController::class);
 
     // Authorization query endpoint
@@ -36,5 +39,6 @@ Route::post('media/upload', [MediaController::class, 'upload']);
 Route::get('games', [GameController::class, 'index']);
 Route::post('games', [GameController::class, 'store']);
 Route::get('games/{game}', [GameController::class, 'show']);
+Route::get('games/{game}/associations', [GameController::class, 'associations']);
 Route::put('games/{game}', [GameController::class, 'update']);
 Route::patch('games/{game}', [GameController::class, 'update']);

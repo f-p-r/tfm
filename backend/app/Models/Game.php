@@ -27,4 +27,12 @@ class Game extends Model
         'team_size' => 'integer',
         'disabled' => 'boolean',
     ];
+
+    /**
+     * Get the associations that have this game.
+     */
+    public function associations()
+    {
+        return $this->belongsToMany(Association::class);
+    }
 }
