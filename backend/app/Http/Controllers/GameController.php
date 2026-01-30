@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Rules\CanonicalSlug;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
@@ -32,6 +33,7 @@ class GameController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|unique:games,name',
+            'slug' => ['required', 'string', 'unique:games,slug', new CanonicalSlug()],
             'team_size' => 'required|integer|min:1',
             'disabled' => 'boolean',
         ]);
@@ -59,6 +61,13 @@ class GameController extends Controller
                 'required',
                 'string',
                 Rule::unique('games')->ignore($game->id)
+            ],
+            'slug' => [
+                'sometimes',
+                'required',
+                'string',
+                Rule::unique('games')->ignore($game->id),
+                new CanonicalSlug()
             ],
             'team_size' => 'sometimes|required|integer|min:1',
             'disabled' => 'boolean',

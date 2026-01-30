@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->string('slug', 64)->unique();
             $table->integer('team_size')->unsigned();
             $table->boolean('disabled')->default(false);
             $table->timestamps();

@@ -3,6 +3,7 @@ import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { GamesStore } from '../../core/games/games.store';
+import { Game } from '../../core/games/games.models';
 import { UserMenuComponent } from '../user-menu/user-menu.component';
 import { HelpPanelComponent } from '../../shared/help/help-panel/help-panel.component';
 import { AuthzService } from '../../core/authz/authz.service';
@@ -32,11 +33,11 @@ export class NavbarComponent {
     const q = this.gamesQuery().toLowerCase().trim();
     const list = this.gamesStore.sortedGames();
     if (!q) return list;
-    return list.filter((g: string) => g.toLowerCase().includes(q));
+    return list.filter((g: Game) => g.name.toLowerCase().includes(q));
   });
 
   constructor() {
-    this.gamesStore.loadOnce();
+    this.gamesStore.loadOnce().pipe(takeUntilDestroyed()).subscribe();
     this.router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -103,26 +104,32 @@ export class NavbarComponent {
   }
 
   onDesktopGameChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = input.value?.trim();
-    if (!value || value.toLowerCase() === 'todos los juegos') {
+    const select = event.target as HTMLSelectElement;
+    const value = select.value?.trim();
+    if (!value) {
       this.gamesStore.setSelected(null);
       this.router.navigateByUrl('/');
       return;
     }
-    this.gamesStore.setSelected(value);
-    const slug = this.gamesStore.slugify(value);
-    this.router.navigateByUrl(`/games/${slug}`);
+    const gameId = parseInt(value, 10);
+    this.gamesStore.setSelected(gameId);
+    const game = this.gamesStore.getById(gameId);
+    if (game) {
+      this.router.navigateByUrl(`/games/${game.slug}`);
+    }
   }
 
-  selectGameMobile(name: string | null): void {
-    if (!name) {
+  selectGameMobile(value: string | null): void {
+    if (!value) {
       this.gamesStore.setSelected(null);
       this.router.navigateByUrl('/');
     } else {
-      this.gamesStore.setSelected(name);
-      const slug = this.gamesStore.slugify(name);
-      this.router.navigateByUrl(`/games/${slug}`);
+      const gameId = parseInt(value, 10);
+      this.gamesStore.setSelected(gameId);
+      const game = this.gamesStore.getById(gameId);
+      if (game) {
+        this.router.navigateByUrl(`/games/${game.slug}`);
+      }
     }
     this.closeMobileMenu();
   }
