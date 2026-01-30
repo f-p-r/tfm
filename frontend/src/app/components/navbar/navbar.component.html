@@ -1,3 +1,32 @@
+<!-- Template: Selector de juegos -->
+<ng-template #gamesSelector let-id="id" let-cssClass="cssClass" let-onChange="onChange">
+  <label class="sr-only" [attr.for]="id">Seleccionar juego</label>
+  <select
+    [id]="id"
+    [value]="gamesStore.selectedGameId() ?? ''"
+    (change)="onChange($event)"
+    [class]="cssClass"
+  >
+    <option value="" [selected]="!gamesStore.selectedGameId()">Todos los juegos</option>
+    @for (g of gamesStore.sortedGames(); track g.id) {
+      <option [value]="g.id" [selected]="gamesStore.selectedGameId() === g.id">{{ g.name }}</option>
+    }
+  </select>
+</ng-template>
+
+<!-- Template: Nav items -->
+<ng-template #navItemsList let-cssClass="cssClass" let-onNavigate="onNavigate">
+  @for (item of navItems(); track item.label) {
+    @if (!item.condition || item.condition()) {
+      @if (item.type === 'link') {
+        <a [routerLink]="item.route" [class]="cssClass" (click)="onNavigate()">{{ item.label }}</a>
+      } @else {
+        <button type="button" [class]="cssClass" [class.text-left]="cssClass === 'ds-nav-mobile-link'" (click)="item.onClick?.(); onNavigate()" [attr.aria-label]="item.label === '?' ? 'Ayuda' : undefined">{{ item.label }}</button>
+      }
+    }
+  }
+</ng-template>
+
 <nav class="ds-nav" aria-label="Navegación principal">
   <div class="ds-nav-inner">
     <!-- Brand / Logo -->
@@ -6,27 +35,10 @@
     <!-- Enlaces / controles desktop -->
     <div class="ds-nav-links">
       <!-- Selector de juegos (desktop) -->
-      <label class="sr-only" for="desktop-games">Seleccionar juego</label>
-      <select
-        id="desktop-games"
-        [value]="gamesStore.selectedGameId() ?? ''"
-        (change)="onDesktopGameChange($event)"
-        class="ds-nav-link"
-      >
-        <option value="" [selected]="!gamesStore.selectedGameId()">Todos los juegos</option>
-        @for (g of gamesStore.sortedGames(); track g.id) {
-          <option [value]="g.id" [selected]="gamesStore.selectedGameId() === g.id">{{ g.name }}</option>
-        }
-      </select>
+      <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'desktop-games', cssClass: 'ds-nav-link', onChange: onDesktopGameChange.bind(this)}"></ng-container>
 
-      <!-- Resto de enlaces desktop -->
-      <a routerLink="/associations" class="ds-nav-link">Asociaciones</a>
-      <a routerLink="/events" class="ds-nav-link">Eventos</a>
-      <a routerLink="/news" class="ds-nav-link">Noticias</a>
-      @if (canSeeAdmin()) {
-        <a routerLink="/admin" class="ds-nav-link">Admin</a>
-      }
-      <button type="button" class="ds-nav-link" (click)="openHelp()" aria-label="Ayuda">?</button>
+      <!-- Nav items desktop -->
+      <ng-container *ngTemplateOutlet="navItemsList; context: {cssClass: 'ds-nav-link', onNavigate: noop.bind(this)}"></ng-container>
     </div>
 
     <!-- Acciones -->
@@ -55,26 +67,11 @@
       <div class="ds-nav-mobile-list">
         <!-- Selector de juegos (mobile) -->
         <div class="border-b border-neutral-medium">
-          <label for="mobile-games-select" class="sr-only">Seleccionar juego</label>
-          <select
-            id="mobile-games-select"
-            [value]="gamesStore.selectedGameId() ?? ''"
-            (change)="selectGameMobile($any($event.target).value === '' ? null : $any($event.target).value)"
-            class="w-full px-4 md:px-6 py-3 border-0 focus:ring-2 focus:ring-brand-primary text-neutral-dark"
-          >
-            <option value="" [selected]="!gamesStore.selectedGameId()">Todos los juegos</option>
-            @for (g of gamesStore.sortedGames(); track g.id) {
-              <option [value]="g.id" [selected]="gamesStore.selectedGameId() === g.id">{{ g.name }}</option>
-            }
-          </select>
+          <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'mobile-games-select', cssClass: 'ds-nav-mobile-link w-full border-0', onChange: onMobileGameChange.bind(this)}"></ng-container>
         </div>
-        <a routerLink="/associations" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Asociaciones</a>
-        <a routerLink="/events" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Eventos</a>
-        <a routerLink="/news" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Noticias</a>
-        @if (canSeeAdmin()) {
-          <a routerLink="/admin" class="ds-nav-mobile-link" (click)="closeMobileMenu()">Admin</a>
-        }
-        <button type="button" class="ds-nav-mobile-link text-left" (click)="openHelp()">?</button>
+
+        <!-- Nav items mobile -->
+        <ng-container *ngTemplateOutlet="navItemsList; context: {cssClass: 'ds-nav-mobile-link', onNavigate: closeMobileMenu.bind(this)}"></ng-container>
       </div>
     </div>
   }

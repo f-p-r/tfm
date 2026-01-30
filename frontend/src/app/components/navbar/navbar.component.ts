@@ -10,10 +10,19 @@ import { AuthzService } from '../../core/authz/authz.service';
 import { isSummaryResponse } from '../../core/authz/authz.models';
 import { WebScope } from '../../core/web-scope.constants';
 import { ContextStore } from '../../core/context/context.store';
+import { NgTemplateOutlet } from '@angular/common';
+
+type NavItem = {
+  label: string;
+  type: 'link' | 'button';
+  route?: string;
+  onClick?: () => void;
+  condition?: () => boolean;
+};
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterModule, UserMenuComponent, HelpPanelComponent],
+  imports: [RouterModule, UserMenuComponent, HelpPanelComponent, NgTemplateOutlet],
   templateUrl: './navbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,6 +47,14 @@ export class NavbarComponent {
     if (!q) return list;
     return list.filter((g: Game) => g.name.toLowerCase().includes(q));
   });
+
+  readonly navItems = computed<NavItem[]>(() => [
+    { label: 'Asociaciones', type: 'link', route: '/associations' },
+    { label: 'Eventos', type: 'link', route: '/events' },
+    { label: 'Noticias', type: 'link', route: '/news' },
+    { label: 'Admin', type: 'link', route: '/admin', condition: () => this.canSeeAdmin() },
+    { label: '?', type: 'button', onClick: () => this.openHelp() },
+  ]);
 
   constructor() {
     this.gamesStore.loadOnce().pipe(takeUntilDestroyed()).subscribe();
@@ -147,5 +164,15 @@ export class NavbarComponent {
 
   closeHelp(): void {
     this.helpOpen.set(false);
+  }
+
+  noop(): void {
+    // No operation - usado en desktop nav items que no necesitan callback
+  }
+
+  onMobileGameChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const value = select.value?.trim();
+    this.selectGameMobile(value === '' ? null : value);
   }
 }
