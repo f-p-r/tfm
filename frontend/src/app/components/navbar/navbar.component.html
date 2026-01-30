@@ -9,14 +9,13 @@
       <label class="sr-only" for="desktop-games">Seleccionar juego</label>
       <select
         id="desktop-games"
-        [value]="gamesStore.selectedGame()?.id ?? ''"
+        [value]="contextStore.scopeType() === WebScope.GAME ? contextStore.scopeId() : null"
         (change)="onDesktopGameChange($event)"
         class="ds-nav-link"
       >
-        <option value="">Todos los juegos</option>
+        <option value="" [selected]="contextStore.scopeType() !== WebScope.GAME">Todos los juegos</option>
         @for (g of gamesStore.sortedGames(); track g.id) {
-          <option [value]="g.id">{{ g.name }}</option>
-        }
+          <option [value]="g.id" [selected]="contextStore.scopeType() === WebScope.GAME && contextStore.scopeId() === g.id">{{ g.name }}</option>        }
       </select>
 
       <!-- Resto de enlaces desktop -->
@@ -58,13 +57,13 @@
           <label for="mobile-games-select" class="sr-only">Seleccionar juego</label>
           <select
             id="mobile-games-select"
-            [value]="gamesStore.selectedGame()?.id ?? ''"
+            [value]="contextStore.scopeType() === WebScope.GAME ? contextStore.scopeId() : ''"
             (change)="selectGameMobile($any($event.target).value === '' ? null : $any($event.target).value)"
             class="w-full px-4 md:px-6 py-3 border-0 focus:ring-2 focus:ring-brand-primary text-neutral-dark"
           >
-            <option value="" [selected]="!gamesStore.selectedGame()">Todos los juegos</option>
+            <option value="" [selected]="contextStore.scopeType() !== WebScope.GAME">Todos los juegos</option>
             @for (g of gamesStore.sortedGames(); track g.id) {
-              <option [value]="g.id" [selected]="gamesStore.selectedGame()?.id === g.id">{{ g.name }}</option>
+              <option [value]="g.id" [selected]="contextStore.scopeType() === WebScope.GAME && contextStore.scopeId() === g.id">{{ g.name }}</option>
             }
           </select>
         </div>

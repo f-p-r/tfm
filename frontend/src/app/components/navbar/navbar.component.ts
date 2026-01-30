@@ -9,6 +9,7 @@ import { HelpPanelComponent } from '../../shared/help/help-panel/help-panel.comp
 import { AuthzService } from '../../core/authz/authz.service';
 import { isSummaryResponse } from '../../core/authz/authz.models';
 import { WebScope } from '../../core/web-scope.constants';
+import { ContextStore } from '../../core/context/context.store';
 
 @Component({
   selector: 'app-navbar',
@@ -28,6 +29,8 @@ export class NavbarComponent {
   private readonly router = inject(Router);
   private readonly authz = inject(AuthzService);
   readonly gamesStore = inject(GamesStore);
+  readonly contextStore = inject(ContextStore);
+  readonly WebScope = WebScope;
 
   readonly filteredGames = computed(() => {
     const q = this.gamesQuery().toLowerCase().trim();
@@ -38,12 +41,15 @@ export class NavbarComponent {
 
   constructor() {
     this.gamesStore.loadOnce().pipe(takeUntilDestroyed()).subscribe();
+
     this.router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         takeUntilDestroyed(),
       )
-      .subscribe(() => this.closeMobileMenu());
+      .subscribe(() => {
+        this.closeMobileMenu();
+      });
 
     // Evaluar permisos de admin cuando mode es 'portal' (scope GLOBAL)
     effect(() => {
@@ -115,7 +121,7 @@ export class NavbarComponent {
     this.gamesStore.setSelected(gameId);
     const game = this.gamesStore.getById(gameId);
     if (game) {
-      this.router.navigateByUrl(`/games/${game.slug}`);
+      this.router.navigateByUrl(`/juegos/${game.slug}`);
     }
   }
 
@@ -128,7 +134,7 @@ export class NavbarComponent {
       this.gamesStore.setSelected(gameId);
       const game = this.gamesStore.getById(gameId);
       if (game) {
-        this.router.navigateByUrl(`/games/${game.slug}`);
+        this.router.navigateByUrl(`/juegos/${game.slug}`);
       }
     }
     this.closeMobileMenu();

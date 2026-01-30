@@ -4,12 +4,17 @@ import { LoginPage } from './pages/login/login.page';
 import { AuthCallbackPage } from './pages/auth-callback/auth-callback.page';
 import { StyleguidePage } from './styleguide/styleguide.page';
 import { PrototypeHostPage } from './prototypes/prototype-host.page';
+import { GamePage } from './pages/games/game/game.page';
+import { gameBySlugGuard } from './guards/game-by-slug.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomePage },
   { path: 'login', component: LoginPage },
   { path: 'auth/callback', component: AuthCallbackPage },
   { path: 'styleguide', component: StyleguidePage },
+
+  // Ruta de juegos (sin ID en URL)
+  { path: 'juegos/:slug', component: GamePage, canActivate: [gameBySlugGuard] },
   {
     path: 'prototypes',
     children: [
