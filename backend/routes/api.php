@@ -8,6 +8,8 @@ use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\AuthzController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\RegionController;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -20,7 +22,7 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
-    
+
     // Association by slug (must be before apiResource)
     Route::get('associations/by-slug/{slug}', [AssociationController::class, 'bySlug']);
     Route::apiResource('associations', AssociationController::class);
@@ -42,3 +44,9 @@ Route::get('games/{game}', [GameController::class, 'show']);
 Route::get('games/{game}/associations', [GameController::class, 'associations']);
 Route::put('games/{game}', [GameController::class, 'update']);
 Route::patch('games/{game}', [GameController::class, 'update']);
+
+// Countries and Regions endpoints (sin autenticación)
+Route::get('countries', [CountryController::class, 'index']);
+Route::get('countries/{id}', [CountryController::class, 'show']);
+Route::get('regions', [RegionController::class, 'index']);
+Route::get('regions/{id}', [RegionController::class, 'show']);
