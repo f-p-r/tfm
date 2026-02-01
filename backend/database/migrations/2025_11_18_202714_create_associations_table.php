@@ -21,6 +21,7 @@ return new class extends Migration
             $table->char('country_id', 2)->nullable();
             $table->string('region_id')->nullable();
             $table->string('web', 2048)->nullable();
+            $table->integer('homePageId')->nullable();
             $table->timestamps();
         });
     }

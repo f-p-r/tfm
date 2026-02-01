@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
-import { ContentDTO } from '../../shared/content/content-segments.dto';
+import { PageContentDTO } from '../../shared/content/page-content.dto';
 
 const PREVIEW_KEY = 'contentSegmentsPreview:current';
 
@@ -29,7 +29,7 @@ const PREVIEW_KEY = 'contentSegmentsPreview:current';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentSegmentsPreviewPage {
-  readonly content: ContentDTO | null;
+  readonly content: PageContentDTO | null;
 
   constructor() {
     this.content = this.load();
@@ -39,10 +39,10 @@ export class ContentSegmentsPreviewPage {
     window.close();
   }
 
-  private load(): ContentDTO | null {
+  private load(): PageContentDTO | null {
     try {
       const raw = sessionStorage.getItem(PREVIEW_KEY);
-      return raw ? (JSON.parse(raw) as ContentDTO) : null;
+      return raw ? (JSON.parse(raw) as PageContentDTO) : null;
     } catch {
       return null;
     }

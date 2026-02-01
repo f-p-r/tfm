@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { QuillModule, QuillEditorComponent } from 'ngx-quill';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Quill from 'quill';
-import { ContentDTO, SegmentDTO, RichSegmentDTO, CarouselSegmentDTO } from '../../shared/content/content-segments.dto';
+import { PageContentDTO, SegmentDTO, RichSegmentDTO, CarouselSegmentDTO } from '../../shared/content/page-content.dto';
 import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
 import { quillModules } from '../quill.config';
 import { MediaPickerComponent } from '../../components/media/media-picker.component';
@@ -271,7 +271,7 @@ export class ContentSegmentsEditorPage {
   readonly showLinkSelector = signal(false);
   private savedSelection: any = null;
   // Estado principal de contenido en memoria
-  readonly content = signal<ContentDTO>({
+  readonly content = signal<PageContentDTO>({
     schemaVersion: 1,
     segments: [],
   });
@@ -591,7 +591,7 @@ export class ContentSegmentsEditorPage {
     return JSON.parse(JSON.stringify(seg)) as T;
   }
 
-  singleContent(seg: SegmentDTO): ContentDTO {
+  singleContent(seg: SegmentDTO): PageContentDTO {
     return {
       schemaVersion: 1,
       segments: [seg],

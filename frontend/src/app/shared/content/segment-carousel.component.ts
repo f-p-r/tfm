@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CarouselSegmentDTO } from './content-segments.dto';
+import { CarouselSegmentDTO } from './page-content.dto';
 
 @Component({
   selector: 'app-segment-carousel',

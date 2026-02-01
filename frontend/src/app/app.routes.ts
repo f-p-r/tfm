@@ -63,6 +63,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./prototypes/help-demo/help-demo.page').then((m) => m.HelpDemoPage),
       },
+      {
+        // Prototipo association-page-demo: páginas de asociación con segmentos
+        path: 'association-page-demo',
+        loadComponent: () =>
+          import('./prototypes/association-page-demo/association-page-demo.page').then(
+            (m) => m.AssociationPageDemoPage,
+          ),
+      },
       { path: '**', component: PrototypeHostPage },
     ],
   },

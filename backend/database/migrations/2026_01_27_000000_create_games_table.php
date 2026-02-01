@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug', 64)->unique();
             $table->integer('team_size')->unsigned();
             $table->boolean('disabled')->default(false);
+            $table->integer('homePageId')->nullable();
             $table->timestamps();
         });
     }

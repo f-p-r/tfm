@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
-import { ContentDTO } from '../../shared/content/content-segments.dto';
+import { PageContentDTO } from '../../shared/content/page-content.dto';
 
 const IMAGE_URL = 'https://lawebdeperez.es/frameworks_a3/img/landing1.jpg';
 
@@ -22,7 +22,7 @@ const IMAGE_URL = 'https://lawebdeperez.es/frameworks_a3/img/landing1.jpg';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentSegmentsDemoPage {
-  readonly content: ContentDTO = {
+  readonly content: PageContentDTO = {
     schemaVersion: 1,
     segments: [
       {

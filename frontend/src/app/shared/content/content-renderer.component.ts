@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContentDTO } from './content-segments.dto';
+import { PageContentDTO } from './page-content.dto';
 import { SegmentRichComponent } from './segment-rich.component';
 import { SegmentCarouselComponent } from './segment-carousel.component';
 
@@ -22,7 +22,7 @@ import { SegmentCarouselComponent } from './segment-carousel.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentRendererComponent {
-  readonly content = input<ContentDTO | null>(null);
+  readonly content = input<PageContentDTO | null>(null);
 
   get segments() {
     return this.content()?.segments ?? [];

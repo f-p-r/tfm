@@ -2,7 +2,7 @@
 
 export type SegmentDTO = RichSegmentDTO | CarouselSegmentDTO;
 
-export interface ContentDTO {
+export interface PageContentDTO {
   schemaVersion: 1;
   segments: SegmentDTO[];
 }
