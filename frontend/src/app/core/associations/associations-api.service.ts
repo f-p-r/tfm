@@ -13,6 +13,15 @@ export class AssociationsApiService {
   private readonly baseUrl = `${environment.apiBaseUrl}/api/associations`;
 
   /**
+   * Obtiene todas las asociaciones.
+   *
+   * @returns Observable con el array de asociaciones.
+   */
+  getAll(): Observable<Association[]> {
+    return this.http.get<Association[]>(this.baseUrl);
+  }
+
+  /**
    * Obtiene una asociación por su ID.
    *
    * @param id ID de la asociación.

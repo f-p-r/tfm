@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject, signal, 
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { QuillModule, QuillEditorComponent } from 'ngx-quill';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import Quill from 'quill';
