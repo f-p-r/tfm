@@ -27,8 +27,11 @@ interface CacheEntry {
 export class AssociationsResolveService {
   private readonly api = inject(AssociationsApiService);
 
-  /** Caché in-memory con TTL */
+  /** Caché in-memory con TTL (clave: slug) */
   private readonly cache = new Map<string, CacheEntry>();
+
+  /** Índice id → slug para lookup O(1) */
+  private readonly idIndex = new Map<number, string>();
 
   /** Observables in-flight para deduplicación */
   private readonly inFlight = new Map<string, Observable<Association>>();
@@ -63,6 +66,8 @@ export class AssociationsResolveService {
           value: association,
           fetchedAt: Date.now(),
         });
+        // Actualizar índice id → slug
+        this.idIndex.set(association.id, key);
         // Limpiar in-flight
         this.inFlight.delete(key);
       }),
@@ -110,6 +115,8 @@ export class AssociationsResolveService {
           value: association,
           fetchedAt: Date.now(),
         });
+        // Actualizar índice id → slug
+        this.idIndex.set(association.id, slugKey);
         // Limpiar in-flight
         this.inFlight.delete(key);
       }),
@@ -129,16 +136,26 @@ export class AssociationsResolveService {
   /**
    * Busca una asociación en la caché por su ID.
    * Método síncrono que solo consulta la caché existente.
+   * Usa indexación O(1) mediante idIndex.
    *
    * @param id ID de la asociación.
    * @returns La asociación si está en caché, undefined si no.
    */
   getById(id: number): Association | undefined {
-    for (const entry of this.cache.values()) {
-      if (entry.value.id === id && this.isCacheValid(entry.fetchedAt)) {
-        return entry.value;
-      }
+    // Buscar slug en el índice
+    const slugKey = this.idIndex.get(id);
+    if (!slugKey) {
+      return undefined;
     }
+
+    // Verificar que la entrada sigue válida
+    const cached = this.cache.get(slugKey);
+    if (cached && this.isCacheValid(cached.fetchedAt)) {
+      return cached.value;
+    }
+
+    // Entrada expirada: limpiar índice
+    this.idIndex.delete(id);
     return undefined;
   }
 
@@ -148,6 +165,7 @@ export class AssociationsResolveService {
    */
   clearCache(): void {
     this.cache.clear();
+    this.idIndex.clear();
   }
 
   /**
