@@ -3,13 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PagesService } from '../../../../core/pages/pages.service';
-import { PageDTO, PageUpdateDTO, PageContentDTO } from '../../../../shared/content/page.dto';
+import { PageDTO, PageUpdateDTO } from '../../../../shared/content/page.dto';
+import { PageContentDTO } from '../../../../shared/content/page-content.dto';
 import { ContentSegmentsEditorComponent } from '../../../../shared/content/segments-editor/content-segments-editor.component';
-import { ContentSegmentsPreviewComponent } from '../../../../shared/content/segments-preview/content-segments-preview.component';
+
 
 @Component({
   selector: 'app-page-edit-admin',
-  imports: [CommonModule, FormsModule, ContentSegmentsEditorComponent, ContentSegmentsPreviewComponent],
+  imports: [CommonModule, FormsModule, ContentSegmentsEditorComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './page-edit-admin.page.html',
   styleUrl: './page-edit-admin.page.css',
@@ -40,6 +41,7 @@ export class PageEditAdminPage implements OnInit {
   readonly isLoading = signal(false);
   readonly isSaving = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly validationErrors = signal<Record<string, string[]>>({});
 
   // Computed
   readonly hasChanges = computed(() => {
@@ -109,8 +111,14 @@ export class PageEditAdminPage implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage.set('Error al cargar la página');
         this.isLoading.set(false);
+
+        if (err.status === 404) {
+          this.errorMessage.set('Página no encontrada');
+        } else {
+          this.errorMessage.set(err.message || 'Error al cargar la página');
+        }
+
         console.error(err);
       },
     });
@@ -133,6 +141,7 @@ export class PageEditAdminPage implements OnInit {
 
     this.isSaving.set(true);
     this.errorMessage.set(null);
+    this.validationErrors.set({});
 
     this.pagesService.update(id, patch).subscribe({
       next: (updatedPage) => {
@@ -141,8 +150,16 @@ export class PageEditAdminPage implements OnInit {
         alert('Página guardada correctamente');
       },
       error: (err) => {
-        this.errorMessage.set(err.message || 'Error al guardar la página');
         this.isSaving.set(false);
+
+        if (err.status === 422) {
+          this.errorMessage.set('Error de validación');
+          this.validationErrors.set(err.errors || {});
+        } else {
+          this.errorMessage.set(err.message || 'Error al guardar la página');
+          this.validationErrors.set({});
+        }
+
         console.error(err);
       },
     });

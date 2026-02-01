@@ -11,6 +11,9 @@ use App\Http\Controllers\AuthzController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\InternalLinksController;
+use App\Http\Controllers\AdminPagesController;
+use App\Http\Controllers\AdminOwnerHomePageController;
+use App\Http\Controllers\PublicPagesController;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -34,6 +37,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Internal Links Resolver
     Route::get('internal-links/resolve', [InternalLinksController::class, 'resolve']);
+
+    Route::prefix('admin')->group(function () {
+        Route::get('pages', [AdminPagesController::class, 'indexByOwner']);
+        Route::get('pages/{page}', [AdminPagesController::class, 'show']);
+        Route::post('pages', [AdminPagesController::class, 'store']);
+        Route::patch('pages/{page}', [AdminPagesController::class, 'update']);
+        Route::delete('pages/{page}', [AdminPagesController::class, 'destroy']);
+
+        Route::get('owners/home-page', [AdminOwnerHomePageController::class, 'get']);
+        Route::put('owners/home-page', [AdminOwnerHomePageController::class, 'set']);
+    });
 });
 
 // Media endpoints (sin autenticación por ahora)
@@ -54,3 +68,7 @@ Route::get('countries', [CountryController::class, 'index']);
 Route::get('countries/{id}', [CountryController::class, 'show']);
 Route::get('regions', [RegionController::class, 'index']);
 Route::get('regions/{id}', [RegionController::class, 'show']);
+
+// Public Pages endpoints (sin autenticación)
+Route::get('pages/home', [PublicPagesController::class, 'home']);
+Route::get('pages/by-owner-slug', [PublicPagesController::class, 'byOwnerSlug']);

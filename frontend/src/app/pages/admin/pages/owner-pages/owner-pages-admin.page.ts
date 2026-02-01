@@ -4,9 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PagesService } from '../../../../core/pages/pages.service';
 import { OwnerPagesSettingsService } from '../../../../core/pages/owner-pages-settings.service';
-import { PageSummaryDTO, PageDTO, PageOwnerType } from '../../../../shared/content/page.dto';
+import { PageSummaryDTO, PageDTO, PageOwnerType, PageOwnerScope } from '../../../../shared/content/page.dto';
 import { ContentSegmentsPreviewComponent } from '../../../../shared/content/segments-preview/content-segments-preview.component';
-import { WebScope } from '../../../../core/web-scope.constants';
 
 @Component({
   selector: 'app-owner-pages-admin',
@@ -45,8 +44,8 @@ export class OwnerPagesAdminPage implements OnInit {
 
   readonly ownerTypeLabel = computed(() => {
     const type = this.ownerType();
-    if (type === WebScope.ASSOCIATION) return 'Asociación';
-    if (type === WebScope.GAME) return 'Juego';
+    if (type === PageOwnerScope.ASSOCIATION) return 'Asociación';
+    if (type === PageOwnerScope.GAME) return 'Juego';
     return 'Owner';
   });
 
@@ -99,10 +98,15 @@ export class OwnerPagesAdminPage implements OnInit {
   }
 
   private parseOwnerType(param: string): PageOwnerType | null {
-    const num = parseInt(param, 10);
-    if (!isNaN(num)) {
-      return num as PageOwnerType;
+    // Si es '2' o '3', es válido directamente
+    if (param === PageOwnerScope.ASSOCIATION || param === PageOwnerScope.GAME) {
+      return param as PageOwnerType;
     }
+    // Si es número 2 o 3, convertir a string
+    const num = parseInt(param, 10);
+    if (num === 2) return PageOwnerScope.ASSOCIATION;
+    if (num === 3) return PageOwnerScope.GAME;
+    // Si es otro tipo futuro (news, event, page), devolver tal cual
     return param as PageOwnerType;
   }
 

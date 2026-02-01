@@ -3,8 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
 import { PagesService } from '../../core/pages/pages.service';
-import { PageDTO, PageSummaryDTO } from '../../shared/content/page.dto';
-import { WebScope } from '../../core/web-scope.constants';
+import { PageDTO, PageSummaryDTO, PageOwnerScope } from '../../shared/content/page.dto';
 
 /**
  * Prototipo: Demostración de páginas de asociación.
@@ -96,7 +95,7 @@ export class AssociationPageDemoPage {
   constructor() {
     // Cargar lista de páginas disponibles
     this.pagesService
-      .listByOwner(WebScope.ASSOCIATION, this.association.id)
+      .listByOwner(PageOwnerScope.ASSOCIATION, this.association.id)
       .subscribe((pages) => {
         this.availablePages.set(pages);
       });

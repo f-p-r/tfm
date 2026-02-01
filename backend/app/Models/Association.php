@@ -22,6 +22,7 @@ class Association extends Model
         'region_id',
         'web',
         'disabled',
+        'homePageId',
     ];
 
     /**
@@ -31,6 +32,7 @@ class Association extends Model
      */
     protected $casts = [
         'disabled' => 'boolean',
+        'homePageId' => 'integer',
     ];
 
     /**

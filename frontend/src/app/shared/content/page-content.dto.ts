@@ -7,6 +7,15 @@ export interface PageContentDTO {
   segments: SegmentDTO[];
 }
 
+/** Campos comunes a todos los segmentos */
+export interface BaseSegmentDTO {
+  id: string;
+  order: number;
+
+  /** Lista de clases separadas por espacios (avanzado) */
+  classNames?: string;
+}
+
 export interface RichImageDTO {
   mediaId?: number;
   url: string;
@@ -19,9 +28,7 @@ export interface CarouselImageDTO {
   alt?: string;
 }
 
-export interface RichSegmentDTO {
-  id: string;
-  order: number;
+export interface RichSegmentDTO extends BaseSegmentDTO {
   type: 'rich';
   textHtml?: string;
   image?: RichImageDTO;
@@ -30,9 +37,7 @@ export interface RichSegmentDTO {
   imageMaxHeightPx?: number;
 }
 
-export interface CarouselSegmentDTO {
-  id: string;
-  order: number;
+export interface CarouselSegmentDTO extends BaseSegmentDTO {
   type: 'carousel';
   images: CarouselImageDTO[];
   height: number; // Altura obligatoria en px

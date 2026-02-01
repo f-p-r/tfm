@@ -35,6 +35,13 @@
                 [disabled]="isCreating()"
               />
               <small class="form-help">Debe ser único dentro del owner. Ejemplo: contacto, actividades, noticias</small>
+              @if (validationErrors()['slug']) {
+                <div class="error-field">
+                  @for (error of validationErrors()['slug']; track error) {
+                    <small class="text-danger">{{ error }}</small>
+                  }
+                </div>
+              }
             </div>
 
             <div class="form-group">

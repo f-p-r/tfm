@@ -3,14 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PagesService } from '../../../../core/pages/pages.service';
-import { PageOwnerType, PageCreateDTO, PageContentDTO } from '../../../../shared/content/page.dto';
+import { PageOwnerType, PageCreateDTO, PageOwnerScope } from '../../../../shared/content/page.dto';
+import { PageContentDTO } from '../../../../shared/content/page-content.dto';
 import { ContentSegmentsEditorComponent } from '../../../../shared/content/segments-editor/content-segments-editor.component';
-import { ContentSegmentsPreviewComponent } from '../../../../shared/content/segments-preview/content-segments-preview.component';
-import { WebScope } from '../../../../core/web-scope.constants';
 
 @Component({
   selector: 'app-page-create-admin',
-  imports: [CommonModule, FormsModule, ContentSegmentsEditorComponent, ContentSegmentsPreviewComponent],
+  imports: [CommonModule, FormsModule, ContentSegmentsEditorComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './page-create-admin.page.html',
   styleUrl: './page-create-admin.page.css',
@@ -36,6 +35,7 @@ export class PageCreateAdminPage implements OnInit {
   // States
   readonly isCreating = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly validationErrors = signal<Record<string, string[]>>({});
 
   // Computed
   readonly canCreate = computed(() => {
@@ -44,8 +44,8 @@ export class PageCreateAdminPage implements OnInit {
 
   readonly ownerTypeLabel = computed(() => {
     const type = this.ownerType();
-    if (type === WebScope.ASSOCIATION) return 'Asociación';
-    if (type === WebScope.GAME) return 'Juego';
+    if (type === PageOwnerScope.ASSOCIATION) return 'Asociación';
+    if (type === PageOwnerScope.GAME) return 'Juego';
     return 'Owner';
   });
 
@@ -72,10 +72,15 @@ export class PageCreateAdminPage implements OnInit {
   }
 
   private parseOwnerType(param: string): PageOwnerType | null {
-    const num = parseInt(param, 10);
-    if (!isNaN(num)) {
-      return num as PageOwnerType;
+    // Si es '2' o '3', es válido directamente
+    if (param === PageOwnerScope.ASSOCIATION || param === PageOwnerScope.GAME) {
+      return param as PageOwnerType;
     }
+    // Si es número 2 o 3, convertir a string
+    const num = parseInt(param, 10);
+    if (num === 2) return PageOwnerScope.ASSOCIATION;
+    if (num === 3) return PageOwnerScope.GAME;
+    // Si es otro tipo futuro (news, event, page), devolver tal cual
     return param as PageOwnerType;
   }
 
@@ -108,6 +113,7 @@ export class PageCreateAdminPage implements OnInit {
 
     this.isCreating.set(true);
     this.errorMessage.set(null);
+    this.validationErrors.set({});
 
     this.pagesService.create(input).subscribe({
       next: (createdPage) => {
@@ -116,8 +122,16 @@ export class PageCreateAdminPage implements OnInit {
         this.router.navigate(['/admin/pages', ownerType, ownerId, 'edit', createdPage.id]);
       },
       error: (err) => {
-        this.errorMessage.set(err.message || 'Error al crear la página');
         this.isCreating.set(false);
+
+        if (err.status === 422) {
+          this.errorMessage.set('Error de validación');
+          this.validationErrors.set(err.errors || {});
+        } else {
+          this.errorMessage.set(err.message || 'Error al crear la página');
+          this.validationErrors.set({});
+        }
+
         console.error(err);
       },
     });

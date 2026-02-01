@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { PageContentDTO } from '../../../../shared/content/page.dto';
+import { PageContentDTO } from '../../../../shared/content/page-content.dto';
 import { ContentSegmentsPreviewComponent } from '../../../../shared/content/segments-preview/content-segments-preview.component';
 
 interface PreviewData {

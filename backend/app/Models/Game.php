@@ -16,6 +16,7 @@ class Game extends Model
         'slug',
         'team_size',
         'disabled',
+        'homePageId',
     ];
 
     /**
@@ -26,6 +27,7 @@ class Game extends Model
     protected $casts = [
         'team_size' => 'integer',
         'disabled' => 'boolean',
+        'homePageId' => 'integer',
     ];
 
     /**

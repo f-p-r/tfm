@@ -1,19 +1,23 @@
 import { PageContentDTO } from './page-content.dto';
-import { WebScope } from '../../core/web-scope.constants';
 
-export type { PageContentDTO } from './page-content.dto';
+/**
+ * Owner type viene del backend SIEMPRE como string.
+ * - '2' => asociación (WebScope.ASSOCIATION)
+ * - '3' => juego (WebScope.GAME)
+ * - otros tipos futuros: 'news' | 'event' | 'page'
+ */
+export type PageOwnerType = '2' | '3' | 'news' | 'event' | 'page';
 
-export type PageOwnerType =
-   WebScope.ASSOCIATION
-  | WebScope.GAME
-  | 'news'
-  | 'event'
-  | 'page';
+/** Constantes de ayuda para scopes */
+export const PageOwnerScope = {
+  ASSOCIATION: '2',
+  GAME: '3',
+} as const;
 
 export interface PageDTO {
   id: number;
 
-  /** Owner: scope numérico (association/game) o string (news/event/page) */
+  /** Owner: string ('2'/'3' para scopes o 'news'/'event'/'page' en el futuro) */
   ownerType: PageOwnerType;
 
   /** Id numérico del owner */
@@ -22,31 +26,30 @@ export interface PageDTO {
   /** Único dentro del owner (ownerType + ownerId) */
   slug: string;
 
+  /** Título visible */
   title: string;
 
-  /** Estado publicación (false=draft, true=published) */
+  /** Estado publicación (false=borrador, true=publicada) */
   published: boolean;
 
-  /** Opcional, útil para ordenar/mostrar */
+  /** Opcional, útil para ordenar/mostrar (backend puede setearla al publicar) */
   publishedAt?: string | null;
 
   /** Documento JSON de segmentos */
   content: PageContentDTO;
 
+  /** Auditoría */
   createdAt: string; // ISO
   updatedAt: string; // ISO
 }
 
 export interface PageSummaryDTO {
   id: number;
-  ownerType: PageOwnerType;
-  ownerId: number;
   slug: string;
   title: string;
   published: boolean;
-  publishedAt?: string | null; // ISO
-  createdAt: string; // ISO
   updatedAt: string; // ISO
+  publishedAt?: string | null; // ISO
 }
 
 export interface PageCreateDTO {

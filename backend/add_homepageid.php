@@ -28,16 +28,16 @@ try {
 
     if (!$gamesHasColumn) {
         echo "Adding homePageId to games table...\n";
-        
+
         // Get current structure and data
         $db->exec("BEGIN TRANSACTION");
-        
+
         // Backup data
         $gamesData = $db->query("SELECT * FROM games")->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Get current structure
         $createGamesSql = $db->query("SELECT sql FROM sqlite_master WHERE type='table' AND name='games'")->fetchColumn();
-        
+
         // Drop and recreate table with new column
         $db->exec("DROP TABLE games");
         $db->exec("
@@ -52,7 +52,7 @@ try {
                 updated_at DATETIME
             )
         ");
-        
+
         // Restore data
         if (!empty($gamesData)) {
             $stmt = $db->prepare("
@@ -70,14 +70,14 @@ try {
                     'updated_at' => $row['updated_at'],
                 ]);
             }
-            
+
             // Update sqlite_sequence
             $maxId = $db->query("SELECT MAX(id) FROM games")->fetchColumn();
             if ($maxId) {
                 $db->exec("UPDATE sqlite_sequence SET seq = $maxId WHERE name = 'games'");
             }
         }
-        
+
         $db->exec("COMMIT");
         echo "✓ homePageId added to games table\n\n";
     } else {
@@ -96,13 +96,13 @@ try {
 
     if (!$associationsHasColumn) {
         echo "Adding homePageId to associations table...\n";
-        
+
         // Get current structure and data
         $db->exec("BEGIN TRANSACTION");
-        
+
         // Backup data
         $associationsData = $db->query("SELECT * FROM associations")->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Drop and recreate table with new column
         $db->exec("DROP TABLE associations");
         $db->exec("
@@ -121,7 +121,7 @@ try {
                 updated_at DATETIME
             )
         ");
-        
+
         // Restore data
         if (!empty($associationsData)) {
             $stmt = $db->prepare("
@@ -143,14 +143,14 @@ try {
                     'updated_at' => $row['updated_at'],
                 ]);
             }
-            
+
             // Update sqlite_sequence
             $maxId = $db->query("SELECT MAX(id) FROM associations")->fetchColumn();
             if ($maxId) {
                 $db->exec("UPDATE sqlite_sequence SET seq = $maxId WHERE name = 'associations'");
             }
         }
-        
+
         $db->exec("COMMIT");
         echo "✓ homePageId added to associations table\n\n";
     } else {
@@ -158,14 +158,14 @@ try {
     }
 
     echo "Done! Verifying structure...\n\n";
-    
+
     // Show games structure
     echo "Games table structure:\n";
     $gamesInfo = $db->query("PRAGMA table_info(games)")->fetchAll(PDO::FETCH_ASSOC);
     foreach ($gamesInfo as $col) {
         echo "  {$col['cid']}: {$col['name']} ({$col['type']})\n";
     }
-    
+
     echo "\nAssociations table structure:\n";
     $associationsInfo = $db->query("PRAGMA table_info(associations)")->fetchAll(PDO::FETCH_ASSOC);
     foreach ($associationsInfo as $col) {

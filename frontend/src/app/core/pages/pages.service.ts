@@ -1,319 +1,132 @@
-import { Injectable } from '@angular/core';
-import { Observable, of, delay, throwError } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { PageDTO, PageSummaryDTO, PageCreateDTO, PageUpdateDTO, PageOwnerType } from '../../shared/content/page.dto';
-import { WebScope } from '../web-scope.constants';
-
-interface PageDBRecord {
-  id: number;
-  ownerType: string; // Stored as string in mock DB
-  ownerId: number;
-  title: string;
-  slug: string;
-  published: boolean;
-  publishedAt: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
-  content: PageDTO['content'];
-}
+import { isLaravelValidationError } from '../auth/laravel-validation-error';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PagesService {
-  private nextId = 5;
-
-  // Mock database with ownerType as string (simulating backend storage)
-  private mockPagesDB: PageDBRecord[] = [
-    {
-      id: 1,
-      ownerType: '2', // Simulated backend value for ASSOCIATION
-      ownerId: 1,
-      title: 'Inicio',
-      slug: 'inicio',
-      published: true,
-      publishedAt: new Date('2024-01-15'),
-      createdAt: new Date('2024-01-01'),
-      updatedAt: new Date('2024-01-15'),
-      content: {
-        schemaVersion: 1,
-        segments: [
-          {
-            id: 's1',
-            type: 'rich',
-            order: 1,
-            textHtml:
-              '<h1>Bienvenidos a la Asociación Española de Go</h1><p>La Asociación Española de Go (AEG) es una entidad sin ánimo de lucro que tiene como objetivo promover y difundir el juego del Go en España.</p>',
-            image: {
-              url: '/img/go-stones.jpg',
-            },
-            imagePlacement: 'left',
-            imageWidth: 400,
-          },
-          {
-            id: 's2',
-            type: 'carousel',
-            order: 2,
-            height: 400,
-            imagesPerView: 3,
-            delaySeconds: 5,
-            images: [
-              {
-                url: '/img/carousel1.jpg',
-                alt: 'Imagen 1',
-              },
-              {
-                url: '/img/carousel2.jpg',
-                alt: 'Imagen 2',
-              },
-              {
-                url: '/img/carousel3.jpg',
-                alt: 'Imagen 3',
-              },
-            ],
-          },
-        ],
-      },
-    },
-    {
-      id: 2,
-      ownerType: '2', // Simulated backend value for ASSOCIATION
-      ownerId: 1,
-      title: 'Actividades',
-      slug: 'actividades',
-      published: true,
-      publishedAt: new Date('2024-02-01'),
-      createdAt: new Date('2024-01-20'),
-      updatedAt: new Date('2024-02-01'),
-      content: {
-        schemaVersion: 1,
-        segments: [
-          {
-            id: 's3',
-            type: 'rich',
-            order: 1,
-            textHtml:
-              '<h1>Nuestras Actividades</h1><p>Organizamos torneos, cursos y eventos durante todo el año.</p>',
-          },
-        ],
-      },
-    },
-    {
-      id: 3,
-      ownerType: '2', // Simulated backend value for ASSOCIATION
-      ownerId: 1,
-      title: 'Contacto',
-      slug: 'contacto',
-      published: false, // Draft page
-      publishedAt: null,
-      createdAt: new Date('2024-02-10'),
-      updatedAt: new Date('2024-02-15'),
-      content: {
-        schemaVersion: 1,
-        segments: [
-          {
-            id: 's4',
-            type: 'rich',
-            order: 1,
-            textHtml:
-              '<h1>Contacto</h1><p>Puedes contactarnos en info@aeg.es</p>',
-          },
-        ],
-      },
-    },
-    {
-      id: 4,
-      ownerType: '2', // Simulated backend value for ASSOCIATION
-      ownerId: 1,
-      title: 'Noticias Borrador',
-      slug: 'noticias-borrador',
-      published: false, // Draft page
-      publishedAt: null,
-      createdAt: new Date('2024-03-01'),
-      updatedAt: new Date('2024-03-01'),
-      content: {
-        schemaVersion: 1,
-        segments: [
-          {
-            id: 's5',
-            type: 'rich',
-            order: 1,
-            textHtml:
-              '<h1>Noticias</h1><p>Este es un borrador de la página de noticias.</p>',
-          },
-        ],
-      },
-    },
-  ];
+  private readonly http = inject(HttpClient);
+  private readonly apiBaseUrl = environment.apiBaseUrl;
 
   /**
-   * Serialize PageOwnerType to string for mock DB storage
-   */
-  private serializeOwnerType(type: PageOwnerType): string {
-    return type.toString();
-  }
-
-  /**
-   * Deserialize string from mock DB to PageOwnerType
-   */
-  private deserializeOwnerType(type: string): PageOwnerType {
-    const num = parseInt(type, 10);
-    if (isNaN(num)) {
-      return type as any; // Fallback for non-numeric strings
-    }
-    return num as PageOwnerType;
-  }
-
-  /**
-   * Convert DB page to DTO with proper ownerType deserialization
-   */
-  private toDTO(dbPage: PageDBRecord): PageDTO {
-    return {
-      ...dbPage,
-      ownerType: this.deserializeOwnerType(dbPage.ownerType),
-      publishedAt: dbPage.publishedAt?.toISOString() ?? null,
-      createdAt: dbPage.createdAt.toISOString(),
-      updatedAt: dbPage.updatedAt.toISOString(),
-    };
-  }
-
-  /**
-   * List all pages for a given owner
+   * Lista todas las páginas para un owner dado
+   * GET /api/admin/pages?ownerType={ownerType}&ownerId={ownerId}
    */
   listByOwner(
     ownerType: PageOwnerType,
     ownerId: number,
   ): Observable<PageSummaryDTO[]> {
-    const serializedType = this.serializeOwnerType(ownerType);
-    const pages = this.mockPagesDB
-      .filter((p) => p.ownerType === serializedType && p.ownerId === ownerId)
-      .map((p) => ({
-        id: p.id,
-        ownerType: this.deserializeOwnerType(p.ownerType),
-        ownerId: p.ownerId,
-        title: p.title,
-        slug: p.slug,
-        published: p.published,
-        publishedAt: p.publishedAt?.toISOString() ?? null,
-        createdAt: p.createdAt.toISOString(),
-        updatedAt: p.updatedAt.toISOString(),
-      }));
+    const params = new HttpParams()
+      .set('ownerType', ownerType)
+      .set('ownerId', ownerId.toString());
 
-    return of(pages).pipe(delay(100));
+    return this.http
+      .get<PageSummaryDTO[]>(`${this.apiBaseUrl}/api/admin/pages`, { params })
+      .pipe(catchError((error) => this.handleError(error)));
   }
 
   /**
-   * Get a page by ID
+   * Obtiene una página por su ID
+   * GET /api/admin/pages/{id}
    */
   getById(id: number): Observable<PageDTO | null> {
-    const dbPage = this.mockPagesDB.find((p) => p.id === id);
-    if (!dbPage) {
-      return of(null).pipe(delay(100));
-    }
-    return of(this.toDTO(dbPage)).pipe(delay(100));
+    return this.http
+      .get<PageDTO>(`${this.apiBaseUrl}/api/admin/pages/${id}`)
+      .pipe(
+        catchError((error) => {
+          if (error.status === 404) {
+            return throwError(() => ({
+              status: 404,
+              message: 'Página no encontrada',
+            }));
+          }
+          return this.handleError(error);
+        })
+      );
   }
 
   /**
-   * Get a page by owner and slug
+   * Obtiene una página por owner y slug
+   * (No hay endpoint específico para esto en la API admin, usar getById)
+   * Nota: Este método se mantiene por compatibilidad pero no tiene endpoint directo
    */
   getBySlug(
     ownerType: PageOwnerType,
     ownerId: number,
     slug: string,
   ): Observable<PageDTO | null> {
-    const serializedType = this.serializeOwnerType(ownerType);
-    const dbPage = this.mockPagesDB.find(
-      (p) =>
-        p.ownerType === serializedType &&
-        p.ownerId === ownerId &&
-        p.slug === slug,
-    );
-
-    if (!dbPage) {
-      return of(null).pipe(delay(100));
-    }
-
-    return of(this.toDTO(dbPage)).pipe(delay(100));
+    // Este método necesitaría primero listar y buscar, o un endpoint específico
+    // Por ahora lo dejamos como no implementado
+    return throwError(() => ({
+      status: 501,
+      message: 'getBySlug no implementado - usar listByOwner + búsqueda local',
+    }));
   }
 
   /**
-   * Create a new page
+   * Crea una nueva página
+   * POST /api/admin/pages
    */
   create(input: PageCreateDTO): Observable<PageDTO> {
-    // Validate slug uniqueness
-    const serializedType = this.serializeOwnerType(input.ownerType);
-    const existingPage = this.mockPagesDB.find(
-      (p) =>
-        p.ownerType === serializedType &&
-        p.ownerId === input.ownerId &&
-        p.slug === input.slug,
-    );
-
-    if (existingPage) {
-      return throwError(() => new Error('Ya existe una página con ese slug')).pipe(delay(100));
-    }
-
-    const now = new Date();
-    const newDbPage: PageDBRecord = {
-      id: this.nextId++,
-      ownerType: serializedType,
-      ownerId: input.ownerId,
-      title: input.title,
-      slug: input.slug,
-      published: input.published ?? false,
-      publishedAt: input.published ? now : null,
-      createdAt: now,
-      updatedAt: now,
-      content: input.content ?? {
-        schemaVersion: 1,
-        segments: [],
-      },
-    };
-
-    this.mockPagesDB.push(newDbPage);
-
-    return of(this.toDTO(newDbPage)).pipe(delay(100));
+    return this.http
+      .post<PageDTO>(`${this.apiBaseUrl}/api/admin/pages`, input)
+      .pipe(catchError((error) => this.handleError(error)));
   }
 
   /**
-   * Update an existing page
+   * Actualiza una página existente
+   * PATCH /api/admin/pages/{id}
    */
   update(id: number, patch: PageUpdateDTO): Observable<PageDTO> {
-    const dbPage = this.mockPagesDB.find((p) => p.id === id);
+    return this.http
+      .patch<PageDTO>(`${this.apiBaseUrl}/api/admin/pages/${id}`, patch)
+      .pipe(catchError((error) => this.handleError(error)));
+  }
 
-    if (!dbPage) {
-      return throwError(() => new Error('Página no encontrada')).pipe(delay(100));
+  /**
+   * Elimina una página
+   * DELETE /api/admin/pages/{id}
+   */
+  delete(id: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.apiBaseUrl}/api/admin/pages/${id}`)
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
+  /**
+   * Maneja errores HTTP con soporte para errores de validación 422
+   */
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    if (error.status === 401) {
+      return throwError(() => ({
+        status: 401,
+        message: 'No autorizado',
+      }));
     }
 
-    // Validate slug uniqueness if changing slug
-    if (patch.slug && patch.slug !== dbPage.slug) {
-      const existingPage = this.mockPagesDB.find(
-        (p) =>
-          p.ownerType === dbPage.ownerType &&
-          p.ownerId === dbPage.ownerId &&
-          p.slug === patch.slug &&
-          p.id !== id,
-      );
-
-      if (existingPage) {
-        return throwError(() => new Error('Ya existe una página con ese slug')).pipe(delay(100));
-      }
+    if (error.status === 404) {
+      return throwError(() => ({
+        status: 404,
+        message: 'Recurso no encontrado',
+      }));
     }
 
-    const now = new Date();
-
-    // Apply updates
-    if (patch.title !== undefined) dbPage.title = patch.title;
-    if (patch.slug !== undefined) dbPage.slug = patch.slug;
-    if (patch.content !== undefined) dbPage.content = patch.content;
-    if (patch.published !== undefined) {
-      dbPage.published = patch.published;
-      // Set publishedAt when publishing for the first time
-      if (patch.published && !dbPage.publishedAt) {
-        dbPage.publishedAt = now;
-      }
+    if (error.status === 422 && isLaravelValidationError(error.error)) {
+      return throwError(() => ({
+        status: 422,
+        message: error.error.message || 'Error de validación',
+        errors: error.error.errors || {},
+      }));
     }
-    dbPage.updatedAt = now;
 
-    return of(this.toDTO(dbPage)).pipe(delay(100));
+    return throwError(() => ({
+      status: error.status,
+      message: error.message || 'Error del servidor',
+    }));
   }
 }
