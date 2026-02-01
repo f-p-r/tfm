@@ -1,0 +1,103 @@
+<ds-main>
+  <ds-page [title]="'Editar página: ' + title()">
+    <ds-container>
+      <div class="page-edit-admin">
+        <!-- Loading state -->
+        @if (isLoading()) {
+          <p>Cargando página...</p>
+        } @else if (errorMessage()) {
+          <div class="error-message">
+            <p>{{ errorMessage() }}</p>
+            <button class="btn-secondary" (click)="onCancel()">Volver</button>
+          </div>
+        } @else {
+          <!-- Form section -->
+          <div class="form-section">
+            <h2>Datos de la página</h2>
+
+            <div class="form-group">
+              <label for="title">Título</label>
+              <input
+                type="text"
+                id="title"
+                class="form-control"
+                [(ngModel)]="title"
+                placeholder="Título de la página"
+                [disabled]="isSaving()"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="slug">Slug (URL)</label>
+              <input
+                type="text"
+                id="slug"
+                class="form-control"
+                [(ngModel)]="slug"
+                placeholder="slug-de-la-pagina"
+                [disabled]="isSaving()"
+              />
+              <small class="form-help">Debe ser único dentro del owner</small>
+            </div>
+
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="published"
+                  [disabled]="isSaving()"
+                />
+                <span>Página publicada</span>
+              </label>
+              <small class="form-help">
+                {{ published() ? 'Esta página está publicada y es visible' : 'Esta página es un borrador' }}
+              </small>
+            </div>
+          </div>
+
+          <!-- Editor section -->
+          <div class="editor-section">
+            <h2>Contenido</h2>
+            <app-content-segments-editor
+              [content]="content()"
+              [scopeType]="2"
+              [scopeId]="ownerId() ?? 1"
+              (contentChange)="onContentChange($event)"
+            />
+          </div>
+
+          <!-- Actions -->
+          <div class="actions-section">
+            @if (errorMessage()) {
+              <div class="error-inline">{{ errorMessage() }}</div>
+            }
+
+            <div class="actions-buttons">
+              <button
+                class="btn-secondary"
+                (click)="onCancel()"
+                [disabled]="isSaving()"
+              >
+                Cancelar
+              </button>
+              <button
+                class="btn-secondary"
+                (click)="openPreview()"
+                [disabled]="isSaving()"
+              >
+                Vista previa
+              </button>
+              <button
+                class="btn-primary"
+                (click)="onSave()"
+                [disabled]="!hasChanges() || isSaving()"
+              >
+                {{ isSaving() ? 'Guardando...' : 'Guardar cambios' }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </ds-container>
+  </ds-page>
+</ds-main>

@@ -1,6 +1,8 @@
 import { PageContentDTO } from './page-content.dto';
 import { WebScope } from '../../core/web-scope.constants';
 
+export type { PageContentDTO } from './page-content.dto';
+
 export type PageOwnerType =
    WebScope.ASSOCIATION
   | WebScope.GAME
@@ -37,11 +39,14 @@ export interface PageDTO {
 
 export interface PageSummaryDTO {
   id: number;
+  ownerType: PageOwnerType;
+  ownerId: number;
   slug: string;
   title: string;
   published: boolean;
-  updatedAt: string; // ISO
   publishedAt?: string | null; // ISO
+  createdAt: string; // ISO
+  updatedAt: string; // ISO
 }
 
 export interface PageCreateDTO {

@@ -1,241 +1,319 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
-import { PageDTO, PageSummaryDTO, PageOwnerType } from '../../shared/content/page.dto';
-import { PageContentDTO } from '../../shared/content/page-content.dto';
+import { Observable, of, delay, throwError } from 'rxjs';
+import { PageDTO, PageSummaryDTO, PageCreateDTO, PageUpdateDTO, PageOwnerType } from '../../shared/content/page.dto';
 import { WebScope } from '../web-scope.constants';
 
-/**
- * Servicio para gestión de páginas (mock).
- * Simula una API con datos en memoria.
- */
-@Injectable({ providedIn: 'root' })
+interface PageDBRecord {
+  id: number;
+  ownerType: string; // Stored as string in mock DB
+  ownerId: number;
+  title: string;
+  slug: string;
+  published: boolean;
+  publishedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  content: PageDTO['content'];
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class PagesService {
-  private mockPages: PageDTO[] = [
+  private nextId = 5;
+
+  // Mock database with ownerType as string (simulating backend storage)
+  private mockPagesDB: PageDBRecord[] = [
     {
       id: 1,
-      ownerType: WebScope.ASSOCIATION,
-      ownerId: 2,
-      slug: 'bienvenida',
-      title: 'Bienvenida',
+      ownerType: '2', // Simulated backend value for ASSOCIATION
+      ownerId: 1,
+      title: 'Inicio',
+      slug: 'inicio',
       published: true,
-      publishedAt: '2026-01-15T10:00:00Z',
+      publishedAt: new Date('2024-01-15'),
+      createdAt: new Date('2024-01-01'),
+      updatedAt: new Date('2024-01-15'),
       content: {
         schemaVersion: 1,
         segments: [
           {
-            id: 'seg-1',
-            order: 1,
+            id: 's1',
             type: 'rich',
-            textHtml: `
-              <h2>Bienvenidos a nuestra asociación</h2>
-              <p>Esta es la página de inicio de nuestra comunidad. Aquí encontrarás toda la información relevante.</p>
-              <p>Explora nuestras diferentes secciones y descubre todo lo que tenemos para ofrecer.</p>
-            `,
+            order: 1,
+            textHtml:
+              '<h1>Bienvenidos a la Asociación Española de Go</h1><p>La Asociación Española de Go (AEG) es una entidad sin ánimo de lucro que tiene como objetivo promover y difundir el juego del Go en España.</p>',
             image: {
-              url: 'https://picsum.photos/800/400',
-              alt: 'Imagen de bienvenida',
+              url: '/img/go-stones.jpg',
             },
-            imagePlacement: 'top',
+            imagePlacement: 'left',
+            imageWidth: 400,
           },
           {
-            id: 'seg-2',
-            order: 2,
+            id: 's2',
             type: 'carousel',
+            order: 2,
+            height: 400,
+            imagesPerView: 3,
+            delaySeconds: 5,
             images: [
-              { url: 'https://picsum.photos/800/300?random=1', alt: 'Evento 1' },
-              { url: 'https://picsum.photos/800/300?random=2', alt: 'Evento 2' },
-              { url: 'https://picsum.photos/800/300?random=3', alt: 'Evento 3' },
+              {
+                url: '/img/carousel1.jpg',
+                alt: 'Imagen 1',
+              },
+              {
+                url: '/img/carousel2.jpg',
+                alt: 'Imagen 2',
+              },
+              {
+                url: '/img/carousel3.jpg',
+                alt: 'Imagen 3',
+              },
             ],
-            height: 300,
-            imagesPerView: 1,
-            delaySeconds: 3,
           },
         ],
       },
-      createdAt: '2026-01-10T12:00:00Z',
-      updatedAt: '2026-01-15T10:00:00Z',
     },
     {
       id: 2,
-      ownerType: WebScope.ASSOCIATION,
-      ownerId: 2,
-      slug: 'historia',
-      title: 'Nuestra Historia',
-     published: true,
-      publishedAt: '2026-01-20T14:00:00Z',
+      ownerType: '2', // Simulated backend value for ASSOCIATION
+      ownerId: 1,
+      title: 'Actividades',
+      slug: 'actividades',
+      published: true,
+      publishedAt: new Date('2024-02-01'),
+      createdAt: new Date('2024-01-20'),
+      updatedAt: new Date('2024-02-01'),
       content: {
         schemaVersion: 1,
         segments: [
           {
-            id: 'seg-1',
+            id: 's3',
+            type: 'rich',
             order: 1,
-            type: 'rich',
-            textHtml: `
-              <h2>Cómo empezó todo</h2>
-              <p>Nuestra asociación nació en 2010 con la misión de reunir a entusiastas del gaming competitivo.</p>
-              <p>A lo largo de los años hemos crecido hasta convertirnos en una de las comunidades más activas de España.</p>
-              <p>Todo comenzó cuando un grupo de amigos decidió organizar el primer torneo local. Lo que empezó como un evento pequeño se convirtió rápidamente en una referencia del gaming competitivo.</p>
-            `,
-            image: {
-              url: 'https://picsum.photos/500/600?random=4',
-              alt: 'Foto histórica',
-            },
-            imagePlacement: 'left',
-            imageWidth: 35,
-          },
-          {
-            id: 'seg-2',
-            order: 2,
-            type: 'rich',
-            textHtml: `
-              <h3>Nuestros logros más destacados</h3>
-              <ul>
-                <li><strong>+500 miembros activos</strong> en toda España</li>
-                <li><strong>20+ torneos anuales</strong> organizados desde 2015</li>
-                <li><strong>Presencia internacional</strong> en 5 países europeos</li>
-                <li><strong>3 equipos profesionales</strong> compitiendo a nivel nacional</li>
-                <li><strong>Red de streamers</strong> con más de 100K seguidores combinados</li>
-              </ul>
-              <p class="mt-4">Nuestro compromiso con la comunidad sigue siendo el mismo: fomentar el fair play, la competitividad sana y el compañerismo.</p>
-            `,
-          },
-          {
-            id: 'seg-3',
-            order: 3,
-            type: 'rich',
-            textHtml: `
-              <h3>Cronología de hitos importantes</h3>
-              <table class="w-full border-collapse">
-                <tr><td class="font-bold p-2">2010</td><td class="p-2">Fundación de la asociación</td></tr>
-                <tr><td class="font-bold p-2">2013</td><td class="p-2">Primer torneo internacional</td></tr>
-                <tr><td class="font-bold p-2">2016</td><td class="p-2">Apertura de gaming house</td></tr>
-                <tr><td class="font-bold p-2">2020</td><td class="p-2">Expansión a 5 países</td></tr>
-                <tr><td class="font-bold p-2">2024</td><td class="p-2">500º miembro registrado</td></tr>
-              </table>
-            `,
+            textHtml:
+              '<h1>Nuestras Actividades</h1><p>Organizamos torneos, cursos y eventos durante todo el año.</p>',
           },
         ],
       },
-      createdAt: '2026-01-18T09:00:00Z',
-      updatedAt: '2026-01-20T14:00:00Z',
     },
     {
       id: 3,
-      ownerType: WebScope.ASSOCIATION,
-      ownerId: 2,
-      slug: 'contacto',
+      ownerType: '2', // Simulated backend value for ASSOCIATION
+      ownerId: 1,
       title: 'Contacto',
-     published: true,
-      publishedAt: '2026-01-22T16:00:00Z',
+      slug: 'contacto',
+      published: false, // Draft page
+      publishedAt: null,
+      createdAt: new Date('2024-02-10'),
+      updatedAt: new Date('2024-02-15'),
       content: {
         schemaVersion: 1,
         segments: [
           {
-            id: 'seg-1',
+            id: 's4',
+            type: 'rich',
             order: 1,
-            type: 'rich',
-            textHtml: `
-              <h2>Ponte en contacto con nosotros</h2>
-              <p>¿Tienes alguna pregunta? ¿Quieres unirte a nuestra comunidad? ¡Estamos aquí para ayudarte!</p>
-            `,
-          },
-          {
-            id: 'seg-2',
-            order: 2,
-            type: 'rich',
-            textHtml: `
-              <h3>Canales de comunicación</h3>
-              <div class="space-y-3">
-                <div class="bg-blue-50 p-4 rounded">
-                  <strong class="text-blue-900">📧 Email:</strong>
-                  <p class="text-blue-800">info@asociacion-gaming.com</p>
-                </div>
-                <div class="bg-purple-50 p-4 rounded">
-                  <strong class="text-purple-900">💬 Discord:</strong>
-                  <p class="text-purple-800">discord.gg/asociacion-gaming</p>
-                </div>
-                <div class="bg-sky-50 p-4 rounded">
-                  <strong class="text-sky-900">🐦 Twitter:</strong>
-                  <p class="text-sky-800">@AsociacionGaming</p>
-                </div>
-                <div class="bg-pink-50 p-4 rounded">
-                  <strong class="text-pink-900">📸 Instagram:</strong>
-                  <p class="text-pink-800">@asociacion.gaming</p>
-                </div>
-              </div>
-            `,
-            image: {
-              url: 'https://picsum.photos/400/600?random=5',
-              alt: 'Contacto',
-            },
-            imagePlacement: 'right',
-            imageWidth: 30,
-          },
-          {
-            id: 'seg-3',
-            order: 3,
-            type: 'rich',
-            textHtml: `
-              <h3>Horario de atención</h3>
-              <p>Nuestro equipo está disponible para atenderte:</p>
-              <ul>
-                <li><strong>Lunes a Viernes:</strong> 10:00 - 20:00</li>
-                <li><strong>Sábados:</strong> 12:00 - 18:00</li>
-                <li><strong>Domingos:</strong> Cerrado</li>
-              </ul>
-              <p class="mt-4"><em>Responderemos a tu consulta en un plazo máximo de 24-48 horas.</em></p>
-            `,
+            textHtml:
+              '<h1>Contacto</h1><p>Puedes contactarnos en info@aeg.es</p>',
           },
         ],
       },
-      createdAt: '2026-01-22T15:00:00Z',
-      updatedAt: '2026-01-22T16:00:00Z',
+    },
+    {
+      id: 4,
+      ownerType: '2', // Simulated backend value for ASSOCIATION
+      ownerId: 1,
+      title: 'Noticias Borrador',
+      slug: 'noticias-borrador',
+      published: false, // Draft page
+      publishedAt: null,
+      createdAt: new Date('2024-03-01'),
+      updatedAt: new Date('2024-03-01'),
+      content: {
+        schemaVersion: 1,
+        segments: [
+          {
+            id: 's5',
+            type: 'rich',
+            order: 1,
+            textHtml:
+              '<h1>Noticias</h1><p>Este es un borrador de la página de noticias.</p>',
+          },
+        ],
+      },
     },
   ];
 
   /**
-   * Lista páginas de un owner específico.
-   *
-   * @param ownerType Tipo de propietario ('association' | 'game')
-   * @param ownerId ID del propietario
-   * @returns Observable con array de resúmenes de páginas
+   * Serialize PageOwnerType to string for mock DB storage
    */
-  listByOwner(ownerType: PageOwnerType, ownerId: number): Observable<PageSummaryDTO[]> {
-    const filtered = this.mockPages
-      .filter((p) => p.ownerType === ownerType && p.ownerId === ownerId)
+  private serializeOwnerType(type: PageOwnerType): string {
+    return type.toString();
+  }
+
+  /**
+   * Deserialize string from mock DB to PageOwnerType
+   */
+  private deserializeOwnerType(type: string): PageOwnerType {
+    const num = parseInt(type, 10);
+    if (isNaN(num)) {
+      return type as any; // Fallback for non-numeric strings
+    }
+    return num as PageOwnerType;
+  }
+
+  /**
+   * Convert DB page to DTO with proper ownerType deserialization
+   */
+  private toDTO(dbPage: PageDBRecord): PageDTO {
+    return {
+      ...dbPage,
+      ownerType: this.deserializeOwnerType(dbPage.ownerType),
+      publishedAt: dbPage.publishedAt?.toISOString() ?? null,
+      createdAt: dbPage.createdAt.toISOString(),
+      updatedAt: dbPage.updatedAt.toISOString(),
+    };
+  }
+
+  /**
+   * List all pages for a given owner
+   */
+  listByOwner(
+    ownerType: PageOwnerType,
+    ownerId: number,
+  ): Observable<PageSummaryDTO[]> {
+    const serializedType = this.serializeOwnerType(ownerType);
+    const pages = this.mockPagesDB
+      .filter((p) => p.ownerType === serializedType && p.ownerId === ownerId)
       .map((p) => ({
         id: p.id,
-        slug: p.slug,
+        ownerType: this.deserializeOwnerType(p.ownerType),
+        ownerId: p.ownerId,
         title: p.title,
+        slug: p.slug,
         published: p.published,
-        updatedAt: p.updatedAt,
-        publishedAt: p.publishedAt,
+        publishedAt: p.publishedAt?.toISOString() ?? null,
+        createdAt: p.createdAt.toISOString(),
+        updatedAt: p.updatedAt.toISOString(),
       }));
 
-    return of(filtered).pipe(delay(100)); // Simular latencia
+    return of(pages).pipe(delay(100));
   }
 
   /**
-   * Obtiene una página por su ID.
-   *
-   * @param id ID de la página
-   * @returns Observable con la página completa
+   * Get a page by ID
    */
   getById(id: number): Observable<PageDTO | null> {
-    const page = this.mockPages.find((p) => p.id === id);
-    return of(page || null).pipe(delay(100));
+    const dbPage = this.mockPagesDB.find((p) => p.id === id);
+    if (!dbPage) {
+      return of(null).pipe(delay(100));
+    }
+    return of(this.toDTO(dbPage)).pipe(delay(100));
   }
 
   /**
-   * Guarda una página (crear o actualizar).
-   * Mock: simplemente devuelve la página recibida.
-   *
-   * @param page Página a guardar
-   * @returns Observable con la página guardada
+   * Get a page by owner and slug
    */
-  save(page: PageDTO): Observable<PageDTO> {
-    // Mock: simplemente devolver la página
-    // En producción, aquí iría la llamada HTTP POST/PUT
-    return of(page).pipe(delay(200));
+  getBySlug(
+    ownerType: PageOwnerType,
+    ownerId: number,
+    slug: string,
+  ): Observable<PageDTO | null> {
+    const serializedType = this.serializeOwnerType(ownerType);
+    const dbPage = this.mockPagesDB.find(
+      (p) =>
+        p.ownerType === serializedType &&
+        p.ownerId === ownerId &&
+        p.slug === slug,
+    );
+
+    if (!dbPage) {
+      return of(null).pipe(delay(100));
+    }
+
+    return of(this.toDTO(dbPage)).pipe(delay(100));
+  }
+
+  /**
+   * Create a new page
+   */
+  create(input: PageCreateDTO): Observable<PageDTO> {
+    // Validate slug uniqueness
+    const serializedType = this.serializeOwnerType(input.ownerType);
+    const existingPage = this.mockPagesDB.find(
+      (p) =>
+        p.ownerType === serializedType &&
+        p.ownerId === input.ownerId &&
+        p.slug === input.slug,
+    );
+
+    if (existingPage) {
+      return throwError(() => new Error('Ya existe una página con ese slug')).pipe(delay(100));
+    }
+
+    const now = new Date();
+    const newDbPage: PageDBRecord = {
+      id: this.nextId++,
+      ownerType: serializedType,
+      ownerId: input.ownerId,
+      title: input.title,
+      slug: input.slug,
+      published: input.published ?? false,
+      publishedAt: input.published ? now : null,
+      createdAt: now,
+      updatedAt: now,
+      content: input.content ?? {
+        schemaVersion: 1,
+        segments: [],
+      },
+    };
+
+    this.mockPagesDB.push(newDbPage);
+
+    return of(this.toDTO(newDbPage)).pipe(delay(100));
+  }
+
+  /**
+   * Update an existing page
+   */
+  update(id: number, patch: PageUpdateDTO): Observable<PageDTO> {
+    const dbPage = this.mockPagesDB.find((p) => p.id === id);
+
+    if (!dbPage) {
+      return throwError(() => new Error('Página no encontrada')).pipe(delay(100));
+    }
+
+    // Validate slug uniqueness if changing slug
+    if (patch.slug && patch.slug !== dbPage.slug) {
+      const existingPage = this.mockPagesDB.find(
+        (p) =>
+          p.ownerType === dbPage.ownerType &&
+          p.ownerId === dbPage.ownerId &&
+          p.slug === patch.slug &&
+          p.id !== id,
+      );
+
+      if (existingPage) {
+        return throwError(() => new Error('Ya existe una página con ese slug')).pipe(delay(100));
+      }
+    }
+
+    const now = new Date();
+
+    // Apply updates
+    if (patch.title !== undefined) dbPage.title = patch.title;
+    if (patch.slug !== undefined) dbPage.slug = patch.slug;
+    if (patch.content !== undefined) dbPage.content = patch.content;
+    if (patch.published !== undefined) {
+      dbPage.published = patch.published;
+      // Set publishedAt when publishing for the first time
+      if (patch.published && !dbPage.publishedAt) {
+        dbPage.publishedAt = now;
+      }
+    }
+    dbPage.updatedAt = now;
+
+    return of(this.toDTO(dbPage)).pipe(delay(100));
   }
 }

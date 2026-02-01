@@ -10,6 +10,10 @@ import { gameBySlugGuard } from './guards/game-by-slug.guard';
 import { AssociationsPage } from './pages/associations/associations.page';
 import { AssociationPage } from './pages/associations/association/association.page';
 import { associationBySlugGuard } from './core/associations/association-by-slug.guard';
+import { OwnerPagesAdminPage } from './pages/admin/pages/owner-pages/owner-pages-admin.page';
+import { PageEditAdminPage } from './pages/admin/pages/owner-pages/page-edit-admin.page';
+import { PageCreateAdminPage } from './pages/admin/pages/owner-pages/page-create-admin.page';
+import { PagePreviewPage } from './pages/admin/pages/owner-pages/page-preview.page';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomePage },
@@ -74,5 +78,24 @@ export const routes: Routes = [
       { path: '**', component: PrototypeHostPage },
     ],
   },
+
+  // Admin: gestión de páginas
+  {
+    path: 'admin/pages/:ownerType/:ownerId',
+    component: OwnerPagesAdminPage,
+  },
+  {
+    path: 'admin/pages/:ownerType/:ownerId/create',
+    component: PageCreateAdminPage,
+  },
+  {
+    path: 'admin/pages/:ownerType/:ownerId/edit/:pageId',
+    component: PageEditAdminPage,
+  },
+  {
+    path: 'admin/pages/preview',
+    component: PagePreviewPage,
+  },
+
   { path: '**', redirectTo: '' },
 ];

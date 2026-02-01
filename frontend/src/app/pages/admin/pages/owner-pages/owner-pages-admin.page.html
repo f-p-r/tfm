@@ -1,0 +1,89 @@
+<ds-main>
+  <ds-page [title]="'Gestor de páginas - ' + ownerTypeLabel() + ' #' + ownerId()">
+    <ds-container>
+      <div class="pages-admin">
+        <!-- Header con botón crear -->
+        <div class="admin-header">
+          <h2>Páginas</h2>
+          <button class="btn-primary" (click)="onCreatePage()" [disabled]="isLoadingPages()">
+            <span>+ Crear página</span>
+          </button>
+        </div>
+
+        <!-- Loading state -->
+        @if (isLoadingPages()) {
+          <p>Cargando páginas...</p>
+        } @else if (pages().length === 0) {
+          <p>No hay páginas creadas.</p>
+        } @else {
+          <!-- Tabla de páginas -->
+          <table class="pages-table">
+            <thead>
+              <tr>
+                <th>Inicio</th>
+                <th>Título</th>
+                <th>Slug</th>
+                <th>Estado</th>
+                <th>Actualizada</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (page of pages(); track page.id) {
+                <tr
+                  [class.selected]="selectedPageId() === page.id"
+                  (click)="onSelectPage(page.id)"
+                >
+                  <td class="radio-cell">
+                    <input
+                      type="radio"
+                      name="homepage"
+                      [value]="page.id"
+                      [checked]="homePageId() === page.id"
+                      (change)="onHomePageChange(page.id)"
+                      [disabled]="isSavingHomePage()"
+                      (click)="$event.stopPropagation()"
+                    />
+                  </td>
+                  <td>{{ page.title }}</td>
+                  <td><code>{{ page.slug }}</code></td>
+                  <td>
+                    <span [class.status-published]="page.published" [class.status-draft]="!page.published">
+                      {{ getPublishedLabel(page.published) }}
+                    </span>
+                  </td>
+                  <td>{{ page.updatedAt | date: 'short' }}</td>
+                  <td>
+                    <button
+                      class="btn-secondary btn-small"
+                      (click)="onEditPage(page.id); $event.stopPropagation()"
+                    >
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+
+        <!-- Vista previa de la página seleccionada -->
+        @if (selectedPageId() !== null) {
+          <div class="preview-section">
+            <h3>Vista previa: {{ selectedPage()?.title }}</h3>
+
+            @if (isLoadingPageContent()) {
+              <p>Cargando contenido...</p>
+            } @else if (selectedPageContent()) {
+              <div class="preview-container">
+                <app-content-segments-preview [content]="selectedPageContent()!.content" />
+              </div>
+            } @else {
+              <p>No se pudo cargar el contenido.</p>
+            }
+          </div>
+        }
+      </div>
+    </ds-container>
+  </ds-page>
+</ds-main>
