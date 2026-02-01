@@ -164,9 +164,6 @@ class AssociationController extends Controller
             'web' => $validated['web'] ?? $association->web,
             'disabled' => $validated['disabled'] ?? $association->disabled,
         ]);
-            'region_id' => $validated['region_id'] ?? $association->region_id,
-            'disabled' => $validated['disabled'] ?? $association->disabled,
-        ]);
 
         // Sync games if provided
         if (isset($validated['game_ids'])) {

@@ -10,6 +10,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\AuthzController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\InternalLinksController;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -30,6 +31,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Authorization query endpoint
     Route::post('authz/query', [AuthzController::class, 'query']);
     Route::apiResource('tournaments', TournamentController::class);
+
+    // Internal Links Resolver
+    Route::get('internal-links/resolve', [InternalLinksController::class, 'resolve']);
 });
 
 // Media endpoints (sin autenticación por ahora)

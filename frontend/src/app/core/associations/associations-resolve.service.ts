@@ -80,6 +80,69 @@ export class AssociationsResolveService {
   }
 
   /**
+   * Resuelve una asociación por su ID, con caché y deduplicación.
+   *
+   * @param id ID de la asociación.
+   * @returns Observable con los datos de la asociación.
+   */
+  resolveById(id: number): Observable<Association> {
+    // Verificar caché buscando por ID
+    const cached = this.getById(id);
+    if (cached) {
+      return of(cached);
+    }
+
+    // Clave para in-flight por ID
+    const key = `id:${id}`;
+
+    // Si hay petición in-flight, reutilizarla
+    const existing = this.inFlight.get(key);
+    if (existing) {
+      return existing;
+    }
+
+    // Iniciar nueva petición
+    const request$ = this.api.getById(id).pipe(
+      tap((association) => {
+        // Guardar en caché usando el slug como clave
+        const slugKey = slugify(association.slug);
+        this.cache.set(slugKey, {
+          value: association,
+          fetchedAt: Date.now(),
+        });
+        // Limpiar in-flight
+        this.inFlight.delete(key);
+      }),
+      catchError((err) => {
+        // Limpiar in-flight en caso de error
+        this.inFlight.delete(key);
+        return throwError(() => err);
+      }),
+      shareReplay(1)
+    );
+
+    // Guardar in-flight
+    this.inFlight.set(key, request$);
+    return request$;
+  }
+
+  /**
+   * Busca una asociación en la caché por su ID.
+   * Método síncrono que solo consulta la caché existente.
+   *
+   * @param id ID de la asociación.
+   * @returns La asociación si está en caché, undefined si no.
+   */
+  getById(id: number): Association | undefined {
+    for (const entry of this.cache.values()) {
+      if (entry.value.id === id && this.isCacheValid(entry.fetchedAt)) {
+        return entry.value;
+      }
+    }
+    return undefined;
+  }
+
+  /**
    * Limpia toda la caché de asociaciones.
    * Útil para invalidación manual.
    */

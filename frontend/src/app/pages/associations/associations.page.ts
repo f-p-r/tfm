@@ -45,7 +45,7 @@ import { WebScope } from '../../core/web-scope.constants';
 })
 export class AssociationsPage {
   readonly contextStore = inject(ContextStore);
-  
+
   // Exponer WebScope para el template
   readonly WebScope = WebScope;
 

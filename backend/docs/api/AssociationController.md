@@ -4,6 +4,72 @@ Controlador para gestión de asociaciones (clubes, equipos, etc.).
 
 ## Endpoints
 
+### GET /api/associations
+Listar todas las asociaciones.
+
+**Autenticación:** Requerida (Sanctum)
+
+**Query Parameters:**
+- `include_disabled` (boolean, opcional) - Incluir asociaciones deshabilitadas (default: false)
+
+**Respuestas:**
+- **200 OK**
+  ```json
+  [
+    {
+      "id": 1,
+      "name": "Club Example",
+      "shortname": "CE",
+      "slug": "club-example",
+      "description": "Descripción del club...",
+      "country_id": "ES",
+      "region_id": "ES-MD",
+      "web": "https://www.clubexample.com",
+      "disabled": false,
+      "games": [...],
+      "country": {...},
+      "region": {...},
+      "created_at": "...",
+      "updated_at": "..."
+    }
+  ]
+  ```
+
+---
+
+### GET /api/associations/{id}
+Obtener una asociación específica.
+
+**Autenticación:** Requerida (Sanctum)
+
+**Parámetros de ruta:**
+- `id` (integer) - ID de la asociación
+
+**Respuestas:**
+- **200 OK**
+  ```json
+  {
+    "id": 1,
+    "name": "Club Example",
+    "shortname": "CE",
+    "slug": "club-example",
+    "description": "Descripción del club...",
+    "country_id": "ES",
+    "web": "https://www.clubexample.com",
+    "region_id": "ES-MD",
+    "disabled": false,
+    "games": [...],
+    "country": {...},
+    "region": {...},
+    "created_at": "...",
+    "updated_at": "..."
+  }
+  ```
+
+- **404 Not Found** - Asociación no encontrada
+
+---
+
 ### GET /api/associations/by-slug/{slug}
 Obtener una asociación por su slug.
 
@@ -45,39 +111,6 @@ Obtener una asociación por su slug.
   ```
 
 - **404 Not Found** - Asociación no encontrada
-
----
-
-### GET /api/associations
-Listar todas las asociaciones.
-
-**Autenticación:** Requerida (Sanctum)
-
-**Query Parameters:**
-- `include_disabled` (boolean, opcional) - Incluir asociaciones deshabilitadas (default: false)
-
-**Respuestas:**
-- **200 OK**
-  ```json
-  [
-    {
-      "id": 1,
-      "name": "Club Example",
-      "shortname": "CE",
-      "slug": "club-example",
-      "description": "Descripción del club...",
-      "country_id": "ES",
-      "region_id": "ES-MD",
-      "web": "https://www.clubexample.com",
-      "disabled": false,
-      "games": [...],
-      "country": {...},
-      "region": {...},
-      "created_at": "...",
-      "updated_at": "..."
-    }
-  ]
-  ```
 
 ---
 
@@ -139,39 +172,6 @@ Crear una nueva asociación.
 - **422 Unprocessable Entity** - Error de validación
   - Región especificada sin país
   - Región no pertenece al país especificado
-
----
-
-### GET /api/associations/{id}
-Obtener una asociación específica.
-
-**Autenticación:** Requerida (Sanctum)
-
-**Parámetros de ruta:**
-- `id` (integer) - ID de la asociación
-
-**Respuestas:**
-- **200 OK**
-  ```json
-  {
-    "id": 1,
-    "name": "Club Example",
-    "shortname": "CE",
-    "slug": "club-example",
-    "description": "Descripción del club...",
-    "country_id": "ES",
-    "web": "https://www.clubexample.com",
-    "region_id": "ES-MD",
-    "disabled": false,
-    "games": [...],
-    "country": {...},
-    "region": {...},
-    "created_at": "...",
-    "updated_at": "..."
-  }
-  ```
-
-- **404 Not Found** - Asociación no encontrada
 
 ---
 

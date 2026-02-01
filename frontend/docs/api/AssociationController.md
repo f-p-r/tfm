@@ -4,6 +4,72 @@ Controlador para gestión de asociaciones (clubes, equipos, etc.).
 
 ## Endpoints
 
+### GET /api/associations
+Listar todas las asociaciones.
+
+**Autenticación:** Requerida (Sanctum)
+
+**Query Parameters:**
+- `include_disabled` (boolean, opcional) - Incluir asociaciones deshabilitadas (default: false)
+
+**Respuestas:**
+- **200 OK**
+  ```json
+  [
+    {
+      "id": 1,
+      "name": "Club Example",
+      "shortname": "CE",
+      "slug": "club-example",
+      "description": "Descripción del club...",
+      "country_id": "ES",
+      "region_id": "ES-MD",
+      "web": "https://www.clubexample.com",
+      "disabled": false,
+      "games": [...],
+      "country": {...},
+      "region": {...},
+      "created_at": "...",
+      "updated_at": "..."
+    }
+  ]
+  ```
+
+---
+
+### GET /api/associations/{id}
+Obtener una asociación específica.
+
+**Autenticación:** Requerida (Sanctum)
+
+**Parámetros de ruta:**
+- `id` (integer) - ID de la asociación
+
+**Respuestas:**
+- **200 OK**
+  ```json
+  {
+    "id": 1,
+    "name": "Club Example",
+    "shortname": "CE",
+    "slug": "club-example",
+    "description": "Descripción del club...",
+    "country_id": "ES",
+    "web": "https://www.clubexample.com",
+    "region_id": "ES-MD",
+    "disabled": false,
+    "games": [...],
+    "country": {...},
+    "region": {...},
+    "created_at": "...",
+    "updated_at": "..."
+  }
+  ```
+
+- **404 Not Found** - Asociación no encontrada
+
+---
+
 ### GET /api/associations/by-slug/{slug}
 Obtener una asociación por su slug.
 
@@ -26,6 +92,7 @@ Obtener una asociación por su slug.
     "description": "Descripción del club...",
     "country_id": "ES",
     "region_id": "ES-MD",
+    "web": "https://www.clubexample.com",
     "disabled": false,
     "games": [...],
     "country": {
@@ -47,38 +114,6 @@ Obtener una asociación por su slug.
 
 ---
 
-### GET /api/associations
-Listar todas las asociaciones.
-
-**Autenticación:** Requerida (Sanctum)
-
-**Query Parameters:**
-- `include_disabled` (boolean, opcional) - Incluir asociaciones deshabilitadas (default: false)
-
-**Respuestas:**
-- **200 OK**
-  ```json
-  [
-    {
-      "id": 1,
-      "name": "Club Example",
-      "shortname": "CE",
-      "slug": "club-example",
-      "description": "Descripción del club...",
-      "country_id": "ES",
-      "region_id": "ES-MD",
-      "disabled": false,
-      "games": [...],
-      "country": {...},
-      "region": {...},
-      "created_at": "...",
-      "updated_at": "..."
-    }
-  ]
-  ```
-
----
-
 ### POST /api/associations
 Crear una nueva asociación.
 
@@ -93,6 +128,7 @@ Crear una nueva asociación.
   "description": "string (optional) - Descripción de la asociación",
   "country_id": "string (optional, nullable) - Código ISO del país",
   "region_id": "string (optional, nullable) - ID de la región",
+  "web": "string (optional, url, max:2048) - URL del sitio web",
   "disabled": "boolean (optional, default: false)",
   "game_ids": "array (optional) - IDs de juegos asociados",
   "game_ids.*": "integer (exists:games,id)"
@@ -108,6 +144,7 @@ Crear una nueva asociación.
 - `region_id`: Opcional, debe existir en tabla regions
   - **Si se informa `region_id`, `country_id` es obligatorio**
   - **La región debe pertenecer al país especificado** (region.country_id == country_id)
+- `web`: Opcional, debe ser una URL válida, máximo 2048 caracteres
 - `disabled`: Booleano opcional
 - `game_ids`: Array opcional de IDs de juegos existentes
 
@@ -122,6 +159,7 @@ Crear una nueva asociación.
     "description": "Descripción del club...",
     "country_id": "ES",
     "region_id": "ES-MD",
+    "web": "https://www.clubexample.com",
     "disabled": false,
     "games": [...],
     "country": {...},
@@ -134,38 +172,6 @@ Crear una nueva asociación.
 - **422 Unprocessable Entity** - Error de validación
   - Región especificada sin país
   - Región no pertenece al país especificado
-
----
-
-### GET /api/associations/{id}
-Obtener una asociación específica.
-
-**Autenticación:** Requerida (Sanctum)
-
-**Parámetros de ruta:**
-- `id` (integer) - ID de la asociación
-
-**Respuestas:**
-- **200 OK**
-  ```json
-  {
-    "id": 1,
-    "name": "Club Example",
-    "shortname": "CE",
-    "slug": "club-example",
-    "description": "Descripción del club...",
-    "country_id": "ES",
-    "region_id": "ES-MD",
-    "disabled": false,
-    "games": [...],
-    "country": {...},
-    "region": {...},
-    "created_at": "...",
-    "updated_at": "..."
-  }
-  ```
-
-- **404 Not Found** - Asociación no encontrada
 
 ---
 
@@ -186,6 +192,7 @@ Actualizar una asociación.
   "description": "string - Descripción de la asociación",
   "country_id": "string (nullable) - Código ISO del país",
   "region_id": "string (nullable) - ID de la región",
+  "web": "string (url, max:2048) - URL del sitio web",
   "disabled": "boolean",
   "game_ids": "array - IDs de juegos asociados"
 }
