@@ -9,7 +9,8 @@
     }
 
     <main class="ds-main">
-      <div class="ds-page">
+      <!--<div class="ds-page"> -->
+      <div>
         @if (noNavbar()) {
           <!-- Layout estrecho y centrado para rutas sin navbar (login, auth) -->
           <div class="ds-container-narrow flex items-center min-h-dvh">
@@ -17,9 +18,9 @@
           </div>
         } @else {
           <!-- Layout normal con navbar -->
-          <div class="ds-container">
+          <!--<div class="ds-container">-->
             <router-outlet></router-outlet>
-          </div>
+          <!--</div>-->
         }
       </div>
     </main>

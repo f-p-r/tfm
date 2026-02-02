@@ -8,9 +8,10 @@ import { CarouselSegmentDTO } from './page-content.dto';
   encapsulation: ViewEncapsulation.None,
   template: `
     @if (segment(); as seg) {
-      <article class="rounded-lg border border-gray-200 overflow-hidden bg-white shadow-sm" [class]="seg.classNames ?? ''">
+      <section class="seg-article" [class]="seg.classNames ?? ''">
+        <div class="ds-container">
         <div
-          class="relative bg-gray-100 group"
+          class="relative group"
           [style.height.px]="seg.height"
           (mouseenter)="onHoverChange(true)"
           (mouseleave)="onHoverChange(false)"
@@ -126,7 +127,8 @@ import { CarouselSegmentDTO } from './page-content.dto';
             </div>
           </div>
         }
-      </article>
+        </div>
+      </section>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

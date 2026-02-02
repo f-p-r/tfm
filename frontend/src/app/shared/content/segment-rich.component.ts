@@ -13,7 +13,8 @@ import { RichImageDTO, RichSegmentDTO } from './page-content.dto';
   encapsulation: ViewEncapsulation.None,
   template: `
     @if (segment(); as seg) {
-      <article class="seg-article" [class]="seg.classNames ?? ''">
+      <section class="seg-article" [class]="seg.classNames ?? ''">
+        <div class="ds-container">
         @if (imageFor(seg); as img) {
           @if (seg.imagePlacement === 'left') {
           <!-- Móvil: 100%; Desktop (md+): flotado a la izquierda y ancho configurado -->
@@ -58,14 +59,14 @@ import { RichImageDTO, RichSegmentDTO } from './page-content.dto';
           <div class="seg-text ql-editor" [innerHTML]="normalizeHtml(seg.textHtml)"></div>
         }
         <div class="clear-both"></div>
-      </article>
+        </div>
+      </section>
     }
   `,
   // Estilos locales: aplicamos la anchura personalizada solo en md+ (>= 768px)
   styles: [
     `
-    article.seg-article {
-      color: rgb(64 64 64);
+    section.seg-article {
       line-height: 1.75;
     }
 
@@ -90,40 +91,39 @@ import { RichImageDTO, RichSegmentDTO } from './page-content.dto';
       }
     }
 
-    article.seg-article :where(h1, h2, h3, h4, h5, h6) {
-      color: rgb(23 23 23);
+    section.seg-article :where(h1, h2, h3, h4, h5, h6) {
       font-weight: 600;
       line-height: 1.25;
       margin-top: 1.5em;
       margin-bottom: 0.5em;
     }
 
-    article.seg-article :where(p) {
+    section.seg-article :where(p) {
       margin-top: 1em;
       margin-bottom: 1em;
     }
 
-    article.seg-article :where(ul, ol) {
+    section.seg-article :where(ul, ol) {
       margin-top: 1em;
       margin-bottom: 1em;
       padding-left: 1.625em;
     }
 
-    article.seg-article :where(li) {
+    section.seg-article :where(li) {
       margin-top: 0.5em;
       margin-bottom: 0.5em;
     }
 
-    article.seg-article :where(a) {
+    section.seg-article :where(a) {
       color: rgb(37 99 235);
       text-decoration: underline;
     }
 
-    article.seg-article :where(strong) {
+    section.seg-article :where(strong) {
       font-weight: 600;
     }
 
-    article.seg-article :where(em) {
+    section.seg-article :where(em) {
       font-style: italic;
     }
     `,

@@ -256,6 +256,14 @@
     @apply mt-2 flex justify-end gap-1;
   }
 
+  /* === clases para dar formato segmentos de páginas hechos con el editor === */
+  .ds-seg-bg-black {
+    @apply text-white w-fit w-full block bg-black py-5;
+  }
+
+  .ds-seg-bg-black *{
+    @apply text-white;
+  }
 }
 
 

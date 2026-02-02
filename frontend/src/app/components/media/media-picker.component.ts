@@ -66,12 +66,12 @@ import { WebScope } from '../../core/web-scope.constants';
 
         @if (modalItem()) {
           <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeImageModal()"></div>
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
             <div class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col gap-4 p-4">
               <div class="flex-1 flex items-center justify-center overflow-auto">
                 <img [src]="modalItem()?.url" alt="" class="max-h-[70vh] max-w-full object-contain" />
               </div>
-              <div class="flex items-center justify-center gap-16 pb-2">
+              <div class="flex items-center justify-center gap-3 pb-2">
                 <button type="button" class="ds-btn ds-btn-primary" (click)="confirmPick(modalItem()!)">Seleccionar</button>
                 <button type="button" class="ds-btn ds-btn-secondary" (click)="closeImageModal()">Cancelar</button>
               </div>
@@ -149,11 +149,6 @@ export class MediaPickerComponent {
 
   openImageModal(item: MediaItem): void {
     this.onInteract();
-    if (this.mode() === 'single') {
-      this.emitPick(item);
-      this.onClose();
-      return;
-    }
     this.modalItem.set(item);
   }
 

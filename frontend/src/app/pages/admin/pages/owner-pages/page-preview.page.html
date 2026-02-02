@@ -9,18 +9,17 @@
       </div>
     </div>
 
-    <div class="ds-container">
-      @if (errorMessage()) {
-        <div class="error-message">
-          <p>{{ errorMessage() }}</p>
-        </div>
-      } @else if (content()) {
-        <div class="preview-content">
-          <app-content-segments-preview [content]="content()!" />
-        </div>
-      } @else {
-        <p>Cargando vista previa...</p>
-      }
+    @if (errorMessage()) {
+    <div class="error-message">
+      <p>{{ errorMessage() }}</p>
     </div>
+    } @else if (content()) {
+    <div class="preview-content">
+      <app-content-segments-preview [content]="content()!" />
+    </div>
+    } @else {
+    <p>Cargando vista previa...</p>
+    }
   </div>
+
 </main>
