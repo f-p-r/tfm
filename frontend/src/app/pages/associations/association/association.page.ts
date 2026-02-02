@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavbarComponent } from '../../../components/navbar/navbar.component';
 import { AssociationsResolveService } from '../../../core/associations/associations-resolve.service';
 import { Association } from '../../../core/associations/associations.models';
 
@@ -13,25 +12,18 @@ import { Association } from '../../../core/associations/associations.models';
  */
 @Component({
   selector: 'app-association-page',
-  imports: [NavbarComponent],
+  imports: [],
   template: `
-    <app-navbar />
-    <main class="ds-main">
-      <div class="ds-page">
-        <div class="ds-container">
-          @if (association(); as assoc) {
-            <h1>{{ assoc.name }}</h1>
-            <p>Slug: {{ assoc.slug }}</p>
-            <p>ID: {{ assoc.id }}</p>
-            @if (assoc.games && assoc.games.length > 0) {
-              <p>Juegos asociados: {{ assoc.games.length }}</p>
-            }
-          } @else {
-            <p>Cargando asociación...</p>
-          }
-        </div>
-      </div>
-    </main>
+    @if (association(); as assoc) {
+      <h1>{{ assoc.name }}</h1>
+      <p>Slug: {{ assoc.slug }}</p>
+      <p>ID: {{ assoc.id }}</p>
+      @if (assoc.games && assoc.games.length > 0) {
+        <p>Juegos asociados: {{ assoc.games.length }}</p>
+      }
+    } @else {
+      <p>Cargando asociación...</p>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

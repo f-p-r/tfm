@@ -1,46 +1,38 @@
-<app-navbar [mode]="'game'" [contextName]="gameName()"></app-navbar>
-
-<main class="ds-main">
-  <div class="ds-page">
-    <div class="ds-container">
-      @if (game(); as gameData) {
-        <header class="border-b border-neutral-medium pb-4">
-          <h1 class="h1">{{ gameData.name }}</h1>
-          <div class="mt-4 text-sm text-neutral-dark space-y-1">
-            <p><strong>ID:</strong> {{ gameData.id }}</p>
-            <p><strong>Slug:</strong> {{ gameData.slug }}</p>
-            <p><strong>Jugadores por equipo:</strong> {{ gameData.team_size }}</p>
-          </div>
-        </header>
-
-        <section class="mt-6">
-          <h2 class="text-lg font-semibold text-neutral-dark mb-3">ContextStore</h2>
-          <div class="bg-neutral-light border border-neutral-medium rounded-lg p-4 text-sm text-neutral-dark space-y-2">
-            <p><strong>scopeType:</strong> {{ contextStore.scopeType() }}
-              @if (contextStore.scopeType() === WebScope.GLOBAL) { (GLOBAL) }
-              @else if (contextStore.scopeType() === WebScope.ASSOCIATION) { (ASSOCIATION) }
-              @else if (contextStore.scopeType() === WebScope.GAME) { (GAME) }
-            </p>
-            <p><strong>scopeId:</strong> {{ contextStore.scopeId() ?? 'null' }}</p>
-            <p><strong>source:</strong> {{ contextStore.source() }}</p>
-            <p><strong>isGlobal:</strong> {{ contextStore.isGlobal() }}</p>
-            <p><strong>hasScope:</strong> {{ contextStore.hasScope() }}</p>
-            <p><strong>scopeKey:</strong> {{ contextStore.scopeKey() }}</p>
-            <p><strong>updatedAt:</strong> {{ contextStore.updatedAt() }}</p>
-          </div>
-        </section>
-
-        <section class="mt-6">
-          <p class="p text-neutral-dark">
-            Esta es una página placeholder para el juego. La funcionalidad completa se implementará próximamente.
-          </p>
-        </section>
-      } @else {
-        <div class="border-b border-neutral-medium pb-4">
-          <h1 class="h1">Cargando...</h1>
-          <p class="mt-4 text-neutral-dark">Cargando información del juego...</p>
-        </div>
-      }
+@if (game(); as gameData) {
+  <header class="border-b border-neutral-medium pb-4">
+    <h1 class="h1">{{ gameData.name }}</h1>
+    <div class="mt-4 text-sm text-neutral-dark space-y-1">
+      <p><strong>ID:</strong> {{ gameData.id }}</p>
+      <p><strong>Slug:</strong> {{ gameData.slug }}</p>
+      <p><strong>Jugadores por equipo:</strong> {{ gameData.team_size }}</p>
     </div>
+  </header>
+
+  <section class="mt-6">
+    <h2 class="text-lg font-semibold text-neutral-dark mb-3">ContextStore</h2>
+    <div class="bg-neutral-light border border-neutral-medium rounded-lg p-4 text-sm text-neutral-dark space-y-2">
+      <p><strong>scopeType:</strong> {{ contextStore.scopeType() }}
+        @if (contextStore.scopeType() === WebScope.GLOBAL) { (GLOBAL) }
+        @else if (contextStore.scopeType() === WebScope.ASSOCIATION) { (ASSOCIATION) }
+        @else if (contextStore.scopeType() === WebScope.GAME) { (GAME) }
+      </p>
+      <p><strong>scopeId:</strong> {{ contextStore.scopeId() ?? 'null' }}</p>
+      <p><strong>source:</strong> {{ contextStore.source() }}</p>
+      <p><strong>isGlobal:</strong> {{ contextStore.isGlobal() }}</p>
+      <p><strong>hasScope:</strong> {{ contextStore.hasScope() }}</p>
+      <p><strong>scopeKey:</strong> {{ contextStore.scopeKey() }}</p>
+      <p><strong>updatedAt:</strong> {{ contextStore.updatedAt() }}</p>
+    </div>
+  </section>
+
+  <section class="mt-6">
+    <p class="p text-neutral-dark">
+      Esta es una página placeholder para el juego. La funcionalidad completa se implementará próximamente.
+    </p>
+  </section>
+} @else {
+  <div class="border-b border-neutral-medium pb-4">
+    <h1 class="h1">Cargando...</h1>
+    <p class="mt-4 text-neutral-dark">Cargando información del juego...</p>
   </div>
-</main>
+}
