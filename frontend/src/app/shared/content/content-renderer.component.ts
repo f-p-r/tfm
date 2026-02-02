@@ -8,7 +8,7 @@ import { SegmentCarouselComponent } from './segment-carousel.component';
   selector: 'app-content-renderer',
   imports: [CommonModule, SegmentRichComponent, SegmentCarouselComponent],
   template: `
-    <section class="flex flex-col gap-8">
+    <section>
       @for (segment of segments; track segment.id) {
         @if (segment.type === 'rich') {
           <app-segment-rich [segment]="segment"></app-segment-rich>

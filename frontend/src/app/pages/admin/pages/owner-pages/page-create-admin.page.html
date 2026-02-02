@@ -62,12 +62,14 @@
           <!-- Editor section -->
           <div class="editor-section">
             <h2>Contenido</h2>
-            <app-content-segments-editor
-              [content]="content()"
-              [scopeType]="2"
-              [scopeId]="ownerId() ?? 1"
-              (contentChange)="onContentChange($event)"
-            />
+            <div class="ds-container">
+              <app-content-segments-editor
+                [content]="content()"
+                [scopeType]="2"
+                [scopeId]="ownerId() ?? 1"
+                (contentChange)="onContentChange($event)"
+              />
+            </div>
           </div>
 
           <!-- Actions -->
