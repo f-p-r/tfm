@@ -1,17 +1,26 @@
-<ds-main>
-  <ds-page [title]="title()">
-    <ds-container>
+<main class="ds-main">
+  <div class="preview-wrapper">
+    <div class="preview-header">
+      <div class="ds-container">
+        <div class="header-content">
+          <h1 class="preview-title">Vista previa de la página</h1>
+          <button class="ds-btn ds-btn-secondary" (click)="close()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-container">
       @if (errorMessage()) {
         <div class="error-message">
           <p>{{ errorMessage() }}</p>
         </div>
       } @else if (content()) {
-        <div class="preview-content ds-container">
+        <div class="preview-content">
           <app-content-segments-preview [content]="content()!" />
         </div>
       } @else {
         <p>Cargando vista previa...</p>
       }
-    </ds-container>
-  </ds-page>
-</ds-main>
+    </div>
+  </div>
+</main>

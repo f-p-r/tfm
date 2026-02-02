@@ -19,6 +19,10 @@ export class PagePreviewPage implements OnInit {
   readonly content = signal<PageContentDTO | null>(null);
   readonly errorMessage = signal<string | null>(null);
 
+  close(): void {
+    window.close();
+  }
+
   ngOnInit(): void {
     try {
       const dataStr = sessionStorage.getItem('admin:pagePreview');
