@@ -1,25 +1,31 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { PageOwnerType } from '../../shared/content/page.dto';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { PageOwnerType, PageOwnerScope } from '../../shared/content/page.dto';
 import { isLaravelValidationError } from '../auth/laravel-validation-error';
 import { environment } from '../../../environments/environment';
+import { SiteParamsService } from '../site-params/site-params.service';
 
 interface HomePageResponse {
   homePageId: number | null;
 }
+
+const GLOBAL_HOMEPAGE_PARAM_ID = 'homepage';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OwnerPagesSettingsService {
   private readonly http = inject(HttpClient);
+  private readonly siteParamsService = inject(SiteParamsService);
   private readonly apiBaseUrl = environment.apiBaseUrl;
 
   /**
    * Obtiene el ID de la página home para un owner dado
    * GET /api/admin/owners/home-page?ownerType={ownerType}&ownerId={ownerId}
+   *
+   * NOTA: Para ownerType GLOBAL (1), usa site-params en lugar del endpoint de owners
    *
    * @returns Observable con el ID de la página home o null si no está configurada
    */
@@ -27,6 +33,12 @@ export class OwnerPagesSettingsService {
     ownerType: PageOwnerType,
     ownerId: number,
   ): Observable<number | null> {
+    // Para páginas globales, usar site-params
+    if (ownerType === PageOwnerScope.GLOBAL) {
+      return this.siteParamsService.getNumber(GLOBAL_HOMEPAGE_PARAM_ID);
+    }
+
+    // Para owners específicos (asociaciones, juegos), usar endpoint owners
     const params = new HttpParams()
       .set('ownerType', ownerType)
       .set('ownerId', ownerId.toString());
@@ -43,6 +55,8 @@ export class OwnerPagesSettingsService {
    * Establece el ID de la página home para un owner dado
    * PUT /api/admin/owners/home-page
    *
+   * NOTA: Para ownerType GLOBAL (1), usa site-params en lugar del endpoint de owners
+   *
    * @param pageId ID de la página home, o null para desasignar
    * @returns Observable que completa cuando la operación es exitosa
    */
@@ -51,6 +65,18 @@ export class OwnerPagesSettingsService {
     ownerId: number,
     pageId: number | null,
   ): Observable<void> {
+    // Para páginas globales, usar site-params
+    if (ownerType === PageOwnerScope.GLOBAL) {
+      if (pageId === null) {
+        // Si se desasigna, guardamos "0" o podríamos eliminar el parámetro
+        return this.siteParamsService.setString(GLOBAL_HOMEPAGE_PARAM_ID, '0').pipe(
+          map(() => void 0)
+        );
+      }
+      return this.siteParamsService.setNumber(GLOBAL_HOMEPAGE_PARAM_ID, pageId);
+    }
+
+    // Para owners específicos (asociaciones, juegos), usar endpoint owners
     const body = {
       ownerType,
       ownerId,

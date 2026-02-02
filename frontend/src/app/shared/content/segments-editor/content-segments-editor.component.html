@@ -83,6 +83,18 @@
                     </div>
                   </div>
 
+                  <div class="ds-field">
+                    <label class="ds-label">Clases CSS (avanzado)</label>
+                    <input
+                      type="text"
+                      class="ds-input"
+                      [value]="draft.classNames ?? ''"
+                      (input)="onSegmentClassNamesChange(draft.id, $event)"
+                      placeholder="ds-clase-1 ds-clase-2"
+                    />
+                    <p class="ds-help">Clases CSS separadas por espacios (solo clases ds-)</p>
+                  </div>
+
                   <div class="image-section">
                     @if (draft.image; as image) {
                       <div class="image-preview" (click)="toggleRichPicker()">
@@ -176,6 +188,18 @@
                         (input)="onCarouselDelayChange(draft.id, $event)"
                       />
                     </div>
+                  </div>
+
+                  <div class="ds-field">
+                    <label class="ds-label">Clases CSS (avanzado)</label>
+                    <input
+                      type="text"
+                      class="ds-input"
+                      [value]="draft.classNames ?? ''"
+                      (input)="onSegmentClassNamesChange(draft.id, $event)"
+                      placeholder="ds-clase-1 ds-clase-2"
+                    />
+                    <p class="ds-help">Clases CSS separadas por espacios (solo clases ds-)</p>
                   </div>
 
                   <div class="carousel-images">

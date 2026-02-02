@@ -80,6 +80,20 @@ export const routes: Routes = [
   },
 
   // Admin: gestión de páginas
+  // Páginas globales (scopeType 1, sin scopeId)
+  {
+    path: 'admin/pages/1',
+    component: OwnerPagesAdminPage,
+  },
+  {
+    path: 'admin/pages/1/create',
+    component: PageCreateAdminPage,
+  },
+  {
+    path: 'admin/pages/1/edit/:pageId',
+    component: PageEditAdminPage,
+  },
+  // Páginas de owner (scopeType 2/3 con scopeId)
   {
     path: 'admin/pages/:ownerType/:ownerId',
     component: OwnerPagesAdminPage,

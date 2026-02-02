@@ -32,6 +32,7 @@ export class PageEditAdminPage implements OnInit {
   readonly title = signal('');
   readonly slug = signal('');
   readonly published = signal(false);
+  readonly classNames = signal('');
   readonly content = signal<PageContentDTO>({
     schemaVersion: 1,
     segments: [],
@@ -62,13 +63,36 @@ export class PageEditAdminPage implements OnInit {
       const content = this.content();
       // This effect ensures content signal is properly tracked
     });
+
+    // Sync classNames changes to content
+    effect(() => {
+      const classNamesValue = this.classNames();
+      this.content.update(c => ({ ...c, classNames: classNamesValue || undefined }));
+    });
   }
 
   ngOnInit(): void {
     // Parse route params
-    const pageIdParam = this.route.snapshot.paramMap.get('pageId');
-    const ownerTypeParam = this.route.snapshot.paramMap.get('ownerType');
-    const ownerIdParam = this.route.snapshot.paramMap.get('ownerId');
+    let pageIdParam = this.route.snapshot.paramMap.get('pageId');
+    let ownerTypeParam = this.route.snapshot.paramMap.get('ownerType');
+    let ownerIdParam = this.route.snapshot.paramMap.get('ownerId');
+
+    // Si no hay paramMap, intentar parsear desde URL (para rutas estáticas como /admin/pages/1/edit/:pageId)
+    if (!ownerTypeParam) {
+      const urlSegments = this.route.snapshot.url;
+      // URL esperada: /admin/pages/1/edit/123 o /admin/pages/:ownerType/:ownerId/edit/:pageId
+      if (urlSegments.length >= 2 && urlSegments[0].path === 'admin' && urlSegments[1].path === 'pages') {
+        ownerTypeParam = urlSegments[2]?.path ?? null;
+        // Si el siguiente segmento es 'edit', entonces ownerType='1' sin ownerId
+        if (urlSegments[3]?.path === 'edit') {
+          ownerIdParam = null;
+          pageIdParam = urlSegments[4]?.path ?? null;
+        } else {
+          ownerIdParam = urlSegments[3]?.path ?? null;
+          pageIdParam = urlSegments[5]?.path ?? null; // Salta 'edit' en [4]
+        }
+      }
+    }
 
     if (!pageIdParam) {
       this.errorMessage.set('ID de página no válido');
@@ -107,6 +131,7 @@ export class PageEditAdminPage implements OnInit {
         this.title.set(page.title);
         this.slug.set(page.slug);
         this.published.set(page.published);
+        this.classNames.set(page.content.classNames ?? '');
         this.content.set(page.content);
         this.isLoading.set(false);
       },
@@ -169,8 +194,12 @@ export class PageEditAdminPage implements OnInit {
     const ownerType = this.ownerType();
     const ownerId = this.ownerId();
 
-    if (ownerType && ownerId) {
-      this.router.navigate(['/admin/pages', ownerType, ownerId]);
+    if (ownerType && (ownerType === '1' || ownerId !== null)) {
+      if (ownerType === '1') {
+        this.router.navigate(['/admin/pages', '1']);
+      } else {
+        this.router.navigate(['/admin/pages', ownerType, ownerId]);
+      }
     } else {
       window.history.back();
     }

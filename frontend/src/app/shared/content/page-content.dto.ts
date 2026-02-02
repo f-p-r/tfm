@@ -4,6 +4,8 @@ export type SegmentDTO = RichSegmentDTO | CarouselSegmentDTO;
 
 export interface PageContentDTO {
   schemaVersion: 1;
+  /** Lista de clases CSS separadas por espacios para el contenedor de la página (avanzado) */
+  classNames?: string;
   segments: SegmentDTO[];
 }
 

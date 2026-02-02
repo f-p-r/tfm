@@ -2,14 +2,19 @@ import { PageContentDTO } from './page-content.dto';
 
 /**
  * Owner type viene del backend SIEMPRE como string.
+ * - '1' => global (WebScope.GLOBAL)
  * - '2' => asociación (WebScope.ASSOCIATION)
  * - '3' => juego (WebScope.GAME)
  * - otros tipos futuros: 'news' | 'event' | 'page'
+ *
+ * NOTA: Para ownerType='1' (global), ownerId debe ser 0 (no null).
+ * El backend no acepta null en ownerId, usa 0 como convención para páginas globales.
  */
-export type PageOwnerType = '2' | '3' | 'news' | 'event' | 'page';
+export type PageOwnerType = '1' | '2' | '3' | 'news' | 'event' | 'page';
 
 /** Constantes de ayuda para scopes */
 export const PageOwnerScope = {
+  GLOBAL: '1',
   ASSOCIATION: '2',
   GAME: '3',
 } as const;

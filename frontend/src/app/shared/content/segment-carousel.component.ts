@@ -7,7 +7,7 @@ import { CarouselSegmentDTO } from './page-content.dto';
   imports: [CommonModule],
   template: `
     @if (segment(); as seg) {
-      <article class="rounded-lg border border-gray-200 overflow-hidden bg-white shadow-sm">
+      <article class="rounded-lg border border-gray-200 overflow-hidden bg-white shadow-sm" [class]="seg.classNames ?? ''">
         <div
           class="relative bg-gray-100 group"
           [style.height.px]="seg.height"

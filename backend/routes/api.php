@@ -13,7 +13,9 @@ use App\Http\Controllers\RegionController;
 use App\Http\Controllers\InternalLinksController;
 use App\Http\Controllers\AdminPagesController;
 use App\Http\Controllers\AdminOwnerHomePageController;
+use App\Http\Controllers\AdminSiteParamsController;
 use App\Http\Controllers\PublicPagesController;
+use App\Http\Controllers\PublicSiteParamsController;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -47,6 +49,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('owners/home-page', [AdminOwnerHomePageController::class, 'get']);
         Route::put('owners/home-page', [AdminOwnerHomePageController::class, 'set']);
+
+        Route::post('site-params/{id}', [AdminSiteParamsController::class, 'upsert']);
     });
 });
 
@@ -72,3 +76,6 @@ Route::get('regions/{id}', [RegionController::class, 'show']);
 // Public Pages endpoints (sin autenticación)
 Route::get('pages/home', [PublicPagesController::class, 'home']);
 Route::get('pages/by-owner-slug', [PublicPagesController::class, 'byOwnerSlug']);
+
+// Public Site Params endpoints (sin autenticación)
+Route::get('site-params/{id}', [PublicSiteParamsController::class, 'show']);

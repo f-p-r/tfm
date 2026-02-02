@@ -12,7 +12,7 @@ import { RichImageDTO, RichSegmentDTO } from './page-content.dto';
   imports: [CommonModule],
   template: `
     @if (segment(); as seg) {
-      <article class="seg-article">
+      <article class="seg-article" [class]="seg.classNames ?? ''">
         @if (imageFor(seg); as img) {
           @if (seg.imagePlacement === 'left') {
           <!-- Móvil: 100%; Desktop (md+): flotado a la izquierda y ancho configurado -->

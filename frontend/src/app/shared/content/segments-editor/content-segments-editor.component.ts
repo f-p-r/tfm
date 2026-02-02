@@ -272,6 +272,14 @@ export class ContentSegmentsEditorComponent {
     this.onRichChange(id, { imageWidth: isNaN(n) ? 50 : n });
   }
 
+  // Common: classNames change (works for both rich and carousel)
+  onSegmentClassNamesChange(id: string, ev: Event): void {
+    const value = (ev.target as HTMLInputElement | null)?.value ?? '';
+    const currentDraft = this.editingDraft();
+    if (!currentDraft || currentDraft.id !== id) return;
+    this.editingDraft.set({ ...currentDraft, classNames: value || undefined });
+  }
+
   // Edición CAROUSEL
   onCarouselHeightChange(id: string, ev: Event): void {
     const raw = (ev.target as HTMLInputElement | null)?.value ?? '';

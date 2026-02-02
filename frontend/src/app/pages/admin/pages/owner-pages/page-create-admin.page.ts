@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, signal, computed, effect, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -27,6 +27,7 @@ export class PageCreateAdminPage implements OnInit {
   readonly title = signal('');
   readonly slug = signal('');
   readonly published = signal(false);
+  readonly classNames = signal('');
   readonly content = signal<PageContentDTO>({
     schemaVersion: 1,
     segments: [],
@@ -44,27 +45,55 @@ export class PageCreateAdminPage implements OnInit {
 
   readonly ownerTypeLabel = computed(() => {
     const type = this.ownerType();
+    if (type === '1') return 'Global';
     if (type === PageOwnerScope.ASSOCIATION) return 'Asociación';
     if (type === PageOwnerScope.GAME) return 'Juego';
     return 'Owner';
   });
 
+  constructor() {
+    // Sync classNames changes to content
+    effect(() => {
+      const classNamesValue = this.classNames();
+      this.content.update(c => ({ ...c, classNames: classNamesValue || undefined }));
+    });
+  }
+
   ngOnInit(): void {
     // Parse route params
-    const ownerTypeParam = this.route.snapshot.paramMap.get('ownerType');
-    const ownerIdParam = this.route.snapshot.paramMap.get('ownerId');
+    let ownerTypeParam = this.route.snapshot.paramMap.get('ownerType');
+    let ownerIdParam = this.route.snapshot.paramMap.get('ownerId');
 
-    if (!ownerTypeParam || !ownerIdParam) {
-      this.errorMessage.set('Parámetros de ruta no válidos');
+    // Si no hay paramMap, intentar parsear desde URL (para rutas estáticas como /admin/pages/1/create)
+    if (!ownerTypeParam) {
+      const urlSegments = this.route.snapshot.url;
+      // URL esperada: /admin/pages/1/create o /admin/pages/:ownerType/:ownerId/create
+      if (urlSegments.length >= 2 && urlSegments[0].path === 'admin' && urlSegments[1].path === 'pages') {
+        ownerTypeParam = urlSegments[2]?.path ?? null;
+        ownerIdParam = urlSegments[3]?.path ?? null;
+      }
+    }
+
+    if (!ownerTypeParam) {
+      this.errorMessage.set('Parámetro ownerType no válido');
       return;
     }
 
     const parsedOwnerType = this.parseOwnerType(ownerTypeParam);
-    const parsedOwnerId = parseInt(ownerIdParam, 10);
 
-    if (parsedOwnerType === null || isNaN(parsedOwnerId)) {
-      this.errorMessage.set('Parámetros de ruta no válidos');
+    if (parsedOwnerType === null) {
+      this.errorMessage.set('Parámetro ownerType no válido');
       return;
+    }
+
+    // Para scopeType 1 (global), ownerId es opcional
+    let parsedOwnerId: number | null = null;
+    if (parsedOwnerType !== '1' && ownerIdParam) {
+      parsedOwnerId = parseInt(ownerIdParam, 10);
+      if (isNaN(parsedOwnerId)) {
+        this.errorMessage.set('Parámetro ownerId no válido');
+        return;
+      }
     }
 
     this.ownerType.set(parsedOwnerType);
@@ -72,12 +101,13 @@ export class PageCreateAdminPage implements OnInit {
   }
 
   private parseOwnerType(param: string): PageOwnerType | null {
-    // Si es '2' o '3', es válido directamente
-    if (param === PageOwnerScope.ASSOCIATION || param === PageOwnerScope.GAME) {
+    // Si es '1' (global), '2' o '3', es válido directamente
+    if (param === '1' || param === PageOwnerScope.ASSOCIATION || param === PageOwnerScope.GAME) {
       return param as PageOwnerType;
     }
-    // Si es número 2 o 3, convertir a string
+    // Si es número 1, 2 o 3, convertir a string
     const num = parseInt(param, 10);
+    if (num === 1) return '1';
     if (num === 2) return PageOwnerScope.ASSOCIATION;
     if (num === 3) return PageOwnerScope.GAME;
     // Si es otro tipo futuro (news, event, page), devolver tal cual
@@ -92,7 +122,13 @@ export class PageCreateAdminPage implements OnInit {
     const ownerType = this.ownerType();
     const ownerId = this.ownerId();
 
-    if (ownerType === null || ownerId === null) {
+    if (ownerType === null) {
+      this.errorMessage.set('Parámetros de ruta no válidos');
+      return;
+    }
+
+    // Para scopeType 1 (global), ownerId puede ser null
+    if (ownerType !== '1' && ownerId === null) {
       this.errorMessage.set('Parámetros de ruta no válidos');
       return;
     }
@@ -104,7 +140,7 @@ export class PageCreateAdminPage implements OnInit {
 
     const input: PageCreateDTO = {
       ownerType,
-      ownerId,
+      ownerId: ownerId ?? 0,
       title: this.title(),
       slug: this.slug(),
       published: this.published(),
@@ -119,7 +155,11 @@ export class PageCreateAdminPage implements OnInit {
       next: (createdPage) => {
         this.isCreating.set(false);
         // Navigate to edit page or back to list
-        this.router.navigate(['/admin/pages', ownerType, ownerId, 'edit', createdPage.id]);
+        if (ownerType === '1') {
+          this.router.navigate(['/admin/pages', '1', 'edit', createdPage.id]);
+        } else {
+          this.router.navigate(['/admin/pages', ownerType, ownerId, 'edit', createdPage.id]);
+        }
       },
       error: (err) => {
         this.isCreating.set(false);
@@ -141,8 +181,12 @@ export class PageCreateAdminPage implements OnInit {
     const ownerType = this.ownerType();
     const ownerId = this.ownerId();
 
-    if (ownerType && ownerId) {
-      this.router.navigate(['/admin/pages', ownerType, ownerId]);
+    if (ownerType && (ownerType === '1' || ownerId !== null)) {
+      if (ownerType === '1') {
+        this.router.navigate(['/admin/pages', '1']);
+      } else {
+        this.router.navigate(['/admin/pages', ownerType, ownerId]);
+      }
     } else {
       window.history.back();
     }

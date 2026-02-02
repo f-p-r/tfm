@@ -60,6 +60,19 @@
                 {{ published() ? 'Esta página está publicada y es visible' : 'Esta página es un borrador' }}
               </small>
             </div>
+
+            <div class="form-group">
+              <label for="classNames">Clases CSS (avanzado)</label>
+              <input
+                type="text"
+                id="classNames"
+                class="form-control"
+                [(ngModel)]="classNames"
+                placeholder="ds-clase-1 ds-clase-2"
+                [disabled]="isSaving()"
+              />
+              <small class="form-help">Clases CSS separadas por espacios (solo clases ds-)</small>
+            </div>
           </div>
 
           <!-- Editor section -->

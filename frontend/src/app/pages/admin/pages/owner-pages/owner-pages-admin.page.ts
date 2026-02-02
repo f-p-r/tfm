@@ -44,6 +44,7 @@ export class OwnerPagesAdminPage implements OnInit {
 
   readonly ownerTypeLabel = computed(() => {
     const type = this.ownerType();
+    if (type === '1') return 'Global';
     if (type === PageOwnerScope.ASSOCIATION) return 'Asociación';
     if (type === PageOwnerScope.GAME) return 'Juego';
     return 'Owner';
@@ -73,20 +74,39 @@ export class OwnerPagesAdminPage implements OnInit {
 
   ngOnInit(): void {
     // Parse route params
-    const ownerTypeParam = this.route.snapshot.paramMap.get('ownerType');
-    const ownerIdParam = this.route.snapshot.paramMap.get('ownerId');
+    let ownerTypeParam = this.route.snapshot.paramMap.get('ownerType');
+    let ownerIdParam = this.route.snapshot.paramMap.get('ownerId');
 
-    if (!ownerTypeParam || !ownerIdParam) {
-      console.error('Missing route params');
+    // Si no hay paramMap, intentar parsear desde URL (para rutas estáticas como /admin/pages/1)
+    if (!ownerTypeParam) {
+      const urlSegments = this.route.snapshot.url;
+      // URL esperada: /admin/pages/1 o /admin/pages/:ownerType/:ownerId
+      if (urlSegments.length >= 2 && urlSegments[0].path === 'admin' && urlSegments[1].path === 'pages') {
+        ownerTypeParam = urlSegments[2]?.path ?? null;
+        ownerIdParam = urlSegments[3]?.path ?? null;
+      }
+    }
+
+    if (!ownerTypeParam) {
+      console.error('Missing ownerType param');
       return;
     }
 
     const parsedOwnerType = this.parseOwnerType(ownerTypeParam);
-    const parsedOwnerId = parseInt(ownerIdParam, 10);
 
-    if (parsedOwnerType === null || isNaN(parsedOwnerId)) {
-      console.error('Invalid route params');
+    if (parsedOwnerType === null) {
+      console.error('Invalid ownerType param');
       return;
+    }
+
+    // Para scopeType 1 (global), ownerId es opcional
+    let parsedOwnerId: number | null = null;
+    if (parsedOwnerType !== '1' && ownerIdParam) {
+      parsedOwnerId = parseInt(ownerIdParam, 10);
+      if (isNaN(parsedOwnerId)) {
+        console.error('Invalid ownerId param');
+        return;
+      }
     }
 
     this.ownerType.set(parsedOwnerType);
@@ -98,12 +118,13 @@ export class OwnerPagesAdminPage implements OnInit {
   }
 
   private parseOwnerType(param: string): PageOwnerType | null {
-    // Si es '2' o '3', es válido directamente
-    if (param === PageOwnerScope.ASSOCIATION || param === PageOwnerScope.GAME) {
+    // Si es '1' (global), '2' o '3', es válido directamente
+    if (param === '1' || param === PageOwnerScope.ASSOCIATION || param === PageOwnerScope.GAME) {
       return param as PageOwnerType;
     }
-    // Si es número 2 o 3, convertir a string
+    // Si es número 1, 2 o 3, convertir a string
     const num = parseInt(param, 10);
+    if (num === 1) return '1';
     if (num === 2) return PageOwnerScope.ASSOCIATION;
     if (num === 3) return PageOwnerScope.GAME;
     // Si es otro tipo futuro (news, event, page), devolver tal cual
@@ -113,10 +134,12 @@ export class OwnerPagesAdminPage implements OnInit {
   private loadPages(): void {
     const ownerType = this.ownerType();
     const ownerId = this.ownerId();
-    if (ownerType === null || ownerId === null) return;
+    if (ownerType === null) return;
+    // Para scopeType 1 (global), ownerId puede ser null
+    if (ownerType !== '1' && ownerId === null) return;
 
     this.isLoadingPages.set(true);
-    this.pagesService.listByOwner(ownerType, ownerId).subscribe({
+    this.pagesService.listByOwner(ownerType, ownerId ?? 0).subscribe({
       next: (pages) => {
         this.pages.set(pages);
         this.isLoadingPages.set(false);
@@ -135,10 +158,12 @@ export class OwnerPagesAdminPage implements OnInit {
   private loadHomePageId(): void {
     const ownerType = this.ownerType();
     const ownerId = this.ownerId();
-    if (ownerType === null || ownerId === null) return;
+    if (ownerType === null) return;
+    // Para scopeType 1 (global), ownerId puede ser null
+    if (ownerType !== '1' && ownerId === null) return;
 
     this.isLoadingHomePage.set(true);
-    this.settingsService.getHomePageId(ownerType, ownerId).subscribe({
+    this.settingsService.getHomePageId(ownerType, ownerId ?? 0).subscribe({
       next: (pageId) => {
         this.homePageId.set(pageId);
         this.isLoadingHomePage.set(false);
@@ -152,10 +177,12 @@ export class OwnerPagesAdminPage implements OnInit {
   onHomePageChange(pageId: number): void {
     const ownerType = this.ownerType();
     const ownerId = this.ownerId();
-    if (ownerType === null || ownerId === null) return;
+    if (ownerType === null) return;
+    // Para scopeType 1 (global), ownerId puede ser null
+    if (ownerType !== '1' && ownerId === null) return;
 
     this.isSavingHomePage.set(true);
-    this.settingsService.setHomePageId(ownerType, ownerId, pageId).subscribe({
+    this.settingsService.setHomePageId(ownerType, ownerId ?? 0, pageId).subscribe({
       next: () => {
         this.homePageId.set(pageId);
         this.isSavingHomePage.set(false);
@@ -173,17 +200,27 @@ export class OwnerPagesAdminPage implements OnInit {
   onCreatePage(): void {
     const ownerType = this.ownerType();
     const ownerId = this.ownerId();
-    if (ownerType === null || ownerId === null) return;
+    if (ownerType === null) return;
 
-    this.router.navigate(['/admin/pages', ownerType, ownerId, 'create']);
+    if (ownerType === '1') {
+      this.router.navigate(['/admin/pages', '1', 'create']);
+    } else {
+      if (ownerId === null) return;
+      this.router.navigate(['/admin/pages', ownerType, ownerId, 'create']);
+    }
   }
 
   onEditPage(pageId: number): void {
     const ownerType = this.ownerType();
     const ownerId = this.ownerId();
-    if (ownerType === null || ownerId === null) return;
+    if (ownerType === null) return;
 
-    this.router.navigate(['/admin/pages', ownerType, ownerId, 'edit', pageId]);
+    if (ownerType === '1') {
+      this.router.navigate(['/admin/pages', '1', 'edit', pageId]);
+    } else {
+      if (ownerId === null) return;
+      this.router.navigate(['/admin/pages', ownerType, ownerId, 'edit', pageId]);
+    }
   }
 
   getPublishedLabel(published: boolean): string {
