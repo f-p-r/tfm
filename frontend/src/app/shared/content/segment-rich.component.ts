@@ -3,13 +3,14 @@
  * Muestra imágenes con posicionamiento configurable (izquierda/derecha/arriba)
  * y permite que el texto fluya alrededor de la imagen en escritorio.
  */
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RichImageDTO, RichSegmentDTO } from './page-content.dto';
 
 @Component({
   selector: 'app-segment-rich',
   imports: [CommonModule],
+  encapsulation: ViewEncapsulation.None,
   template: `
     @if (segment(); as seg) {
       <article class="seg-article" [class]="seg.classNames ?? ''">
@@ -54,7 +55,7 @@ import { RichImageDTO, RichSegmentDTO } from './page-content.dto';
           }
         }
         @if (seg.textHtml) {
-          <div class="seg-text" [innerHTML]="normalizeHtml(seg.textHtml)"></div>
+          <div class="seg-text ql-editor" [innerHTML]="normalizeHtml(seg.textHtml)"></div>
         }
         <div class="clear-both"></div>
       </article>
@@ -70,6 +71,14 @@ import { RichImageDTO, RichSegmentDTO } from './page-content.dto';
 
     .seg-text {
       display: block;
+    }
+
+    /* Sobrescribir estilos del editor de Quill para el viewer */
+    .seg-text.ql-editor {
+      padding: 0;
+      height: auto;
+      overflow-y: visible;
+      white-space: normal;
     }
 
     figure.seg-figure {

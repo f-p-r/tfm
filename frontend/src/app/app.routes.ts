@@ -14,20 +14,25 @@ import { OwnerPagesAdminPage } from './pages/admin/pages/owner-pages/owner-pages
 import { PageEditAdminPage } from './pages/admin/pages/owner-pages/page-edit-admin.page';
 import { PageCreateAdminPage } from './pages/admin/pages/owner-pages/page-create-admin.page';
 import { PagePreviewPage } from './pages/admin/pages/owner-pages/page-preview.page';
+import { PageViewerPage } from './pages/page-viewer/page-viewer.page';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', component: HomePage },
+  // Public page viewer routes (must be before admin routes)
+  { path: '', pathMatch: 'full', component: PageViewerPage },
+  { path: 'paginas/:slug', component: PageViewerPage },
   { path: 'login', component: LoginPage },
   { path: 'auth/callback', component: AuthCallbackPage },
   { path: 'styleguide', component: StyleguidePage },
 
-  // Ruta de juegos (sin ID en URL)
-  { path: 'juegos/:slug', component: GamePage, canActivate: [gameBySlugGuard] },
+  // Ruta de juegos con páginas
+  { path: 'juegos/:slug', component: PageViewerPage },
+  { path: 'juegos/:slug/:pagina', component: PageViewerPage },
   { path: 'juegos/:slug/asociaciones', component: GameAssociationsPage, canActivate: [gameBySlugGuard] },
 
-  // Rutas de asociaciones (sin ID en URL)
+  // Rutas de asociaciones con páginas
   { path: 'asociaciones', component: AssociationsPage },
-  { path: 'asociaciones/:slug', component: AssociationPage, canActivate: [associationBySlugGuard] },
+  { path: 'asociaciones/:slug', component: PageViewerPage },
+  { path: 'asociaciones/:slug/:pagina', component: PageViewerPage },
   {
     path: 'prototypes',
     children: [

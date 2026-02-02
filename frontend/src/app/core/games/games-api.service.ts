@@ -36,4 +36,15 @@ export class GamesApiService {
     }
     return this.http.get<Game[]>(this.endpoint, { params });
   }
+
+  /**
+   * Obtiene un juego por su slug.
+   *
+   * @param slug Slug del juego (será URL-encoded automáticamente).
+   * @returns Observable con los datos del juego.
+   * @throws 404 si no existe o está deshabilitado.
+   */
+  getBySlug(slug: string): Observable<Game> {
+    return this.http.get<Game>(`${this.endpoint}/by-slug/${encodeURIComponent(slug)}`);
+  }
 }

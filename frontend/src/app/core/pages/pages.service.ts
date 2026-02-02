@@ -99,6 +99,62 @@ export class PagesService {
   }
 
   /**
+   * Obtiene una página publicada por owner y pageSlug (endpoint público)
+   * GET /api/pages/by-owner-slug?ownerType={ownerType}&ownerSlug={ownerSlug}&pageSlug={pageSlug}
+   */
+  getPublicPageByOwnerSlug(
+    ownerType: PageOwnerType,
+    ownerSlug: string,
+    pageSlug: string,
+  ): Observable<PageDTO | null> {
+    const params = new HttpParams()
+      .set('ownerType', ownerType)
+      .set('ownerSlug', ownerSlug)
+      .set('pageSlug', pageSlug);
+
+    return this.http
+      .get<PageDTO>(`${this.apiBaseUrl}/api/pages/by-owner-slug`, { params })
+      .pipe(
+        catchError((error) => {
+          if (error.status === 404) {
+            return throwError(() => ({
+              status: 404,
+              message: 'Página no encontrada',
+            }));
+          }
+          return this.handleError(error);
+        })
+      );
+  }
+
+  /**
+   * Obtiene la home page publicada de un owner (endpoint público)
+   * GET /api/pages/home?ownerType={ownerType}&ownerSlug={ownerSlug}
+   */
+  getPublicHomePage(
+    ownerType: PageOwnerType,
+    ownerSlug: string,
+  ): Observable<PageDTO | null> {
+    const params = new HttpParams()
+      .set('ownerType', ownerType)
+      .set('ownerSlug', ownerSlug);
+
+    return this.http
+      .get<PageDTO>(`${this.apiBaseUrl}/api/pages/home`, { params })
+      .pipe(
+        catchError((error) => {
+          if (error.status === 404) {
+            return throwError(() => ({
+              status: 404,
+              message: 'Página de inicio no encontrada',
+            }));
+          }
+          return this.handleError(error);
+        })
+      );
+  }
+
+  /**
    * Maneja errores HTTP con soporte para errores de validación 422
    */
   private handleError(error: HttpErrorResponse): Observable<never> {

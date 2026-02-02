@@ -62,6 +62,7 @@ Route::post('media/upload', [MediaController::class, 'upload']);
 // Games endpoints (sin autenticación por ahora)
 Route::get('games', [GameController::class, 'index']);
 Route::post('games', [GameController::class, 'store']);
+Route::get('games/by-slug/{slug}', [GameController::class, 'bySlug']);
 Route::get('games/{game}', [GameController::class, 'show']);
 Route::get('games/{game}/associations', [GameController::class, 'associations']);
 Route::put('games/{game}', [GameController::class, 'update']);

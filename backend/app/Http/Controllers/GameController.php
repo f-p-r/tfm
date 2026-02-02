@@ -11,6 +11,21 @@ use Illuminate\Validation\Rule;
 class GameController extends Controller
 {
     /**
+     * Get a game by slug.
+     */
+    public function bySlug(string $slug, Request $request): JsonResponse
+    {
+        $query = Game::query()->where('slug', $slug);
+
+        if (! $request->boolean('include_disabled')) {
+            $query->where('disabled', false);
+        }
+
+        $game = $query->firstOrFail();
+        return response()->json($game);
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request): JsonResponse

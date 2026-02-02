@@ -69,6 +69,35 @@ Crear un nuevo juego.
 
 ---
 
+### GET /api/games/by-slug/{slug}
+Obtener un juego por su slug.
+
+**Autenticación:** No requerida
+
+**Parámetros de ruta:**
+- `slug` (string) - Slug único del juego
+
+**Query Parameters:**
+- `include_disabled` (boolean, opcional) - Incluir juegos deshabilitados (default: false)
+
+**Respuestas:**
+- **200 OK**
+  ```json
+  {
+    "id": 1,
+    "name": "League of Legends",
+    "slug": "league-of-legends",
+    "team_size": 5,
+    "disabled": false,
+    "created_at": "2026-01-01T00:00:00.000000Z",
+    "updated_at": "2026-01-01T00:00:00.000000Z"
+  }
+  ```
+
+- **404 Not Found** - Juego no encontrado
+
+---
+
 ### GET /api/games/{game}
 Obtener un juego específico.
 

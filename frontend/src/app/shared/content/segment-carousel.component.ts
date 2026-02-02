@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, ViewEncapsulation, signal, computed, effect, type EffectCleanupRegisterFn } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarouselSegmentDTO } from './page-content.dto';
 
 @Component({
   selector: 'app-segment-carousel',
   imports: [CommonModule],
+  encapsulation: ViewEncapsulation.None,
   template: `
     @if (segment(); as seg) {
       <article class="rounded-lg border border-gray-200 overflow-hidden bg-white shadow-sm" [class]="seg.classNames ?? ''">
@@ -167,7 +168,7 @@ export class SegmentCarouselComponent {
   });
 
   // Autoavance según delaySeconds; se reinicia al cambiar de página o parámetros
-  private readonly autoplay = effect((onCleanup) => {
+  private readonly autoplay = effect((onCleanup: EffectCleanupRegisterFn) => {
     const seg = this.segment();
     const delay = seg?.delaySeconds ?? 0;
     const total = this.totalPages();
