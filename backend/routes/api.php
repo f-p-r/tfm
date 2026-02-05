@@ -28,12 +28,19 @@ Route::prefix('auth')->group(function () {
     Route::get('{provider}/callback', [SocialAuthController::class, 'callback']);
 });
 
+// Public Association endpoints (sin autenticación)
+Route::get('associations', [AssociationController::class, 'index']);
+Route::get('associations/by-slug/{slug}', [AssociationController::class, 'bySlug']);
+Route::get('associations/{association}', [AssociationController::class, 'show']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
 
-    // Association by slug (must be before apiResource)
-    Route::get('associations/by-slug/{slug}', [AssociationController::class, 'bySlug']);
-    Route::apiResource('associations', AssociationController::class);
+    // Association write operations (require auth)
+    Route::post('associations', [AssociationController::class, 'store']);
+    Route::put('associations/{association}', [AssociationController::class, 'update']);
+    Route::patch('associations/{association}', [AssociationController::class, 'update']);
+    Route::delete('associations/{association}', [AssociationController::class, 'destroy']);
 
     // Association Member Statuses
     Route::apiResource('association-member-statuses', AssociationMemberStatusController::class);
@@ -85,6 +92,7 @@ Route::get('regions/{id}', [RegionController::class, 'show']);
 // Public Pages endpoints (sin autenticación)
 Route::get('pages/home', [PublicPagesController::class, 'home']);
 Route::get('pages/by-owner-slug', [PublicPagesController::class, 'byOwnerSlug']);
+Route::get('pages/{page}', [PublicPagesController::class, 'show']);
 
 // Public Site Params endpoints (sin autenticación)
 Route::get('site-params/{id}', [PublicSiteParamsController::class, 'show']);

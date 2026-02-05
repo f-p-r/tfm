@@ -1,0 +1,199 @@
+<div class="ds-page bg-neutral-light">
+  <!-- Hero Section con Primary -->
+  <section class="mb-12 p-8 rounded-lg bg-brand-primary text-white">
+    <h1 class="h1 mb-4">Demostración de Colores</h1>
+    <p class="p text-lg opacity-90">
+      Ejemplos prácticos de cómo usar la paleta de colores del proyecto
+      en diferentes contextos y componentes de la interfaz.
+    </p>
+  </section>
+
+  <!-- Sección con Secondary como acento -->
+  <section class="mb-12 p-8 rounded-lg bg-white border-l-4 border-brand-secondary">
+    <h2 class="h2 mb-4 text-brand-primary">Títulos y Encabezados</h2>
+    <p class="p mb-4 text-neutral-dark">
+      Los títulos principales usan el color <span class="font-semibold text-brand-primary">Primary</span>
+      para mantener la jerarquía visual y reforzar la identidad de marca.
+    </p>
+    <div class="space-y-4">
+      <div>
+        <h1 class="h1 text-brand-primary">H1 – Título Principal</h1>
+        <p class="text-neutral-medium text-sm">Color: brand-primary (#1B4F72)</p>
+      </div>
+      <div>
+        <h2 class="h2 text-brand-primary">H2 – Sección Importante</h2>
+        <p class="text-neutral-medium text-sm">Color: brand-primary (#1B4F72)</p>
+      </div>
+      <div>
+        <h3 class="h3 text-neutral-dark">H3 – Subtítulo Secundario</h3>
+        <p class="text-neutral-medium text-sm">Color: neutral-dark (#2C3E50)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tarjetas con diferentes colores -->
+  <section class="mb-12">
+    <h2 class="h2 mb-6 text-brand-primary">Tarjetas de Contenido</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Tarjeta Primary -->
+      <div class="p-6 rounded-lg bg-brand-primary text-white">
+        <h3 class="h3 mb-3">Torneos Activos</h3>
+        <p class="text-5xl font-bold mb-2">12</p>
+        <p class="opacity-90">Participantes: 240</p>
+        <button class="ds-btn bg-white text-brand-primary hover:bg-brand-secondary hover:text-neutral-dark mt-4 w-full">
+          Ver torneos
+        </button>
+      </div>
+
+      <!-- Tarjeta Accent -->
+      <div class="p-6 rounded-lg bg-brand-accent text-white">
+        <h3 class="h3 mb-3">Partidas en Curso</h3>
+        <p class="text-5xl font-bold mb-2">48</p>
+        <p class="opacity-90">Finalizadas hoy: 15</p>
+        <button class="ds-btn bg-white text-brand-accent hover:bg-brand-primary hover:text-white mt-4 w-full">
+          Ver partidas
+        </button>
+      </div>
+
+      <!-- Tarjeta Secondary -->
+      <div class="p-6 rounded-lg bg-brand-secondary text-neutral-dark">
+        <h3 class="h3 mb-3">Nuevos Miembros</h3>
+        <p class="text-5xl font-bold mb-2">8</p>
+        <p class="opacity-75">Esta semana</p>
+        <button class="ds-btn bg-brand-primary text-white hover:bg-neutral-dark mt-4 w-full">
+          Ver miembros
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alertas y Notificaciones -->
+  <section class="mb-12">
+    <h2 class="h2 mb-6 text-brand-primary">Alertas y Mensajes</h2>
+    <div class="space-y-4">
+      <!-- Info con Primary -->
+      <div class="p-4 rounded-lg bg-brand-primary/10 border border-brand-primary/30">
+        <h3 class="font-semibold text-brand-primary mb-1">Información importante</h3>
+        <p class="p text-neutral-dark">
+          El torneo de primavera comenzará el próximo lunes. Asegúrate de confirmar tu participación.
+        </p>
+      </div>
+
+      <!-- Éxito con Accent -->
+      <div class="p-4 rounded-lg bg-brand-accent/10 border border-brand-accent/30">
+        <h3 class="font-semibold text-brand-accent mb-1">¡Operación exitosa!</h3>
+        <p class="p text-neutral-dark">
+          Tu perfil ha sido actualizado correctamente. Los cambios son visibles para todos los miembros.
+        </p>
+      </div>
+
+      <!-- Aviso con Secondary -->
+      <div class="p-4 rounded-lg bg-brand-secondary/20 border border-brand-secondary">
+        <h3 class="font-semibold text-neutral-dark mb-1">⚠️ Atención necesaria</h3>
+        <p class="p text-neutral-dark">
+          Hay 3 solicitudes de membresía pendientes de revisión por parte del administrador.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Botones y Acciones -->
+  <section class="mb-12 p-8 rounded-lg bg-white">
+    <h2 class="h2 mb-6 text-brand-primary">Botones y Acciones</h2>
+    <div class="space-y-6">
+      <div>
+        <h3 class="h3 mb-3 text-neutral-dark">Acciones Principales</h3>
+        <div class="flex flex-wrap gap-3">
+          <button class="ds-btn ds-btn-primary">Crear torneo</button>
+          <button class="ds-btn ds-btn-primary">Inscribirse ahora</button>
+          <button class="ds-btn ds-btn-primary">Guardar cambios</button>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="h3 mb-3 text-neutral-dark">Acciones Secundarias</h3>
+        <div class="flex flex-wrap gap-3">
+          <button class="ds-btn ds-btn-secondary">Ver detalles</button>
+          <button class="ds-btn ds-btn-secondary">Cancelar</button>
+          <button class="ds-btn ds-btn-secondary">Editar</button>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="h3 mb-3 text-neutral-dark">Acciones Peligrosas</h3>
+        <div class="flex flex-wrap gap-3">
+          <button class="ds-btn ds-btn-danger">Eliminar torneo</button>
+          <button class="ds-btn ds-btn-danger">Expulsar jugador</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lista con elementos destacados -->
+  <section class="mb-12">
+    <h2 class="h2 mb-6 text-brand-primary">Lista de Asociaciones</h2>
+    <div class="space-y-3">
+      <div class="p-4 rounded-lg bg-white hover:bg-neutral-light border border-neutral-medium hover:border-brand-accent transition-all cursor-pointer">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-semibold text-neutral-dark">Club de Ajedrez Madrid</h3>
+            <p class="text-sm text-neutral-medium">125 miembros • 8 torneos activos</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-brand-accent/20 text-brand-accent text-sm font-medium">
+            Activa
+          </span>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-lg bg-white hover:bg-neutral-light border border-neutral-medium hover:border-brand-accent transition-all cursor-pointer">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-semibold text-neutral-dark">Asociación de Go Barcelona</h3>
+            <p class="text-sm text-neutral-medium">89 miembros • 3 torneos activos</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-brand-secondary/40 text-neutral-dark text-sm font-medium">
+            Destacada
+          </span>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-lg bg-white hover:bg-neutral-light border border-neutral-medium hover:border-brand-accent transition-all cursor-pointer">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-semibold text-neutral-dark">Peña de Damas Valencia</h3>
+            <p class="text-sm text-neutral-medium">42 miembros • 2 torneos activos</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-neutral-medium/40 text-neutral-dark text-sm font-medium">
+            Normal
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer con colores de marca -->
+  <section class="p-8 rounded-lg bg-neutral-dark text-white">
+    <div class="grid md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="font-display font-bold text-brand-secondary mb-3">Sobre nosotros</h3>
+        <p class="text-sm opacity-80">
+          Plataforma de gestión de asociaciones y torneos de juegos de mesa.
+        </p>
+      </div>
+      <div>
+        <h3 class="font-display font-bold text-brand-accent mb-3">Enlaces rápidos</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-brand-secondary transition">Torneos</a></li>
+          <li><a href="#" class="hover:text-brand-secondary transition">Asociaciones</a></li>
+          <li><a href="#" class="hover:text-brand-secondary transition">Juegos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-display font-bold text-brand-secondary mb-3">Contacto</h3>
+        <p class="text-sm opacity-80">
+          info&#64;asociaciones.com
+        </p>
+      </div>
+    </div>
+  </section>
+</div>

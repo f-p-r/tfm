@@ -80,6 +80,12 @@ export const routes: Routes = [
             (m) => m.AssociationPageDemoPage,
           ),
       },
+      {
+        // Prototipo color-demo: demostración de uso de colores
+        path: 'color-demo',
+        loadComponent: () =>
+          import('./prototypes/color-demo/color-demo.page').then((m) => m.ColorDemoPage),
+      },
       { path: '**', component: PrototypeHostPage },
     ],
   },

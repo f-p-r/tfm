@@ -149,12 +149,15 @@ export class PageViewerPage implements OnInit, OnDestroy {
     this.siteParamsService.getNumber('homepage').subscribe({
       next: (pageId) => {
         if (pageId === null) {
-          this.showError('No hay página de inicio configurada');
+          this.showError('No hay página de inicio configurada. Por favor, contacta con el administrador del sitio.');
           return;
         }
         this.loadPageById(pageId);
       },
-      error: () => this.showError('Error al obtener la página de inicio')
+      error: (err) => {
+        console.error('Error loading homepage:', err);
+        this.showError('No hay página de inicio configurada. Por favor, contacta con el administrador del sitio.');
+      }
     });
   }
 
@@ -262,7 +265,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
   }
 
   private loadPageById(pageId: number): void {
-    this.pagesService.getById(pageId).subscribe({
+    this.pagesService.getPublicById(pageId).subscribe({
       next: (page) => {
         if (page) {
           this.page.set(page);

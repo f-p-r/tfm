@@ -76,6 +76,16 @@ class PublicPagesController extends Controller
         return response()->json($this->mapPage($page));
     }
 
+    public function show(Page $page): JsonResponse
+    {
+        // Solo mostrar páginas publicadas en endpoints públicos
+        if (!$page->published) {
+            return response()->json(['message' => 'Page not found.'], 404);
+        }
+
+        return response()->json($this->mapPage($page));
+    }
+
     private function resolveOwnerBySlug(string $ownerType, string $ownerSlug): Association|Game|null
     {
         if ($ownerType === '2') {

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal, effect } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { ContextStore } from '../../core/context/context.store';
 import { WebScope } from '../../core/web-scope.constants';
 import { AssociationsApiService } from '../../core/associations/associations-api.service';
@@ -16,12 +15,10 @@ import { GamesStore } from '../../core/games/games.store';
  */
 @Component({
   selector: 'app-associations-page',
-  imports: [NavbarComponent],
+  imports: [],
   template: `
-    <app-navbar />
-    <main class="ds-main">
-      <div class="ds-page">
-        <div class="ds-container">
+    <div class="ds-page">
+      <div class="ds-container">
           <header class="border-b border-neutral-medium pb-4">
             <h1 class="h1">Asociaciones</h1>
             @if (contextStore.scopeType() === WebScope.GAME) {
@@ -85,8 +82,7 @@ import { GamesStore } from '../../core/games/games.store';
             }
           </section>
         </div>
-      </div>
-    </main>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

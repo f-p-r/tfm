@@ -7,7 +7,7 @@ Controlador para gestión de asociaciones (clubes, equipos, etc.).
 ### GET /api/associations
 Listar todas las asociaciones.
 
-**Autenticación:** Requerida (Sanctum)
+**Autenticación:** No requerida
 
 **Query Parameters:**
 - `include_disabled` (boolean, opcional) - Incluir asociaciones deshabilitadas (default: false)
@@ -40,7 +40,7 @@ Listar todas las asociaciones.
 ### GET /api/associations/{id}
 Obtener una asociación específica.
 
-**Autenticación:** Requerida (Sanctum)
+**Autenticación:** No requerida
 
 **Parámetros de ruta:**
 - `id` (integer) - ID de la asociación
@@ -73,7 +73,7 @@ Obtener una asociación específica.
 ### GET /api/associations/by-slug/{slug}
 Obtener una asociación por su slug.
 
-**Autenticación:** Requerida (Sanctum)
+**Autenticación:** No requerida
 
 **Parámetros de ruta:**
 - `slug` (string) - Slug único de la asociación

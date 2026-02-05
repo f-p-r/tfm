@@ -31,7 +31,7 @@ export class PagesService {
   }
 
   /**
-   * Obtiene una página por su ID
+   * Obtiene una página por su ID (admin - incluye borradores)
    * GET /api/admin/pages/{id}
    */
   getById(id: number): Observable<PageDTO | null> {
@@ -43,6 +43,26 @@ export class PagesService {
             return throwError(() => ({
               status: 404,
               message: 'Página no encontrada',
+            }));
+          }
+          return this.handleError(error);
+        })
+      );
+  }
+
+  /**
+   * Obtiene una página publicada por su ID (público - solo páginas publicadas)
+   * GET /api/pages/{id}
+   */
+  getPublicById(id: number): Observable<PageDTO | null> {
+    return this.http
+      .get<PageDTO>(`${this.apiBaseUrl}/api/pages/${id}`)
+      .pipe(
+        catchError((error) => {
+          if (error.status === 404) {
+            return throwError(() => ({
+              status: 404,
+              message: 'Página no encontrada o no publicada',
             }));
           }
           return this.handleError(error);
