@@ -23,6 +23,10 @@ class Association extends Model
         'web',
         'disabled',
         'homePageId',
+        'owner_id',
+        'external_url',
+        'management',
+        'province',
     ];
 
     /**
@@ -33,6 +37,16 @@ class Association extends Model
     protected $casts = [
         'disabled' => 'boolean',
         'homePageId' => 'integer',
+        'management' => 'boolean',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'has_internal_web',
     ];
 
     /**
@@ -57,5 +71,24 @@ class Association extends Model
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);
+    }
+
+    /**
+     * Get the owner (user) for this association.
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * Get the has_internal_web attribute.
+     * Returns true if there is a page with owner_type=2 and owner_id matching this association.
+     */
+    public function getHasInternalWebAttribute(): bool
+    {
+        return Page::where('owner_type', 2)
+            ->where('owner_id', $this->id)
+            ->exists();
     }
 }

@@ -23,6 +23,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Las asociaciones donde este usuario es owner.
+     */
+    public function ownedAssociations(): HasMany
+    {
+        return $this->hasMany(Association::class, 'owner_id');
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>

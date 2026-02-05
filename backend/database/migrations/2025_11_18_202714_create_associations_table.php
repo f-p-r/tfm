@@ -22,7 +22,13 @@ return new class extends Migration
             $table->string('region_id')->nullable();
             $table->string('web', 2048)->nullable();
             $table->integer('homePageId')->nullable();
+            $table->unsignedBigInteger('owner_id')->nullable();
+            $table->string('external_url')->nullable();
+            $table->boolean('management')->default(false);
+            $table->string('province')->nullable();
             $table->timestamps();
+
+            $table->foreign('owner_id')->references('id')->on('users')->onDelete('set null');
         });
     }
     /**
