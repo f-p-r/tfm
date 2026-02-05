@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Association extends Model
 {
@@ -79,6 +80,22 @@ class Association extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * Get the member statuses for this association.
+     */
+    public function memberStatuses(): HasMany
+    {
+        return $this->hasMany(AssociationMemberStatus::class);
+    }
+
+    /**
+     * Get the user memberships for this association.
+     */
+    public function userAssociations(): HasMany
+    {
+        return $this->hasMany(UserAssociation::class);
     }
 
     /**

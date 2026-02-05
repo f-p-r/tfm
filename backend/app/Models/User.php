@@ -31,6 +31,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Las membresías del usuario en asociaciones.
+     */
+    public function userAssociations(): HasMany
+    {
+        return $this->hasMany(UserAssociation::class);
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>

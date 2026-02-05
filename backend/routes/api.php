@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AssociationController;
+use App\Http\Controllers\AssociationMemberStatusController;
+use App\Http\Controllers\UserAssociationController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\GameController;
@@ -32,6 +34,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Association by slug (must be before apiResource)
     Route::get('associations/by-slug/{slug}', [AssociationController::class, 'bySlug']);
     Route::apiResource('associations', AssociationController::class);
+
+    // Association Member Statuses
+    Route::apiResource('association-member-statuses', AssociationMemberStatusController::class);
+
+    // User Associations (memberships)
+    Route::apiResource('user-associations', UserAssociationController::class);
 
     // Authorization query endpoint
     Route::post('authz/query', [AuthzController::class, 'query']);
