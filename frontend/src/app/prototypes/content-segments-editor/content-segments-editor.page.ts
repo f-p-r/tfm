@@ -6,7 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Quill from 'quill';
 import { PageContentDTO, SegmentDTO, RichSegmentDTO, CarouselSegmentDTO } from '../../shared/content/page-content.dto';
 import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
-import { quillModules } from '../quill.config';
+import { createQuillModules } from '../quill.config';
 import { MediaPickerComponent } from '../../components/media/media-picker.component';
 import { MediaItem } from '../../components/media/media.models';
 import { WebScope } from '../../core/web-scope.constants';
@@ -17,7 +17,7 @@ import { LinkSelectorComponent, type InternalLinkDestination } from '../../share
 const PREVIEW_KEY = 'contentSegmentsPreview:current';
 const DEFAULT_CAROUSEL_HEIGHT = 300; // Altura por defecto del carrusel en px
 
-// Registrar el custom blot ANTES de que se inicialice el componente
+// Registrar el custom blot
 Quill.register(InternalLinkBlot);
 
 @Component({
@@ -242,26 +242,10 @@ export class ContentSegmentsEditorPage {
   readonly WebScope = WebScope;
   readonly quillEditor = viewChild<QuillEditorComponent>('editor');
 
-  // Configuración dinámica con handler para enlaces internos
-  readonly modules = {
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, 4, false] }],
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ align: [] }],
-        ['blockquote'],
-        ['link'],
-        ['internal-link'],
-        ['clean'],
-      ],
-      handlers: {
-        'internal-link': () => {
-          this.openLinkSelector();
-        },
-      },
-    },
-  };
+  // Configuración con handlers
+  readonly modules = createQuillModules({
+    'internal-link': () => this.openLinkSelector(),
+  });
 
   readonly quillControl = new FormControl<string>('', { nonNullable: true });
   readonly richPickerOpen = signal(false);

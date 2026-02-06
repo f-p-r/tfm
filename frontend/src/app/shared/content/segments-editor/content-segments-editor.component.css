@@ -198,6 +198,12 @@
     brightness(98%) contrast(101%);
 }
 
+/* Estilos para el botón de tabla de QuillTableBetter */
+.ql-toolbar .ql-table-better {
+  width: auto !important;
+}
+
+
 .carousel-images {
   border: 1px solid #d5d8dc;
   border-radius: 12px;

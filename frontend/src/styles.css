@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "quill/dist/quill.core.css";
+@import "quill-table-better/dist/quill-table-better.css";
 
 @theme {
   /* Colores */

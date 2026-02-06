@@ -8,7 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import Quill from 'quill';
-import { editorDemoQuillModules } from '../quill.config';
+import { createQuillModules } from '../quill.config';
 import { InternalLinkBlot } from '../../shared/content/internal-link.blot';
 import { LinkSelectorComponent, type InternalLinkDestination } from '../../shared/content/link-selector.component';
 import { InternalLinksRewriterService } from '../../shared/content/internal-links-rewriter.service';
@@ -16,7 +16,7 @@ import { WebScope } from '../../core/web-scope.constants';
 import { GamesStore } from '../../core/games/games.store';
 import { AssociationsResolveService } from '../../core/associations/associations-resolve.service';
 
-// Registrar el custom blot ANTES de que se inicialice el componente
+// Registrar el custom blot
 Quill.register(InternalLinkBlot);
 
 @Component({
@@ -34,26 +34,10 @@ export class EditorDemoPage {
 
   readonly quillEditor = viewChild<QuillEditorComponent>('editor');
 
-  // Configuración dinámica con handler
-  readonly modules = {
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, 4, false] }],
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ align: [] }],
-        ['blockquote'],
-        ['link'],
-        ['internal-link'],
-        ['clean'],
-      ],
-      handlers: {
-        'internal-link': () => {
-          this.openLinkSelector();
-        },
-      },
-    },
-  };
+  // Configuración con handlers
+  readonly modules = createQuillModules({
+    'internal-link': () => this.openLinkSelector(),
+  });
 
   // Semilla inicial para que se vea contenido al cargar
   readonly control = new FormControl<string>('<h2>Editor Quill listo</h2><p>Escribe aquí…</p>', {

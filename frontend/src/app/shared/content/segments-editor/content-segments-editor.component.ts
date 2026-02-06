@@ -13,6 +13,7 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { QuillModule, QuillEditorComponent } from 'ngx-quill';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Quill from 'quill';
+import QuillTableBetter from 'quill-table-better';
 import { PageContentDTO, SegmentDTO, RichSegmentDTO, CarouselSegmentDTO } from '../page-content.dto';
 import { ContentRendererComponent } from '../content-renderer.component';
 import { MediaPickerComponent } from '../../../components/media/media-picker.component';
@@ -20,9 +21,11 @@ import { MediaItem } from '../../../components/media/media.models';
 import { WebScope } from '../../../core/web-scope.constants';
 import { InternalLinkBlot } from '../internal-link.blot';
 import { LinkSelectorComponent, type InternalLinkDestination } from '../link-selector.component';
+import es_ES from '../../../prototypes/quill-table-better-es';
 
-// Registrar el custom blot
+// Registrar el custom blot y módulo de tablas
 Quill.register(InternalLinkBlot);
+Quill.register('modules/table-better', QuillTableBetter);
 
 const DEFAULT_CAROUSEL_HEIGHT = 300;
 
@@ -62,6 +65,7 @@ export class ContentSegmentsEditorComponent {
         ['blockquote'],
         ['link'],
         ['internal-link'],
+        ['table-better'],
         ['clean'],
       ],
       handlers: {
@@ -70,6 +74,14 @@ export class ContentSegmentsEditorComponent {
         },
       },
     },
+    'table-better': {
+      toolbarTable: true,
+      language: { name: 'es_ES', content: es_ES },
+      menus: ['column', 'row', 'merge', 'table', 'cell', 'wrap', 'delete'],
+    },
+    keyboard: {
+      bindings: QuillTableBetter.keyboardBindings
+    }
   };
 
   // Estado interno
