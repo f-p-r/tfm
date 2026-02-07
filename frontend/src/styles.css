@@ -367,6 +367,12 @@
     @apply z-20 relative shrink-0;
   }
 
+  /* Toolbar superior de la tabla */
+  .ds-table-toolbar {
+    @apply p-4 border-b border-neutral-medium bg-white;
+    @apply flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0;
+  }
+
   /* Contenedor simple (Legacy) */
   .ds-table-container {
     @apply bg-white border border-neutral-medium rounded-lg overflow-hidden shadow-sm;
