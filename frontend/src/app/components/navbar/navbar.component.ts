@@ -10,6 +10,7 @@ import { AuthzService } from '../../core/authz/authz.service';
 import { isSummaryResponse } from '../../core/authz/authz.models';
 import { WebScope } from '../../core/web-scope.constants';
 import { ContextStore } from '../../core/context/context.store';
+import { AssociationsResolveService } from '../../core/associations/associations-resolve.service';
 import { NgTemplateOutlet } from '@angular/common';
 
 type NavItem = {
@@ -29,6 +30,7 @@ type NavItem = {
 export class NavbarComponent {
   readonly mode = input<'portal' | 'game' | 'association'>('portal');
   readonly contextName = input<string | undefined>(undefined);
+  readonly isAdmin = input<boolean>(false);
 
   readonly mobileMenuOpen = signal(false);
   readonly gamesQuery = signal('');
@@ -39,6 +41,7 @@ export class NavbarComponent {
   private readonly authz = inject(AuthzService);
   readonly gamesStore = inject(GamesStore);
   readonly contextStore = inject(ContextStore);
+  private readonly associationsResolve = inject(AssociationsResolveService);
   readonly WebScope = WebScope;
 
   readonly filteredGames = computed(() => {
@@ -48,13 +51,24 @@ export class NavbarComponent {
     return list.filter((g: Game) => g.name.toLowerCase().includes(q));
   });
 
-  readonly navItems = computed<NavItem[]>(() => [
-    { label: 'Asociaciones', type: 'link', route: '/asociaciones' },
-    { label: 'Eventos', type: 'link', route: '/events' },
-    { label: 'Noticias', type: 'link', route: '/news' },
-    { label: 'Admin', type: 'link', route: '/admin', condition: () => this.canSeeAdmin() },
-    { label: '?', type: 'button', onClick: () => this.openHelp() },
-  ]);
+  readonly navItems = computed<NavItem[]>(() => {
+    if (this.isAdmin()) {
+      // Modo admin: mostrar opciones específicas de administración
+      return [
+        { label: 'Panel', type: 'button', onClick: () => this.toggleAdminSidebar() },
+        { label: 'Salir de Admin', type: 'button', onClick: () => this.exitAdmin() },
+        { label: '?', type: 'button', onClick: () => this.openHelp() },
+      ];
+    }
+    // Modo normal: opciones estándar
+    return [
+      { label: 'Asociaciones', type: 'link', route: '/asociaciones' },
+      { label: 'Eventos', type: 'link', route: '/events' },
+      { label: 'Noticias', type: 'link', route: '/news' },
+      { label: 'Admin', type: 'link', route: '/admin', condition: () => this.canSeeAdmin() },
+      { label: '?', type: 'button', onClick: () => this.openHelp() },
+    ];
+  });
 
   constructor() {
     this.gamesStore.loadOnce().pipe(takeUntilDestroyed()).subscribe();
@@ -75,6 +89,19 @@ export class NavbarComponent {
         this.checkAdminPermission();
       } else {
         this.canSeeAdmin.set(false);
+      }
+    });
+
+    // Cuando está en modo Admin, asegurar que el sidebar esté visible por defecto
+    effect(() => {
+      if (this.isAdmin()) {
+        // Usar setTimeout para asegurar que el DOM está listo
+        setTimeout(() => {
+          const sidebar = document.getElementById('admin-sidebar');
+          if (sidebar) {
+            sidebar.classList.remove('ds-admin-sidebar-closed');
+          }
+        }, 0);
       }
     });
   }
@@ -120,6 +147,34 @@ export class NavbarComponent {
   }
 
   get displayName(): string {
+    if (this.isAdmin()) {
+      // Modo admin: mostrar contexto según scopeType
+      const scopeType = this.contextStore.scopeType();
+      const scopeId = this.contextStore.scopeId();
+
+      // Si no hay scopeType definido, mostrar solo "Administración"
+      if (!scopeType) {
+        return 'Administración';
+      }
+
+      if (scopeType === WebScope.GLOBAL) {
+        return 'Administración de la web';
+      }
+
+      if (scopeType === WebScope.GAME && scopeId) {
+        const game = this.gamesStore.getById(scopeId);
+        return game ? game.name : 'Administración';
+      }
+
+      if (scopeType === WebScope.ASSOCIATION && scopeId) {
+        const association = this.associationsResolve.getById(scopeId);
+        return association ? association.name : 'Administración';
+      }
+
+      return 'Administración';
+    }
+
+    // Modo normal
     if (this.mode() === 'portal') {
       return 'Portal';
     }
@@ -174,5 +229,18 @@ export class NavbarComponent {
     const select = event.target as HTMLSelectElement;
     const value = select.value?.trim();
     this.selectGameMobile(value === '' ? null : value);
+  }
+
+  toggleAdminSidebar(): void {
+    const sidebar = document.getElementById('admin-sidebar');
+    if (sidebar) {
+      sidebar.classList.toggle('ds-admin-sidebar-closed');
+    }
+    this.closeMobileMenu();
+  }
+
+  exitAdmin(): void {
+    this.router.navigateByUrl('/');
+    this.closeMobileMenu();
   }
 }

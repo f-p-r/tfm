@@ -206,6 +206,7 @@
   .ds-menu-panel-left {
     @apply absolute left-0 min-w-max rounded-lg border border-neutral-medium bg-white shadow-lg;
   }
+
   /* Idem alineado a la izquierda */
 
   /* Lista de items */
@@ -296,51 +297,61 @@
     @apply text-white w-fit w-full block bg-black py-5;
   }
 
-  .ds-seg-bg-black *{
+  .ds-seg-bg-black * {
     @apply text-white;
   }
 
-/* === Layout administración === */
+  /* === Layout administración === */
+
 
   .ds-admin-shell {
-    @apply flex min-h-dvh bg-admin-bg text-sm;
+    @apply flex min-h-dvh bg-admin-bg text-sm relative overflow-hidden;
   }
 
+  /* Sidebar: FLOTANTE, debajo del navbar y con z-index alto */
   .ds-admin-sidebar {
-    @apply bg-admin-sidebar flex flex-col fixed md:relative z-20 h-dvh;
-    @apply transition-[width,transform] duration-300 ease-in-out;
+    @apply bg-admin-sidebar flex flex-col fixed z-50 transition-all duration-300 ease-in-out;
+    top: 4rem;
+    bottom: 0;
     width: 16rem;
-    overflow: hidden;
-    color: var(--color-neutral-medium);
+    left: 0;
+    box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.2);
   }
 
+  /* Estado cerrado: sacamos el menú lateral de la vista */
+  .ds-admin-sidebar-closed {
+    @apply -translate-x-full opacity-0 pointer-events-none;
+  }
+
+  /* Navbar: Ocupa todo el ancho, z-index superior al sidebar */
   .ds-admin-header {
-    @apply h-16 bg-admin-header border-b border-neutral-medium px-6 flex items-center justify-between sticky top-0 z-10;
+    @apply h-16 bg-white border-b border-neutral-medium px-6 flex items-center justify-between fixed top-0 left-0 right-0 z-[60] w-full;
   }
 
-  .ds-admin-main {
-    @apply flex-1 flex flex-col min-w-0 transition-all duration-300;
-  }
-
-  .ds-admin-content {
-    @apply p-6 md:p-8 overflow-y-auto h-[calc(100dvh-4rem)];
-  }
-
-  /* Items del Menú */
+  /* Items del Menú: Texto claro y brillo en iconos */
   .ds-admin-nav-item {
-    @apply flex items-center gap-3 px-4 py-3 mx-2 rounded-md transition-colors cursor-pointer;
-    @apply text-neutral-medium hover:text-white hover:bg-admin-sidebar-hover;
+    @apply flex items-center gap-3 px-4 py-3 mx-2 rounded-md transition-colors cursor-pointer text-white;
   }
 
-  .ds-admin-nav-item.active {
-    @apply bg-brand-primary text-white shadow-sm font-medium;
+  /* Brillo máximo para los iconos de socios y otros emojis */
+  .ds-admin-nav-item span {
+    @apply brightness-200 saturate-150;
   }
 
-/* === Tablas de datos === */
+  .ds-admin-nav-item:not(.active) {
+    @apply text-neutral-medium hover:bg-admin-sidebar-hover hover:text-white;
+  }
+
+  /* Ajuste para el contenido principal para que no quede tapado por el navbar fijo */
+  .ds-admin-main {
+    @apply h-dvh w-full flex flex-col overflow-hidden;
+  }
+
+  /* === Tablas de datos === */
 
   /* Estructura para tablas Admin (Layout Flex con header fijo) */
   .ds-table-card {
-    @apply flex flex-col bg-white border border-neutral-medium rounded-lg shadow-sm overflow-hidden;
+    @apply flex flex-col bg-white border border-neutral-medium shadow-sm overflow-visible;
     /* Nota: Requiere altura definida en el padre (ej: h-full) para activar el scroll */
   }
 
@@ -369,7 +380,7 @@
   .ds-table th {
     @apply sticky top-0 z-10;
     @apply bg-neutral-light font-semibold text-neutral-dark px-4 py-3 text-xs uppercase tracking-wider border-b border-neutral-medium;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
 
   .ds-table td {

@@ -32,10 +32,17 @@
     <!-- Brand / Logo -->
     <a routerLink="/" class="ds-nav-brand">Naipeando</a>
 
+    <!-- Título contextual (modo admin) -->
+    @if (isAdmin()) {
+      <span class="ds-nav-link font-semibold">{{ displayName }}</span>
+    }
+
     <!-- Enlaces / controles desktop -->
     <div class="ds-nav-links">
-      <!-- Selector de juegos (desktop) -->
-      <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'desktop-games', cssClass: 'ds-nav-link', onChange: onDesktopGameChange.bind(this)}"></ng-container>
+      <!-- Selector de juegos (desktop) - solo en modo normal -->
+      @if (!isAdmin()) {
+        <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'desktop-games', cssClass: 'ds-nav-link', onChange: onDesktopGameChange.bind(this)}"></ng-container>
+      }
 
       <!-- Nav items desktop -->
       <ng-container *ngTemplateOutlet="navItemsList; context: {cssClass: 'ds-nav-link', onNavigate: noop.bind(this)}"></ng-container>
@@ -65,10 +72,12 @@
   @if (mobileMenuOpen()) {
     <div class="ds-nav-mobile">
       <div class="ds-nav-mobile-list">
-        <!-- Selector de juegos (mobile) -->
-        <div class="border-b border-neutral-medium">
-          <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'mobile-games-select', cssClass: 'ds-nav-mobile-link w-full border-0', onChange: onMobileGameChange.bind(this)}"></ng-container>
-        </div>
+        <!-- Selector de juegos (mobile) - solo en modo normal -->
+        @if (!isAdmin()) {
+          <div class="border-b border-neutral-medium">
+            <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'mobile-games-select', cssClass: 'ds-nav-mobile-link w-full border-0', onChange: onMobileGameChange.bind(this)}"></ng-container>
+          </div>
+        }
 
         <!-- Nav items mobile -->
         <ng-container *ngTemplateOutlet="navItemsList; context: {cssClass: 'ds-nav-mobile-link', onNavigate: closeMobileMenu.bind(this)}"></ng-container>
