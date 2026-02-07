@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "quill/dist/quill.core.css";
-@import "quill-table-better/dist/quill-table-better.css";
 
 @theme {
   /* Colores */
@@ -15,6 +14,12 @@
   /* Tipografías */
   --font-sans: "Inter", sans-serif;
   --font-display: "Inter Tight", "Inter", sans-serif;
+
+  /* Colores Admin */
+  --color-admin-sidebar: #0F2C40;
+  --color-admin-sidebar-hover: #1B4F72;
+  --color-admin-bg: #F0F4F8;
+  --color-admin-header: #FFFFFF;
 }
 
 @layer utilities {
@@ -48,6 +53,35 @@
   /* Botón de selección de imagen en grid */
   .ds-btn-img-grid {
     @apply border border-neutral-200 rounded-lg overflow-hidden bg-white hover:ring-2 hover:ring-brand-primary transition;
+  }
+
+  /* === Badges / Etiquetas de Estado === */
+
+  /* Clase Base (Estructura) */
+  .ds-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold whitespace-nowrap;
+  }
+
+  /* Variantes de Color (Situaciones) */
+
+  /* Solicitud de ingreso: Azul (Informativo/Nuevo) */
+  .ds-badge-request {
+    @apply bg-blue-100 text-blue-800;
+  }
+
+  /* Activo: Verde (Correcto) */
+  .ds-badge-active {
+    @apply bg-green-100 text-green-800;
+  }
+
+  /* Incidencias: Naranja (Advertencia administrativa) */
+  .ds-badge-incident {
+    @apply bg-orange-100 text-orange-800;
+  }
+
+  /* Alerta: Rojo (Peligro/Bloqueo/Sanción) */
+  .ds-badge-alert {
+    @apply bg-red-100 text-red-800;
   }
 
   /* === Formularios / Inputs === */
@@ -265,6 +299,87 @@
   .ds-seg-bg-black *{
     @apply text-white;
   }
+
+/* === Layout administración === */
+
+  .ds-admin-shell {
+    @apply flex min-h-dvh bg-admin-bg text-sm;
+  }
+
+  .ds-admin-sidebar {
+    @apply bg-admin-sidebar flex flex-col fixed md:relative z-20 h-dvh;
+    @apply transition-[width,transform] duration-300 ease-in-out;
+    width: 16rem;
+    overflow: hidden;
+    color: var(--color-neutral-medium);
+  }
+
+  .ds-admin-header {
+    @apply h-16 bg-admin-header border-b border-neutral-medium px-6 flex items-center justify-between sticky top-0 z-10;
+  }
+
+  .ds-admin-main {
+    @apply flex-1 flex flex-col min-w-0 transition-all duration-300;
+  }
+
+  .ds-admin-content {
+    @apply p-6 md:p-8 overflow-y-auto h-[calc(100dvh-4rem)];
+  }
+
+  /* Items del Menú */
+  .ds-admin-nav-item {
+    @apply flex items-center gap-3 px-4 py-3 mx-2 rounded-md transition-colors cursor-pointer;
+    @apply text-neutral-medium hover:text-white hover:bg-admin-sidebar-hover;
+  }
+
+  .ds-admin-nav-item.active {
+    @apply bg-brand-primary text-white shadow-sm font-medium;
+  }
+
+/* === Tablas de datos === */
+
+  /* Estructura para tablas Admin (Layout Flex con header fijo) */
+  .ds-table-card {
+    @apply flex flex-col bg-white border border-neutral-medium rounded-lg shadow-sm overflow-hidden;
+    /* Nota: Requiere altura definida en el padre (ej: h-full) para activar el scroll */
+  }
+
+  /* Zona de scroll: AÑADIDO min-h-0 para corregir el bug de flexbox */
+  .ds-table-viewport {
+    @apply flex-1 overflow-auto relative min-h-0;
+  }
+
+  /* Footer de paginación: AÑADIDO shrink-0 para que nunca se aplaste */
+  .ds-table-pagination {
+    @apply bg-white border-t border-neutral-medium p-3;
+    @apply flex items-center justify-between text-xs text-neutral-500;
+    @apply z-20 relative shrink-0;
+  }
+
+  /* Contenedor simple (Legacy) */
+  .ds-table-container {
+    @apply bg-white border border-neutral-medium rounded-lg overflow-hidden shadow-sm;
+  }
+
+  /* Estilos de tabla */
+  .ds-table {
+    @apply w-full text-left border-collapse;
+  }
+
+  .ds-table th {
+    @apply sticky top-0 z-10;
+    @apply bg-neutral-light font-semibold text-neutral-dark px-4 py-3 text-xs uppercase tracking-wider border-b border-neutral-medium;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+
+  .ds-table td {
+    @apply px-4 py-3 border-b border-neutral-light text-neutral-dark align-middle;
+  }
+
+  .ds-table tr:hover td {
+    @apply bg-neutral-50;
+  }
+
 }
 
 
