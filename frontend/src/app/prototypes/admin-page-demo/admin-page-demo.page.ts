@@ -1,3 +1,8 @@
+/**
+Este prototipo muestra un layout completo de administración con navbar, sidebar, tabla y paginación.
+Es ideal para validar la estructura general del panel de control antes de implementarlo en secciones específicas
+como juegos o asociaciones
+*/
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
@@ -83,12 +88,6 @@ import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/
               (action)="onTableAction($event)" />
 
           </div>
-
-          <!-- Footer -->
-          <footer class="mt-4 text-center text-xs text-neutral-500 shrink-0">
-            <p>&copy; 2026 Naipeando Admin Panel</p>
-          </footer>
-
         </div>
       </main>
 
