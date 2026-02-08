@@ -341,7 +341,7 @@
 
   /* Ajuste para el contenido principal para que no quede tapado por el navbar fijo */
   .ds-admin-main {
-    @apply h-dvh w-full flex flex-col overflow-hidden;
+    @apply w-full flex flex-col overflow-hidden;
   }
 
   /* === Tablas de datos === */
