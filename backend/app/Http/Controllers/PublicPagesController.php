@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ScopeType;
 use App\Http\Requests\PublicByOwnerSlugRequest;
 use App\Http\Requests\PublicHomePageRequest;
 use App\Models\Association;
@@ -19,6 +20,29 @@ class PublicPagesController extends Controller
         if (! $this->isSupportedOwnerType($ownerType)) {
             // TODO: soportar otros ownerType (news, event, ...)
             return response()->json(['message' => 'Owner type no soportado.'], 501);
+        }
+
+        // For GLOBAL ownerType, ownerId is always 0
+        if ($ownerType === (string)ScopeType::GLOBAL->value) {
+            $ownerId = 0;
+            $homePageId = null;
+            // TODO: implement logic to get homePageId for GLOBAL scope
+            if (! $homePageId) {
+                return response()->json(['message' => 'Home page not found.'], 404);
+            }
+
+            $page = Page::query()
+                ->where('id', $homePageId)
+                ->where('owner_type', $ownerType)
+                ->where('owner_id', $ownerId)
+                ->where('published', true)
+                ->first();
+
+            if (! $page) {
+                return response()->json(['message' => 'Page not found.'], 404);
+            }
+
+            return response()->json($this->mapPage($page));
         }
 
         $owner = $this->resolveOwnerBySlug($ownerType, $ownerSlug);
@@ -56,6 +80,24 @@ class PublicPagesController extends Controller
             return response()->json(['message' => 'Owner type no soportado.'], 501);
         }
 
+        // For GLOBAL ownerType, ownerId is always 0
+        if ($ownerType === (string)ScopeType::GLOBAL->value) {
+            $ownerId = 0;
+
+            $page = Page::query()
+                ->where('owner_type', $ownerType)
+                ->where('owner_id', $ownerId)
+                ->where('slug', $pageSlug)
+                ->where('published', true)
+                ->first();
+
+            if (! $page) {
+                return response()->json(['message' => 'Page not found.'], 404);
+            }
+
+            return response()->json($this->mapPage($page));
+        }
+
         $owner = $this->resolveOwnerBySlug($ownerType, $ownerSlug);
 
         if (! $owner) {
@@ -88,11 +130,11 @@ class PublicPagesController extends Controller
 
     private function resolveOwnerBySlug(string $ownerType, string $ownerSlug): Association|Game|null
     {
-        if ($ownerType === '2') {
+        if ($ownerType === (string)ScopeType::ASSOCIATION->value) {
             return Association::query()->where('slug', $ownerSlug)->first();
         }
 
-        if ($ownerType === '3') {
+        if ($ownerType === (string)ScopeType::GAME->value) {
             return Game::query()->where('slug', $ownerSlug)->first();
         }
 
@@ -101,7 +143,11 @@ class PublicPagesController extends Controller
 
     private function isSupportedOwnerType(string $ownerType): bool
     {
-        return in_array($ownerType, ['2', '3'], true);
+        return in_array($ownerType, [
+            (string)ScopeType::GLOBAL->value,
+            (string)ScopeType::ASSOCIATION->value,
+            (string)ScopeType::GAME->value,
+        ], true);
     }
 
     private function mapPage(Page $page): array

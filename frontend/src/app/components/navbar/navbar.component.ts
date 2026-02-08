@@ -1,22 +1,25 @@
 import { ChangeDetectionStrategy, Component, input, signal, inject, computed, effect } from '@angular/core';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
+import { NgTemplateOutlet } from '@angular/common';
+
+// Stores y Servicios
 import { GamesStore } from '../../core/games/games.store';
 import { Game } from '../../core/games/games.models';
-import { UserMenuComponent } from '../user-menu/user-menu.component';
-import { HelpPanelComponent } from '../../shared/help/help-panel/help-panel.component';
-import { AuthzService } from '../../core/authz/authz.service';
-import { isSummaryResponse } from '../../core/authz/authz.models';
-import { WebScope } from '../../core/web-scope.constants';
 import { ContextStore } from '../../core/context/context.store';
 import { AssociationsResolveService } from '../../core/associations/associations-resolve.service';
-import { NgTemplateOutlet } from '@angular/common';
+import { ContextService } from '../../core/context/context.service';
+import { WebScope } from '../../core/web-scope.constants';
+
+// Componentes
+import { UserMenuComponent } from '../user-menu/user-menu.component';
+import { HelpPanelComponent } from '../../shared/help/help-panel/help-panel.component';
 
 type NavItem = {
   label: string;
   type: 'link' | 'button';
-  route?: string;
+  route?: any;
   onClick?: () => void;
   condition?: () => boolean;
 };
@@ -28,21 +31,30 @@ type NavItem = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent {
+  // ... Inputs ...
   readonly mode = input<'portal' | 'game' | 'association'>('portal');
   readonly contextName = input<string | undefined>(undefined);
   readonly isAdmin = input<boolean>(false);
 
+  // ... Estados ...
   readonly mobileMenuOpen = signal(false);
+  readonly adminMenuOpen = signal(false); // <--- Control del dropdown admin
   readonly gamesQuery = signal('');
   readonly helpOpen = signal(false);
-  readonly canSeeAdmin = signal(false);
 
+  // ... Inyecciones ...
   private readonly router = inject(Router);
-  private readonly authz = inject(AuthzService);
   readonly gamesStore = inject(GamesStore);
   readonly contextStore = inject(ContextStore);
   private readonly associationsResolve = inject(AssociationsResolveService);
+  private readonly contextService = inject(ContextService);
+
   readonly WebScope = WebScope;
+
+  // ... Signals computadas ...
+
+  /** Acciones administrativas dinámicas (Array) */
+  readonly adminActions = toSignal(this.contextService.adminActions$);
 
   readonly filteredGames = computed(() => {
     const q = this.gamesQuery().toLowerCase().trim();
@@ -51,23 +63,31 @@ export class NavbarComponent {
     return list.filter((g: Game) => g.name.toLowerCase().includes(q));
   });
 
+  /**
+   * Elementos de navegación ESTÁNDAR.
+   * NOTA: Ya no incluimos aquí las adminActions, se gestionan aparte en el HTML
+   */
   readonly navItems = computed<NavItem[]>(() => {
+    // 1. MODO ADMINISTRACIÓN (Panel interno)
     if (this.isAdmin()) {
-      // Modo admin: mostrar opciones específicas de administración
       return [
         { label: 'Panel', type: 'button', onClick: () => this.toggleAdminSidebar() },
         { label: 'Salir de Admin', type: 'button', onClick: () => this.exitAdmin() },
         { label: '?', type: 'button', onClick: () => this.openHelp() },
       ];
     }
-    // Modo normal: opciones estándar
-    return [
+
+    // 2. MODO PÚBLICO
+    const items: NavItem[] = [
       { label: 'Asociaciones', type: 'link', route: '/asociaciones' },
       { label: 'Eventos', type: 'link', route: '/events' },
       { label: 'Noticias', type: 'link', route: '/news' },
-      { label: 'Admin', type: 'link', route: '/admin', condition: () => this.canSeeAdmin() },
-      { label: '?', type: 'button', onClick: () => this.openHelp() },
     ];
+
+    // Botón de ayuda siempre al final
+    items.push({ label: '?', type: 'button', onClick: () => this.openHelp() });
+
+    return items;
   });
 
   constructor() {
@@ -79,23 +99,13 @@ export class NavbarComponent {
         takeUntilDestroyed(),
       )
       .subscribe(() => {
+        // Cerrar todos los menús al navegar
         this.closeMobileMenu();
+        this.closeAdminMenu();
       });
 
-    // Evaluar permisos de admin cuando mode es 'portal' (scope GLOBAL)
-    effect(() => {
-      const currentMode = this.mode();
-      if (currentMode === 'portal') {
-        this.checkAdminPermission();
-      } else {
-        this.canSeeAdmin.set(false);
-      }
-    });
-
-    // Cuando está en modo Admin, asegurar que el sidebar esté visible por defecto
     effect(() => {
       if (this.isAdmin()) {
-        // Usar setTimeout para asegurar que el DOM está listo
         setTimeout(() => {
           const sidebar = document.getElementById('admin-sidebar');
           if (sidebar) {
@@ -106,56 +116,30 @@ export class NavbarComponent {
     });
   }
 
-  private checkAdminPermission(): void {
-    this.authz
-      .query({
-        scopeType: WebScope.GLOBAL,
-        scopeIds: [],
-        permissions: ['web.admin'],
-        breakdown: false,
-      })
-      .subscribe({
-        next: (res) => {
-          console.log('[NavbarComponent] Respuesta authz query:', res);
-          // Discriminar tipo de respuesta
-          if (isSummaryResponse(res)) {
-            // Si all=true o hay scopeIds, tiene el permiso
-            const hasPermission = res.all || res.scopeIds.length > 0;
-            console.log('[NavbarComponent] Summary response - hasPermission:', hasPermission, 'all:', res.all, 'scopeIds:', res.scopeIds);
-            this.canSeeAdmin.set(hasPermission);
-          } else {
-            // breakdown=true (no debería ocurrir con breakdown:false, pero por seguridad)
-            const hasPermission = res.all || res.allPermissions.includes('web.admin');
-            console.log('[NavbarComponent] Breakdown response - hasPermission:', hasPermission, 'all:', res.all, 'allPermissions:', res.allPermissions);
-            this.canSeeAdmin.set(hasPermission);
-          }
-        },
-        error: (err) => {
-          // En caso de error (ej: 401), no mostrar Admin
-          console.log('[NavbarComponent] Error en authz query:', err);
-          this.canSeeAdmin.set(false);
-        },
-      });
-  }
+  // ... Métodos Públicos ...
 
   toggleMobileMenu(): void {
-    this.mobileMenuOpen.update((current: boolean) => !current);
+    this.mobileMenuOpen.update((current) => !current);
   }
 
   closeMobileMenu(): void {
     this.mobileMenuOpen.set(false);
   }
 
+  toggleAdminMenu(): void {
+    this.adminMenuOpen.update(v => !v);
+  }
+
+  closeAdminMenu(): void {
+    this.adminMenuOpen.set(false);
+  }
+
   get displayName(): string {
-    if (this.isAdmin()) {
-      // Modo admin: mostrar contexto según scopeType
+     if (this.isAdmin()) {
       const scopeType = this.contextStore.scopeType();
       const scopeId = this.contextStore.scopeId();
 
-      // Si no hay scopeType definido, mostrar solo "Administración"
-      if (!scopeType) {
-        return 'Administración';
-      }
+      if (!scopeType) return 'Administración';
 
       if (scopeType === WebScope.GLOBAL) {
         return 'Administración de la web';
@@ -174,7 +158,6 @@ export class NavbarComponent {
       return 'Administración';
     }
 
-    // Modo normal
     if (this.mode() === 'portal') {
       return 'Portal';
     }
@@ -184,6 +167,17 @@ export class NavbarComponent {
   onDesktopGameChange(event: Event): void {
     const select = event.target as HTMLSelectElement;
     const value = select.value?.trim();
+    this.navigateToGame(value);
+  }
+
+  onMobileGameChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const value = select.value?.trim();
+    this.navigateToGame(value);
+    this.closeMobileMenu();
+  }
+
+  private navigateToGame(value: string | undefined): void {
     if (!value) {
       this.gamesStore.setSelected(null);
       this.router.navigateByUrl('/');
@@ -197,21 +191,6 @@ export class NavbarComponent {
     }
   }
 
-  selectGameMobile(value: string | null): void {
-    if (!value) {
-      this.gamesStore.setSelected(null);
-      this.router.navigateByUrl('/');
-    } else {
-      const gameId = parseInt(value, 10);
-      this.gamesStore.setSelected(gameId);
-      const game = this.gamesStore.getById(gameId);
-      if (game) {
-        this.router.navigateByUrl(`/juegos/${game.slug}`);
-      }
-    }
-    this.closeMobileMenu();
-  }
-
   openHelp(): void {
     this.helpOpen.set(true);
     this.closeMobileMenu();
@@ -221,15 +200,7 @@ export class NavbarComponent {
     this.helpOpen.set(false);
   }
 
-  noop(): void {
-    // No operation - usado en desktop nav items que no necesitan callback
-  }
-
-  onMobileGameChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const value = select.value?.trim();
-    this.selectGameMobile(value === '' ? null : value);
-  }
+  noop(): void {}
 
   toggleAdminSidebar(): void {
     const sidebar = document.getElementById('admin-sidebar');

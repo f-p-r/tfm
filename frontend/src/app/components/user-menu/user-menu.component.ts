@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy, signal, inject, input, computed, ElementRef, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, input, computed, ElementRef } from '@angular/core';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, fromEvent } from 'rxjs';
-import { AuthStore } from '../../core/auth/auth.store';
+// Eliminamos AuthStore, ya no es la fuente de verdad
 import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
@@ -16,19 +16,21 @@ export class UserMenuComponent {
 
   readonly isOpen = signal(false);
 
-  private readonly authStore = inject(AuthStore);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly elementRef = inject(ElementRef);
 
-  // Exponer señales del store para el template
-  readonly user = this.authStore.user;
-  readonly isAuthenticated = this.authStore.isAuthenticated;
+  // 1. CORRECCIÓN: Conectamos directamente con las señales del servicio
+  // (que es quien tiene los datos frescos tras el F5)
+  readonly user = this.authService.currentUser;
+  readonly isAuthenticated = this.authService.isAuthenticated;
 
   // Computed signal para el nombre a mostrar
   readonly displayName = computed(() => {
-    const u = this.user() as any;
-    return u?.user?.username || u?.user?.name || u?.username || u?.name || 'Usuario';
+    const u = this.user();
+    if (!u) return 'Usuario';
+    // Como en el servicio ya mapeamos la respuesta, 'u' es el objeto usuario directo
+    return u.username || u.name || 'Usuario';
   });
 
   constructor() {
@@ -44,6 +46,7 @@ export class UserMenuComponent {
     fromEvent<MouseEvent>(document, 'click')
       .pipe(takeUntilDestroyed())
       .subscribe((event) => {
+        // Solo cerramos si el clic fue fuera del componente
         if (this.isOpen() && !this.elementRef.nativeElement.contains(event.target)) {
           this.close();
         }
@@ -61,14 +64,11 @@ export class UserMenuComponent {
   logout(): void {
     this.authService.logout().subscribe({
       next: () => {
-        this.authStore.clear();
         this.close();
         this.router.navigateByUrl('/');
       },
       error: (err: unknown) => {
         console.error('Error al cerrar sesión:', err);
-        // Incluso si falla el backend, limpiamos el estado local
-        this.authStore.clear();
         this.close();
         this.router.navigateByUrl('/');
       }

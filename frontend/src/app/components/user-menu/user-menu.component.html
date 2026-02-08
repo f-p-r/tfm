@@ -1,23 +1,21 @@
-<!-- Versión desktop -->
 @if (variant() === 'desktop') {
   @if (!isAuthenticated()) {
-    <!-- No autenticado: mostrar "Entrar" -->
     <a routerLink="/login" class="ds-nav-link">Entrar</a>
   } @else {
-    <!-- Autenticado: mostrar dropdown -->
-    <div class="relative">
+    <div class="relative inline-block">
       <button
         type="button"
         (click)="toggle()"
         [attr.aria-expanded]="isOpen()"
-        class="ds-nav-link"
+        class="ds-nav-link flex items-center gap-2"
       >
-        {{ displayName() }}
+        <span>{{ displayName() }}</span>
+        <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
       </button>
 
       @if (isOpen()) {
-        <div class="absolute right-0 w-auto bg-white border border-neutral-medium rounded-md shadow-lg z-50">
-          <div class="py-1 whitespace-nowrap">
+        <div class="absolute right-0 mt-2 w-48 bg-white border border-neutral-medium rounded-lg shadow-lg z-50 overflow-hidden">
+          <div class="py-1">
             <a
               routerLink="/me"
               (click)="close()"
@@ -25,10 +23,11 @@
             >
               Mis datos
             </a>
+            <div class="border-t border-neutral-medium my-1"></div>
             <button
               type="button"
               (click)="logout()"
-              class="w-full text-left block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors"
+              class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
             >
               Cerrar sesión
             </button>
@@ -39,39 +38,39 @@
   }
 }
 
-<!-- Versión mobile -->
 @if (variant() === 'mobile') {
   @if (!isAuthenticated()) {
-    <!-- No autenticado: mostrar "Entrar" -->
     <a routerLink="/login" class="ds-nav-mobile-link">Entrar</a>
   } @else {
-    <!-- Autenticado: mostrar dropdown igual que en desktop -->
-    <button
-      type="button"
-      (click)="toggle()"
-      [attr.aria-expanded]="isOpen()"
-      class="ds-nav-mobile-link w-full text-left"
-    >
-      {{ displayName() }}
-    </button>
+    <div class="border-t border-neutral-medium pt-2 mt-2">
+      <button
+        type="button"
+        (click)="toggle()"
+        [attr.aria-expanded]="isOpen()"
+        class="ds-nav-mobile-link w-full text-left flex justify-between items-center"
+      >
+        <span class="font-semibold">{{ displayName() }}</span>
+        <svg [class.rotate-180]="isOpen()" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
 
-    @if (isOpen()) {
-      <div class="border-t border-neutral-medium bg-neutral-light/30 inline-block w-auto">
-        <a
-          routerLink="/me"
-          (click)="close()"
-          class="block px-8 py-2 text-sm text-neutral-dark hover:bg-neutral-light transition-colors whitespace-nowrap"
-        >
-          Mis datos
-        </a>
-        <button
-          type="button"
-          (click)="logout()"
-          class="w-full text-left block px-8 py-2 text-sm text-neutral-dark hover:bg-neutral-light transition-colors whitespace-nowrap"
-        >
-          Cerrar sesión
-        </button>
-      </div>
-    }
+      @if (isOpen()) {
+        <div class="pl-4 pb-2 space-y-1 bg-neutral-light/20 rounded-b-lg">
+          <a
+            routerLink="/me"
+            (click)="close()"
+            class="ds-nav-mobile-link text-sm text-neutral-dark"
+          >
+            Mis datos
+          </a>
+          <button
+            type="button"
+            (click)="logout()"
+            class="ds-nav-mobile-link w-full text-left text-sm text-red-600"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+      }
+    </div>
   }
 }

@@ -44,11 +44,12 @@ class AuthzController extends Controller
         ]);
 
         if ($validator->fails()) {
-            if ($enableDebugLogging) {
-                Log::error('AuthzController::query - Validation failed', [
-                    'errors' => $validator->errors()->toArray(),
-                ]);
-            }
+            // Siempre loguear errores de validación
+            Log::error('AuthzController::query - Validation failed', [
+                'errors' => $validator->errors()->toArray(),
+                'request_data' => $request->all(),
+                'user_id' => $request->user()?->id,
+            ]);
             return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()

@@ -1,4 +1,3 @@
-<!-- Template: Selector de juegos -->
 <ng-template #gamesSelector let-id="id" let-cssClass="cssClass" let-onChange="onChange">
   <label class="sr-only" [attr.for]="id">Seleccionar juego</label>
   <select
@@ -14,7 +13,6 @@
   </select>
 </ng-template>
 
-<!-- Template: Nav items -->
 <ng-template #navItemsList let-cssClass="cssClass" let-onNavigate="onNavigate">
   @for (item of navItems(); track item.label) {
     @if (!item.condition || item.condition()) {
@@ -27,33 +25,78 @@
   }
 </ng-template>
 
+<ng-template #adminMobileList>
+  @if (adminActions(); as actions) {
+    @for (action of actions; track action.label) {
+      @if (action.isVisible) {
+        <a [routerLink]="action.route" class="ds-nav-mobile-link text-brand-primary font-medium" (click)="closeMobileMenu()">
+          {{ action.label }}
+        </a>
+      }
+    }
+  }
+</ng-template>
+
 <nav class="ds-nav" aria-label="Navegación principal">
   <div class="ds-nav-inner">
-    <!-- Brand / Logo -->
     <a routerLink="/" class="ds-nav-brand">Naipeando</a>
 
-    <!-- Título contextual (modo admin) -->
     @if (isAdmin()) {
       <span class="ds-nav-link font-semibold">{{ displayName }}</span>
     }
 
-    <!-- Enlaces / controles desktop -->
     <div class="ds-nav-links">
-      <!-- Selector de juegos (desktop) - solo en modo normal -->
       @if (!isAdmin()) {
         <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'desktop-games', cssClass: 'ds-nav-link', onChange: onDesktopGameChange.bind(this)}"></ng-container>
       }
 
-      <!-- Nav items desktop -->
       <ng-container *ngTemplateOutlet="navItemsList; context: {cssClass: 'ds-nav-link', onNavigate: noop.bind(this)}"></ng-container>
+
+      @if (!isAdmin()) {
+        @if (adminActions(); as actions) {
+          @if (actions.length > 1) {
+            <div class="ds-menu relative inline-block">
+              <button
+                type="button"
+                class="ds-nav-link flex items-center gap-1 font-medium text-brand-primary"
+                [attr.aria-expanded]="adminMenuOpen()"
+                (click)="toggleAdminMenu()"
+              >
+                Administración
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+
+              @if (adminMenuOpen()) {
+                <div class="ds-menu-panel absolute right-0 mt-2 w-48 bg-white border border-neutral-medium rounded-lg shadow-lg z-50">
+                  <div class="ds-menu-list p-1">
+                    @for (action of actions; track action.label) {
+                      @if (action.isVisible) {
+                        <a
+                          [routerLink]="action.route"
+                          class="ds-menu-item block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light rounded"
+                          (click)="closeAdminMenu()"
+                        >
+                          {{ action.label }}
+                        </a>
+                      }
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @else if (actions.length === 1 && actions[0].isVisible) {
+            <a [routerLink]="actions[0].route" class="ds-nav-link font-medium text-brand-primary">
+              {{ actions[0].label }}
+            </a>
+          }
+        }
+      }
     </div>
 
-    <!-- Acciones -->
     <div class="ds-nav-actions">
-      <!-- Menú de usuario (desktop) -->
       <app-user-menu variant="desktop"></app-user-menu>
 
-      <!-- Botón hamburguesa (mobile) -->
       <button
         type="button"
         class="ds-nav-toggle"
@@ -68,19 +111,20 @@
     </div>
   </div>
 
-  <!-- Panel de menú móvil -->
   @if (mobileMenuOpen()) {
     <div class="ds-nav-mobile">
       <div class="ds-nav-mobile-list">
-        <!-- Selector de juegos (mobile) - solo en modo normal -->
         @if (!isAdmin()) {
           <div class="border-b border-neutral-medium">
             <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'mobile-games-select', cssClass: 'ds-nav-mobile-link w-full border-0', onChange: onMobileGameChange.bind(this)}"></ng-container>
           </div>
         }
 
-        <!-- Nav items mobile -->
         <ng-container *ngTemplateOutlet="navItemsList; context: {cssClass: 'ds-nav-mobile-link', onNavigate: closeMobileMenu.bind(this)}"></ng-container>
+
+        @if (!isAdmin()) {
+          <ng-container *ngTemplateOutlet="adminMobileList"></ng-container>
+        }
       </div>
     </div>
   }

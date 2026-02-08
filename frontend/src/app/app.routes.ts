@@ -15,24 +15,25 @@ import { PageEditAdminPage } from './pages/admin/pages/owner-pages/page-edit-adm
 import { PageCreateAdminPage } from './pages/admin/pages/owner-pages/page-create-admin.page';
 import { PagePreviewPage } from './pages/admin/pages/owner-pages/page-preview.page';
 import { PageViewerPage } from './pages/page-viewer/page-viewer.page';
+import { PageEntityResolver } from './core/pages/page-entity.resolver';
 
 export const routes: Routes = [
   // Public page viewer routes (must be before admin routes)
   { path: '', pathMatch: 'full', component: PageViewerPage },
-  { path: 'paginas/:slug', component: PageViewerPage },
+  { path: 'paginas/:slug', component: PageViewerPage , resolve: { entity: PageEntityResolver }},
   { path: 'login', component: LoginPage },
   { path: 'auth/callback', component: AuthCallbackPage },
   { path: 'styleguide', component: StyleguidePage },
 
   // Ruta de juegos con páginas
   { path: 'juegos/:slug', component: PageViewerPage },
-  { path: 'juegos/:slug/:pagina', component: PageViewerPage },
   { path: 'juegos/:slug/asociaciones', component: GameAssociationsPage, canActivate: [gameBySlugGuard] },
+  { path: 'juegos/:slug/:pagina', component: PageViewerPage, resolve:{ entity: PageEntityResolver } },
 
   // Rutas de asociaciones con páginas
   { path: 'asociaciones', component: AssociationsPage },
   { path: 'asociaciones/:slug', component: PageViewerPage },
-  { path: 'asociaciones/:slug/:pagina', component: PageViewerPage },
+  { path: 'asociaciones/:slug/:pagina', component: PageViewerPage, resolve:{ entity: PageEntityResolver } },
   {
     path: 'prototypes',
     children: [
