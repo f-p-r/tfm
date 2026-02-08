@@ -1,4 +1,9 @@
+/* Estilos base de Quill */
 @import 'quill/dist/quill.snow.css';
+@import 'quill/dist/quill.core.css';
+
+/* Estilos CRÍTICOS para quill-table-better */
+@import 'quill-table-better/dist/quill-table-better.css';
 
 .segments-editor {
   display: flex;
