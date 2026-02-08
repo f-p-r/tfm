@@ -86,6 +86,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./prototypes/color-demo/color-demo.page').then((m) => m.ColorDemoPage),
       },
+      {
+        // Prototipo admin-page-demo: layout completo de administración
+        path: 'admin-page-demo',
+        loadComponent: () =>
+          import('./prototypes/admin-page-demo/admin-page-demo.page').then((m) => m.AdminPageDemoPage),
+      },
       { path: '**', component: PrototypeHostPage },
     ],
   },

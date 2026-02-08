@@ -109,6 +109,21 @@ export class StyleguidePage {
     { id: 13, status: 'active', socioId: 'SOC-002', name: 'Ana López', date: '2024-01-11' },
     { id: 14, status: 'incident', socioId: 'SOC-003', name: 'Carlos Ruiz', date: '2024-01-12' },
     { id: 15, status: 'alert', socioId: 'SOC-005', name: 'Pablo M.', date: '2024-01-14' },
+    { id: 1, status: 'pending', socioId: '---', name: 'María García', date: new Date() },
+    { id: 2, status: 'active', socioId: 'SOC-001', name: 'Juan Pérez', date: '2024-01-10' },
+    { id: 3, status: 'active', socioId: 'SOC-002', name: 'Ana López', date: '2024-01-11' },
+    { id: 4, status: 'incident', socioId: 'SOC-003', name: 'Carlos Ruiz', date: '2024-01-12' },
+    { id: 5, status: 'alert', socioId: 'SOC-005', name: 'Pablo M.', date: '2024-01-14' },
+    { id: 6, status: 'pending', socioId: '---', name: 'María García', date: new Date() },
+    { id: 7, status: 'active', socioId: 'SOC-001', name: 'Juan Pérez', date: '2024-01-10' },
+    { id: 8, status: 'active', socioId: 'SOC-002', name: 'Ana López', date: '2024-01-11' },
+    { id: 9, status: 'incident', socioId: 'SOC-003', name: 'Carlos Ruiz', date: '2024-01-12' },
+    { id: 10, status: 'alert', socioId: 'SOC-005', name: 'Pablo M.', date: '2024-01-14' },
+    { id: 11, status: 'pending', socioId: '---', name: 'María García', date: new Date() },
+    { id: 12, status: 'active', socioId: 'SOC-001', name: 'Juan Pérez', date: '2024-01-10' },
+    { id: 13, status: 'active', socioId: 'SOC-002', name: 'Ana López', date: '2024-01-11' },
+    { id: 14, status: 'incident', socioId: 'SOC-003', name: 'Carlos Ruiz', date: '2024-01-12' },
+    { id: 15, status: 'alert', socioId: 'SOC-005', name: 'Pablo M.', date: '2024-01-14' },
   ];
 
   // --- 3. MANEJADORES DE EVENTOS ---

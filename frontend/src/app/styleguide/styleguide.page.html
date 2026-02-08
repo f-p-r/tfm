@@ -450,222 +450,59 @@
       contraste y legibilidad.
     </p>
 
-    <div class="border border-neutral-dark rounded-xl overflow-hidden shadow-2xl h-[600px] relative bg-admin-bg">
+    <!-- <div class="border border-neutral-dark rounded-xl overflow-hidden shadow-2xl h-[600px] relative bg-admin-bg"> -->
 
-      <div class="h-16 sticky top-0 z-[60]">
-        <app-navbar [isAdmin]="true" />
-      </div>
+    <div class="h-16 sticky top-0 z-[60]">
+      <app-navbar [isAdmin]="true" />
+    </div>
 
-      <div class="ds-admin-shell !min-h-0 !absolute !inset-0 !top-16" id="admin-demo-shell">
+    <div class="ds-admin-shell" id="admin-demo-shell" style="height: 700px; overflow: hidden;">
 
-        <!-- Sidebar: !top-0 solo para esta demo dentro de contenedor (en páginas reales usa top: 4rem del CSS) -->
-        <aside class="ds-admin-sidebar !absolute !z-50 !top-0" id="admin-sidebar">
-          <nav class="flex-1 py-6 space-y-1 overflow-y-auto">
-            <div class="px-6 text-xs font-bold text-neutral-medium uppercase tracking-wider mb-2 opacity-70">
-              Gestión
+      <!-- Sidebar: !top-0 solo para esta demo dentro de contenedor (en páginas reales usa top: 4rem del CSS) -->
+      <aside class="ds-admin-sidebar !absolute !z-50 !top-0" id="admin-sidebar">
+          <app-admin-menu [items]="demoMenuItems" [demoMode]="true">
+          </app-admin-menu>
+      </aside>
+
+      <main class="ds-admin-main flex flex-col h-full overflow-hidden relative ds-container">
+        <div class="pt-6" ds-container>
+
+          <div class="mb-4 ">
+            <div>
+              <h3 class="h3">Listado de Socios</h3>
             </div>
-            <a href="javascript:void(0)" class="ds-admin-nav-item active">
-              <span class="text-xl brightness-200 saturate-150">📊</span>
-              <span>Dashboard</span>
-            </a>
+          </div>
 
-            <a href="javascript:void(0)" class="ds-admin-nav-item">
-              <span class="text-xl brightness-200 saturate-150">👥</span>
-              <span>Socios</span>
-            </a>
-            <a href="javascript:void(0)" class="ds-admin-nav-item">
-              <span class="text-xl brightness-200 saturate-150">📰</span>
-              <span>Noticias</span>
-            </a>
-          </nav>
+          <div class="ds-table-card h-[500px] flex flex-col">
 
-        </aside>
+            <app-admin-table-toolbar placeholder="Buscar socio por nombre, email o ID...">
 
-        <main class="ds-admin-main flex flex-col h-full overflow-hidden relative">
-          <div class="flex-1 flex flex-col p-6 min-h-0">
-
-            <div class="mb-4 flex justify-between items-end shrink-0">
-              <div>
-                <h3 class="h3">Listado de Socios</h3>
-                <p class="text-sm text-neutral-500">Gestión de altas, bajas y solicitudes.</p>
-              </div>
-            </div>
-
-            <div class="ds-table-card ds-container">
-
-              <div class="ds-table-viewport max-h-96">
-                <!-- Tabla de datos con scroll en tbody-->
-                <table class="ds-table w-full text-left border-collapse">
-                  <thead class="bg-neutral-light sticky top-0 z-10 shadow-sm">
-                    <tr>
-                      <th
-                        class="px-4 py-3 text-xs font-semibold text-neutral-dark uppercase border-b border-neutral-medium bg-neutral-light">
-                        Estado</th>
-                      <th
-                        class="px-4 py-3 text-xs font-semibold text-neutral-dark uppercase border-b border-neutral-medium bg-neutral-light">
-                        Nº Socio</th>
-                      <th
-                        class="px-4 py-3 text-xs font-semibold text-neutral-dark uppercase border-b border-neutral-medium bg-neutral-light">
-                        Nombre</th>
-                      <th
-                        class="px-4 py-3 text-xs font-semibold text-neutral-dark uppercase border-b border-neutral-medium bg-neutral-light">
-                        Fecha</th>
-                      <th
-                        class="text-right px-4 py-3 text-xs font-semibold text-neutral-dark uppercase border-b border-neutral-medium bg-neutral-light">
-                        Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-neutral-light">
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-request">Solicitud</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-400">---</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">María García</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">Hoy, 10:30</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Revisar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-001</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Juan Pérez</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">10/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-002</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Ana López</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">11/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-incident">Incidencia</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-003</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Carlos Ruiz</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">12/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Corregir</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-004</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Laura V.</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">13/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-alert">Alerta</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-005</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Pablo M.</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">14/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Ver</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-006</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Sara K.</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">15/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-007</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">David B.</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">16/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-008</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Elena R.</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">17/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-009</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Fernando</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">18/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-010</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Isabel P.</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">19/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-011</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Jorge L.</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">20/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-012</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Katia M.</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">21/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-013</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Mario Casas</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">22/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-014</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Blanca Suárez</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">23/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                    <tr>
-                      <td class="px-4 py-3"><span class="ds-badge ds-badge-active">Activo</span></td>
-                      <td class="px-4 py-3 font-mono text-xs text-neutral-dark">SOC-015</td>
-                      <td class="px-4 py-3 font-medium text-neutral-dark">Úrsula Corberó</td>
-                      <td class="px-4 py-3 text-neutral-500 text-xs">24/01/2024</td>
-                      <td class="px-4 py-3 text-right"><button
-                          class="text-brand-primary hover:underline text-sm font-medium">Editar</button></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- Div de paginación -->
-              <div class="ds-table-pagination !justify-center gap-4">
-                <button
-                  class="px-2 py-1 border border-neutral-medium rounded hover:bg-neutral-light disabled:opacity-50"
-                  disabled>&lt;</button>
-                <span>Mostrando <strong>1-16</strong> de <strong>142</strong></span>
-                <button class="px-2 py-1 border border-neutral-medium rounded hover:bg-neutral-light">&gt;</button>
+              <div filters class="hidden md:block">
+                <select class="ds-select py-1.5 text-sm w-auto">
+                  <option value="">Todos los estados</option>
+                  <option value="active">Activos</option>
+                  <option value="pending">Solicitudes</option>
+                </select>
               </div>
 
-            </div>
+              <div actions class="flex gap-2">
+                <button class="ds-btn ds-btn-secondary text-xs flex items-center gap-2">
+                  <span>📥</span> <span class="hidden sm:inline">Exportar</span>
+                </button>
+                <button class="ds-btn ds-btn-primary text-xs flex items-center gap-1">
+                  <span class="text-lg leading-none">+</span> Nuevo
+                </button>
+              </div>
+            </app-admin-table-toolbar>
 
-            <footer class="mt-4 text-center text-xs text-neutral-500 shrink-0">
-              <p>&copy; 2026 Naipeando Admin Panel</p>
-            </footer>
+            <app-admin-table [columns]="tableColumns" [data]="tableData" [actions]="tableActions" [total]="142"
+              [page]="1" [pageSize]="15" (action)="onTableAction($event)"></app-admin-table>
 
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
+    <!-- </div> -->
   </section>
 
 </div>

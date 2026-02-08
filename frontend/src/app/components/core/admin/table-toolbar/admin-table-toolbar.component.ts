@@ -9,6 +9,12 @@ import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive
   standalone: true,
   // 2. Añadimos la directiva a los imports
   imports: [CommonModule, FormsModule, HelpHoverDirective],
+  styles: [`
+    :host {
+      display: block;
+      flex-shrink: 0;
+    }
+  `],
   template: `
     <div class="ds-table-toolbar">
 
