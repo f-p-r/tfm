@@ -34,6 +34,12 @@
         </div>
       </div>
 
+      @if (editingId() !== seg.id) {
+      <div class="segment-preview">
+        <app-content-segments-preview [content]="{ schemaVersion: 1, segments: [seg] }" />
+      </div>
+      }
+
       @if (editingId() === seg.id && editingDraft(); as draft) {
       <div class="segment-edit-panel">
 

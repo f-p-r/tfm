@@ -11,6 +11,7 @@ import { HelpIComponent } from '../../help/help-i/help-i.component';
 import { MediaPickerComponent } from '../../../components/media/media-picker.component';
 import { MediaItem } from '../../../components/media/media.models';
 import { SegmentCarouselComponent } from '../segment-carousel.component';
+import { ContentSegmentsPreviewComponent } from '../segments-preview/content-segments-preview.component';
 
 @Component({
   selector: 'app-content-segments-editor',
@@ -22,7 +23,8 @@ import { SegmentCarouselComponent } from '../segment-carousel.component';
     HelpHoverDirective,
     HelpIComponent,
     MediaPickerComponent,
-    SegmentCarouselComponent
+    SegmentCarouselComponent,
+    ContentSegmentsPreviewComponent
   ],
   providers: [
     { provide: TINYMCE_SCRIPT_SRC, useValue: '/assets/tinymce/tinymce.min.js' }
