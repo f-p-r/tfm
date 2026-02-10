@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { ContentRendererComponent } from '../content-renderer.component';
+import { ContentRendererComponent } from '../content-renderer/content-renderer.component';
 import { PageContentDTO } from '../page-content.dto';
 
 /**

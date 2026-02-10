@@ -1,0 +1,15 @@
+/* Importamos la magia del grid y estilos de texto */
+@import '../../../../styles/_ds-content-layout.css';
+
+/* Estilos extra específicos del renderizado final */
+.content-renderer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.segment-wrapper {
+  width: 100%;
+  /* Asegura que el background cubra todo */
+  box-sizing: border-box;
+}

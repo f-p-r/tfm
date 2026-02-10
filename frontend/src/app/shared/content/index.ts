@@ -4,7 +4,7 @@
  */
 
 // Blot personalizado para enlaces internos
-export { InternalLinkBlot } from './internal-link.blot';
+//export { InternalLinkBlot } from './internal-link.blot';
 
 // Componente selector de enlaces internos
 export { LinkSelectorComponent, type InternalLinkDestination } from './link-selector.component';

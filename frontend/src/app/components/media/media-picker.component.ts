@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, computed, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { input, output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MediaApiService } from './media-api.service';
-import { MediaItem } from './media.models';
+import { MediaItem, MediaListResponse } from './media.models';
 import { WebScope } from '../../core/web-scope.constants';
 
 @Component({
   selector: 'app-media-picker',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="fixed inset-0 z-40 flex items-center justify-center p-4" role="dialog" aria-modal="true">
       <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="onClose()"></div>
@@ -19,61 +19,63 @@ import { WebScope } from '../../core/web-scope.constants';
           <h3 class="text-lg font-semibold text-neutral-800">Seleccionar imagen</h3>
           <div class="flex items-center gap-2 flex-wrap justify-end">
             @if (allowUpload()) {
-              @if (uploading()) {
-                <span class="text-sm text-neutral-600">Subiendo...</span>
-              }
-              <button
-                type="button"
-                class="ds-btn ds-btn-secondary"
-                (click)="openFilePicker(fileInput)"
-                [disabled]="uploading()"
-              >
-                Subir imagen
+              <button type="button" class="ds-btn ds-btn-secondary text-sm" (click)="fileInput.click()" [disabled]="uploading()">
+                {{ uploading() ? 'Subiendo...' : 'Subir nueva' }}
               </button>
-              <input #fileInput type="file" accept="image/*" class="hidden" (change)="onFileSelected($event, fileInput)" />
+              <input #fileInput type="file" class="hidden" accept="image/*" (change)="onFileSelected($event)" />
             }
-            <button type="button" class="ds-btn ds-btn-secondary" (click)="onClose()">Cerrar</button>
+            <button type="button" class="p-2 hover:bg-neutral-100 rounded-full transition-colors" (click)="onClose()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
           </div>
         </div>
 
-        @if (errorMessage()) {
-          <div class="text-sm text-red-600">{{ errorMessage() }}</div>
+        @if (infoMessage()) {
+          <div class="text-xs text-blue-600 bg-blue-50 p-2 rounded-lg border border-blue-100">{{ infoMessage() }}</div>
         }
 
-        @if (displayedInfo()) {
-          <div class="text-sm text-green-700">{{ displayedInfo() }}</div>
-        }
-
-        @if (loading()) {
-          <div class="text-sm text-neutral-700">Cargando imagenes...</div>
-        } @else {
-          <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
-            @for (item of items(); track item.id) {
-              <button
-                type="button"
-                class="ds-btn-img-grid"
-                (click)="openImageModal(item)"
-              >
-                <img [src]="item.url" alt="" class="w-full h-28 object-cover" />
-                <div class="p-2 text-xs text-neutral-700 truncate">{{ fileName(item.url) }}</div>
-              </button>
-            }
-          </div>
-          @if (!items().length && !errorMessage()) {
-            <div class="text-sm text-neutral-700">No hay imágenes disponibles.</div>
-          }
-        }
+        <div class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 p-1">
+           @for (item of items(); track item.id) {
+             <div
+               class="group relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all"
+               [class.border-brand-primary]="modalItem()?.id === item.id"
+               [class.border-transparent]="modalItem()?.id !== item.id"
+               (click)="modalItem.set(item)"
+             >
+               <img [src]="item.url" class="w-full h-full object-cover" loading="lazy" />
+             </div>
+           }
+        </div>
 
         @if (modalItem()) {
           <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-            <div class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col gap-4 p-4">
-              <div class="flex-1 flex items-center justify-center overflow-auto">
-                <img [src]="modalItem()?.url" alt="" class="max-h-[70vh] max-w-full object-contain" />
+            <div class="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 flex flex-col gap-4">
+
+              <div class="flex-1 flex items-center justify-center bg-gray-50 rounded-lg p-4 overflow-hidden">
+                <img [src]="modalItem()?.url" [style.width.%]="showDesignControls() ? imgWidth() : ''" class="max-h-[40vh] object-contain shadow-sm transition-all" />
               </div>
-              <div class="flex items-center justify-center gap-3 pb-2">
-                <button type="button" class="ds-btn ds-btn-primary" (click)="confirmPick(modalItem()!)">Seleccionar</button>
-                <button type="button" class="ds-btn ds-btn-secondary" (click)="closeImageModal()">Cancelar</button>
+
+              @if (showDesignControls()) {
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                  <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-gray-500 uppercase">Ancho: {{ imgWidth() }}%</label>
+                    <input type="range" min="10" max="100" step="5" [(ngModel)]="imgWidth" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand-primary">
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-gray-500 uppercase">Alineación</label>
+                    <div class="flex gap-2">
+                      <button type="button" (click)="imgFloat.set('none')" [class.bg-brand-primary]="imgFloat() === 'none'" [class.text-white]="imgFloat() === 'none'" class="flex-1 py-1 border rounded text-xs">Centro</button>
+                      <button type="button" (click)="imgFloat.set('left')" [class.bg-brand-primary]="imgFloat() === 'left'" [class.text-white]="imgFloat() === 'left'" class="flex-1 py-1 border rounded text-xs">Izquierda</button>
+                      <button type="button" (click)="imgFloat.set('right')" [class.bg-brand-primary]="imgFloat() === 'right'" [class.text-white]="imgFloat() === 'right'" class="flex-1 py-1 border rounded text-xs">Derecha</button>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              <div class="flex gap-3 justify-center">
+                <button type="button" class="ds-btn ds-btn-primary px-8" (click)="confirmSelection(modalItem()!)">Insertar</button>
+                <button type="button" class="ds-btn ds-btn-secondary" (click)="modalItem.set(null)">Cancelar</button>
               </div>
             </div>
           </div>
@@ -87,158 +89,84 @@ export class MediaPickerComponent {
   private readonly mediaApi = inject(MediaApiService);
   private readonly destroyRef = inject(DestroyRef);
 
+  // Inputs restaurados y nuevos
   readonly scopeType = input<number>();
   readonly scopeId = input<number | null>(null);
   readonly includeGlobal = input(true);
-  readonly pageSize = input(60);
-  readonly allowUpload = input(true);
-  readonly mode = input<'single' | 'multi'>('single');
   readonly infoMessage = input<string | null>(null);
-  readonly showInfo = signal(true);
-  readonly displayedInfo = computed(() => this.showInfo() && this.modalItem() === null ? this.infoMessage() : null);
+  readonly mode = input<'single' | 'multi'>('single');
+  readonly showDesignControls = input(false);
 
-  readonly close = output<void>();
-  readonly interact = output<void>();
-
+  // Outputs tipados explícitamente para evitar errores TS2345
   readonly pick = output<MediaItem>();
+  readonly pickWithDesign = output<{ item: MediaItem, width: string, float: string }>();
   readonly uploadSuccess = output<MediaItem>();
   readonly error = output<string>();
+  readonly close = output<void>();
 
   readonly items = signal<MediaItem[]>([]);
   readonly loading = signal(false);
   readonly uploading = signal(false);
-  readonly errorMessage = signal<string | null>(null);
   readonly modalItem = signal<MediaItem | null>(null);
+
+  readonly imgWidth = signal(50);
+  readonly imgFloat = signal<'none' | 'left' | 'right'>('none');
+
+  readonly allowUpload = computed(() => !!this.scopeType());
 
   constructor() {
     effect(() => {
-      const msg = this.infoMessage();
-      if (msg) {
-        this.showInfo.set(true);
-      }
-    });
-
-    effect(() => {
-      const scopeType = this.scopeType();
-      const scopeId = this.scopeId();
-      const includeGlobal = this.includeGlobal();
-      const pageSize = this.pageSize();
-
-      if (!scopeType) return;
-      if (scopeType !== WebScope.GLOBAL && (scopeId === null || scopeId === undefined)) return;
-
-      this.loadMedia(scopeType, scopeId ?? null, includeGlobal, pageSize);
+      const sType = this.scopeType();
+      if (sType) this.loadMedia(sType, this.scopeId() ?? null, this.includeGlobal());
     });
   }
 
-  openFilePicker(el: HTMLInputElement): void {
-    this.onInteract();
-    el.click();
-  }
-
-  onFileSelected(event: Event, inputEl: HTMLInputElement): void {
-    const file = (event.target as HTMLInputElement | null)?.files?.[0];
-    if (!file) return;
-    this.uploadFile(file);
-    inputEl.value = '';
-  }
-
-  emitPick(item: MediaItem): void {
-    this.pick.emit(item);
-  }
-
-  openImageModal(item: MediaItem): void {
-    this.onInteract();
-    this.modalItem.set(item);
-  }
-
-  closeImageModal(): void {
-    this.modalItem.set(null);
-  }
-
-  confirmPick(item: MediaItem): void {
-    this.pick.emit(item);
-    this.closeImageModal();
-  }
-
-  onClose(): void {
-    this.closeImageModal();
-    this.showInfo.set(false);
-    this.close.emit();
-  }
-
-  onInteract(): void {
-    this.showInfo.set(false);
-    this.interact.emit();
-  }
-
-  private loadMedia(scopeType: number, scopeId: number | null, includeGlobal: boolean | null, pageSize: number | null): void {
+  loadMedia(scopeType: number, scopeId: number | null, includeGlobal: boolean) {
     this.loading.set(true);
-    this.errorMessage.set(null);
-
-    this.mediaApi
-      .listMedia({ scopeType, scopeId, includeGlobal: includeGlobal ?? true, page: 1, pageSize: pageSize ?? 60 })
+    this.mediaApi.listMedia({ scopeType, scopeId, includeGlobal, page: 1, pageSize: 60 })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (res) => {
-          this.items.set(res.items ?? []);
+        next: (res: MediaListResponse) => {
+          this.items.set(res.items || []);
           this.loading.set(false);
         },
-        error: () => {
-          this.loading.set(false);
-          this.errorMessage.set('No se pudieron cargar imagenes');
-          this.error.emit('No se pudieron cargar imagenes');
-        },
+        error: () => this.loading.set(false)
       });
   }
 
-  private uploadFile(file: File): void {
-    const scopeType = this.scopeType();
-    const scopeId = this.scopeId();
-    if (!scopeType) return;
-    if (scopeType !== WebScope.GLOBAL && (scopeId === null || scopeId === undefined)) {
-      this.errorMessage.set('Falta scopeId para subir la imagen');
-      this.error.emit('Falta scopeId para subir la imagen');
-      return;
-    }
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file || !this.scopeType()) return;
 
     this.uploading.set(true);
-    this.errorMessage.set(null);
-
-    this.mediaApi
-      .uploadMedia(file, scopeType, scopeId ?? null)
+    this.mediaApi.uploadMedia(file, this.scopeType()!, this.scopeId() ?? null)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (item) => {
-          this.uploadSuccess.emit(item);
-          this.pick.emit(item);
-          this.refreshAfterUpload(item);
+          this.items.update(prev => [item, ...prev]);
           this.uploading.set(false);
+          this.uploadSuccess.emit(item); // Emitimos para componentes antiguos
+          this.modalItem.set(item);
         },
         error: () => {
           this.uploading.set(false);
-          this.errorMessage.set('No se pudo subir la imagen');
-          this.error.emit('No se pudo subir la imagen');
-        },
+          this.error.emit('Error al subir la imagen');
+        }
       });
   }
 
-  private refreshAfterUpload(newItem: MediaItem): void {
-    // Prepend the new item for feedback, then refresh to keep list aligned with backend order
-    this.items.set([newItem, ...this.items()]);
-    const scopeType = this.scopeType();
-    if (!scopeType) return;
-    const scopeId = this.scopeId();
-    this.loadMedia(scopeType, scopeId ?? null, this.includeGlobal(), this.pageSize());
+  confirmSelection(item: MediaItem) {
+    if (this.showDesignControls()) {
+      this.pickWithDesign.emit({
+        item,
+        width: this.imgWidth() + '%',
+        float: this.imgFloat()
+      });
+    } else {
+      this.pick.emit(item);
+    }
+    this.modalItem.set(null);
   }
 
-  fileName(url: string): string {
-    if (!url) return '';
-    try {
-      const parts = url.split('?')[0].split('/');
-      return parts[parts.length - 1] || url;
-    } catch {
-      return url;
-    }
-  }
+  onClose() { this.close.emit(); }
 }

@@ -1,0 +1,38 @@
+<main class="ds-main">
+  <div class="ds-page">
+    <div class="ds-container space-y-8">
+
+      <header class="border-b border-neutral-medium pb-4 flex justify-between items-end">
+        <div>
+          <p class="text-xs uppercase tracking-[0.18em] text-neutral-dark/70">Prototipo</p>
+          <h1 class="h1 mt-2">Editor de Contenidos (Nuevo)</h1>
+          <p class="p mt-2 text-neutral-dark/80">Sistema de columnas, grid y carrusel integrado.</p>
+        </div>
+        <button (click)="downloadJson()" class="ds-btn ds-btn-secondary text-sm">
+          Descargar JSON
+        </button>
+      </header>
+
+      <section>
+        <app-content-segments-editor
+          [initialContent]="content()"
+          (contentChange)="onContentChange($event)"
+          [scopeType]="1"  [scopeId]="1">
+        </app-content-segments-editor>
+      </section>
+
+      <section class="mt-12 pt-8 border-t border-neutral-medium">
+        <h2 class="h3 mb-4">Estructura de Datos (Live)</h2>
+        <pre class="p-4 bg-neutral-light rounded-lg text-xs overflow-auto max-h-96 font-mono border border-neutral-medium">{{ content() | json }}</pre>
+      </section>
+
+      <section class="mt-12 pt-8 border-t border-neutral-medium">
+        <h2 class="h3 mb-4">Resultado Final (Visor)</h2>
+        <div class="border border-neutral-medium rounded-xl overflow-hidden shadow-sm bg-white">
+           <app-content-renderer [content]="content()"></app-content-renderer>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>

@@ -1,90 +1,97 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ContentRendererComponent } from '../../shared/content/content-renderer/content-renderer.component';
 import { PageContentDTO } from '../../shared/content/page-content.dto';
 
-const IMAGE_URL = 'https://lawebdeperez.es/frameworks_a3/img/landing1.jpg';
+const IMAGE_URL = 'https://images.unsplash.com/photo-1707343843437-caacff5cfa74?q=80&w=1000&auto=format&fit=crop';
 
 @Component({
-  selector: 'app-content-segments-demo-page',
+  selector: 'app-content-segments-demo',
   standalone: true,
-  imports: [ContentRendererComponent],
+  imports: [CommonModule, ContentRendererComponent],
   template: `
-    <main class="max-w-4xl mx-auto py-8 px-4">
-      <header class="mb-8">
-        <p class="text-xs uppercase tracking-widest text-gray-500">Prototipo</p>
-        <h1 class="text-3xl font-semibold text-gray-900 mt-2">contentSegmentsDemo</h1>
-        <p class="text-gray-600 mt-2">Render de segmentos sin editor ni guardado.</p>
-      </header>
+    <main class="ds-main">
+      <div class="ds-page">
+        <div class="ds-container space-y-8">
 
-      <app-content-renderer [content]="content"></app-content-renderer>
+          <header class="border-b border-neutral-medium pb-4">
+            <p class="text-xs uppercase tracking-[0.18em] text-neutral-dark/70">Prototipo</p>
+            <h1 class="h1 mt-2">Demo de Visualización</h1>
+            <p class="p mt-2 text-neutral-dark/80">
+              Así es como se ve el contenido final renderizado por <code>app-content-renderer</code>.
+            </p>
+          </header>
+
+          <section class="border border-neutral-medium rounded-xl overflow-hidden shadow-sm bg-white">
+            <app-content-renderer [content]="content()"></app-content-renderer>
+          </section>
+
+          <section class="mt-8 pt-8 border-t border-neutral-medium">
+            <h2 class="h3 mb-4 text-sm text-neutral-500">Datos simulados (PageContentDTO)</h2>
+            <pre class="p-4 bg-neutral-light rounded-lg text-xs overflow-auto font-mono border border-neutral-medium">{{ content() | json }}</pre>
+          </section>
+
+        </div>
+      </div>
     </main>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: []
 })
-export class ContentSegmentsDemoPage {
-  readonly content: PageContentDTO = {
+export class ContentSegmentsDemoPage { // <--- CORREGIDO: Antes ponía ContentSegmentsEditorPage
+
+  content = signal<PageContentDTO>({
     schemaVersion: 1,
     segments: [
+      // 1. Texto simple (1 Columna)
       {
-        id: 'seg-1',
+        id: '1',
         order: 1,
-        type: 'rich',
-        textHtml: `
-          <h2 class="text-2xl font-bold mb-3">Segmento 1: Imagen arriba</h2>
-          <p class="text-gray-700">Este es un bloque con imagen en top.</p>
-        `,
-        image: { url: IMAGE_URL, alt: 'Imagen demo' },
-        imagePlacement: 'top',
+        type: 'columns',
+        distribution: '1',
+        verticalPadding: 'normal',
+        backgroundColor: 'white',
+        containerWidth: 'standard',
+        columns: [
+          {
+            id: 'c1',
+            contentHtml: '<h2 class="h2">Bienvenido a la nueva Demo</h2><p>Este bloque es un texto de ancho completo (distribución "1") renderizado con el nuevo sistema.</p>'
+          }
+        ]
       },
+      // 2. Carrusel
       {
-        id: 'seg-2',
+        id: '2',
         order: 2,
         type: 'carousel',
-        images: [
-          { url: IMAGE_URL, alt: 'Slide 1' },
-          { url: IMAGE_URL, alt: 'Slide 2' },
-          { url: IMAGE_URL, alt: 'Slide 3' },
-        ],
-        height: 300,
+        height: 400,
         imagesPerView: 3,
+        delaySeconds: 5,
+        images: [
+          { mediaId: 1, url: IMAGE_URL, alt: 'Paisaje 1' },
+          { mediaId: 2, url: IMAGE_URL, alt: 'Paisaje 2' },
+          { mediaId: 3, url: IMAGE_URL, alt: 'Paisaje 3' }
+        ]
       },
+      // 3. Columnas 50/50 con fondo
       {
-        id: 'seg-3',
+        id: '3',
         order: 3,
-        type: 'rich',
-        textHtml: `
-          <h2 class="text-2xl font-bold mb-3">Segmento 3: Solo texto</h2>
-          <p class="text-gray-700">Bloque de contenido sin imagen.</p>
-        `,
-      },
-      {
-        id: 'seg-4',
-        order: 4,
-        type: 'rich',
-        textHtml: `
-          <h2 class="text-2xl font-bold mb-3">Segmento 4: Imagen izquierda 50%</h2>
-          <p class="text-gray-700">Este bloque demuestra la imagen colocada a la izquierda con un ancho del 50% y un texto lo suficientemente largo como para que fluya por debajo de la imagen. Cuando la pantalla es amplia, la imagen se mantiene a la izquierda y el texto ocupa el espacio restante, envolviéndola y continuando más allá de su altura.</p>
-          <p class="text-gray-700">Para observar claramente el comportamiento, este párrafo añade más contenido. En dispositivos móviles, el diseño se apila de forma natural (la imagen primero y el texto debajo), mientras que en escritorio el texto rodea la imagen hasta superarla en altura, quedando todo el bloque limpio gracias al clearfix final. Esto permite composiciones ricas sin necesidad de maquetados complejos.</p>
-          <p class="text-gray-700">Sigue leyendo: este es aún más texto de ejemplo que debería terminar bajando por debajo del final de la imagen, confirmando que el layout responde correctamente y que el texto no se corta ni solapa. Ideal para artículos con resúmenes ilustrados o secciones destacadas con fotografía.</p>
-        `,
-        image: { url: IMAGE_URL, alt: 'Imagen izquierda 50%' },
-        imagePlacement: 'left',
-        imageWidth: 50,
-      },
-      {
-        id: 'seg-5',
-        order: 5,
-        type: 'rich',
-        textHtml: `
-          <h2 class="text-2xl font-bold mb-3">Segmento 5: Imagen derecha 50%</h2>
-          <p class="text-gray-700">Ejemplo equivalente al anterior pero con la imagen a la derecha. En escritorio el texto envuelve la imagen y se extiende por debajo cuando es más largo. En móvil, la imagen ocupa el 100% del ancho y aparece por encima del texto.</p>
-          <p class="text-gray-700">Añadimos suficiente texto de demostración para asegurar que el flujo pasa el borde inferior de la imagen: esto valida el float y el clearfix, evitando solapes y manteniendo una lectura cómoda en diferentes tamaños de pantalla.</p>
-          <p class="text-gray-700">Más contenido de ejemplo: la composición resultante es útil para destacar imágenes relevantes mientras el texto se desarrolla en paralelo en dispositivos grandes, sin sacrificar la legibilidad en móviles.</p>
-        `,
-        image: { url: IMAGE_URL, alt: 'Imagen derecha 50%' },
-        imagePlacement: 'right',
-        imageWidth: 50,
-      },
-    ],
-  };
+        type: 'columns',
+        distribution: '1-1',
+        backgroundColor: 'neutral',
+        verticalPadding: 'large',
+        containerWidth: 'standard',
+        columns: [
+          {
+            id: 'c2',
+            contentHtml: '<h3 class="h3">Columna Izquierda</h3><p>Esta sección tiene fondo gris (<code>neutral</code>) y padding amplio.</p>'
+          },
+          {
+            id: 'c3',
+            contentHtml: '<img src="' + IMAGE_URL + '" style="float:right; width: 100%; border-radius: 8px;">'
+          }
+        ]
+      }
+    ]
+  });
 }

@@ -1,0 +1,134 @@
+/* src/styles/_ds-content-layout.css */
+
+/* === 1. SISTEMA DE GRID (Columnas) === */
+.ds-layout-grid {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Reglas de Distribución (Desktop) */
+.ds-layout-grid[data-layout="1"]       { grid-template-columns: 1fr; }
+.ds-layout-grid[data-layout="1-1"]     { grid-template-columns: 1fr 1fr; }
+.ds-layout-grid[data-layout="2-1"]     { grid-template-columns: 2fr 1fr; }
+.ds-layout-grid[data-layout="1-2"]     { grid-template-columns: 1fr 2fr; }
+.ds-layout-grid[data-layout="3-1"]     { grid-template-columns: 3fr 1fr; }
+.ds-layout-grid[data-layout="1-3"]     { grid-template-columns: 1fr 3fr; }
+/* Variantes de 3 columnas */
+.ds-layout-grid[data-layout="1-1-1"]   { grid-template-columns: 1fr 1fr 1fr; }
+.ds-layout-grid[data-layout="2-1-1"]   { grid-template-columns: 2fr 1fr 1fr; }
+.ds-layout-grid[data-layout="1-2-1"]   { grid-template-columns: 1fr 2fr 1fr; }
+.ds-layout-grid[data-layout="1-1-2"]   { grid-template-columns: 1fr 1fr 2fr; }
+/* Variantes de 4 columnas */
+.ds-layout-grid[data-layout="1-1-1-1"] { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+/* Responsive: En móvil (menor de 768px) todo a 1 columna */
+@media (max-width: 768px) {
+  .ds-layout-grid { grid-template-columns: 1fr !important; }
+}
+
+/* === 2. CELDAS === */
+.ds-layout-cell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* === 3. ESPACIADO VERTICAL (Padding) === */
+.ds-seg-pad-none   { padding-top: 0; padding-bottom: 0; }
+.ds-seg-pad-small  { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+.ds-seg-pad-normal { padding-top: 3rem; padding-bottom: 3rem; }
+.ds-seg-pad-large  { padding-top: 5rem; padding-bottom: 5rem; }
+
+/* === 4. COLORES DE FONDO === */
+.ds-seg-bg-white       { background-color: #ffffff; }
+.ds-seg-bg-neutral     { background-color: var(--color-neutral-light); }
+.ds-seg-bg-brand-light { background-color: #eaf6fa; }
+.ds-seg-bg-brand-dark  { background-color: var(--color-brand-primary); }
+
+/* === 5. COLORES DE TEXTO === */
+
+/* Texto por defecto (Gris oscuro) */
+.ds-seg-text-default {
+  color: var(--color-neutral-dark);
+}
+
+/* Texto Corporativo */
+.ds-seg-text-brand {
+  color: var(--color-brand-primary);
+}
+.ds-seg-text-brand h1, .ds-seg-text-brand h2, .ds-seg-text-brand h3,
+.ds-seg-text-brand p, .ds-seg-text-brand li {
+  color: var(--color-brand-primary) !important;
+}
+
+/* Texto Blanco (Para fondos oscuros) */
+.ds-seg-text-white {
+  color: #ffffff;
+}
+
+/* Forzamos blanco en todos los hijos para vencer al CSS base */
+.ds-seg-text-white h1,
+.ds-seg-text-white h2,
+.ds-seg-text-white h3,
+.ds-seg-text-white p,
+.ds-seg-text-white ul,
+.ds-seg-text-white li,
+.ds-seg-text-white span,
+.ds-seg-text-white strong {
+  color: #ffffff !important;
+}
+
+/* Enlaces en modo texto blanco (azul clarito para contraste) */
+.ds-seg-text-white a {
+  color: #bfdbfe !important;
+  text-decoration: underline;
+}
+
+/* === 5. ANCHO DEL CONTENEDOR === */
+.ds-seg-width-standard {
+  width: 100%;
+  max-width: 72rem; /* ~1152px */
+  margin: 0 auto;
+}
+.ds-seg-width-narrow {
+  width: 100%;
+  max-width: 48rem; /* ~768px (Lectura) */
+  margin: 0 auto;
+}
+.ds-seg-width-full {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* === 6. ALINEACIÓN DE IMAGENES === */
+
+/* Alineación Izquierda (Flotante) */
+.ds-seg-img-left {
+  float: left;
+  margin: 0.5rem 1.5rem 0.5rem 0; /* Margen derecho para separar texto */
+  display: inline-block;
+}
+
+/* Alineación Derecha (Flotante) */
+.ds-seg-img-right {
+  float: right;
+  margin: 0.5rem 0 0.5rem 1.5rem; /* Margen izquierdo para separar texto */
+  display: inline-block;
+}
+
+/* Alineación Centro (Bloque) */
+.ds-seg-img-center {
+  float: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Sin alineación (Inline por defecto) */
+.ds-seg-img-none {
+  float: none;
+  display: inline;
+  margin: 0;
+}
+

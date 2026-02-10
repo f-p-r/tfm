@@ -1,276 +1,139 @@
 <div class="segments-editor">
+
   <div class="editor-actions">
-    <button type="button" (click)="addRich()" class="ds-btn ds-btn-primary">
-      Añadir segmento texto/imagen
-    </button>
-    <button type="button" (click)="addCarousel()" class="ds-btn ds-btn-primary">
-      Añadir carrusel
-    </button>
+    <button type="button" (click)="addBlock('1')" class="ds-btn ds-btn-primary">+ Texto (1 Col)</button>
+    <button type="button" (click)="addBlock('1-1')" class="ds-btn ds-btn-secondary">+ Columnas</button>
+    <button type="button" (click)="addCarousel()" class="ds-btn ds-btn-secondary">+ Carrusel</button>
   </div>
 
   <div class="segments-list">
-    @for (seg of segments(); track seg.id) {
-      <article class="segment-card">
-        <div class="segment-header">
-          <div class="segment-title">
-            #{{ seg.order }} ·
-            @if (seg.type === 'rich') {
-              Texto/Imagen
-            } @else if (seg.type === 'carousel') {
-              Carrusel
-            }
-          </div>
-          @if (editingId() === seg.id) {
-            <div class="segment-actions">
-              <button type="button" class="ds-btn ds-btn-primary" (click)="saveEdit()">
-                Guardar
-              </button>
-              <button type="button" class="ds-btn ds-btn-secondary" (click)="discardEdit()">
-                Descartar
-              </button>
-            </div>
-          } @else {
-            <div class="segment-actions">
-              <button type="button" class="ds-btn ds-btn-secondary" (click)="moveUp(seg.id)">
-                ↑
-              </button>
-              <button type="button" class="ds-btn ds-btn-secondary" (click)="moveDown(seg.id)">
-                ↓
-              </button>
-              <button type="button" class="ds-btn ds-btn-secondary" (click)="startEdit(seg.id)">
-                Editar
-              </button>
-              <button type="button" class="ds-btn ds-btn-danger" (click)="remove(seg.id)">
-                Eliminar
-              </button>
-            </div>
+    @for (seg of segments(); track seg.id; let i = $index) {
+    <article class="segment-card" [class.editing]="editingId() === seg.id">
+
+      <div class="segment-header">
+        <div class="segment-info">
+          <span class="ds-badge ds-badge-active">#{{ seg.order }}</span>
+          <span class="segment-type">
+            {{ seg.type === 'columns' ? (seg.distribution === '1' ? 'Texto Completo' : 'Columnas Multiples') : 'Carrusel
+            Imágenes' }}
+          </span>
+        </div>
+        <div class="segment-actions">
+          <button type="button" (click)="moveSegment(i, -1)" [disabled]="i === 0" class="ds-btn-sm"
+            title="Subir">⬆</button>
+          <button type="button" (click)="moveSegment(i, 1)" [disabled]="i === segments().length - 1" class="ds-btn-sm"
+            title="Bajar">⬇</button>
+          @if (editingId() !== seg.id) {
+          <button type="button" (click)="startEdit(seg.id)" class="ds-btn ds-btn-secondary">Editar</button>
+          <button type="button" (click)="deleteSegment(i)" class="ds-btn ds-btn-danger">Borrar</button>
           }
         </div>
+      </div>
 
-        @if (editingId() === seg.id) {
-          @if (editingDraft(); as draft) {
-            <div class="segment-edit">
-              @if (draft.type === 'rich') {
-                <div class="rich-editor">
-                  <div class="form-row">
-                    <div class="ds-field">
-                      <label class="ds-label">Posicionamiento</label>
-                      <select
-                        class="ds-select"
-                        [value]="draft.imagePlacement ?? 'top'"
-                        (change)="onRichPlacementChange(draft.id, $event)"
-                      >
-                        <option value="top">Arriba</option>
-                        <option value="left">Izquierda</option>
-                        <option value="right">Derecha</option>
-                      </select>
-                    </div>
-                    <div class="ds-field">
-                      <label class="ds-label">Ancho (%)</label>
-                      <select
-                        class="ds-select"
-                        [value]="draft.imageWidth ?? 50"
-                        (change)="onRichWidthChange(draft.id, $event)"
-                      >
-                        <option [value]="10">10</option>
-                        <option [value]="25">25</option>
-                        <option [value]="33">33</option>
-                        <option [value]="50">50</option>
-                        <option [value]="66">66</option>
-                        <option [value]="75">75</option>
-                        <option [value]="100">100</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="ds-field">
-                    <label class="ds-label">Clases CSS (avanzado)</label>
-                    <input
-                      type="text"
-                      class="ds-input"
-                      [value]="draft.classNames ?? ''"
-                      (input)="onSegmentClassNamesChange(draft.id, $event)"
-                      placeholder="ds-clase-1 ds-clase-2"
-                    />
-                    <p class="ds-help">Clases CSS separadas por espacios (solo clases ds-)</p>
-                  </div>
-
-                  <div class="image-section">
-                    @if (draft.image; as image) {
-                      <div class="image-preview" (click)="toggleRichPicker()">
-                        <img [src]="image.url" alt="" class="preview-img" />
-                        <div class="image-name">{{ fileName(image.url) }}</div>
-                      </div>
-                    } @else {
-                      <button
-                        type="button"
-                        class="ds-btn ds-btn-secondary"
-                        (click)="toggleRichPicker()"
-                      >
-                        Añadir imagen
-                      </button>
-                    }
-
-                    @if (richPickerOpen()) {
-                      <app-media-picker
-                        [scopeType]="scopeType()"
-                        [scopeId]="scopeId()"
-                        [includeGlobal]="true"
-                        [mode]="'single'"
-                        (pick)="onRichMediaPicked($event); toggleRichPicker()"
-                        (uploadSuccess)="onRichMediaPicked($event); toggleRichPicker()"
-                        (error)="onMediaPickerError($event)"
-                        (close)="toggleRichPicker()"
-                      ></app-media-picker>
-                    }
-
-                    @if (draft.image) {
-                      <button type="button" class="ds-btn ds-btn-danger" (click)="removeImage()">
-                        Quitar imagen
-                      </button>
-                    }
-
-                    @if (pickerError()) {
-                      <div class="error-message">{{ pickerError() }}</div>
-                    }
-                  </div>
-
-                  <div class="quill-section">
-                    <span class="section-label">Texto</span>
-                    <div class="quill-shell">
-                      <quill-editor
-                        #editor
-                        class="quill-editor-block"
-                        [modules]="modules"
-                        [formControl]="quillControl"
-                        theme="snow"
-                      ></quill-editor>
-                    </div>
-                  </div>
-                </div>
-              }
-
-              @if (draft.type === 'carousel') {
-                <div class="carousel-editor">
-                  <div class="form-row">
-                    <div class="ds-field">
-                      <label class="ds-label">Altura (px)</label>
-                      <input
-                        class="ds-input"
-                        type="number"
-                        min="1"
-                        [value]="draft.height"
-                        (input)="onCarouselHeightChange(draft.id, $event)"
-                      />
-                    </div>
-                    <div class="ds-field">
-                      <label class="ds-label">Imágenes visibles</label>
-                      <select
-                        class="ds-select"
-                        [value]="draft.imagesPerView"
-                        (change)="onCarouselImagesPerViewChange(draft.id, $event)"
-                      >
-                        <option [value]="1">1</option>
-                        <option [value]="2">2</option>
-                        <option [value]="3">3</option>
-                        <option [value]="4">4</option>
-                        <option [value]="5">5</option>
-                        <option [value]="6">6</option>
-                      </select>
-                    </div>
-                    <div class="ds-field">
-                      <label class="ds-label">Retardo (s)</label>
-                      <input
-                        class="ds-input"
-                        type="number"
-                        min="0"
-                        placeholder="0 desactiva el autoavance"
-                        (input)="onCarouselDelayChange(draft.id, $event)"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="ds-field">
-                    <label class="ds-label">Clases CSS (avanzado)</label>
-                    <input
-                      type="text"
-                      class="ds-input"
-                      [value]="draft.classNames ?? ''"
-                      (input)="onSegmentClassNamesChange(draft.id, $event)"
-                      placeholder="ds-clase-1 ds-clase-2"
-                    />
-                    <p class="ds-help">Clases CSS separadas por espacios (solo clases ds-)</p>
-                  </div>
-
-                  <div class="carousel-images">
-                    <button
-                      type="button"
-                      class="ds-btn ds-btn-secondary"
-                      (click)="toggleCarouselPicker()"
-                    >
-                      Añadir imagen
-                    </button>
-
-                    @if (carouselPickerOpen()) {
-                      <app-media-picker
-                        [scopeType]="scopeType()"
-                        [scopeId]="scopeId()"
-                        [includeGlobal]="true"
-                        [mode]="'multi'"
-                        [infoMessage]="pickerInfo()"
-                        (pick)="onCarouselMediaPicked($event)"
-                        (uploadSuccess)="onCarouselMediaPicked($event)"
-                        (error)="onMediaPickerError($event)"
-                        (close)="toggleCarouselPicker()"
-                      ></app-media-picker>
-                    }
-
-                    @if (draft.images.length) {
-                      <div class="images-grid">
-                        @for (img of draft.images; track $index) {
-                          <div class="carousel-image-item">
-                            <img [src]="img.url" alt="" class="carousel-img" />
-                            <div class="image-item-footer">
-                              <span class="image-item-name">{{ fileName(img.url) }}</span>
-                              <button
-                                type="button"
-                                class="btn-remove"
-                                (click)="removeCarouselImage($index)"
-                              >
-                                Eliminar
-                              </button>
-                            </div>
-                          </div>
-                        }
-                      </div>
-                    } @else {
-                      <div class="no-images">El carrusel no tiene imágenes.</div>
-                    }
-
-                    @if (pickerError()) {
-                      <div class="error-message">{{ pickerError() }}</div>
-                    }
-                  </div>
-                </div>
-              }
-            </div>
-          }
-        }
-
-        @if (editingId() !== seg.id) {
-          <div class="segment-preview">
-            <app-content-renderer [content]="singleContent(seg)"></app-content-renderer>
+      @if (editingId() === seg.id && editingDraft(); as draft) {
+      <div class="segment-edit-panel">
+        @if (draft.type === 'columns') {
+        <div class="controls-grid">
+          <div class="ds-field">
+            <div class="ds-label-with-help"><label class="ds-label">Distribución</label><app-help-i
+                helpKey="col_dist"></app-help-i></div>
+            <select class="ds-select" [ngModel]="draft.distribution" (ngModelChange)="updateDistribution($event)">
+              <option value="1">Ancho Completo</option>
+              <optgroup label="2 Cols">
+                <option value="1-1">50/50</option>
+                <option value="2-1">66/33</option>
+                <option value="1-2">33/66</option>
+              </optgroup>
+              <optgroup label="3 Cols">
+                <option value="1-1-1">33/33/33</option>
+              </optgroup>
+            </select>
           </div>
+          <div class="ds-field">
+            <div class="ds-label-with-help"><label class="ds-label">Padding</label><app-help-i
+                helpKey="col_padding"></app-help-i></div>
+            <select class="ds-select" [ngModel]="draft.verticalPadding"
+              (ngModelChange)="updateProperty('verticalPadding', $event)">
+              <option value="normal">Normal</option>
+              <option value="large">Amplio</option>
+              <option value="small">Pequeño</option>
+              <option value="none">Ninguno</option>
+            </select>
+          </div>
+          <div class="ds-field">
+            <div class="ds-label-with-help"><label class="ds-label">Fondo</label><app-help-i
+                helpKey="col_bg"></app-help-i></div>
+            <select class="ds-select" [ngModel]="draft.backgroundColor"
+              (ngModelChange)="updateProperty('backgroundColor', $event)">
+              <option value="white">Blanco</option>
+              <option value="neutral">Gris</option>
+              <option value="brand-light">Marca Claro</option>
+              <option value="brand-dark">Marca Oscuro</option>
+            </select>
+          </div>
+          <div class="ds-field">
+            <div class="ds-label-with-help"><label class="ds-label">Texto</label><app-help-i
+                helpKey="col_text_color"></app-help-i></div>
+            <select class="ds-select" [ngModel]="draft.textColor" (ngModelChange)="updateProperty('textColor', $event)">
+              <option value="default">Default</option>
+              <option value="brand">Azul</option>
+              <option value="white">Blanco</option>
+            </select>
+          </div>
+          <div class="ds-field">
+            <div class="ds-label-with-help"><label class="ds-label">Ancho</label><app-help-i
+                helpKey="col_width"></app-help-i></div>
+            <select class="ds-select" [ngModel]="draft.containerWidth"
+              (ngModelChange)="updateProperty('containerWidth', $event)">
+              <option value="standard">Estándar</option>
+              <option value="narrow">Lectura</option>
+              <option value="full">Completo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="preview-area" [class]="'ds-seg-bg-' + (draft.backgroundColor || 'white')"
+          [class]="'ds-seg-text-' + (draft.textColor || 'default')"
+          [class]="'ds-seg-pad-' + (draft.verticalPadding || 'normal')">
+          <div class="ds-layout-grid" [attr.data-layout]="draft.distribution"
+            [class]="'ds-seg-width-' + (draft.containerWidth || 'standard')">
+            @for (col of draft.columns; track col.id; let idx = $index) {
+            <div class="ds-layout-cell ds-user-content bg-white/50 p-2 rounded border border-dashed border-gray-300">
+              @if (draft.distribution !== '1') { <div class="text-xs text-gray-400 text-center mb-1">COL {{idx+1}}</div>
+              }
+
+              <editor
+                [init]="tinyConfig"
+                [(ngModel)]="col.contentHtml"
+                placeholder="Escribe el contenido...">
+              </editor>
+
+            </div>
+            }
+          </div>
+        </div>
         }
-      </article>
+
+        @if (draft.type === 'carousel') {
+        <div class="ds-field">
+          <p class="text-gray-500 italic">Editor de carrusel pendiente de implementación.</p>
+        </div>
+        }
+
+        <div class="edit-footer">
+          <button (click)="cancelEdit()" class="ds-btn">Cancelar</button>
+          <button (click)="saveEdit()" class="ds-btn ds-btn-primary">Guardar</button>
+        </div>
+      </div>
+      }
+    </article>
     }
   </div>
 
-  <!-- Selector de enlaces internos -->
-  @if (showLinkSelector()) {
-    <app-link-selector
-      (select)="onLinkSelected($event)"
-      (cancel)="onLinkCanceled()"
-    ></app-link-selector>
+  @if (showMediaPicker()) {
+  <app-media-picker [scopeType]="scopeType()" [scopeId]="scopeId()" [includeGlobal]="true" [mode]="'single'"
+    (pick)="onMediaSelected($event)" (close)="showMediaPicker.set(false)">
+  </app-media-picker>
   }
+
 </div>

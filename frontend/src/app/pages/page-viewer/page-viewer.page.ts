@@ -5,7 +5,7 @@ import { GamesApiService } from '../../core/games/games-api.service';
 import { AssociationsApiService } from '../../core/associations/associations-api.service';
 import { SiteParamsService } from '../../core/site-params/site-params.service';
 import { PageOwnerScope, PageDTO } from '../../shared/content/page.dto';
-import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
+import { ContentRendererComponent } from '../../shared/content/content-renderer/content-renderer.component';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 

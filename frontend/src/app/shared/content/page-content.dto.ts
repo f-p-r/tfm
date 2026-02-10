@@ -1,48 +1,39 @@
-// DTO: tipos para segmentos de contenido
+export type SegmentType = 'columns' | 'carousel';
 
-export type SegmentDTO = RichSegmentDTO | CarouselSegmentDTO;
-
-export interface PageContentDTO {
-  schemaVersion: 1;
-  /** Lista de clases CSS separadas por espacios para el contenedor de la página (avanzado) */
-  classNames?: string;
-  segments: SegmentDTO[];
+export interface ColumnBlock {
+  id: string;
+  contentHtml: string; // HTML Puro (TinyMCE se encarga de todo)
 }
 
-/** Campos comunes a todos los segmentos */
-export interface BaseSegmentDTO {
+export interface ColumnsSegmentDTO {
   id: string;
   order: number;
-
-  /** Lista de clases separadas por espacios (avanzado) */
+  type: 'columns';
+  distribution: '1' | '1-1' | '2-1' | '1-2' | '3-1' | '1-3' | '1-1-1' | '1-2-1' | '2-1-1' | '1-1-2' | '1-1-1-1';
+  columns: ColumnBlock[];
+  verticalPadding?: 'none' | 'small' | 'normal' | 'large';
+  backgroundColor?: 'white' | 'neutral' | 'brand-light' | 'brand-dark';
+  textColor?: 'default' | 'white' | 'brand';
+  containerWidth?: 'standard' | 'narrow' | 'full';
+  anchorId?: string;
   classNames?: string;
 }
 
-export interface RichImageDTO {
-  mediaId?: number;
-  url: string;
-  alt?: string;
-}
-
-export interface CarouselImageDTO {
-  mediaId?: number;
-  url: string;
-  alt?: string;
-}
-
-export interface RichSegmentDTO extends BaseSegmentDTO {
-  type: 'rich';
-  textHtml?: string;
-  image?: RichImageDTO;
-  imagePlacement?: 'top' | 'left' | 'right';
-  imageWidth?: number;
-  imageMaxHeightPx?: number;
-}
-
-export interface CarouselSegmentDTO extends BaseSegmentDTO {
+export interface CarouselSegmentDTO {
+  id: string;
+  order: number;
   type: 'carousel';
-  images: CarouselImageDTO[];
-  height: number; // Altura obligatoria en px
-  imagesPerView: number; // Número de imágenes visibles a la vez (1-6)
-  delaySeconds?: number; // Retardo en segundos para autoavanzar (0 o undefined = sin auto)
+  images: { mediaId: number; url: string; alt?: string }[];
+  height: number;
+  imagesPerView: number;
+  delaySeconds: number;
+  classNames?: string;
+}
+
+export type SegmentDTO = ColumnsSegmentDTO | CarouselSegmentDTO;
+
+export interface PageContentDTO {
+  schemaVersion: number;
+  segments: SegmentDTO[];
+  classNames?: string;
 }

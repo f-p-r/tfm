@@ -1,12 +1,13 @@
+/*
 import Quill from 'quill';
 
 const Inline = Quill.import('blots/inline') as any;
 
-/**
- * Custom Blot para enlaces internos con tipo e identificador.
- * Renderiza un <a> con atributos href, data-internal-type y data-internal-id.
- * Soporta múltiples tipos: pages, news, events, games (3), associations (2).
- */
+
+ // Custom Blot para enlaces internos con tipo e identificador.
+ // Renderiza un <a> con atributos href, data-internal-type y data-internal-id.
+ // Soporta múltiples tipos: pages, news, events, games (3), associations (2).
+ //
 export class InternalLinkBlot extends Inline {
   static blotName = 'internal-link';
   static tagName = 'a';
@@ -61,3 +62,4 @@ export class InternalLinkBlot extends Inline {
     return formats;
   }
 }
+*/

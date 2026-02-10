@@ -1,287 +1,114 @@
-/* Estilos base de Quill */
-@import 'quill/dist/quill.snow.css';
-@import 'quill/dist/quill.core.css';
-
-/* Estilos CRÍTICOS para quill-table-better */
-@import 'quill-table-better/dist/quill-table-better.css';
+/* Importamos nuestro Grid Layout */
+@import '../../../../styles/_ds-content-layout.css';
 
 .segments-editor {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
+}
+
+/*Cursor pointer en imágenes para indicar que son clicables */
+.ds-user-content img {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.ds-user-content img:hover {
+  opacity: 0.9;
+  outline: 2px solid var(--color-brand-primary); /* Feedback visual extra */
 }
 
 .editor-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  position: sticky;
+  top: 1rem;
+  z-index: 10;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .segments-list {
-  display: grid;
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .segment-card {
-  border: 1px solid #d5d8dc;
-  border-radius: 12px;
-  padding: 1rem;
   background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.2s;
 }
 
+.segment-card.editing {
+  border-color: var(--color-brand-primary);
+  box-shadow: 0 0 0 2px rgba(27, 79, 114, 0.1);
+}
+
+/* Header del segmento (modo lista) */
 .segment-header {
+  padding: 1rem;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
   justify-content: space-between;
+  align-items: center;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.segment-title {
-  font-family: var(--font-display), sans-serif;
+.segment-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.segment-type {
   font-weight: 600;
-  color: var(--color-brand-primary, #0066cc);
+  color: #374151;
 }
 
 .segment-actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
   gap: 0.5rem;
 }
 
-.ds-btn-danger {
-  padding: 0.375rem 0.75rem;
-  border-radius: 8px;
-  border: 1px solid #fca5a5;
-  color: #dc2626;
+/* Panel de edición */
+.segment-edit-panel {
+  padding: 1.5rem;
   background: white;
-  cursor: pointer;
-  transition: background-color 0.2s;
 }
 
-.ds-btn-danger:hover {
-  background: #fef2f2;
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f3f4f6;
+  border-radius: 0.5rem;
 }
 
-.segment-edit {
-  margin-top: 1rem;
+.edit-footer {
+  margin-top: 2rem;
   padding-top: 1rem;
-  border-top: 1px solid #d5d8dc;
-  display: grid;
-  gap: 1rem;
-}
-
-.rich-editor,
-.carousel-editor {
-  display: grid;
-  gap: 1rem;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.ds-field {
+  border-top: 1px solid #e5e7eb;
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  justify-content: flex-end;
+  gap: 1rem;
 }
 
-.ds-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #4a5568;
-}
-
-.ds-select,
-.ds-input {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d5d8dc;
-  border-radius: 8px;
+/* Ajustes visuales dentro del editor */
+.ds-layout-cell .ql-container {
+  min-height: 200px;
+  background: white;
   font-size: 1rem;
-  font-family: inherit;
 }
 
-.ds-select:focus,
-.ds-input:focus {
-  outline: none;
-  border-color: var(--color-brand-primary, #0066cc);
-  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
-}
-
-.image-section {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.image-preview {
-  border: 1px solid #d5d8dc;
-  border-radius: 12px;
-  padding: 0.75rem;
-  background: #f7f9fa;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.image-preview:hover {
-  background: white;
-}
-
-.preview-img {
-  width: 128px;
-  height: 112px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.image-name {
-  font-size: 0.75rem;
-  color: #4a5568;
-  text-align: center;
-  max-width: 300px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.quill-section {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.section-label {
-  font-size: 0.875rem;
-  color: #4a5568;
-  font-weight: 600;
-}
-
-.quill-shell {
-  border: 1px solid #d5d8dc;
-  border-radius: 12px;
-  background: #f7f9fa;
-  width: 100%;
-}
-
-.quill-shell .ql-toolbar {
-  overflow: visible;
-  border-color: #d5d8dc;
-}
-
-.quill-editor-block {
-  width: 100%;
-  display: block;
-}
-
-.quill-editor-block .ql-container {
-  min-height: 220px;
-  border-color: #d5d8dc;
-  background: #ffffff;
-}
-
-/* Botón personalizado para enlaces internos */
-.ql-toolbar .ql-internal-link::before {
-  content: '🔗';
-  filter: brightness(0) saturate(100%);
-}
-
-.ql-toolbar .ql-internal-link {
-  width: auto !important;
-  padding: 0 0.5rem;
-}
-
-.ql-toolbar .ql-internal-link:hover::before {
-  filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(3082%) hue-rotate(196deg)
-    brightness(98%) contrast(101%);
-}
-
-/* Estilos para el botón de tabla de QuillTableBetter */
-.ql-toolbar .ql-table-better {
-  width: auto !important;
-}
-
-
-.carousel-images {
-  border: 1px solid #d5d8dc;
-  border-radius: 12px;
-  padding: 0.75rem;
-  background: #f7f9fa;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.images-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 0.75rem;
-}
-
-.carousel-image-item {
-  border: 1px solid #d5d8dc;
-  border-radius: 12px;
-  overflow: hidden;
-  background: white;
-  display: flex;
-  flex-direction: column;
-}
-
-.carousel-img {
-  width: 100%;
-  height: 112px;
-  object-fit: cover;
-}
-
-.image-item-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.5rem 0.5rem;
-  font-size: 0.75rem;
-  color: #4a5568;
-}
-
-.image-item-name {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.btn-remove {
-  color: #dc2626;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  font-size: 0.75rem;
-}
-
-.btn-remove:hover {
-  color: #b91c1c;
-}
-
-.no-images {
-  font-size: 0.875rem;
-  color: #4a5568;
-}
-
-.error-message {
-  font-size: 0.875rem;
-  color: #dc2626;
-}
-
-.segment-preview {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #d5d8dc;
+.ds-layout-cell .ql-toolbar {
+  background: #f8fafc;
+  border-color: #e2e8f0;
 }

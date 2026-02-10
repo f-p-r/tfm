@@ -38,11 +38,7 @@ export const routes: Routes = [
     path: 'prototypes',
     children: [
       { path: '', component: PrototypeHostPage },
-      {
-        // Ruta lazy: Quill y estilos se cargan sólo en este chunk
-        path: 'editor-demo',
-        loadComponent: () => import('./prototypes/editor-demo/editor-demo.page').then((m) => m.EditorDemoPage),
-      },
+
       {
         // Prototipo contentSegmentsDemo: esqueleto mínimo
         path: 'content-segments-demo',

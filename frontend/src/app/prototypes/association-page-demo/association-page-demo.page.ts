@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { ContentRendererComponent } from '../../shared/content/content-renderer.component';
+import { ContentRendererComponent } from '../../shared/content/content-renderer/content-renderer.component';
 import { PagesService } from '../../core/pages/pages.service';
 import { PageDTO, PageSummaryDTO, PageOwnerScope } from '../../shared/content/page.dto';
 
