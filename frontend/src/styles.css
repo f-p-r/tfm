@@ -54,6 +54,22 @@
     @apply border border-neutral-200 rounded-lg overflow-hidden bg-white hover:ring-2 hover:ring-brand-primary transition;
   }
 
+  /* Botones de flechas */
+  .ds-btn-arrow {
+    font-size: 1.4rem;
+    /* Icono más grande */
+    line-height: 1;
+    /* Evita desplazamientos verticales */
+    padding: 0.25rem 0.6rem;
+    /* Área de clic generosa */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    /* Ancho mínimo para dedos/ratón */
+  }
+
   /* === Badges / Etiquetas de Estado === */
 
   /* Clase Base (Estructura) */
@@ -304,7 +320,7 @@
 
 
   .ds-admin-shell {
-    @apply flex  bg-admin-bg text-sm relative overflow-hidden;
+    @apply flex bg-admin-bg text-sm relative overflow-hidden;
   }
 
   /* Sidebar: FLOTANTE, debajo del navbar y con z-index alto */

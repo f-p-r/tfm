@@ -1,9 +1,12 @@
 <div class="segments-editor">
 
   <div class="editor-actions">
-    <button type="button" (click)="addBlock('1')" class="ds-btn ds-btn-primary">+ Texto (1 Col)</button>
-    <button type="button" (click)="addBlock('1-1')" class="ds-btn ds-btn-secondary">+ Columnas</button>
-    <button type="button" (click)="addCarousel()" class="ds-btn ds-btn-secondary">+ Carrusel</button>
+    <button type="button" (click)="addBlock('1')" class="ds-btn ds-btn-primary">
+      + Bloque Contenido
+    </button>
+    <button type="button" (click)="addCarousel()" class="ds-btn ds-btn-secondary">
+      + Carrusel
+    </button>
   </div>
 
   <div class="segments-list">
@@ -14,15 +17,16 @@
         <div class="segment-info">
           <span class="ds-badge ds-badge-active">#{{ seg.order }}</span>
           <span class="segment-type">
-            {{ seg.type === 'columns' ? (seg.distribution === '1' ? 'Texto Completo' : 'Columnas Multiples') : 'Carrusel
-            Imágenes' }}
+            {{ seg.type === 'columns' ? (seg.distribution === '1' ? 'Bloque Texto' : 'Multi-Columna') : 'Carrusel' }}
           </span>
         </div>
         <div class="segment-actions">
-          <button type="button" (click)="moveSegment(i, -1)" [disabled]="i === 0" class="ds-btn-sm"
+          <button type="button" (click)="moveSegment(i, -1)" [disabled]="i === 0" class="ds-btn-arrow"
             title="Subir">⬆</button>
-          <button type="button" (click)="moveSegment(i, 1)" [disabled]="i === segments().length - 1" class="ds-btn-sm"
-            title="Bajar">⬇</button>
+
+          <button type="button" (click)="moveSegment(i, 1)" [disabled]="i === segments().length - 1"
+            class="ds-btn-arrow" title="Bajar">⬇</button>
+
           @if (editingId() !== seg.id) {
           <button type="button" (click)="startEdit(seg.id)" class="ds-btn ds-btn-secondary">Editar</button>
           <button type="button" (click)="deleteSegment(i)" class="ds-btn ds-btn-danger">Borrar</button>
@@ -32,12 +36,19 @@
 
       @if (editingId() === seg.id && editingDraft(); as draft) {
       <div class="segment-edit-panel">
+
         @if (draft.type === 'columns') {
         <div class="controls-grid">
+
           <div class="ds-field">
-            <div class="ds-label-with-help"><label class="ds-label">Distribución</label><app-help-i
-                helpKey="col_dist"></app-help-i></div>
-            <select class="ds-select" [ngModel]="draft.distribution" (ngModelChange)="updateDistribution($event)">
+            <div class="ds-label-with-help">
+              <label class="ds-label">Distribución</label>
+              <app-help-i helpKey="col_dist"></app-help-i>
+            </div>
+            <select class="ds-select"
+                    helpHover [helpKey]="'col_dist'"
+                    [ngModel]="draft.distribution"
+                    (ngModelChange)="updateDistribution($event)">
               <option value="1">Ancho Completo</option>
               <optgroup label="2 Cols">
                 <option value="1-1">50/50</option>
@@ -49,42 +60,63 @@
               </optgroup>
             </select>
           </div>
+
           <div class="ds-field">
-            <div class="ds-label-with-help"><label class="ds-label">Padding</label><app-help-i
-                helpKey="col_padding"></app-help-i></div>
-            <select class="ds-select" [ngModel]="draft.verticalPadding"
-              (ngModelChange)="updateProperty('verticalPadding', $event)">
+            <div class="ds-label-with-help">
+              <label class="ds-label">Padding</label>
+              <app-help-i helpKey="col_padding"></app-help-i>
+            </div>
+            <select class="ds-select"
+                    helpHover [helpKey]="'col_padding'"
+                    [ngModel]="draft.verticalPadding"
+                    (ngModelChange)="updateProperty('verticalPadding', $event)">
               <option value="normal">Normal</option>
               <option value="large">Amplio</option>
               <option value="small">Pequeño</option>
               <option value="none">Ninguno</option>
             </select>
           </div>
+
           <div class="ds-field">
-            <div class="ds-label-with-help"><label class="ds-label">Fondo</label><app-help-i
-                helpKey="col_bg"></app-help-i></div>
-            <select class="ds-select" [ngModel]="draft.backgroundColor"
-              (ngModelChange)="updateProperty('backgroundColor', $event)">
+            <div class="ds-label-with-help">
+              <label class="ds-label">Fondo</label>
+              <app-help-i helpKey="col_bg"></app-help-i>
+            </div>
+            <select class="ds-select"
+                    helpHover [helpKey]="'col_bg'"
+                    [ngModel]="draft.backgroundColor"
+                    (ngModelChange)="updateProperty('backgroundColor', $event)">
               <option value="white">Blanco</option>
               <option value="neutral">Gris</option>
               <option value="brand-light">Marca Claro</option>
               <option value="brand-dark">Marca Oscuro</option>
             </select>
           </div>
+
           <div class="ds-field">
-            <div class="ds-label-with-help"><label class="ds-label">Texto</label><app-help-i
-                helpKey="col_text_color"></app-help-i></div>
-            <select class="ds-select" [ngModel]="draft.textColor" (ngModelChange)="updateProperty('textColor', $event)">
+            <div class="ds-label-with-help">
+              <label class="ds-label">Texto</label>
+              <app-help-i helpKey="col_text_color"></app-help-i>
+            </div>
+            <select class="ds-select"
+                    helpHover [helpKey]="'col_text_color'"
+                    [ngModel]="draft.textColor"
+                    (ngModelChange)="updateProperty('textColor', $event)">
               <option value="default">Default</option>
               <option value="brand">Azul</option>
               <option value="white">Blanco</option>
             </select>
           </div>
+
           <div class="ds-field">
-            <div class="ds-label-with-help"><label class="ds-label">Ancho</label><app-help-i
-                helpKey="col_width"></app-help-i></div>
-            <select class="ds-select" [ngModel]="draft.containerWidth"
-              (ngModelChange)="updateProperty('containerWidth', $event)">
+            <div class="ds-label-with-help">
+              <label class="ds-label">Ancho</label>
+              <app-help-i helpKey="col_width"></app-help-i>
+            </div>
+            <select class="ds-select"
+                    helpHover [helpKey]="'col_width'"
+                    [ngModel]="draft.containerWidth"
+                    (ngModelChange)="updateProperty('containerWidth', $event)">
               <option value="standard">Estándar</option>
               <option value="narrow">Lectura</option>
               <option value="full">Completo</option>
@@ -102,10 +134,7 @@
               @if (draft.distribution !== '1') { <div class="text-xs text-gray-400 text-center mb-1">COL {{idx+1}}</div>
               }
 
-              <editor
-                [init]="tinyConfig"
-                [(ngModel)]="col.contentHtml"
-                placeholder="Escribe el contenido...">
+              <editor [init]="tinyConfig" [(ngModel)]="col.contentHtml" placeholder="Escribe el contenido...">
               </editor>
 
             </div>
@@ -115,9 +144,53 @@
         }
 
         @if (draft.type === 'carousel') {
-        <div class="ds-field">
-          <p class="text-gray-500 italic">Editor de carrusel pendiente de implementación.</p>
-        </div>
+          <div class="controls-grid">
+            <div class="ds-field">
+              <div class="ds-label-with-help"><label class="ds-label">Altura (px)</label></div>
+              <input type="number" class="ds-input" [ngModel]="draft.height" (ngModelChange)="updateProperty('height', $event)">
+            </div>
+            <div class="ds-field">
+              <div class="ds-label-with-help"><label class="ds-label">Imágenes/Vista</label></div>
+              <select class="ds-select" [ngModel]="draft.imagesPerView" (ngModelChange)="updateProperty('imagesPerView', $event)">
+                <option [value]="1">1</option>
+                <option [value]="2">2</option>
+                <option [value]="3">3</option>
+                <option [value]="4">4</option>
+                <option [value]="6">6</option>
+              </select>
+            </div>
+            <div class="ds-field">
+              <div class="ds-label-with-help"><label class="ds-label">Auto-play (seg)</label></div>
+              <input type="number" class="ds-input" [ngModel]="draft.delaySeconds" (ngModelChange)="updateProperty('delaySeconds', $event)">
+            </div>
+          </div>
+
+          <div class="my-4 border rounded p-3 bg-gray-50">
+            <div class="flex justify-between items-center mb-2">
+              <h4 class="font-bold text-sm text-gray-700">Imágenes ({{draft.images.length}})</h4>
+              <button type="button" class="ds-btn-sm ds-btn-primary" (click)="openCarouselImagePicker()">+ Añadir Imagen</button>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              @for (img of draft.images; track $index) {
+                <div class="relative group w-20 h-20 border rounded overflow-hidden bg-white">
+                  <img [src]="img.url" class="w-full h-full object-cover">
+                  <button type="button" (click)="removeCarouselImage($index)"
+                          class="absolute top-0 right-0 bg-red-500 text-white w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity ds-btn-arrow">
+                    ✕
+                  </button>
+                </div>
+              }
+              @if (draft.images.length === 0) {
+                <div class="text-sm text-gray-500 italic p-2">No hay imágenes seleccionadas.</div>
+              }
+            </div>
+          </div>
+
+          <div class="preview-area border p-2 bg-white rounded">
+            <div class="text-xs text-gray-400 mb-1">VISTA PREVIA:</div>
+            <app-segment-carousel [segment]="draft"></app-segment-carousel>
+          </div>
         }
 
         <div class="edit-footer">

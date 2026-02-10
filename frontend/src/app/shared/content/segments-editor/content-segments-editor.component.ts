@@ -6,9 +6,11 @@ import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { PageContentDTO, SegmentDTO, ColumnsSegmentDTO, CarouselSegmentDTO } from '../page-content.dto';
 import { CONTENT_EDITOR_HELP } from './content-editor.help';
 import { HelpContentService } from '../../help/help-content.service';
+import { HelpHoverDirective } from '../../help/help-hover.directive';
 import { HelpIComponent } from '../../help/help-i/help-i.component';
 import { MediaPickerComponent } from '../../../components/media/media-picker.component';
 import { MediaItem } from '../../../components/media/media.models';
+import { SegmentCarouselComponent } from '../segment-carousel.component';
 
 @Component({
   selector: 'app-content-segments-editor',
@@ -17,10 +19,11 @@ import { MediaItem } from '../../../components/media/media.models';
     CommonModule,
     FormsModule,
     EditorComponent,
+    HelpHoverDirective,
     HelpIComponent,
-    MediaPickerComponent
+    MediaPickerComponent,
+    SegmentCarouselComponent
   ],
-  // Inyección del script local
   providers: [
     { provide: TINYMCE_SCRIPT_SRC, useValue: '/assets/tinymce/tinymce.min.js' }
   ],
@@ -42,45 +45,34 @@ export class ContentSegmentsEditorComponent {
 
   readonly showMediaPicker = signal(false);
 
+  readonly mediaPickerContext = signal<'editor' | 'carousel'>('editor');
+
   private helpService = inject(HelpContentService);
   private activeEditorRef: any = null;
 
-  // --- CONFIGURACIÓN TINYMCE DEFINITIVA ---
   readonly tinyConfig: any = {
     base_url: '/assets/tinymce',
     license_key: 'gpl',
     suffix: '.min',
     height: 300,
     menubar: false,
-
-    // 1. AQUI ESTÁ LA CLAVE: 'quickbars'
     plugins: 'lists link image table code help wordcount quickbars',
-
-    // Barra superior estándar
     toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',
-
-    // 2. CONFIGURACIÓN DE BARRA FLOTANTE DE IMAGEN
     quickbars_image_toolbar: 'alignleft aligncenter alignright alignnone | image',
-
-    // Opcional: Desactivar la barra flotante de texto (la que sale al dar Enter) para que no moleste
     quickbars_insert_toolbar: false,
-
     branding: false,
     statusbar: false,
-
-    // Configuración visual interna
     content_style: `
       body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; }
       img { max-width: 100%; height: auto; }
     `,
-
     setup: (editor: any) => {
-      // Tu botón personalizado para abrir el MediaPicker
       editor.ui.registry.addButton('customImage', {
         icon: 'image',
         tooltip: 'Insertar Imagen',
         onAction: () => {
           this.activeEditorRef = editor;
+          this.mediaPickerContext.set('editor');
           this.showMediaPicker.set(true);
         }
       });
@@ -97,8 +89,6 @@ export class ContentSegmentsEditorComponent {
 
     this.helpService.setPack(CONTENT_EDITOR_HELP);
   }
-
-  // ... (RESTO DEL CÓDIGO: addBlock, addCarousel, saveEdit, etc. SE MANTIENE IGUAL) ...
 
   addBlock(initialDist: '1' | '1-1' = '1') {
     const newSeg: ColumnsSegmentDTO = {
@@ -202,15 +192,45 @@ export class ContentSegmentsEditorComponent {
     this.contentChange.emit({ schemaVersion: 1, segments: this.segments() });
   }
 
+  openCarouselImagePicker() {
+    this.mediaPickerContext.set('carousel');
+    this.showMediaPicker.set(true);
+  }
+
+  removeCarouselImage(index: number) {
+    const draft = this.editingDraft() as CarouselSegmentDTO;
+    if (draft && draft.type === 'carousel') {
+      const newImages = [...draft.images];
+      newImages.splice(index, 1);
+      this.updateDraft({ ...draft, images: newImages });
+    }
+  }
+
   onMediaSelected(media: MediaItem) {
     this.showMediaPicker.set(false);
+    const context = this.mediaPickerContext();
 
-    if (media.url && this.activeEditorRef) {
-      const altText = (media as any).alt || (media as any).name || '';
-      this.activeEditorRef.insertContent(
-        `<img src="${media.url}" alt="${altText}" />`
-      );
+    if (context === 'editor') {
+      if (media.url && this.activeEditorRef) {
+        const altText = (media as any).alt || (media as any).name || '';
+        this.activeEditorRef.insertContent(`<img src="${media.url}" alt="${altText}" />`);
+      }
+      this.activeEditorRef = null;
     }
-    this.activeEditorRef = null;
+
+    // --- CORRECCIÓN AQUÍ ---
+    else if (context === 'carousel') {
+      const draft = this.editingDraft() as CarouselSegmentDTO;
+      if (draft && draft.type === 'carousel') {
+        const newImage = {
+          // Asignamos 'mediaId' que es obligatorio en el DTO
+          mediaId: media.id,
+          url: media.url,
+          alt: (media as any).alt || (media as any).name || ''
+          // Eliminamos 'linkUrl' porque no existe en la definición de CarouselSegmentDTO
+        };
+        this.updateDraft({ ...draft, images: [...draft.images, newImage] });
+      }
+    }
   }
 }
