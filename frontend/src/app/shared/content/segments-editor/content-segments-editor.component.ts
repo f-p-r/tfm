@@ -57,9 +57,18 @@ export class ContentSegmentsEditorComponent {
     height: 300,
     menubar: false,
     plugins: 'lists link image table code help wordcount quickbars',
-    toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',
+    toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',
     quickbars_image_toolbar: 'alignleft aligncenter alignright alignnone | image',
     quickbars_insert_toolbar: false,
+    color_map: [
+      "000000", "Negro",
+      "808080", "Gris",
+      "FFFFFF", "Blanco",
+      "EF4444", "Rojo",
+      "3B82F6", "Azul",
+      "10B981", "Verde",
+      "F59E0B", "Amarillo"
+    ],
     branding: false,
     statusbar: false,
     content_style: `

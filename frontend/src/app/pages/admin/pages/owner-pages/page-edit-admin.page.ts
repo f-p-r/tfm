@@ -8,6 +8,11 @@ import { PageContentDTO } from '../../../../shared/content/page-content.dto';
 import { ContentSegmentsEditorComponent } from '../../../../shared/content/segments-editor/content-segments-editor.component';
 
 
+/**
+ * Componente de administración para la edición de páginas de contenido.
+ * Permite editar el título, slug, estado de publicación y contenido segmentado de una página.
+ * Maneja la carga, validación y guardado de cambios en páginas existentes.
+ */
 @Component({
   selector: 'app-page-edit-admin',
   imports: [CommonModule, FormsModule, ContentSegmentsEditorComponent],
@@ -20,15 +25,15 @@ export class PageEditAdminPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  // Route params
+  // Parámetros de ruta
   readonly pageId = signal<number | null>(null);
   readonly ownerType = signal<string | null>(null);
   readonly ownerId = signal<number | null>(null);
 
-  // Original page data
+  // Datos originales de la página
   readonly originalPage = signal<PageDTO | null>(null);
 
-  // Form fields
+  // Campos del formulario
   readonly title = signal('');
   readonly slug = signal('');
   readonly published = signal(false);
@@ -38,13 +43,13 @@ export class PageEditAdminPage implements OnInit {
     segments: [],
   });
 
-  // Loading/saving states
+  // Estados de carga y guardado
   readonly isLoading = signal(false);
   readonly isSaving = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly validationErrors = signal<Record<string, string[]>>({});
 
-  // Computed
+  // Valores calculados
   readonly hasChanges = computed(() => {
     const original = this.originalPage();
     if (!original) return false;
@@ -58,13 +63,13 @@ export class PageEditAdminPage implements OnInit {
   });
 
   constructor() {
-    // Sync content signal with editor changes
+    // Sincronizar señal de contenido con cambios del editor
     effect(() => {
       const content = this.content();
-      // This effect ensures content signal is properly tracked
+      // Este efecto asegura que la señal de contenido se rastree correctamente
     });
 
-    // Sync classNames changes to content
+    // Sincronizar cambios de classNames al contenido
     effect(() => {
       const classNamesValue = this.classNames();
       this.content.update(c => ({ ...c, classNames: classNamesValue || undefined }));
@@ -72,7 +77,7 @@ export class PageEditAdminPage implements OnInit {
   }
 
   ngOnInit(): void {
-    // Parse route params
+    // Analizar parámetros de ruta
     let pageIdParam = this.route.snapshot.paramMap.get('pageId');
     let ownerTypeParam = this.route.snapshot.paramMap.get('ownerType');
     let ownerIdParam = this.route.snapshot.paramMap.get('ownerId');

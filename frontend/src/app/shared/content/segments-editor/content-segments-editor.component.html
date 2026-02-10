@@ -1,10 +1,10 @@
 <div class="segments-editor">
 
   <div class="editor-actions">
-    <button type="button" (click)="addBlock('1')" class="ds-btn ds-btn-primary">
+    <button type="button" (click)="addBlock('1')" class="ds-btn-sm ds-btn-primary">
       + Bloque Contenido
     </button>
-    <button type="button" (click)="addCarousel()" class="ds-btn ds-btn-secondary">
+    <button type="button" (click)="addCarousel()" class="ds-btn-sm ds-btn-secondary">
       + Carrusel
     </button>
   </div>
@@ -28,8 +28,8 @@
             class="ds-btn-arrow" title="Bajar">⬇</button>
 
           @if (editingId() !== seg.id) {
-          <button type="button" (click)="startEdit(seg.id)" class="ds-btn ds-btn-secondary">Editar</button>
-          <button type="button" (click)="deleteSegment(i)" class="ds-btn ds-btn-danger">Borrar</button>
+          <button type="button" (click)="startEdit(seg.id)" class="ds-btn-sm ds-btn-secondary">Editar</button>
+          <button type="button" (click)="deleteSegment(i)" class="ds-btn-sm ds-btn-danger">Borrar</button>
           }
         </div>
       </div>

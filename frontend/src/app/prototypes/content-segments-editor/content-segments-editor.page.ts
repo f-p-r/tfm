@@ -8,15 +8,12 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
   selector: 'app-content-segments-editor-page',
   standalone: true,
   imports: [CommonModule, ContentSegmentsEditorComponent, ContentRendererComponent],
-  // CAMBIO CLAVE: Usamos templateUrl para leer tu archivo HTML externo
   templateUrl: './content-segments-editor.page.html',
-  // Si tienes estilos, úsalos, si no, puedes dejarlo vacío o borrarlo
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentSegmentsEditorPage {
-  // ... resto de tu código igual ...
-  readonly content = signal<PageContentDTO>({
+    readonly content = signal<PageContentDTO>({
     schemaVersion: 1,
     segments: []
   });
@@ -26,7 +23,7 @@ export class ContentSegmentsEditorPage {
   }
 
   downloadJson() {
-    // ... tu lógica de descarga ...
+    // Lógica de descarga ...
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.content(), null, 2));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);

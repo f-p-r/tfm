@@ -80,8 +80,8 @@
             <h2>Contenido</h2>
             <div class="ds-container">
               <app-content-segments-editor
-                [content]="content()"
-                [scopeType]="2"
+                [initialContent]="content()"
+                [scopeType]="+(ownerType()||0)"
                 [scopeId]="ownerId() ?? 1"
                 (contentChange)="onContentChange($event)"
               />
