@@ -1,0 +1,30 @@
+/* Configuración de espaciado de imágenes en el editor y segmentos */
+body.mce-content-body,
+.segment-wrapper {
+  --img-gap: 0.75em;     /* separación “general” */
+  --img-gap-side: 0.75em;/* separación lateral cuando hay float */
+  --img-pad: 0;          /* padding  */
+}
+
+/* Reglas base */
+body.mce-content-body img,
+.segment-wrapper img {
+  margin-top: 0;
+  margin-left: var(--img-gap) 0;
+  margin-right: var(--img-gap) 0;
+  margin-bottom: var(--img-gap) 0;
+  padding: var(--img-pad);
+}
+
+/* Ajustes por alineación (float) */
+body.mce-content-body img[style*="float: left"],
+.segment-wrapper img[style*="float: left"] {
+  margin-left: 0 !important;
+  margin-right: var(--img-gap-side);
+}
+
+body.mce-content-body img[style*="float: right"],
+.segment-wrapper img[style*="float: right"] {
+  margin-right: 0 !important;
+  margin-left: var(--img-gap-side);
+}
