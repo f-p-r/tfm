@@ -148,19 +148,19 @@
 
   /* === Layout y Contenedores === */
 
-  /* Wrapper global de la aplicación */
+  /* Wrapper global de la aplicación - usar como clase en div */
   .ds-main {
     @apply min-h-dvh bg-neutral-light;
   }
 
-  /* Padding de página mobile-first */
-  ds-page, .ds-page {
-    @apply p-6 md:p-10;
+  /* Padding de página mobile-first - usar como clase en div */
+  .ds-page {
+    @apply py-6 px-3 md:py-10;
   }
 
-  /* Contenedor centrado estándar */
+  /* Contenedor centrado estándar con márgenes laterales - usar como clase en div */
   .ds-container {
-    @apply mx-auto w-full max-w-6xl;
+    @apply mx-auto w-full max-w-6xl ;
   }
 
   /* Contenedor centrado estrecho para formularios */
@@ -177,7 +177,7 @@
 
   /* Contenedor interno de la barra de navegación */
   .ds-nav-inner {
-    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-6xl pr-4 md:pr-6;
+    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-6xl pr-4 md:pr-6 ;
   }
 
   /* Zona de marca/logo */
