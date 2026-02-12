@@ -1,3 +1,47 @@
+/* Este archivo contiene estilos requeridos para el contenido del editor de texto enriquecido (TinyMCE) y los segmentos de contenido,
+asegurando una apariencia consistente y profesional en la tipografía y el espaciado de imágenes.
+Estos estilos se aplican tanto dentro del editor como en el resto de la web, por lo que index.html utiliza este mismo archivo
+para mantener la coherencia visual en todo el sitio.
+*/
+
+/* Importación de fuentes desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700&display=swap');
+
+/* Estilos de tipografía */
+body {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  line-height: 1.625;
+  color: #2C3E50;
+}
+
+h1 {
+  font-family: "Inter Tight", "Inter", sans-serif;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #2C3E50;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-family: "Inter Tight", "Inter", sans-serif;
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 0.875rem;
+}
+
+h3 {
+  font-family: "Inter Tight", "Inter", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 0.75rem;
+}
+
+p {
+  line-height: 1.625;
+}
 /* Configuración de espaciado de imágenes en el editor y segmentos */
 body.mce-content-body,
 .segment-wrapper {

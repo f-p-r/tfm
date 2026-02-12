@@ -74,38 +74,6 @@ export class ContentSegmentsEditorComponent {
     branding: false,
     statusbar: false,
     content_style: `
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@300;400;500;600;700&display=swap');
-
-      body {
-        font-family: "Inter", sans-serif;
-        font-size: 16px;
-        line-height: 1.625;
-        color: #2C3E50;
-      }
-      h1 {
-        font-family: "Inter Tight", "Inter", sans-serif;
-        font-size: 2.25rem;
-        font-weight: 700;
-        color: #2C3E50;
-        margin-bottom: 1rem;
-      }
-      h2 {
-        font-family: "Inter Tight", "Inter", sans-serif;
-        font-size: 1.875rem;
-        font-weight: 600;
-        color: #2C3E50;
-        margin-bottom: 0.875rem;
-      }
-      h3 {
-        font-family: "Inter Tight", "Inter", sans-serif;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #2C3E50;
-        margin-bottom: 0.75rem;
-      }
-      p {
-        line-height: 1.625;
-      }
       img { max-width: 100%; height: auto; }
     `,
     content_css: '/css/editor-content.css',

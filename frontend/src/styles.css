@@ -21,6 +21,13 @@
   --color-admin-header: #FFFFFF;
 }
 
+/* === Fuentes ===
+
+  Debido a que tinyMce no puede usar este archivo css, los fuentes y otras características de estilo se definen
+  en public/css/editor-content.css para que el contenido del editor se vea igual que el contenido final. Index.html
+  también importa ese css para que el contenido renderizado en la web tenga el mismo estilo.
+*/
+
 @layer utilities {
   /* === Botones === */
 
@@ -419,27 +426,23 @@
     @apply cursor-pointer;
   }
 
-  /* Tipografía personalizada */
+  /* Tipografía personalizada (clases) */
   html {
     @apply font-sans text-neutral-dark;
   }
 
-  h1,
   .h1 {
     @apply font-display text-4xl font-bold text-neutral-dark;
   }
 
-  h2,
   .h2 {
     @apply font-display text-3xl font-semibold text-neutral-dark;
   }
 
-  h3,
   .h3 {
     @apply font-display text-2xl font-semibold text-neutral-dark;
   }
 
-  p,
   .p {
     @apply text-base leading-relaxed text-neutral-dark;
   }
