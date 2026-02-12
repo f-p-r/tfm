@@ -1,5 +1,5 @@
 <ds-main>
-  <ds-page [title]="'Editar página: ' + title()">
+  <ds-page>
     <ds-container>
       <div class="page-edit-admin">
         <!-- Loading state -->
@@ -15,63 +15,85 @@
           <div class="form-section">
             <h2>Datos de la página</h2>
 
-            <div class="form-group">
-              <label for="title">Título</label>
-              <input
-                type="text"
-                id="title"
-                class="ds-input"
-                [(ngModel)]="title"
-                placeholder="Título de la página"
-                [disabled]="isSaving()"
-              />
-            </div>
+            <div class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-4">
+                <div class="ds-field">
+                  <div class="ds-label-with-help">
+                    <label class="ds-label" for="title">Título</label>
+                    <app-help-i helpKey="page_title"></app-help-i>
+                  </div>
+                  <input
+                    type="text"
+                    id="title"
+                    class="ds-input"
+                    helpHover
+                    [helpKey]="'page_title'"
+                    [(ngModel)]="title"
+                    placeholder="Título de la página"
+                    [disabled]="isSaving()"
+                  />
+                </div>
 
-            <div class="form-group">
-              <label for="slug">Slug (URL)</label>
-              <input
-                type="text"
-                id="slug"
-                class="ds-input"
-                [(ngModel)]="slug"
-                placeholder="slug-de-la-pagina"
-                [disabled]="isSaving()"
-              />
-              <small class="form-help">Debe ser único dentro del owner</small>
-              @if (validationErrors()['slug']) {
-                <div class="error-field">
-                  @for (error of validationErrors()['slug']; track error) {
-                    <small class="text-danger">{{ error }}</small>
+                <div class="ds-field">
+                  <div class="ds-label-with-help">
+                    <label class="ds-label" for="slug">Slug (URL)</label>
+                    <app-help-i helpKey="page_slug"></app-help-i>
+                  </div>
+                  <input
+                    type="text"
+                    id="slug"
+                    class="ds-input"
+                    helpHover
+                    [helpKey]="'page_slug'"
+                    [(ngModel)]="slug"
+                    placeholder="slug-pagina"
+                    [disabled]="isSaving()"
+                  />
+                  @if (validationErrors()['slug']) {
+                    <div class="error-field">
+                      @for (error of validationErrors()['slug']; track error) {
+                        <small class="text-danger">{{ error }}</small>
+                      }
+                    </div>
                   }
                 </div>
-              }
-            </div>
+              </div>
 
-            <div class="form-group">
-              <label class="checkbox-label">
-                <input
-                  type="checkbox"
-                  [(ngModel)]="published"
-                  [disabled]="isSaving()"
-                />
-                <span>Página publicada</span>
-              </label>
-              <small class="form-help">
-                {{ published() ? 'Esta página está publicada y es visible' : 'Esta página es un borrador' }}
-              </small>
-            </div>
+              <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
+                <div class="ds-field">
+                  <div class="ds-label-with-help">
+                    <label class="ds-label" for="classNames">Clases CSS (avanzado)</label>
+                    <app-help-i helpKey="page_classnames"></app-help-i>
+                  </div>
+                  <input
+                    type="text"
+                    id="classNames"
+                    class="ds-input"
+                    helpHover
+                    [helpKey]="'page_classnames'"
+                    [(ngModel)]="classNames"
+                    placeholder="ds-clase-1 ds-clase-2"
+                    [disabled]="isSaving()"
+                  />
+                </div>
 
-            <div class="form-group">
-              <label for="classNames">Clases CSS (avanzado)</label>
-              <input
-                type="text"
-                id="classNames"
-                class="ds-input"
-                [(ngModel)]="classNames"
-                placeholder="ds-clase-1 ds-clase-2"
-                [disabled]="isSaving()"
-              />
-              <small class="form-help">Clases CSS separadas por espacios (solo clases ds-)</small>
+                <div class="ds-field ds-field-checkbox-grid">
+                  <div class="ds-label-with-help">
+                    <label class="checkbox-label ds-label"
+                        helpHover
+                        [helpKey]="'page_published'"
+                    >
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="published"
+                        [disabled]="isSaving()"
+                      />
+                      <span>Página publicada</span>
+                    </label>
+                    <app-help-i helpKey="page_published"></app-help-i>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

@@ -119,7 +119,16 @@
   .ds-input,
   .ds-select,
   .ds-textarea {
-    @apply w-full px-3 py-2 rounded-lg border border-neutral-medium bg-white text-neutral-dark placeholder:text-neutral-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
+    @apply w-full px-3 py-1 rounded-lg border border-neutral-medium bg-white text-neutral-dark placeholder:text-neutral-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
+  }
+
+  /* Alineación de checkboxes en grids multi-columna
+     Usar cuando un checkbox está junto a un campo con label arriba,
+     para alinear visualmente el checkbox con el input del campo adyacente */
+  .ds-field-checkbox-grid {
+    @media (min-width: 768px) {
+      padding-top: 2.5rem;
+    }
   }
 
   .ds-help {
@@ -145,7 +154,7 @@
   }
 
   /* Padding de página mobile-first */
-  .ds-page {
+  ds-page, .ds-page {
     @apply p-6 md:p-10;
   }
 

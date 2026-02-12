@@ -6,6 +6,8 @@ import { PagesService } from '../../../../core/pages/pages.service';
 import { PageDTO, PageUpdateDTO } from '../../../../shared/content/page.dto';
 import { PageContentDTO } from '../../../../shared/content/page-content.dto';
 import { ContentSegmentsEditorComponent } from '../../../../shared/content/segments-editor/content-segments-editor.component';
+import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive';
+import { HelpIComponent } from '../../../../shared/help/help-i/help-i.component';
 
 
 /**
@@ -15,7 +17,14 @@ import { ContentSegmentsEditorComponent } from '../../../../shared/content/segme
  */
 @Component({
   selector: 'app-page-edit-admin',
-  imports: [CommonModule, FormsModule, ContentSegmentsEditorComponent],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ContentSegmentsEditorComponent,
+    HelpHoverDirective,
+    HelpIComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './page-edit-admin.page.html',
   styleUrl: './page-edit-admin.page.css',
