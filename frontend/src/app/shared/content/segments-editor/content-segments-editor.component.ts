@@ -8,8 +8,8 @@ import { CONTENT_EDITOR_HELP } from './content-editor.help';
 import { HelpContentService } from '../../help/help-content.service';
 import { HelpHoverDirective } from '../../help/help-hover.directive';
 import { HelpIComponent } from '../../help/help-i/help-i.component';
-import { MediaPickerComponent } from '../../../components/media/media-picker.component';
-import { MediaItem } from '../../../components/media/media.models';
+import { MediaPickerComponent } from '../../media/media-picker.component';
+import { MediaItem } from '../../media/media.models';
 import { SegmentCarouselComponent } from '../segment-carousel.component';
 import { ContentSegmentsPreviewComponent } from '../segments-preview/content-segments-preview.component';
 

@@ -1,145 +1,96 @@
+<div class="ds-container">
+  <div class="page-edit-admin">
+    <!-- Loading state -->
+    @if (isLoading()) {
+    <p>Cargando página...</p>
+    } @else if (errorMessage()) {
+    <div class="error-message">
+      <p>{{ errorMessage() }}</p>
+      <button class="btn-secondary" (click)="onCancel()">Volver</button>
+    </div>
+    } @else {
+    <!-- Form section -->
+    <div class="form-section">
+      <h2>Datos de la página</h2>
 
-    <div class="ds-container">
-      <div class="page-edit-admin">
-        <!-- Loading state -->
-        @if (isLoading()) {
-          <p>Cargando página...</p>
-        } @else if (errorMessage()) {
-          <div class="error-message">
-            <p>{{ errorMessage() }}</p>
-            <button class="btn-secondary" (click)="onCancel()">Volver</button>
-          </div>
-        } @else {
-          <!-- Form section -->
-          <div class="form-section">
-            <h2>Datos de la página</h2>
-
-            <div class="space-y-4">
-              <div class="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-4">
-                <div class="ds-field">
-                  <div class="ds-label-with-help">
-                    <label class="ds-label" for="title">Título</label>
-                    <app-help-i helpKey="page_title"></app-help-i>
-                  </div>
-                  <input
-                    type="text"
-                    id="title"
-                    class="ds-input"
-                    helpHover
-                    [helpKey]="'page_title'"
-                    [(ngModel)]="title"
-                    placeholder="Título de la página"
-                    [disabled]="isSaving()"
-                  />
-                </div>
-
-                <div class="ds-field">
-                  <div class="ds-label-with-help">
-                    <label class="ds-label" for="slug">Slug (URL)</label>
-                    <app-help-i helpKey="page_slug"></app-help-i>
-                  </div>
-                  <input
-                    type="text"
-                    id="slug"
-                    class="ds-input"
-                    helpHover
-                    [helpKey]="'page_slug'"
-                    [(ngModel)]="slug"
-                    placeholder="slug-pagina"
-                    [disabled]="isSaving()"
-                  />
-                  @if (validationErrors()['slug']) {
-                    <div class="error-field">
-                      @for (error of validationErrors()['slug']; track error) {
-                        <small class="text-danger">{{ error }}</small>
-                      }
-                    </div>
-                  }
-                </div>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
-                <div class="ds-field">
-                  <div class="ds-label-with-help">
-                    <label class="ds-label" for="classNames">Clases CSS (avanzado)</label>
-                    <app-help-i helpKey="page_classnames"></app-help-i>
-                  </div>
-                  <input
-                    type="text"
-                    id="classNames"
-                    class="ds-input"
-                    helpHover
-                    [helpKey]="'page_classnames'"
-                    [(ngModel)]="classNames"
-                    placeholder="ds-clase-1 ds-clase-2"
-                    [disabled]="isSaving()"
-                  />
-                </div>
-
-                <div class="ds-field ds-field-checkbox-grid">
-                  <div class="ds-label-with-help">
-                    <label class="checkbox-label ds-label"
-                        helpHover
-                        [helpKey]="'page_published'"
-                    >
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="published"
-                        [disabled]="isSaving()"
-                      />
-                      <span>Página publicada</span>
-                    </label>
-                    <app-help-i helpKey="page_published"></app-help-i>
-                  </div>
-                </div>
-              </div>
+      <div class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-4">
+          <div class="ds-field">
+            <div class="ds-label-with-help">
+              <label class="ds-label" for="title">Título</label>
+              <app-help-i helpKey="page_title"></app-help-i>
             </div>
+            <input type="text" id="title" class="ds-input" helpHover [helpKey]="'page_title'" [(ngModel)]="title"
+              placeholder="Título de la página" [disabled]="isSaving()" />
           </div>
 
-          <!-- Editor section -->
-          <div class="editor-section">
-            <h2>Contenido</h2>
-            <div class="ds-container">
-              <app-content-segments-editor
-                [initialContent]="content()"
-                [scopeType]="+(ownerType()||0)"
-                [scopeId]="ownerId() ?? 1"
-                (contentChange)="onContentChange($event)"
-              />
+          <div class="ds-field">
+            <div class="ds-label-with-help">
+              <label class="ds-label" for="slug">Slug (URL)</label>
+              <app-help-i helpKey="page_slug"></app-help-i>
             </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="actions-section">
-            @if (errorMessage()) {
-              <div class="error-inline">{{ errorMessage() }}</div>
+            <input type="text" id="slug" class="ds-input" helpHover [helpKey]="'page_slug'" [(ngModel)]="slug"
+              placeholder="slug-pagina" [disabled]="isSaving()" />
+            @if (validationErrors()['slug']) {
+            <div class="error-field">
+              @for (error of validationErrors()['slug']; track error) {
+              <small class="text-danger">{{ error }}</small>
+              }
+            </div>
             }
+          </div>
+        </div>
 
-            <div class="actions-buttons">
-              <button
-                class="btn-secondary"
-                (click)="onCancel()"
-                [disabled]="isSaving()"
-              >
-                Cancelar
-              </button>
-              <button
-                class="btn-secondary"
-                (click)="openPreview()"
-                [disabled]="isSaving()"
-              >
-                Vista previa
-              </button>
-              <button
-                class="btn-primary"
-                (click)="onSave()"
-                [disabled]="!hasChanges() || isSaving()"
-              >
-                {{ isSaving() ? 'Guardando...' : 'Guardar cambios' }}
-              </button>
+        <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
+          <div class="ds-field">
+            <div class="ds-label-with-help">
+              <label class="ds-label" for="classNames">Clases CSS (avanzado)</label>
+              <app-help-i helpKey="page_classnames"></app-help-i>
+            </div>
+            <input type="text" id="classNames" class="ds-input" helpHover [helpKey]="'page_classnames'"
+              [(ngModel)]="classNames" placeholder="ds-clase-1 ds-clase-2" [disabled]="isSaving()" />
+          </div>
+
+          <div class="ds-field ds-field-checkbox-grid">
+            <div class="ds-label-with-help">
+              <label class="checkbox-label ds-label" helpHover [helpKey]="'page_published'">
+                <input type="checkbox" [(ngModel)]="published" [disabled]="isSaving()" />
+                <span>Página publicada</span>
+              </label>
+              <app-help-i helpKey="page_published"></app-help-i>
             </div>
           </div>
-        }
+        </div>
       </div>
     </div>
 
+    <!-- Editor section -->
+    <div class="editor-section">
+      <h2>Contenido</h2>
+      <div class="ds-container">
+        <app-content-segments-editor [initialContent]="content()" [scopeType]="+(ownerType()||0)"
+          [scopeId]="ownerId() ?? 0" (contentChange)="onContentChange($event)" />
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-section">
+      @if (errorMessage()) {
+      <div class="error-inline">{{ errorMessage() }}</div>
+      }
+
+      <div class="actions-buttons">
+        <button class="btn-secondary" (click)="onCancel()" [disabled]="isSaving()">
+          Cancelar
+        </button>
+        <button class="btn-secondary" (click)="openPreview()" [disabled]="isSaving()">
+          Vista previa
+        </button>
+        <button class="btn-primary" (click)="onSave()" [disabled]="!hasChanges() || isSaving()">
+          {{ isSaving() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+</div>

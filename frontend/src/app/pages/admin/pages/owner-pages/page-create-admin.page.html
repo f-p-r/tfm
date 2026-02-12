@@ -1,6 +1,6 @@
-<div class="ds-main">
-  <div class="ds-page" [title]="'Crear nueva página - ' + ownerTypeLabel() + ' #' + ownerId()">
-    <div class="ds-container">
+<ds-main>
+  <ds-page [title]="'Crear nueva página - ' + ownerTypeLabel() + ' #' + ownerId()">
+    <ds-container>
       <div class="page-create-admin">
         @if (errorMessage() && ownerType() === null) {
           <div class="error-message">
@@ -79,7 +79,7 @@
               <app-content-segments-editor
                 [content]="content()"
                 [scopeType]="2"
-                [scopeId]="ownerId() ?? 1"
+                [scopeId]="ownerId() ?? 0"
                 (contentChange)="onContentChange($event)"
               />
             </div>
@@ -117,6 +117,6 @@
           </div>
         }
       </div>
-    </div>
-  </div>
-</div>
+    </ds-container>
+  </ds-page>
+</ds-main>
