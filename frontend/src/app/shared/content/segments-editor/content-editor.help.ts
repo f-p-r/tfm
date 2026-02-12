@@ -23,6 +23,10 @@ export const CONTENT_EDITOR_HELP: HelpPack = {
       title: 'Ancho del Contenido',
       text: '"Estándar" se alinea con la web (1150px). "Lectura" es más estrecho para artículos. "Completo" ocupa toda la pantalla.'
     },
+    'col_fullwidth_bg': {
+      title: 'Fondo a Ancho Completo',
+      text: 'Expande el color de fondo al 100% del ancho de la pantalla, mientras el contenido mantiene su ancho configurado. Útil para destacar secciones con fondos de color.'
+    },
     'col_id': {
       title: 'Identificador (ID)',
       text: 'Opcional. Escribe un nombre único (ej: "contacto") para poder crear enlaces en el menú que lleven aquí.'

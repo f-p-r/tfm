@@ -21,13 +21,7 @@ export class App {
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
       map((event) => event.urlAfterRedirects),
       startWith(this.router.url),
-      map((url) => {
-        return url.startsWith('/login') ||
-               url.startsWith('/auth/callback') ||
-               url.endsWith('/pages/preview') ||
-               url.startsWith('/styleguide') ||
-               url.startsWith('/prototypes');
-      })
+      map((url) => this.hasNoNavbar(url))
     ),
     { initialValue: this.hasNoNavbar(this.router.url) }
   );
@@ -38,11 +32,7 @@ export class App {
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
       map((event) => event.urlAfterRedirects),
       startWith(this.router.url),
-      map((url) => {
-        return url.endsWith('/pages/preview') ||
-               url.startsWith('/styleguide') ||
-               url.startsWith('/prototypes');
-      })
+      map((url) => this.hasFreeLayout(url))
     ),
     { initialValue: this.hasFreeLayout(this.router.url) }
   );
@@ -56,8 +46,6 @@ export class App {
   }
 
   private hasFreeLayout(url: string): boolean {
-    return url.endsWith('/pages/preview') ||
-           url.startsWith('/styleguide') ||
-           url.startsWith('/prototypes');
+    return url === '/admin/pages/preview' || !url.startsWith('/admin');
   }
 }

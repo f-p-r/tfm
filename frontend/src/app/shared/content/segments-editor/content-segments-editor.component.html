@@ -136,13 +136,48 @@
               <option value="full">Completo</option>
             </select>
           </div>
+
+          <div class="ds-field">
+            <div class="ds-label-with-help">
+              <label class="checkbox-label ds-label" helpHover [helpKey]="'col_fullwidth_bg'">
+                <input type="checkbox"
+                       [ngModel]="draft.fullWidthBackground"
+                       (ngModelChange)="updateProperty('fullWidthBackground', $event)" />
+                <span>Fondo a ancho completo</span>
+              </label>
+              <app-help-i helpKey="col_fullwidth_bg"></app-help-i>
+            </div>
+          </div>
         </div>
 
-        <div class="preview-area" [class]="'ds-seg-bg-' + (draft.backgroundColor || 'white')"
-          [class]="'ds-seg-text-' + (draft.textColor || 'default')"
-          [class]="'ds-seg-pad-' + (draft.verticalPadding || 'normal')">
-          <div class="ds-layout-grid" [attr.data-layout]="draft.distribution"
-            [class]="'ds-seg-width-' + (draft.containerWidth || 'standard')">
+        <div
+          class="preview-area"
+          [ngClass]="{
+            'ds-seg-wrapper-full': draft.fullWidthBackground,
+            'ds-seg-bg-white': draft.backgroundColor === 'white',
+            'ds-seg-bg-neutral': draft.backgroundColor === 'neutral',
+            'ds-seg-bg-brand-light': draft.backgroundColor === 'brand-light',
+            'ds-seg-bg-brand-dark': draft.backgroundColor === 'brand-dark',
+            'ds-seg-text-default': draft.textColor === 'default',
+            'ds-seg-text-brand': draft.textColor === 'brand',
+            'ds-seg-text-white': draft.textColor === 'white',
+            'ds-seg-pad-none': draft.verticalPadding === 'none' && !draft.fullWidthBackground,
+            'ds-seg-pad-small': draft.verticalPadding === 'small' && !draft.fullWidthBackground,
+            'ds-seg-pad-normal': draft.verticalPadding === 'normal' && !draft.fullWidthBackground,
+            'ds-seg-pad-large': draft.verticalPadding === 'large' && !draft.fullWidthBackground
+          }">
+          <div
+            class="ds-layout-grid"
+            [attr.data-layout]="draft.distribution"
+            [ngClass]="{
+              'ds-seg-width-standard': draft.containerWidth === 'standard' || !draft.containerWidth,
+              'ds-seg-width-narrow': draft.containerWidth === 'narrow',
+              'ds-seg-width-full': draft.containerWidth === 'full',
+              'ds-seg-pad-none': draft.verticalPadding === 'none' && draft.fullWidthBackground,
+              'ds-seg-pad-small': draft.verticalPadding === 'small' && draft.fullWidthBackground,
+              'ds-seg-pad-normal': draft.verticalPadding === 'normal' && draft.fullWidthBackground,
+              'ds-seg-pad-large': draft.verticalPadding === 'large' && draft.fullWidthBackground
+            }">
             @for (col of draft.columns; track col.id; let idx = $index) {
             <div class="ds-layout-cell ds-user-content bg-white/50 p-2 rounded border border-dashed border-gray-300">
               @if (draft.distribution !== '1') { <div class="text-xs text-gray-400 text-center mb-1">COL {{idx+1}}</div>

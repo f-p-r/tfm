@@ -1,12 +1,13 @@
 <div class="min-h-dvh bg-neutral-light text-neutral-dark">
+
+  @if (!noNavbar()) {
+    <app-navbar />
+  }
+
   @if (freeLayout()) {
     <!-- Layout completamente libre sin wrappers (styleguide, prototypes, preview) -->
     <router-outlet></router-outlet>
   } @else {
-    <!-- Navbar solo en rutas estándar -->
-    @if (!noNavbar()) {
-      <app-navbar />
-    }
 
     <main class="ds-main">
       <div class="ds-page">

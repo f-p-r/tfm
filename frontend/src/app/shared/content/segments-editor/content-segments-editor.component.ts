@@ -111,6 +111,7 @@ export class ContentSegmentsEditorComponent {
       backgroundColor: 'white',
       textColor: 'default',
       containerWidth: 'standard',
+      fullWidthBackground: false,
       columns: Array(initialDist === '1' ? 1 : 2).fill(null).map(() => ({
         id: crypto.randomUUID(), contentHtml: ''
       }))

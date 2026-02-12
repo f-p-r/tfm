@@ -101,6 +101,19 @@
   max-width: 100%;
 }
 
+/* === 5.1 FONDO A ANCHO COMPLETO === */
+/* Wrapper que expande el fondo al 100% del viewport mientras mantiene el contenido centrado */
+.ds-seg-wrapper-full {
+  width: 100%;
+  /*
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  */
+}
+
 /* === 6. ALINEACIÓN DE IMAGENES === */
 
 /* Alineación Izquierda (Flotante) */

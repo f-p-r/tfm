@@ -15,6 +15,7 @@ export interface ColumnsSegmentDTO {
   backgroundColor?: 'white' | 'neutral' | 'brand-light' | 'brand-dark';
   textColor?: 'default' | 'white' | 'brand';
   containerWidth?: 'standard' | 'narrow' | 'full';
+  fullWidthBackground?: boolean;
   anchorId?: string;
   classNames?: string;
 }
