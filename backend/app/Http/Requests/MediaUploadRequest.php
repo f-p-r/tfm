@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class MediaUploadRequest extends FormRequest
 {
@@ -30,14 +33,24 @@ class MediaUploadRequest extends FormRequest
             'scopeType' => [
                 'required',
                 function ($attribute, $value, $fail) {
+                    Log::info('Validando scopeType', [
+                        'value' => $value,
+                        'type' => gettype($value),
+                        'is_numeric' => is_numeric($value),
+                        'is_string' => is_string($value),
+                    ]);
+
                     // Permitir string o entero
-                    if (is_string($value) && !in_array(strtolower($value), ['global', 'association', 'game'])) {
+                    if (is_string($value) && !is_numeric($value) && !in_array(strtolower($value), ['global', 'association', 'game'])) {
+                        Log::warning('scopeType falla validación: string no válido', ['value' => $value]);
                         $fail('El campo scopeType debe ser global, association, game, 1, 2 o 3.');
                     }
                     if (is_numeric($value) && !in_array((int)$value, [1, 2, 3])) {
+                        Log::warning('scopeType falla validación: número no válido', ['value' => $value, 'int' => (int)$value]);
                         $fail('El campo scopeType debe ser global, association, game, 1, 2 o 3.');
                     }
                     if (!is_string($value) && !is_numeric($value)) {
+                        Log::warning('scopeType falla validación: tipo no válido', ['type' => gettype($value)]);
                         $fail('El campo scopeType debe ser un string o entero.');
                     }
                 },
@@ -68,8 +81,17 @@ class MediaUploadRequest extends FormRequest
     {
         $scopeType = $this->input('scopeType');
 
-        // Solo normalizar a minúsculas si es string
-        if (is_string($scopeType)) {
+        Log::info('MediaUploadRequest - Datos recibidos ANTES de prepareForValidation', [
+            'scopeType_raw' => $scopeType,
+            'scopeType_type' => gettype($scopeType),
+            'scopeType_is_numeric' => is_numeric($scopeType),
+            'scopeId' => $this->input('scopeId'),
+            'all_inputs' => $this->except(['file']),
+            'has_file' => $this->hasFile('file'),
+        ]);
+
+        // Solo normalizar a minúsculas si es string NO numérico
+        if (is_string($scopeType) && !is_numeric($scopeType)) {
             $scopeType = strtolower($scopeType);
         }
 
@@ -78,6 +100,27 @@ class MediaUploadRequest extends FormRequest
             'scopeType' => $scopeType,
             'filename' => $fileNameInput,
         ]);
+
+        Log::info('MediaUploadRequest - Datos DESPUÉS de prepareForValidation', [
+            'scopeType_processed' => $scopeType,
+            'scopeType_type' => gettype($scopeType),
+        ]);
+    }
+
+    /**
+     * Manejar errores de validación.
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        Log::error('MediaUploadRequest - Validación FALLIDA', [
+            'errors' => $validator->errors()->toArray(),
+            'scopeType_value' => $this->input('scopeType'),
+            'scopeType_type' => gettype($this->input('scopeType')),
+            'scopeId_value' => $this->input('scopeId'),
+            'all_inputs' => $this->except(['file']),
+        ]);
+
+        throw new ValidationException($validator);
     }
 
     /**

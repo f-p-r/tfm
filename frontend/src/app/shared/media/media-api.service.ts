@@ -31,7 +31,7 @@ export class MediaApiService {
       .set('page', String(page))
       .set('pageSize', String(pageSize));
 
-    if (params.scopeId !== undefined && params.scopeId !== null) {
+    if (typeof params.scopeId === 'number') {
       httpParams = httpParams.set('scopeId', String(params.scopeId));
     }
 
@@ -44,7 +44,7 @@ export class MediaApiService {
     const formData = new FormData();
     formData.append('file', file, file.name);
     formData.append('scopeType', String(scopeType));
-    if (scopeId !== undefined && scopeId !== null) {
+    if (typeof scopeId === 'number') {
       formData.append('scopeId', String(scopeId));
     }
 

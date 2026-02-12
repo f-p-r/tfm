@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class MediaIndexRequest extends FormRequest
 {
@@ -23,17 +26,26 @@ class MediaIndexRequest extends FormRequest
             'scopeType' => [
                 'required',
                 function ($attribute, $value, $fail) {
+                    Log::info('MediaIndexRequest - Validando scopeType', [
+                        'value' => $value,
+                        'type' => gettype($value),
+                        'is_numeric' => is_numeric($value),
+                    ]);
+
                     // Permitir string o numérico (puede venir como string "2" del query)
                     if (is_numeric($value)) {
                         $intValue = (int)$value;
                         if (!in_array($intValue, [1, 2, 3])) {
+                            Log::warning('MediaIndexRequest - scopeType numérico no válido', ['value' => $value, 'int' => $intValue]);
                             $fail('El campo scopeType debe ser global, association, game, 1, 2 o 3.');
                         }
                     } elseif (is_string($value)) {
                         if (!in_array(strtolower($value), ['global', 'association', 'game'])) {
+                            Log::warning('MediaIndexRequest - scopeType string no válido', ['value' => $value]);
                             $fail('El campo scopeType debe ser global, association, game, 1, 2 o 3.');
                         }
                     } else {
+                        Log::warning('MediaIndexRequest - scopeType tipo no válido', ['type' => gettype($value)]);
                         $fail('El campo scopeType debe ser un string o entero.');
                     }
                 },
@@ -64,8 +76,16 @@ class MediaIndexRequest extends FormRequest
     {
         $scopeType = $this->input('scopeType');
 
-        // Solo normalizar a minúsculas si es string
-        if (is_string($scopeType)) {
+        Log::info('MediaIndexRequest - Datos recibidos', [
+            'scopeType_raw' => $scopeType,
+            'scopeType_type' => gettype($scopeType),
+            'scopeType_is_numeric' => is_numeric($scopeType),
+            'scopeId' => $this->input('scopeId'),
+            'all_query_params' => $this->all(),
+        ]);
+
+        // Solo normalizar a minúsculas si es string NO numérico
+        if (is_string($scopeType) && !is_numeric($scopeType)) {
             $scopeType = strtolower($scopeType);
         }
 
@@ -74,6 +94,25 @@ class MediaIndexRequest extends FormRequest
             // Normaliza includeGlobal a booleano para evitar 422 con valores "true"/"false" en string
             'includeGlobal' => $this->boolean('includeGlobal', true),
         ]);
+
+        Log::info('MediaIndexRequest - Datos después de prepareForValidation', [
+            'scopeType_processed' => $scopeType,
+        ]);
+    }
+
+    /**
+     * Manejar errores de validación.
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        Log::error('MediaIndexRequest - Validación FALLIDA', [
+            'errors' => $validator->errors()->toArray(),
+            'scopeType_value' => $this->input('scopeType'),
+            'scopeType_type' => gettype($this->input('scopeType')),
+            'all_inputs' => $this->all(),
+        ]);
+
+        throw new ValidationException($validator);
     }
 
     /**
