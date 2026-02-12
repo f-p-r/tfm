@@ -122,6 +122,21 @@
     @apply w-full px-3 py-1 rounded-lg border border-neutral-medium bg-white text-neutral-dark placeholder:text-neutral-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
   }
 
+  /* Formato checkbox (label a la derecha)*/
+  .ds-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: normal;
+  }
+
+  .ds-checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
   /* Alineación de checkboxes en grids multi-columna
      Usar cuando un checkbox está junto a un campo con label arriba,
      para alinear visualmente el checkbox con el input del campo adyacente */
@@ -160,7 +175,7 @@
 
   /* Contenedor centrado estándar con márgenes laterales - usar como clase en div */
   .ds-container {
-    @apply mx-auto w-full max-w-6xl ;
+    @apply mx-auto w-full max-w-6xl;
   }
 
   /* Contenedor centrado estrecho para formularios */
@@ -177,7 +192,7 @@
 
   /* Contenedor interno de la barra de navegación */
   .ds-nav-inner {
-    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-6xl pr-4 md:pr-6 ;
+    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-6xl pr-4 md:pr-6;
   }
 
   /* Zona de marca/logo */
