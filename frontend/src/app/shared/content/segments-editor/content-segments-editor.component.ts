@@ -56,7 +56,7 @@ export class ContentSegmentsEditorComponent {
     base_url: '/assets/tinymce',
     license_key: 'gpl',
     suffix: '.min',
-    height: 300,
+    height: 600,
     menubar: false,
     plugins: 'lists link image table code help wordcount quickbars',
     toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',

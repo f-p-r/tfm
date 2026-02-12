@@ -17,72 +17,70 @@ import { GamesStore } from '../../core/games/games.store';
   selector: 'app-associations-page',
   imports: [],
   template: `
-    <div class="ds-page">
-      <div class="ds-container">
-          <header class="border-b border-neutral-medium pb-4">
-            <h1 class="h1">Asociaciones</h1>
-            @if (contextStore.scopeType() === WebScope.GAME) {
-              <p class="text-sm text-neutral-dark mt-1">{{ gameStore.getById(contextStore.scopeId()!)?.name }}</p>
-            }
-          </header>
+    <div class="ds-container">
+        <header class="border-b border-neutral-medium pb-4">
+          <h1 class="h1">Asociaciones</h1>
+          @if (contextStore.scopeType() === WebScope.GAME) {
+            <p class="text-sm text-neutral-dark mt-1">{{ gameStore.getById(contextStore.scopeId()!)?.name }}</p>
+          }
+        </header>
 
-          <section class="mt-6">
-            @if (loading()) {
-              <p class="text-neutral-dark">Cargando...</p>
-            } @else if (error()) {
-              <p class="text-red-600">Error al cargar asociaciones: {{ error() }}</p>
-            } @else if (associations().length === 0) {
-              <p class="text-neutral-dark">No hay asociaciones disponibles.</p>
-            } @else {
-              <div class="overflow-x-auto">
-                <table class="min-w-full bg-white border border-neutral-medium">
-                  <thead class="bg-neutral-light">
-                    <tr>
-                      <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Nombre</th>
-                      <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Nombre corto</th>
-                      <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Slug</th>
-                      <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">País</th>
-                      <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Región</th>
-                      <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Web</th>
-                      <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Estado</th>
+        <section class="mt-6">
+          @if (loading()) {
+            <p class="text-neutral-dark">Cargando...</p>
+          } @else if (error()) {
+            <p class="text-red-600">Error al cargar asociaciones: {{ error() }}</p>
+          } @else if (associations().length === 0) {
+            <p class="text-neutral-dark">No hay asociaciones disponibles.</p>
+          } @else {
+            <div class="overflow-x-auto">
+              <table class="min-w-full bg-white border border-neutral-medium">
+                <thead class="bg-neutral-light">
+                  <tr>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Nombre</th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Nombre corto</th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Slug</th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">País</th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Región</th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Web</th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-neutral-dark border-b">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (association of associations(); track association.id) {
+                    <tr
+                      class="border-b hover:bg-neutral-light cursor-pointer transition-colors"
+                      (click)="navigateToAssociation(association.slug)"
+                    >
+                      <td class="px-4 py-3 text-sm text-neutral-dark">{{ association.name }}</td>
+                      <td class="px-4 py-3 text-sm text-neutral-dark">{{ association.shortname || '—' }}</td>
+                      <td class="px-4 py-3 text-sm text-neutral-dark font-mono text-xs">{{ association.slug }}</td>
+                      <td class="px-4 py-3 text-sm text-neutral-dark">{{ association.country?.name || association.country_id || '—' }}</td>
+                      <td class="px-4 py-3 text-sm text-neutral-dark">{{ association.region?.name || association.region_id || '—' }}</td>
+                      <td class="px-4 py-3 text-sm text-neutral-dark">
+                        @if (association.web) {
+                          <a [href]="association.web" target="_blank" rel="noopener" class="text-blue-600 hover:underline" (click)="$event.stopPropagation()">
+                            Web
+                          </a>
+                        } @else {
+                          —
+                        }
+                      </td>
+                      <td class="px-4 py-3 text-sm">
+                        @if (association.disabled) {
+                          <span class="text-red-600">Deshabilitado</span>
+                        } @else {
+                          <span class="text-green-600">Activo</span>
+                        }
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    @for (association of associations(); track association.id) {
-                      <tr
-                        class="border-b hover:bg-neutral-light cursor-pointer transition-colors"
-                        (click)="navigateToAssociation(association.slug)"
-                      >
-                        <td class="px-4 py-3 text-sm text-neutral-dark">{{ association.name }}</td>
-                        <td class="px-4 py-3 text-sm text-neutral-dark">{{ association.shortname || '—' }}</td>
-                        <td class="px-4 py-3 text-sm text-neutral-dark font-mono text-xs">{{ association.slug }}</td>
-                        <td class="px-4 py-3 text-sm text-neutral-dark">{{ association.country?.name || association.country_id || '—' }}</td>
-                        <td class="px-4 py-3 text-sm text-neutral-dark">{{ association.region?.name || association.region_id || '—' }}</td>
-                        <td class="px-4 py-3 text-sm text-neutral-dark">
-                          @if (association.web) {
-                            <a [href]="association.web" target="_blank" rel="noopener" class="text-blue-600 hover:underline" (click)="$event.stopPropagation()">
-                              Web
-                            </a>
-                          } @else {
-                            —
-                          }
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                          @if (association.disabled) {
-                            <span class="text-red-600">Deshabilitado</span>
-                          } @else {
-                            <span class="text-green-600">Activo</span>
-                          }
-                        </td>
-                      </tr>
-                    }
-                  </tbody>
-                </table>
-              </div>
-            }
-          </section>
-        </div>
-    </div>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </section>
+      </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
