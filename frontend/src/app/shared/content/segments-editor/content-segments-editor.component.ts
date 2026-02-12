@@ -163,7 +163,20 @@ export class ContentSegmentsEditorComponent {
   updateDistribution(dist: string) {
     const draft = this.editingDraft();
     if (!draft || draft.type !== 'columns') return;
-    let target = dist === '1' ? 1 : (['1-1-1', '1-2-1', '2-1-1', '1-1-2'].includes(dist) ? 3 : (dist === '1-1-1-1' ? 4 : 2));
+
+    // Determinar número de columnas según distribución
+    let target: number;
+    if (dist === '1') {
+      target = 1;
+    } else if (dist === '1-1-1') {
+      target = 3;
+    } else if (['1-1-1-1', '1-2-1', '2-1-1', '1-1-2'].includes(dist)) {
+      target = 4;
+    } else {
+      // 1-1, 2-1, 1-2, 1-3, 3-1
+      target = 2;
+    }
+
     let newCols = [...draft.columns];
     while (newCols.length < target) newCols.push({ id: crypto.randomUUID(), contentHtml: '' });
     if (newCols.length > target) newCols = newCols.slice(0, target);
