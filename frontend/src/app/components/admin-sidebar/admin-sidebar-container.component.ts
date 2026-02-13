@@ -4,95 +4,46 @@
  * Responsabilidades:
  * - Lee el contexto (scope) actual desde ContextStore
  * - Obtiene las acciones correspondientes al scope
- * - Verifica permisos del usuario con AuthzService
+ * - Verifica permisos del usuario con PermissionsStore (verificación síncrona)
  * - Prepara los datos y los pasa al componente de renderizado
  *
- * El componente se actualiza automáticamente cuando cambia el scope.
+ * El componente se actualiza automáticamente cuando cambia el scope o los permisos.
  */
 
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { toSignal, toObservable } from '@angular/core/rxjs-interop';
-import { switchMap, map, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
 
 import { ContextStore } from '../../core/context/context.store';
-import { AuthzService } from '../../core/authz/authz.service';
+import { PermissionsStore } from '../../core/authz/permissions.store';
 import { ADMIN_ACTIONS_BY_SCOPE, AdminAction } from '../../core/admin/admin-actions.constants';
 import { AdminMenuItem } from '../../core/admin/admin-menu.model';
 import { AdminMenuComponent } from '../core/admin/admin-menu/admin-menu.component';
-import { isBreakdownResponse } from '../../core/authz/authz.models';
 
 @Component({
   selector: 'app-admin-sidebar-container',
   imports: [AdminMenuComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-admin-menu [items]="authorizedMenuItems() || []" />
+    <app-admin-menu [items]="authorizedMenuItems()" />
   `
 })
 export class AdminSidebarContainerComponent {
   private contextStore = inject(ContextStore);
-  private authz = inject(AuthzService);
-
-  /**
-   * Scope actual como computed signal
-   */
-  private currentScope = computed(() => ({
-    type: this.contextStore.scopeType(),
-    id: this.contextStore.scopeId() ?? 0
-  }));
+  private permissionsStore = inject(PermissionsStore);
 
   /**
    * Items del menú autorizados según el scope y permisos del usuario.
-   * Se actualiza automáticamente cuando cambia el scope.
+   * Se actualiza automáticamente cuando cambia el scope o los permisos.
+   * Verificación síncrona desde PermissionsStore (sin HTTP, instantáneo).
    */
-  readonly authorizedMenuItems = toSignal(
-    toObservable(this.currentScope).pipe(
-      switchMap(scope => {
-        const allActions = ADMIN_ACTIONS_BY_SCOPE[scope.type] || [];
+  readonly authorizedMenuItems = computed(() => {
+    const scopeType = this.contextStore.scopeType();
+    const allActions = ADMIN_ACTIONS_BY_SCOPE[scopeType] || [];
 
-        // Si no hay acciones definidas para este scope, retornar array vacío
-        if (allActions.length === 0) {
-          return of([]);
-        }
-
-        const permissions = allActions.map(a => a.permission);
-
-        return this.authz.query({
-          scopeType: scope.type,
-          scopeIds: scope.id === 0 ? [] : [scope.id],
-          permissions: permissions,
-          breakdown: true
-        }).pipe(
-          map(res => {
-            // Extraer permisos: primero wildcard (allPermissions), luego específicos (results[scopeId])
-            let wildcardPerms: string[] = [];
-            let scopePerms: string[] = [];
-
-            if (isBreakdownResponse(res)) {
-              wildcardPerms = res.allPermissions || [];
-              const scopeResult = res.results.find(r => r.scopeId === scope.id);
-              scopePerms = scopeResult?.permissions || [];
-            }
-
-            // Verificar permiso: primero en wildcard, si no está, en scope-specific
-            const hasPermission = (permission: string) =>
-              wildcardPerms.includes(permission) || scopePerms.includes(permission);
-
-            // Transformar AdminAction[] a AdminMenuItem[]
-            return allActions
-              .filter(action => hasPermission(action.permission))
-              .map(action => this.toMenuItem(action));
-          }),
-          catchError(err => {
-            console.error('❌ [AdminSidebarContainer] Error al verificar permisos:', err);
-            return of([]);
-          })
-        );
-      })
-    ),
-    { initialValue: [] }
-  );
+    // Filtrar acciones según permisos (verificación síncrona)
+    return allActions
+      .filter(action => this.permissionsStore.hasPermission(action.permission))
+      .map(action => this.toMenuItem(action));
+  });
 
   /**
    * Transforma una AdminAction a AdminMenuItem.

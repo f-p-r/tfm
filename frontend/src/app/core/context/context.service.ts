@@ -1,14 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute, Data } from '@angular/router';
-import { BehaviorSubject, Observable, of, forkJoin } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { filter, map, switchMap, catchError, tap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
-import { AuthzService } from '../authz/authz.service';
-import { isSummaryResponse } from '../authz/authz.models';
+import { PermissionsStore } from '../authz/permissions.store';
 import { AdminAction, OwnableEntity } from './context.models';
 import { WebScope } from '../web-scope.constants';
 import { GamesStore } from '../games/games.store';
 import { AssociationsResolveService } from '../associations/associations-resolve.service';
+import { ContextStore } from './context.store';
 
 /**
  * Servicio de contexto que determina dinámicamente las acciones de administración
@@ -17,7 +17,8 @@ import { AssociationsResolveService } from '../associations/associations-resolve
  * Funcionalidad principal:
  * - Escucha eventos de navegación del router
  * - Resuelve el contexto actual (scope: Global, Asociación o Juego) desde la URL
- * - Verifica permisos del usuario usando AuthzService (con caché de 120 seg)
+ * - Actualiza ContextStore con el scope detectado
+ * - Verifica permisos del usuario usando PermissionsStore (verificación síncrona desde memoria)
  * - Calcula acciones de administración disponibles (Editar Página, Administrar Contexto)
  * - Publica las acciones en adminActions$ para ser consumidas por componentes UI
  *
@@ -39,10 +40,11 @@ import { AssociationsResolveService } from '../associations/associations-resolve
 export class ContextService {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private authz = inject(AuthzService);
+  private permissionsStore = inject(PermissionsStore);
   private authService = inject(AuthService);
   private gamesStore = inject(GamesStore);
   private associationsResolve = inject(AssociationsResolveService);
+  private contextStore = inject(ContextStore);
 
   // -------------------------------------------------------------------------
   // CONSTANTES DE PERMISOS
@@ -80,14 +82,13 @@ export class ContextService {
         return this.calculateAdminActions(data, params, url);
       })
     ).subscribe(actions => {
-      console.log('🔍 [ContextService] 6. Acciones finales calculadas:', actions);
       this.adminActionsSubject.next(actions);
     });
   }
 
   /**
    * Calcula las acciones de administración disponibles para el usuario en el contexto actual.
-   * Verifica permisos usando AuthzService (con caché) y filtra las acciones permitidas.
+   * Verifica permisos usando PermissionsStore (verificación síncrona desde memoria).
    *
    * @param data - Datos de la ruta activa (puede contener 'entity')
    * @param params - Parámetros de la ruta (slugs, IDs)
@@ -96,23 +97,33 @@ export class ContextService {
    */
   private calculateAdminActions(data: Data, params: any, url: string): Observable<AdminAction[]> {
     return this.resolveContext(data, params, url).pipe(
-      tap(ctx => console.log('🔍 [ContextService] 3. Contexto resuelto:', ctx)),
-      switchMap(ctx => {
-        const potentialActions$: Observable<AdminAction | null>[] = [];
+      tap(ctx => {
+        console.log('🔍 [ContextService] 3. Contexto resuelto:', ctx);
+        // Actualizar ContextStore → esto dispara recarga automática de permisos en PermissionsStore
+        this.contextStore.setScope(ctx.type, ctx.id === 0 ? null : ctx.id, 'router');
+      }),
+      map(ctx => {
+        const actions: AdminAction[] = [];
 
         // A) Editar Entidad
         if (data['entity']) {
           console.log('🔍 [ContextService] -> Detectada entidad, verificando permiso edición...');
-          potentialActions$.push(this.checkEntityEdit(data['entity']));
+          const editAction = this.checkEntityEdit(data['entity']);
+          if (editAction) {
+            actions.push(editAction);
+          }
         }
 
         // B) Administrar Contexto
         console.log(`🔍 [ContextService] -> Verificando admin de contexto (Type: ${ctx.type}, ID: ${ctx.id})...`);
-        potentialActions$.push(this.checkContextAdmin(ctx.type, ctx.id));
+        const adminAction = this.checkContextAdmin(ctx.type, ctx.id);
+        if (adminAction) {
+          actions.push(adminAction);
+        }
 
-        return forkJoin(potentialActions$);
+        console.log('🔍 [ContextService] 6. Acciones finales calculadas:', actions);
+        return actions;
       }),
-      map(results => results.filter((action): action is AdminAction => action !== null)),
       catchError(err => {
         console.error('❌ [ContextService] Error fatal:', err);
         return of([]);
@@ -171,89 +182,60 @@ export class ContextService {
   /**
    * Verifica si el usuario tiene permiso 'pages.edit' para editar una entidad (página).
    * Si tiene permiso, devuelve una AdminAction con la ruta de edición.
-   *
-   * Nota: Si entity.ownerId es 0 (global), pasa scopeIds=[] al backend.
+   * Verificación síncrona desde PermissionsStore (sin HTTP).
    *
    * @param entity - Entidad con ownerType y ownerId para verificar permisos
-   * @returns Observable con AdminAction si tiene permiso, null si no
+   * @returns AdminAction si tiene permiso, null si no
    */
-  private checkEntityEdit(entity: OwnableEntity): Observable<AdminAction | null> {
-    var ids: number[] = [];
-    // si entity.ownerId es 0, hemos de pasar en scopeIDs un array vacío para que el backend entienda que es global (sin scope específico)
-    if (entity.ownerId === 0) {
-      ids = [];
-    }  else {
-      ids = [entity.ownerId];
+  private checkEntityEdit(entity: OwnableEntity): AdminAction | null {
+    const hasPermission = this.permissionsStore.hasPermission(this.PERM_PAGE_EDIT);
+    console.log(`🔍 [ContextService] 4. Permiso Edición (${this.PERM_PAGE_EDIT}):`, hasPermission ? 'APROBADO' : 'DENEGADO');
+
+    if (hasPermission) {
+      return {
+        label: 'Editar Página',
+        route: ['/admin', 'pages', entity.ownerType, entity.ownerId, 'edit', entity.id],
+        isVisible: true
+      };
     }
-    return this.authz.query({
-      scopeType: entity.ownerType,
-      scopeIds: ids,
-      permissions: [this.PERM_PAGE_EDIT],
-      breakdown: false
-    }).pipe(
-      tap(res => console.log(`🔍 [ContextService] 4. Permiso Edición (${this.PERM_PAGE_EDIT}):`, isSummaryResponse(res) && res.all ? 'APROBADO' : 'DENEGADO')),
-      map(res => {
-        if (isSummaryResponse(res) && res.all) {
-          return {
-            label: 'Editar Página',
-            route: ['/admin', 'pages', entity.ownerType, entity.ownerId, 'edit', entity.id],
-            isVisible: true
-          };
-        }
-        return null;
-      }),
-      catchError(() => of(null))
-    );
+    return null;
   }
 
   /**
    * Verifica si el usuario tiene permiso 'admin' en el contexto actual.
    * Si tiene permiso, devuelve una AdminAction para acceder al panel de administración.
+   * Verificación síncrona desde PermissionsStore (sin HTTP).
    *
    * Etiqueta según scope:
    * - Global: "Administración"
    * - Asociación: "Administrar Asociación"
    * - Juego: "Administrar Juego"
    *
-   * Nota: Si scopeId es 0 (global), pasa scopeIds=[] al backend.
-   *
    * @param scopeType - Tipo de scope (WebScope.GLOBAL, ASSOCIATION, GAME)
    * @param scopeId - ID del scope (0 para global)
-   * @returns Observable con AdminAction si tiene permiso, null si no
+   * @returns AdminAction si tiene permiso, null si no
    */
-  private checkContextAdmin(scopeType: number, scopeId: number): Observable<AdminAction | null> {
-    // Si el ID es 0 (Global), enviamos array vacío []
-    // para que el backend no valide "scopeIds.0 must be at least 1"
-    const ids = scopeId === 0 ? [] : [scopeId];
+  private checkContextAdmin(scopeType: number, scopeId: number): AdminAction | null {
+    const hasPermission = this.permissionsStore.hasPermission(this.PERM_ADMIN);
+    console.log(`🔍 [ContextService] 5. Permiso Admin (${this.PERM_ADMIN}):`, hasPermission ? 'APROBADO' : 'DENEGADO');
 
-    return this.authz.query({
-      scopeType: scopeType,
-      scopeIds: ids,
-      permissions: [this.PERM_ADMIN],
-      breakdown: false
-    }).pipe(
-      tap(res => console.log(`🔍 [ContextService] 5. Permiso Admin (${this.PERM_ADMIN}):`, isSummaryResponse(res) && res.all ? 'APROBADO' : 'DENEGADO')),
-      map(res => {
-        if (isSummaryResponse(res) && res.all) {
-          let label = 'Administración';
-          let route = ['/admin'];
+    if (hasPermission) {
+      let label = 'Administración';
+      let route = ['/admin'];
 
-          if (scopeType === WebScope.ASSOCIATION) {
-            label = 'Administrar Asociación';
-          } else if (scopeType === WebScope.GAME) {
-            label = 'Administrar Juego';
-          }
+      if (scopeType === WebScope.ASSOCIATION) {
+        label = 'Administrar Asociación';
+      } else if (scopeType === WebScope.GAME) {
+        label = 'Administrar Juego';
+      }
 
-          return {
-            label,
-            route,
-            isVisible: true
-          };
-        }
-        return null;
-      }),
-      catchError(() => of(null))
-    );
+      return {
+        label,
+        route,
+        isVisible: true
+      };
+    }
+    return null;
   }
 
   /**

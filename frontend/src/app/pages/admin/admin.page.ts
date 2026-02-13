@@ -13,12 +13,8 @@
 import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/core';
 import { AdminSidebarContainerComponent } from '../../components/admin-sidebar/admin-sidebar-container.component';
 import { ContextStore } from '../../core/context/context.store';
-import { AuthzService } from '../../core/authz/authz.service';
+import { PermissionsStore } from '../../core/authz/permissions.store';
 import { ADMIN_ACTIONS_BY_SCOPE } from '../../core/admin/admin-actions.constants';
-import { toSignal, toObservable } from '@angular/core/rxjs-interop';
-import { switchMap, map, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { isBreakdownResponse } from '../../core/authz/authz.models';
 import { JsonPipe } from '@angular/common';
 
 @Component({
@@ -112,96 +108,37 @@ import { JsonPipe } from '@angular/common';
 })
 export class AdminPage {
   protected readonly contextStore = inject(ContextStore);
-  private readonly authz = inject(AuthzService);
+  protected readonly permissionsStore = inject(PermissionsStore);
 
-  private currentScope = computed(() => ({
-    type: this.contextStore.scopeType(),
-    id: this.contextStore.scopeId() ?? 0
-  }));
+  /**
+   * Todos los permisos del usuario en el scope actual.
+   * Lectura directa desde PermissionsStore (sin HTTP, instantáneo).
+   */
+  protected readonly userPermissions = computed(() => this.permissionsStore.allPermissions());
 
-  // Signal que muestra TODOS los permisos del usuario en el scope actual
-  protected readonly userPermissions = toSignal(
-    toObservable(this.currentScope).pipe(
-      switchMap(scope => {
-        return this.authz.query({
-          scopeType: scope.type,
-          scopeIds: scope.id === 0 ? [] : [scope.id],
-          permissions: [], // Array vacío = devolver TODOS los permisos del usuario
-          breakdown: true
-        }).pipe(
-          map(res => {
-            if (isBreakdownResponse(res)) {
-              // Combinar wildcard + específicos para mostrar TODOS los permisos del usuario
-              const wildcardPerms = res.allPermissions || [];
-              const scopeResult = res.results.find(r => r.scopeId === scope.id);
-              const scopePerms = scopeResult?.permissions || [];
-              // Unir sin duplicados
-              return [...new Set([...wildcardPerms, ...scopePerms])];
-            }
-            return [];
-          }),
-          catchError(err => {
-            console.error('❌ [AdminPage] Error al obtener permisos del usuario:', err);
-            return of([]);
-          })
-        );
-      })
-    ),
-    { initialValue: [] }
-  );
+  /**
+   * Información de debug sobre permisos y acciones disponibles.
+   * Calcula cuántas acciones tiene autorizadas el usuario.
+   */
+  protected readonly debugPermissions = computed(() => {
+    const scope = this.contextStore.scopeType();
+    const allActions = ADMIN_ACTIONS_BY_SCOPE[scope] || [];
 
-  // Signal de debug para mostrar permisos verificados
-  protected readonly debugPermissions = toSignal(
-    toObservable(this.currentScope).pipe(
-      switchMap(scope => {
-        const allActions = ADMIN_ACTIONS_BY_SCOPE[scope.type] || [];
+    if (allActions.length === 0) {
+      return { requested: [], granted: [], totalCount: 0, authorizedCount: 0 };
+    }
 
-        if (allActions.length === 0) {
-          return of({ requested: [], granted: [], totalCount: 0, authorizedCount: 0 });
-        }
+    const requested = allActions.map(a => a.permission);
+    const granted = this.permissionsStore.allPermissions();
+    const authorizedCount = allActions.filter(a =>
+      this.permissionsStore.hasPermission(a.permission)
+    ).length;
 
-        const permissions = allActions.map(a => a.permission);
-
-        return this.authz.query({
-          scopeType: scope.type,
-          scopeIds: scope.id === 0 ? [] : [scope.id],
-          permissions: permissions,
-          breakdown: true
-        }).pipe(
-          map(res => {
-            // Extraer permisos: primero wildcard (allPermissions), luego específicos (results[scopeId])
-            let wildcardPerms: string[] = [];
-            let scopePerms: string[] = [];
-
-            if (isBreakdownResponse(res)) {
-              wildcardPerms = res.allPermissions || [];
-              const scopeResult = res.results.find(r => r.scopeId === scope.id);
-              scopePerms = scopeResult?.permissions || [];
-            }
-
-            // Verificar permiso: primero en wildcard, si no está, en scope-specific
-            const hasPermission = (permission: string) =>
-              wildcardPerms.includes(permission) || scopePerms.includes(permission);
-
-            const authorizedCount = allActions.filter(a => hasPermission(a.permission)).length;
-
-            // Para debug: mostrar ambos arrays por separado
-            const grantedPermissions = [...new Set([...wildcardPerms, ...scopePerms])];
-
-            return {
-              requested: permissions,
-              granted: grantedPermissions,
-              totalCount: allActions.length,
-              authorizedCount
-            };
-          }),
-          catchError(err => {
-            console.error('❌ [AdminPage] Error al verificar permisos:', err);
-            return of({ requested: permissions, granted: [], totalCount: allActions.length, authorizedCount: 0 });
-          })
-        );
-      })
-    ),
-    { initialValue: null }
-  );
+    return {
+      requested,
+      granted,
+      totalCount: allActions.length,
+      authorizedCount
+    };
+  });
 }
