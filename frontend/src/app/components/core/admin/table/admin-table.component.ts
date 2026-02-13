@@ -52,7 +52,7 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
                 @if (actions.length) {
                   <td class="px-4 py-3 text-right whitespace-nowrap">
                     @for (a of actions; track a.action) {
-                      <button class="ml-3 text-sm font-medium hover:underline text-brand-primary" (click)="onAction(a.action, row)">{{ a.label }}</button>
+                      <button class="ds-btn-sm ds-btn-primary ml-3" (click)="onAction(a.action, row)">{{ a.label }}</button>
                     }
                   </td>
                 }
@@ -94,8 +94,18 @@ export class AdminTableComponent {
   changePage(p: number) { this.pageChange.emit(p); }
   onAction(a: string, r: any) { this.action.emit({ action: a, row: r }); }
 
-  getHeaderClass(col: any) { return 'px-4 py-3 text-xs font-semibold text-neutral-dark uppercase tracking-wider border-b border-neutral-medium bg-neutral-light ' + (col.align === 'right' ? 'text-right' : ''); }
-  getCellClass(col: any) { return 'px-4 py-3 align-middle ' + (col.align === 'right' ? 'text-right' : ''); }
+  getHeaderClass(col: any) {
+    const baseClass = 'px-4 py-3 text-xs font-semibold text-neutral-dark uppercase tracking-wider border-b border-neutral-medium bg-neutral-light';
+    if (col.align === 'right') return baseClass + ' text-right';
+    if (col.align === 'center') return baseClass + ' text-center';
+    return baseClass;
+  }
+  getCellClass(col: any) {
+    const baseClass = 'px-4 py-3 align-middle';
+    if (col.align === 'right') return baseClass + ' text-right';
+    if (col.align === 'center') return baseClass + ' text-center';
+    return baseClass;
+  }
   getBadgeClass(col: any, v: string) { return col.badgeConfig?.[v] || ''; }
   getBadgeLabel(col: any, v: string) { return col.badgeLabels?.[v] || v; }
 }
