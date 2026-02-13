@@ -231,7 +231,7 @@
 
   /* Barra de navegación superior */
   .ds-nav {
-    @apply sticky top-0 z-50 bg-white border-b border-neutral-medium h-16;
+    @apply sticky top-0 z-[100] bg-white border-b border-neutral-medium h-16;
   }
 
   /* Contenedor interno de la barra de navegación */
@@ -427,7 +427,7 @@
 
   /* Navbar: Ocupa todo el ancho, z-index superior al sidebar */
   .ds-admin-header {
-    @apply h-16 bg-white border-b border-neutral-medium px-6 flex items-center justify-between fixed top-0 left-0 right-0 z-[60] w-full;
+    @apply h-16 bg-white border-b border-neutral-medium px-6 flex items-center justify-between fixed top-0 left-0 right-0 z-[100] w-full;
   }
 
   /* Items del Menú: Texto claro y brillo en iconos */

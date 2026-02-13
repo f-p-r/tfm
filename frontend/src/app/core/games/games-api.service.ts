@@ -47,4 +47,15 @@ export class GamesApiService {
   getBySlug(slug: string): Observable<Game> {
     return this.http.get<Game>(`${this.endpoint}/by-slug/${encodeURIComponent(slug)}`);
   }
+
+  /**
+   * Actualiza un juego existente.
+   *
+   * @param id ID del juego a actualizar.
+   * @param data Datos parciales del juego a actualizar.
+   * @returns Observable con el juego actualizado.
+   */
+  updateGame(id: number, data: Partial<Game>): Observable<Game> {
+    return this.http.put<Game>(`${this.endpoint}/${id}`, data);
+  }
 }

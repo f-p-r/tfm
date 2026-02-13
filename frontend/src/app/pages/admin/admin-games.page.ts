@@ -3,23 +3,25 @@
  *
  * Muestra la lista completa de juegos con funcionalidad de:
  * - Visualización en tabla paginada
- * - Edición de juegos existentes
+ * - Edición de juegos existentes mediante modal
  *
  * Requiere permiso 'admin' para acceder.
  */
 
-import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, signal, computed, viewChild } from '@angular/core';
 import { AdminSidebarContainerComponent } from '../../components/admin-sidebar/admin-sidebar-container.component';
 import { AdminTableComponent } from '../../components/core/admin/table/admin-table.component';
 import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/table/admin-table.model';
-import { GamesStore } from '../../core/games/games.store';
+import { GamesApiService } from '../../core/games/games-api.service';
+import { GameEditModalComponent } from '../../components/core/admin/game-edit-modal/game-edit-modal.component';
+import { Game } from '../../core/games/games.models';
 
 @Component({
   selector: 'app-admin-games-page',
   imports: [
     AdminSidebarContainerComponent,
-    AdminTableComponent
+    AdminTableComponent,
+    GameEditModalComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -62,11 +64,27 @@ import { GamesStore } from '../../core/games/games.store';
       </main>
 
     </div>
+
+    <!-- Modal de edición -->
+    @if (showModal()) {
+      <app-game-edit-modal
+        [gameData]="selectedGame()"
+        (save)="onSaveGame($event)"
+        (cancel)="onCancelModal()"
+      />
+    }
   `
 })
 export class AdminGamesPage {
-  private readonly gamesStore = inject(GamesStore);
-  private readonly router = inject(Router);
+  private readonly gamesApi = inject(GamesApiService);
+
+  // Datos locales (sin caché)
+  private readonly games = signal<Game[]>([]);
+
+  // Modal
+  protected readonly showModal = signal(false);
+  protected readonly selectedGame = signal<Game | null>(null);
+  private readonly modalComponent = viewChild(GameEditModalComponent);
 
   // Paginación
   protected readonly currentPage = signal(1);
@@ -85,7 +103,7 @@ export class AdminGamesPage {
       key: 'disabled',
       label: 'Estado',
       type: 'badge',
-      align: 'left',
+      align: 'center',
       badgeConfig: {
         'false': 'ds-badge-active',
         'true': 'ds-badge-alert'
@@ -102,8 +120,11 @@ export class AdminGamesPage {
     { action: 'edit', label: 'Modificar' }
   ];
 
-  // Datos completos
-  protected readonly allGames = computed(() => this.gamesStore.sortedGames());
+  // Datos ordenados alfabéticamente
+  protected readonly allGames = computed(() => {
+    const list = this.games();
+    return [...list].sort((a, b) => a.name.localeCompare(b.name));
+  });
 
   // Total de juegos
   protected readonly totalGames = computed(() => this.allGames().length);
@@ -127,8 +148,12 @@ export class AdminGamesPage {
 
   private loadGames() {
     this.isLoading.set(true);
-    this.gamesStore.loadOnce().subscribe({
-      next: () => this.isLoading.set(false),
+    // Llamada directa a API incluyendo juegos deshabilitados
+    this.gamesApi.getGames(true).subscribe({
+      next: (games) => {
+        this.games.set(games);
+        this.isLoading.set(false);
+      },
       error: () => this.isLoading.set(false)
     });
   }
@@ -139,7 +164,36 @@ export class AdminGamesPage {
 
   protected onAction(event: { action: string; row: any }) {
     if (event.action === 'edit') {
-      this.router.navigate(['/admin/juegos', event.row.id]);
+      // Convertir disabled string de vuelta a boolean
+      const gameData = {
+        ...event.row,
+        disabled: event.row.disabled === 'true'
+      };
+      this.selectedGame.set(gameData);
+      this.showModal.set(true);
     }
+  }
+
+  protected onSaveGame(event: { id: number; data: Partial<Game> }) {
+    this.gamesApi.updateGame(event.id, event.data).subscribe({
+      next: () => {
+        // Cerrar modal
+        this.showModal.set(false);
+        this.selectedGame.set(null);
+
+        // Recargar juegos desde API
+        this.loadGames();
+      },
+      error: (err) => {
+        // Mostrar error en el modal
+        const errorMsg = err.error?.message || 'Error al guardar el juego';
+        this.modalComponent()?.setError(errorMsg);
+      }
+    });
+  }
+
+  protected onCancelModal() {
+    this.showModal.set(false);
+    this.selectedGame.set(null);
   }
 }

@@ -102,6 +102,14 @@ export class NavbarComponent {
         // Cerrar todos los menús al navegar
         this.closeMobileMenu();
         this.closeAdminMenu();
+
+        // Cerrar sidebar en mobile al navegar
+        if (window.innerWidth < 768) {
+          const sidebar = document.getElementById('admin-sidebar');
+          if (sidebar) {
+            sidebar.classList.add('ds-admin-sidebar-closed');
+          }
+        }
       });
 
     effect(() => {

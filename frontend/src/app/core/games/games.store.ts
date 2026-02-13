@@ -166,4 +166,14 @@ export class GamesStore {
     if (lastFetch === null) return false;
     return (Date.now() - lastFetch) < GAMES_TTL_MS;
   }
+
+  /**
+   * Fuerza la recarga de juegos desde el backend, ignorando la caché.
+   * Útil después de modificar, crear o eliminar juegos.
+   */
+  reload(): void {
+    this.lastFetchedAt.set(null);
+    this.loaded.set(false);
+    this.loadOnce().subscribe();
+  }
 }
