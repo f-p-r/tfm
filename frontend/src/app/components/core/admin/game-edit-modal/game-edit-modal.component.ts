@@ -1,7 +1,7 @@
 /**
- * Modal de edición de juego.
+ * Modal de creación/edición de juego.
  *
- * Permite editar campos básicos de un juego:
+ * Permite crear o editar campos básicos de un juego:
  * - Nombre
  * - Slug
  * - Tamaño de equipos
@@ -44,7 +44,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
       <div class="modal-content">
         <!-- Modal Header -->
         <div class="px-6 py-4 border-b border-neutral-medium">
-          <h2 class="h3">Editar Juego</h2>
+          <h2 class="h3">{{ mode === 'create' ? 'Crear Juego' : 'Editar Juego' }}</h2>
         </div>
 
         <!-- Modal Body -->
@@ -148,6 +148,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   `
 })
 export class GameEditModalComponent {
+  @Input() mode: 'create' | 'edit' = 'edit';
+
   @Input() set gameData(data: any) {
     if (data) {
       this.form.patchValue({
@@ -160,7 +162,7 @@ export class GameEditModalComponent {
     }
   }
 
-  @Output() save = new EventEmitter<{ id: number; data: any }>();
+  @Output() save = new EventEmitter<{ id: number | null; data: any }>();
   @Output() cancel = new EventEmitter<void>();
 
   protected form: FormGroup;
@@ -182,7 +184,7 @@ export class GameEditModalComponent {
       this.isSaving.set(true);
       this.errorMessage.set(null);
       this.save.emit({
-        id: this.gameId,
+        id: this.mode === 'create' ? null : this.gameId,
         data: this.form.value
       });
     }

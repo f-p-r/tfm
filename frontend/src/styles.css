@@ -144,6 +144,24 @@
     @apply bg-green-100 border-green-300 text-green-800;
   }
 
+  /* === Animaciones === */
+
+  /* Animación de aparición suave */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   /* === Formularios / Inputs === */
   .ds-field {
     @apply flex flex-col gap-2;
@@ -451,6 +469,7 @@
   /* Estructura para tablas Admin (Layout Flex con header fijo) */
   .ds-table-card {
     @apply flex flex-col bg-white border border-neutral-medium shadow-sm overflow-hidden;
+    border-radius: 0.5rem;
     /* Nota: Requiere altura definida en el padre (ej: h-full) para activar el scroll */
   }
 

@@ -49,6 +49,16 @@ export class GamesApiService {
   }
 
   /**
+   * Crea un nuevo juego.
+   *
+   * @param data Datos del juego a crear.
+   * @returns Observable con el juego creado.
+   */
+  createGame(data: Partial<Game>): Observable<Game> {
+    return this.http.post<Game>(this.endpoint, data);
+  }
+
+  /**
    * Actualiza un juego existente.
    *
    * @param id ID del juego a actualizar.

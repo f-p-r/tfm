@@ -38,11 +38,16 @@ import { Game } from '../../core/games/games.models';
         <div class="flex-1 flex flex-col pt-6 min-h-0">
 
           <!-- Page header -->
-          <div class="mb-6 shrink-0">
-            <h1 class="h1">Gestión de Juegos</h1>
-            <p class="text-neutral-medium mt-2">
-              Administra los juegos disponibles en la plataforma
-            </p>
+          <div class="mb-6 shrink-0 flex justify-between items-start">
+            <div>
+              <h1 class="h1">Gestión de Juegos</h1>
+              <p class="text-neutral-medium mt-2">
+                Administra los juegos disponibles en la plataforma
+              </p>
+            </div>
+            <button class="ds-btn ds-btn-primary" (click)="onCreateGame()">
+              Crear juego
+            </button>
           </div>
 
           <!-- Table Card -->
@@ -65,13 +70,23 @@ import { Game } from '../../core/games/games.models';
 
     </div>
 
-    <!-- Modal de edición -->
+    <!-- Modal de creación/edición -->
     @if (showModal()) {
       <app-game-edit-modal
+        [mode]="modalMode()"
         [gameData]="selectedGame()"
         (save)="onSaveGame($event)"
         (cancel)="onCancelModal()"
       />
+    }
+
+    <!-- Mensaje de confirmación -->
+    @if (confirmationMessage()) {
+      <div class="fixed top-4 right-4 z-1001 animate-fade-in">
+        <div class="ds-alert ds-alert-success shadow-lg">
+          {{ confirmationMessage() }}
+        </div>
+      </div>
     }
   `
 })
@@ -83,8 +98,12 @@ export class AdminGamesPage {
 
   // Modal
   protected readonly showModal = signal(false);
+  protected readonly modalMode = signal<'create' | 'edit'>('edit');
   protected readonly selectedGame = signal<Game | null>(null);
   private readonly modalComponent = viewChild(GameEditModalComponent);
+
+  // Confirmación
+  protected readonly confirmationMessage = signal<string | null>(null);
 
   // Paginación
   protected readonly currentPage = signal(1);
@@ -162,6 +181,12 @@ export class AdminGamesPage {
     this.currentPage.set(page);
   }
 
+  protected onCreateGame() {
+    this.modalMode.set('create');
+    this.selectedGame.set(null);
+    this.showModal.set(true);
+  }
+
   protected onAction(event: { action: string; row: any }) {
     if (event.action === 'edit') {
       // Convertir disabled string de vuelta a boolean
@@ -169,24 +194,35 @@ export class AdminGamesPage {
         ...event.row,
         disabled: event.row.disabled === 'true'
       };
+      this.modalMode.set('edit');
       this.selectedGame.set(gameData);
       this.showModal.set(true);
     }
   }
 
-  protected onSaveGame(event: { id: number; data: Partial<Game> }) {
-    this.gamesApi.updateGame(event.id, event.data).subscribe({
-      next: () => {
+  protected onSaveGame(event: { id: number | null; data: Partial<Game> }) {
+    const operation = event.id === null
+      ? this.gamesApi.createGame(event.data)
+      : this.gamesApi.updateGame(event.id, event.data);
+
+    const actionText = event.id === null ? 'creado' : 'modificado';
+
+    operation.subscribe({
+      next: (game) => {
         // Cerrar modal
         this.showModal.set(false);
         this.selectedGame.set(null);
+
+        // Mostrar confirmación
+        this.confirmationMessage.set(`Juego "${game.name}" ${actionText} correctamente`);
+        setTimeout(() => this.confirmationMessage.set(null), 4000);
 
         // Recargar juegos desde API
         this.loadGames();
       },
       error: (err) => {
         // Mostrar error en el modal
-        const errorMsg = err.error?.message || 'Error al guardar el juego';
+        const errorMsg = err.error?.message || `Error al ${event.id === null ? 'crear' : 'guardar'} el juego`;
         this.modalComponent()?.setError(errorMsg);
       }
     });
