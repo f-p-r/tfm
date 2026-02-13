@@ -1,7 +1,7 @@
 <div class="min-h-dvh bg-neutral-light text-neutral-dark">
 
   @if (!noNavbar()) {
-    <app-navbar />
+    <app-navbar [isAdmin]="isAdminMode()" />
   }
 
   @if (freeLayout()) {

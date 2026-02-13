@@ -16,6 +16,7 @@ import { PageCreateAdminPage } from './pages/admin/pages/owner-pages/page-create
 import { PagePreviewPage } from './pages/admin/pages/owner-pages/page-preview.page';
 import { PageViewerPage } from './pages/page-viewer/page-viewer.page';
 import { PageEntityResolver } from './core/pages/page-entity.resolver';
+import { AdminPage } from './pages/admin/admin.page';
 
 export const routes: Routes = [
   // Public page viewer routes (must be before admin routes)
@@ -91,6 +92,12 @@ export const routes: Routes = [
       },
       { path: '**', component: PrototypeHostPage },
     ],
+  },
+
+  // Admin: página principal
+  {
+    path: 'admin',
+    component: AdminPage,
   },
 
   // Admin: gestión de páginas

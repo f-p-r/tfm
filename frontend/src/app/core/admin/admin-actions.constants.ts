@@ -19,12 +19,12 @@ export interface AdminAction {
  * Acciones de administración para Scope Global (WebScope.GLOBAL)
  */
 export const GLOBAL_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
-  { label: 'Páginas', route: '/admin/pages', permission: 'global.pages.view', icon: '📄', category: 'Contenido' },
-  { label: 'Asociaciones', route: '/admin/associations', permission: 'global.associations.view', icon: '🏛️', category: 'Gestión' },
-  { label: 'Juegos', route: '/admin/games', permission: 'global.games.view', icon: '🎴', category: 'Gestión' },
-  { label: 'Usuarios', route: '/admin/users', permission: 'global.users.view', icon: '👥', category: 'Gestión' },
+  { label: 'Páginas', route: '/admin/pages', permission: 'admin', icon: '📄', category: 'Contenido' },
+  { label: 'Asociaciones', route: '/admin/associations', permission: 'admin', icon: '🏛️', category: 'Gestión' },
+  { label: 'Juegos', route: '/admin/games', permission: 'admin', icon: '🎴', category: 'Gestión' },
+  { label: 'Usuarios', route: '/admin/users', permission: 'admin', icon: '👥', category: 'Gestión' },
   { label: 'Medios', route: '/admin/media', permission: 'global.media.view', icon: '🖼️', category: 'Contenido' },
-  { label: 'Parámetros del Sitio', route: '/admin/site-params', permission: 'global.settings.view', icon: '⚙️', category: 'Sistema', iconClass: 'hover:rotate-90 transition-transform duration-500' },
+  { label: 'Parámetros del Sitio', route: '/admin/site-params', permission: 'admin', icon: '⚙️', category: 'Sistema', iconClass: 'hover:rotate-90 transition-transform duration-500' },
 ] as const;
 
 /**

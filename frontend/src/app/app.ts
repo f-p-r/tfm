@@ -37,12 +37,23 @@ export class App {
     { initialValue: this.hasFreeLayout(this.router.url) }
   );
 
+  // Signal que indica si la ruta actual es del área de administración
+  protected readonly isAdminMode = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects),
+      startWith(this.router.url),
+      map((url) => url.startsWith('/admin'))
+    ),
+    { initialValue: this.router.url.startsWith('/admin') }
+  );
+
   private hasNoNavbar(url: string): boolean {
     return url.startsWith('/login') ||
            url.startsWith('/auth/callback') ||
            url.endsWith('/pages/preview') ||
            url.startsWith('/styleguide') ||
-           url.startsWith('/prototypes');
+           url.startsWith('/prototypes')
   }
 
   private hasFreeLayout(url: string): boolean {

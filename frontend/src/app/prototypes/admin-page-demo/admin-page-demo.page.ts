@@ -3,14 +3,20 @@ Este prototipo muestra un layout completo de administración con navbar, sidebar
 Es ideal para validar la estructura general del panel de control antes de implementarlo en secciones específicas
 como juegos o asociaciones
 */
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core';
+import { CommonModule, JsonPipe } from '@angular/common';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop';
+import { switchMap, map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { AdminMenuComponent } from '../../components/core/admin/admin-menu/admin-menu.component';
 import { AdminTableToolbarComponent } from '../../components/core/admin/table-toolbar/admin-table-toolbar.component';
 import { AdminTableComponent } from '../../components/core/admin/table/admin-table.component';
 import { AdminMenuItem } from '../../core/admin/admin-menu.model';
 import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/table/admin-table.model';
+import { ContextStore } from '../../core/context/context.store';
+import { AuthzService } from '../../core/authz/authz.service';
+import { isBreakdownResponse } from '../../core/authz/authz.models';
 
 /**
  * Prototipo: Layout de Administración completo
@@ -20,6 +26,7 @@ import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/
   selector: 'app-admin-page-demo',
   imports: [
     CommonModule,
+    JsonPipe,
     NavbarComponent,
     AdminMenuComponent,
     AdminTableToolbarComponent,
@@ -88,6 +95,29 @@ import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/
               (action)="onTableAction($event)" />
 
           </div>
+
+          <!-- Debug info -->
+          <div class="mt-6 bg-gray-100 rounded-lg border border-gray-300 p-4 text-sm">
+            <h3 class="font-bold mb-2">🔍 Debug - Contexto actual:</h3>
+            <div class="space-y-1 font-mono">
+              <div>scopeType: <strong>{{ contextStore.scopeType() }}</strong></div>
+              <div>scopeId: <strong>{{ contextStore.scopeId() }}</strong></div>
+            </div>
+          </div>
+
+          <!-- Debug permisos -->
+          <div class="mt-4 bg-blue-50 rounded-lg border border-blue-300 p-4 text-sm">
+            <h3 class="font-bold mb-2">🔐 Debug - Permisos del usuario:</h3>
+            @if (userPermissions(); as perms) {
+              <div class="space-y-2">
+                <div class="font-mono">
+                  <strong>Todos los permisos en este scope:</strong>
+                  <div class="ml-4 text-xs">{{ perms | json }}</div>
+                </div>
+              </div>
+            }
+          </div>
+
         </div>
       </main>
 
@@ -95,6 +125,44 @@ import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/
   `
 })
 export class AdminPageDemoPage {
+  protected readonly contextStore = inject(ContextStore);
+  private readonly authz = inject(AuthzService);
+
+  private currentScope = computed(() => ({
+    type: this.contextStore.scopeType(),
+    id: this.contextStore.scopeId() ?? 0
+  }));
+
+  // Signal que muestra TODOS los permisos del usuario en el scope actual
+  protected readonly userPermissions = toSignal(
+    toObservable(this.currentScope).pipe(
+      switchMap(scope => {
+        return this.authz.query({
+          scopeType: scope.type,
+          scopeIds: scope.id === 0 ? [] : [scope.id],
+          permissions: [], // Array vacío = devolver TODOS los permisos del usuario
+          breakdown: true
+        }).pipe(
+          map(res => {
+            if (isBreakdownResponse(res)) {
+              // Combinar wildcard + específicos para mostrar TODOS los permisos del usuario
+              const wildcardPerms = res.allPermissions || [];
+              const scopeResult = res.results.find(r => r.scopeId === scope.id);
+              const scopePerms = scopeResult?.permissions || [];
+              // Unir sin duplicados
+              return [...new Set([...wildcardPerms, ...scopePerms])];
+            }
+            return [];
+          }),
+          catchError(err => {
+            console.error('❌ [AdminPageDemo] Error al obtener permisos del usuario:', err);
+            return of([]);
+          })
+        );
+      })
+    ),
+    { initialValue: [] }
+  );
 
   // Configuración del menú lateral (datos de demo hardcoded)
   menuItems: AdminMenuItem[] = [

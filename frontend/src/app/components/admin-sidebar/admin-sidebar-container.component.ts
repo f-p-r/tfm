@@ -65,17 +65,23 @@ export class AdminSidebarContainerComponent {
           breakdown: true
         }).pipe(
           map(res => {
-            // Filtrar acciones según respuesta de permisos
-            let allowedPermissions: string[] = [];
+            // Extraer permisos: primero wildcard (allPermissions), luego específicos (results[scopeId])
+            let wildcardPerms: string[] = [];
+            let scopePerms: string[] = [];
 
             if (isBreakdownResponse(res)) {
+              wildcardPerms = res.allPermissions || [];
               const scopeResult = res.results.find(r => r.scopeId === scope.id);
-              allowedPermissions = scopeResult?.permissions || [];
+              scopePerms = scopeResult?.permissions || [];
             }
+
+            // Verificar permiso: primero en wildcard, si no está, en scope-specific
+            const hasPermission = (permission: string) =>
+              wildcardPerms.includes(permission) || scopePerms.includes(permission);
 
             // Transformar AdminAction[] a AdminMenuItem[]
             return allActions
-              .filter(action => allowedPermissions.includes(action.permission))
+              .filter(action => hasPermission(action.permission))
               .map(action => this.toMenuItem(action));
           }),
           catchError(err => {

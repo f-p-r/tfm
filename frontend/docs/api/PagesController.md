@@ -208,6 +208,34 @@ Establecer `homePageId` de un owner.
 
 Base: `/api`
 
+### GET /api/pages/{id}
+Obtener página publicada por ID.
+
+**Autenticación:** No requerida
+
+**Parámetros de ruta:**
+- `id` (integer) - ID de la página
+
+**Respuestas:**
+- **200 OK**
+  ```json
+  {
+    "id": 1,
+    "ownerType": "2",
+    "ownerId": 15,
+    "slug": "inicio",
+    "title": "Inicio",
+    "publishedAt": "2026-02-01T00:00:00.000000Z",
+    "content": { "schemaVersion": 1, "segments": [] },
+    "updatedAt": "2026-02-01T00:00:00.000000Z"
+  }
+  ```
+- **404 Not Found** - Página no encontrada o no publicada
+
+**Nota:** Este endpoint solo devuelve páginas con `published = true`. Para ver páginas no publicadas o borradores, usar el endpoint admin.
+
+---
+
 ### GET /api/pages/home
 Obtener home page publicada por owner.
 
