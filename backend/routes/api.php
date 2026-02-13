@@ -38,8 +38,16 @@ Route::get('associations', [AssociationController::class, 'index']);
 Route::get('associations/by-slug/{slug}', [AssociationController::class, 'bySlug']);
 Route::get('associations/{association}', [AssociationController::class, 'show']);
 
+// User registration (sin autenticación)
+Route::post('users', [UserController::class, 'store']);
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('users', UserController::class);
+    // User management (require auth)
+    Route::get('users', [UserController::class, 'index']);
+    Route::get('users/{user}', [UserController::class, 'show']);
+    Route::put('users/{user}', [UserController::class, 'update']);
+    Route::patch('users/{user}', [UserController::class, 'update']);
+    Route::delete('users/{user}', [UserController::class, 'destroy']);
 
     // Association write operations (require auth)
     Route::post('associations', [AssociationController::class, 'store']);

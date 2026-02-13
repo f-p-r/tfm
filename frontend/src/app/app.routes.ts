@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { HomePage } from './pages/home/home.page';
 import { LoginPage } from './pages/login/login.page';
+import { RegistroPage } from './pages/registro/registro.page';
+import { PerfilPage } from './pages/perfil/perfil.page';
 import { AuthCallbackPage } from './pages/auth-callback/auth-callback.page';
 import { StyleguidePage } from './styleguide/styleguide.page';
 import { PrototypeHostPage } from './prototypes/prototype-host.page';
@@ -18,14 +20,19 @@ import { PageViewerPage } from './pages/page-viewer/page-viewer.page';
 import { PageEntityResolver } from './core/pages/page-entity.resolver';
 import { AdminPage } from './pages/admin/admin.page';
 import { requirePermission } from './guards/permission.guard';
+import { requireAuth } from './guards/auth.guard';
 
 export const routes: Routes = [
   // Public page viewer routes (must be before admin routes)
   { path: '', pathMatch: 'full', component: PageViewerPage },
   { path: 'paginas/:slug', component: PageViewerPage , resolve: { entity: PageEntityResolver }},
   { path: 'login', component: LoginPage },
+  { path: 'registro', component: RegistroPage },
   { path: 'auth/callback', component: AuthCallbackPage },
   { path: 'styleguide', component: StyleguidePage },
+
+  // User profile
+  { path: 'perfil', component: PerfilPage, canActivate: [requireAuth] },
 
   // Ruta de juegos con páginas
   { path: 'juegos/:slug', component: PageViewerPage },

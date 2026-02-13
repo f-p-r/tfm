@@ -17,11 +17,11 @@
         <div class="absolute right-0 mt-2 w-48 bg-white border border-neutral-medium rounded-lg shadow-lg z-50 overflow-hidden">
           <div class="py-1">
             <a
-              routerLink="/me"
+              routerLink="/perfil"
               (click)="close()"
               class="block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors"
             >
-              Mis datos
+              Mi perfil
             </a>
             <div class="border-t border-neutral-medium my-1"></div>
             <button
@@ -56,11 +56,11 @@
       @if (isOpen()) {
         <div class="pl-4 pb-2 space-y-1 bg-neutral-light/20 rounded-b-lg">
           <a
-            routerLink="/me"
+            routerLink="/perfil"
             (click)="close()"
             class="ds-nav-mobile-link text-sm text-neutral-dark"
           >
-            Mis datos
+            Mi perfil
           </a>
           <button
             type="button"

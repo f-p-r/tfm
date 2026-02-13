@@ -1,0 +1,174 @@
+<div class="ds-main">
+  <div class="ds-page">
+    <div class="ds-container-narrow">
+
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="h2">Mi perfil</h1>
+        <p class="text-sm text-neutral-medium mt-2">
+          Gestiona tu información personal y seguridad
+        </p>
+      </div>
+
+      <!-- Mensajes globales -->
+      @if (successMessage()) {
+        <div class="ds-alert ds-alert-success mb-6">
+          {{ successMessage() }}
+        </div>
+      }
+
+      @if (generalError()) {
+        <div class="ds-alert ds-alert-error mb-6">
+          {{ generalError() }}
+        </div>
+      }
+
+      <!-- Información del usuario (read-only) -->
+      <div class="bg-white border border-neutral-medium rounded-lg p-6 shadow-sm mb-6">
+        <h2 class="h3 mb-4">Información de cuenta</h2>
+
+        <div class="space-y-3">
+          <div>
+            <p class="text-sm font-semibold text-neutral-medium">Nombre de usuario</p>
+            <p class="text-neutral-dark">{{ user()?.username || '—' }}</p>
+          </div>
+
+          <div>
+            <p class="text-sm font-semibold text-neutral-medium">Fecha de registro</p>
+            <p class="text-neutral-dark">{{ user()?.createdAt || '—' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección: Datos personales -->
+      <div class="bg-white border border-neutral-medium rounded-lg p-6 shadow-sm mb-6">
+        <h2 class="h3 mb-4">Datos personales</h2>
+
+        <form [formGroup]="dataForm" (ngSubmit)="onUpdateData()" class="space-y-6">
+
+          <!-- Campo Nombre -->
+          <div class="ds-field">
+            <label for="name" class="ds-label">
+              Nombre completo
+            </label>
+            <input
+              id="name"
+              formControlName="name"
+              type="text"
+              required
+              class="ds-input"
+              [class.ds-control-error]="getFieldError('name')"
+            />
+            @if (getFieldError('name')) {
+              <p class="ds-error">
+                {{ getFieldError('name') }}
+              </p>
+            }
+          </div>
+
+          <!-- Campo Email -->
+          <div class="ds-field">
+            <label for="email" class="ds-label">
+              Email
+            </label>
+            <input
+              id="email"
+              formControlName="email"
+              type="email"
+              required
+              class="ds-input"
+              [class.ds-control-error]="getFieldError('email')"
+            />
+            @if (getFieldError('email')) {
+              <p class="ds-error">
+                {{ getFieldError('email') }}
+              </p>
+            }
+          </div>
+
+          <!-- Botón guardar -->
+          <div class="flex justify-end">
+            <button
+              type="submit"
+              [disabled]="dataForm.invalid || isLoading()"
+              class="ds-btn ds-btn-primary"
+              [class.ds-btn-disabled]="dataForm.invalid || isLoading()"
+            >
+              @if (isLoading()) {
+                Guardando...
+              } @else {
+                Guardar cambios
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Sección: Cambiar contraseña -->
+      <div class="bg-white border border-neutral-medium rounded-lg p-6 shadow-sm">
+        <h2 class="h3 mb-4">Cambiar contraseña</h2>
+
+        <form [formGroup]="passwordForm" (ngSubmit)="onUpdatePassword()" class="space-y-6">
+
+          <!-- Campo Nueva contraseña -->
+          <div class="ds-field">
+            <label for="password" class="ds-label">
+              Nueva contraseña
+            </label>
+            <input
+              id="password"
+              formControlName="password"
+              type="password"
+              required
+              class="ds-input"
+              [class.ds-control-error]="getFieldError('password')"
+            />
+            @if (getFieldError('password')) {
+              <p class="ds-error">
+                {{ getFieldError('password') }}
+              </p>
+            }
+            <p class="ds-help">Mínimo 8 caracteres</p>
+          </div>
+
+          <!-- Campo Confirmar contraseña -->
+          <div class="ds-field">
+            <label for="passwordConfirmation" class="ds-label">
+              Confirmar contraseña
+            </label>
+            <input
+              id="passwordConfirmation"
+              formControlName="passwordConfirmation"
+              type="password"
+              required
+              class="ds-input"
+              [class.ds-control-error]="getFieldError('passwordConfirmation')"
+            />
+            @if (getFieldError('passwordConfirmation')) {
+              <p class="ds-error">
+                {{ getFieldError('passwordConfirmation') }}
+              </p>
+            }
+          </div>
+
+          <!-- Botón cambiar contraseña -->
+          <div class="flex justify-end">
+            <button
+              type="submit"
+              [disabled]="passwordForm.invalid || isLoading()"
+              class="ds-btn ds-btn-primary"
+              [class.ds-btn-disabled]="passwordForm.invalid || isLoading()"
+            >
+              @if (isLoading()) {
+                Actualizando...
+              } @else {
+                Cambiar contraseña
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

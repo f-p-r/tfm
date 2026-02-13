@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, signal, PLATFORM_ID } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
@@ -9,7 +9,7 @@ import { User } from '../../core/auth/user.model';
 
 @Component({
   selector: 'app-login-page',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.page.html',
   styleUrl: './login.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

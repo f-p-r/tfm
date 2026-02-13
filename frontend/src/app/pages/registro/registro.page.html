@@ -1,0 +1,174 @@
+<div class="ds-main flex items-center justify-center px-4">
+  <div class="ds-container-narrow py-10">
+    <!-- Título -->
+    <div class="text-center mb-8">
+      <h1 class="h2">Crear cuenta</h1>
+      <p class="text-sm text-neutral-medium mt-2">
+        Completa el formulario para registrarte
+      </p>
+    </div>
+
+    <!-- Contenedor con borde redondeado -->
+    <div class="bg-white border border-neutral-medium rounded-lg p-6 shadow-sm">
+
+      <!-- Mensaje de éxito -->
+      @if (success()) {
+        <div class="ds-alert ds-alert-success mb-6">
+          ¡Cuenta creada exitosamente! Redirigiendo a inicio de sesión...
+        </div>
+      }
+
+      <!-- Error general -->
+      @if (generalError()) {
+        <div class="ds-alert ds-alert-error mb-6">
+          {{ generalError() }}
+        </div>
+      }
+
+      <!-- Formulario -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+        <!-- Campo Nombre -->
+        <div class="ds-field">
+          <label for="name" class="ds-label">
+            Nombre completo
+          </label>
+          <input
+            id="name"
+            formControlName="name"
+            type="text"
+            required
+            class="ds-input"
+            [class.ds-control-error]="getFieldError('name')"
+            placeholder="Ej: Juan Pérez"
+          />
+          @if (getFieldError('name')) {
+            <p class="ds-error">
+              {{ getFieldError('name') }}
+            </p>
+          }
+        </div>
+
+        <!-- Campo Username -->
+        <div class="ds-field">
+          <label for="username" class="ds-label">
+            Nombre de usuario
+          </label>
+          <input
+            id="username"
+            formControlName="username"
+            type="text"
+            required
+            class="ds-input"
+            [class.ds-control-error]="getFieldError('username')"
+            placeholder="Ej: jperez"
+          />
+          @if (getFieldError('username')) {
+            <p class="ds-error">
+              {{ getFieldError('username') }}
+            </p>
+          }
+          <p class="ds-help">
+            Será visible públicamente. Solo letras, números y guiones.
+          </p>
+        </div>
+
+        <!-- Campo Email -->
+        <div class="ds-field">
+          <label for="email" class="ds-label">
+            Email
+          </label>
+          <input
+            id="email"
+            formControlName="email"
+            type="email"
+            required
+            class="ds-input"
+            [class.ds-control-error]="getFieldError('email')"
+            placeholder="ejemplo@email.com"
+          />
+          @if (getFieldError('email')) {
+            <p class="ds-error">
+              {{ getFieldError('email') }}
+            </p>
+          }
+        </div>
+
+        <!-- Campo Contraseña -->
+        <div class="ds-field">
+          <label for="password" class="ds-label">
+            Contraseña
+          </label>
+          <input
+            id="password"
+            formControlName="password"
+            type="password"
+            required
+            class="ds-input"
+            [class.ds-control-error]="getFieldError('password')"
+          />
+          @if (getFieldError('password')) {
+            <p class="ds-error">
+              {{ getFieldError('password') }}
+            </p>
+          }
+          <p class="ds-help">Mínimo 8 caracteres</p>
+        </div>
+
+        <!-- Campo Confirmar Contraseña -->
+        <div class="ds-field">
+          <label for="passwordConfirmation" class="ds-label">
+            Confirmar contraseña
+          </label>
+          <input
+            id="passwordConfirmation"
+            formControlName="passwordConfirmation"
+            type="password"
+            required
+            class="ds-input"
+            [class.ds-control-error]="getFieldError('passwordConfirmation')"
+          />
+          @if (getFieldError('passwordConfirmation')) {
+            <p class="ds-error">
+              {{ getFieldError('passwordConfirmation') }}
+            </p>
+          }
+        </div>
+
+        <!-- Botón Registrarse -->
+        <button
+          type="submit"
+          [disabled]="form.invalid || isSubmitting() || success()"
+          class="ds-btn ds-btn-primary w-full"
+          [class.ds-btn-disabled]="form.invalid || isSubmitting() || success()"
+        >
+          @if (isSubmitting()) {
+            Creando cuenta...
+          } @else if (success()) {
+            ✓ Cuenta creada
+          } @else {
+            Crear cuenta
+          }
+        </button>
+      </form>
+
+      <!-- Separador -->
+      <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-neutral-medium"></div>
+        </div>
+      </div>
+
+      <!-- Link a login -->
+      <div class="text-center">
+        <p class="text-sm text-neutral-medium mb-3">¿Ya tienes cuenta?</p>
+        <a
+          routerLink="/login"
+          class="ds-btn ds-btn-secondary w-full block text-center"
+        >
+          Iniciar sesión
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

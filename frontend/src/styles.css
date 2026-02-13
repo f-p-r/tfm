@@ -114,7 +114,34 @@
 
   /* Alerta: Rojo (Peligro/Bloqueo/Sanción) */
   .ds-badge-alert {
-    @apply bg-red-100 text-red-800;
+    @apply bg-red-100 text-danger;
+  }
+
+  /* === Alertas / Notificaciones === */
+
+  /* Clase base para alertas */
+  .ds-alert {
+    @apply px-4 py-3 rounded-lg border;
+  }
+
+  /* Alerta de error - acciones fallidas o errores críticos */
+  .ds-alert-error {
+    @apply bg-danger-light border-danger text-danger;
+  }
+
+  /* Alerta de advertencia - situaciones que requieren atención */
+  .ds-alert-warning {
+    @apply bg-orange-100 border-orange-300 text-orange-800;
+  }
+
+  /* Alerta informativa - información general o tips */
+  .ds-alert-info {
+    @apply bg-blue-100 border-blue-300 text-blue-800;
+  }
+
+  /* Alerta de éxito - confirmación de acciones completadas */
+  .ds-alert-success {
+    @apply bg-green-100 border-green-300 text-green-800;
   }
 
   /* === Formularios / Inputs === */
