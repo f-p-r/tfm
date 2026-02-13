@@ -62,10 +62,15 @@
       manteniendo equilibrio entre un entorno institucional y una plataforma social y dinámica.
     </p>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
       <div class="p-6 rounded-lg bg-brand-primary text-white">Primary<br>#1B4F72</div>
       <div class="p-6 rounded-lg bg-brand-secondary text-neutral-dark">Secondary<br>#F4CB42</div>
       <div class="p-6 rounded-lg bg-brand-accent text-white">Accent<br>#48C9B0</div>
+      <div class="p-6 rounded-lg bg-danger text-white">Danger<br>#DC3545</div>
+      <div class="p-6 rounded-lg bg-brand-primary-light text-neutral-dark border">Primary Light<br>#C5D7E4</div>
+      <div class="p-6 rounded-lg bg-brand-secondary-light text-neutral-dark border">Secondary Light<br>#FDF3D7</div>
+      <div class="p-6 rounded-lg bg-brand-accent-light text-neutral-dark border">Accent Light<br>#D0F0E8</div>
+      <div class="p-6 rounded-lg bg-danger-light text-neutral-dark border">Danger Light<br>#F8D7DA</div>
       <div class="p-6 rounded-lg bg-neutral-light text-neutral-dark border">Neutral Light<br>#F7F9FA</div>
       <div class="p-6 rounded-lg bg-neutral-medium text-neutral-dark border">Neutral Medium<br>#D5D8DC</div>
       <div class="p-6 rounded-lg bg-neutral-dark text-white">Neutral Dark<br>#2C3E50</div>
@@ -420,27 +425,7 @@
     </div>
   </section>
 
-  <!-- Layout antiguo -->
-  <section class="mb-16">
-    <h2 class="h2 mb-8">Ejemplo de Layout</h2>
 
-    <div class="border border-neutral-medium rounded-lg grid md:grid-cols-3">
-      <aside class="p-4 bg-neutral-light border-r border-neutral-medium">
-        <p class="p font-semibold">Sidebar</p>
-        <ul class="mt-2 space-y-1">
-          <li class="p text-neutral-dark">Inicio</li>
-          <li class="p text-neutral-dark">Asociaciones</li>
-          <li class="p text-neutral-dark">Torneos</li>
-        </ul>
-      </aside>
-
-      <main class="p-6 md:col-span-2">
-        <h3 class="h3 mb-2">Contenido principal</h3>
-        <p class="p">Aquí va el contenido principal del layout.</p>
-      </main>
-    </div>
-  </section>
-  <hr class="my-16 border-neutral-medium">
 
   <!-- Layout de administración -->
   <section class="mb-16">
@@ -460,7 +445,7 @@
 
       <!-- Sidebar: !top-0 solo para esta demo dentro de contenedor (en páginas reales usa top: 4rem del CSS) -->
       <aside class="ds-admin-sidebar !absolute !z-50 !top-0" id="admin-sidebar">
-          <app-admin-menu [items]="demoMenuItems" [demoMode]="true">
+          <app-admin-menu [items]="demoMenuItems">
           </app-admin-menu>
       </aside>
 

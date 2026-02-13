@@ -80,13 +80,13 @@
       }
 
       <div class="actions-buttons">
-        <button class="btn-secondary" (click)="onCancel()" [disabled]="isSaving()">
+        <button class="ds-btn ds-btn-danger" (click)="onCancel()" [disabled]="isSaving()">
           Cancelar
         </button>
-        <button class="btn-secondary" (click)="openPreview()" [disabled]="isSaving()">
+        <button class="ds-btn ds-btn-secondary" (click)="openPreview()" [disabled]="isSaving()">
           Vista previa
         </button>
-        <button class="btn-primary" (click)="onSave()" [disabled]="!hasChanges() || isSaving()">
+        <button class="ds-btn ds-btn-primary" (click)="onSave()" [disabled]="!hasChanges() || isSaving()">
           {{ isSaving() ? 'Guardando...' : 'Guardar cambios' }}
         </button>
       </div>

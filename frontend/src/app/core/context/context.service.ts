@@ -10,6 +10,31 @@ import { WebScope } from '../web-scope.constants';
 import { GamesStore } from '../games/games.store';
 import { AssociationsResolveService } from '../associations/associations-resolve.service';
 
+/**
+ * Servicio de contexto que determina dinámicamente las acciones de administración
+ * disponibles para el usuario según la ruta actual y sus permisos.
+ *
+ * Funcionalidad principal:
+ * - Escucha eventos de navegación del router
+ * - Resuelve el contexto actual (scope: Global, Asociación o Juego) desde la URL
+ * - Verifica permisos del usuario usando AuthzService (con caché de 120 seg)
+ * - Calcula acciones de administración disponibles (Editar Página, Administrar Contexto)
+ * - Publica las acciones en adminActions$ para ser consumidas por componentes UI
+ *
+ * Las acciones se recalculan automáticamente en cada navegación y se filtran
+ * según los permisos del usuario autenticado.
+ *
+ * @example
+ * ```typescript
+ * constructor(private context = inject(ContextService)) {}
+ *
+ * ngOnInit() {
+ *   this.context.adminActions$.subscribe(actions => {
+ *     console.log('Acciones disponibles:', actions);
+ *   });
+ * }
+ * ```
+ */
 @Injectable({ providedIn: 'root' })
 export class ContextService {
   private router = inject(Router);
@@ -22,8 +47,7 @@ export class ContextService {
   // -------------------------------------------------------------------------
   // CONSTANTES DE PERMISOS
   // -------------------------------------------------------------------------
-  // NOTA: Asegúrate que coinciden con tu BD. Si dudas, prueba con 'web.admin'
-  private readonly PERM_ADMIN = 'admin';
+   private readonly PERM_ADMIN = 'admin';
   private readonly PERM_PAGE_EDIT = 'pages.edit';
 
   // -------------------------------------------------------------------------
@@ -32,6 +56,14 @@ export class ContextService {
   private adminActionsSubject = new BehaviorSubject<AdminAction[]>([]);
   public adminActions$ = this.adminActionsSubject.asObservable();
 
+  /**
+   * Inicializa el servicio suscribiéndose a eventos de navegación del router.
+   * En cada navegación:
+   * - Obtiene la ruta más profunda
+   * - Extrae datos y parámetros de la ruta
+   * - Calcula acciones de administración según contexto y permisos
+   * - Publica las acciones en adminActions$
+   */
   constructor() {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
@@ -53,6 +85,15 @@ export class ContextService {
     });
   }
 
+  /**
+   * Calcula las acciones de administración disponibles para el usuario en el contexto actual.
+   * Verifica permisos usando AuthzService (con caché) y filtra las acciones permitidas.
+   *
+   * @param data - Datos de la ruta activa (puede contener 'entity')
+   * @param params - Parámetros de la ruta (slugs, IDs)
+   * @param url - URL completa de la navegación actual
+   * @returns Observable con array de AdminAction autorizadas
+   */
   private calculateAdminActions(data: Data, params: any, url: string): Observable<AdminAction[]> {
     return this.resolveContext(data, params, url).pipe(
       tap(ctx => console.log('🔍 [ContextService] 3. Contexto resuelto:', ctx)),
@@ -79,6 +120,21 @@ export class ContextService {
     );
   }
 
+  /**
+   * Resuelve el contexto (scope) actual desde la URL y datos de la ruta.
+   * Determina si estamos en contexto Global, Asociación o Juego.
+   *
+   * Jerarquía de resolución:
+   * 1. Si hay entity en data, usa entity.ownerType y entity.ownerId
+   * 2. Si URL empieza con /asociaciones, resuelve el slug de asociación
+   * 3. Si URL empieza con /juegos, busca el juego por slug
+   * 4. Fallback: contexto Global (type: WebScope.GLOBAL, id: 0)
+   *
+   * @param data - Datos de la ruta (puede contener 'entity')
+   * @param params - Parámetros de la ruta (slug, assocSlug, gameSlug)
+   * @param url - URL completa para detectar sección
+   * @returns Observable con {type: scopeType, id: scopeId}
+   */
   private resolveContext(data: Data, params: any, url: string): Observable<{type: number, id: number}> {
     if (data['entity']) {
       const entity = data['entity'] as OwnableEntity;
@@ -112,6 +168,15 @@ export class ContextService {
     return of({ type: WebScope.GLOBAL, id: 0 });
   }
 
+  /**
+   * Verifica si el usuario tiene permiso 'pages.edit' para editar una entidad (página).
+   * Si tiene permiso, devuelve una AdminAction con la ruta de edición.
+   *
+   * Nota: Si entity.ownerId es 0 (global), pasa scopeIds=[] al backend.
+   *
+   * @param entity - Entidad con ownerType y ownerId para verificar permisos
+   * @returns Observable con AdminAction si tiene permiso, null si no
+   */
   private checkEntityEdit(entity: OwnableEntity): Observable<AdminAction | null> {
     var ids: number[] = [];
     // si entity.ownerId es 0, hemos de pasar en scopeIDs un array vacío para que el backend entienda que es global (sin scope específico)
@@ -141,6 +206,21 @@ export class ContextService {
     );
   }
 
+  /**
+   * Verifica si el usuario tiene permiso 'admin' en el contexto actual.
+   * Si tiene permiso, devuelve una AdminAction para acceder al panel de administración.
+   *
+   * Etiqueta según scope:
+   * - Global: "Administración"
+   * - Asociación: "Administrar Asociación"
+   * - Juego: "Administrar Juego"
+   *
+   * Nota: Si scopeId es 0 (global), pasa scopeIds=[] al backend.
+   *
+   * @param scopeType - Tipo de scope (WebScope.GLOBAL, ASSOCIATION, GAME)
+   * @param scopeId - ID del scope (0 para global)
+   * @returns Observable con AdminAction si tiene permiso, null si no
+   */
   private checkContextAdmin(scopeType: number, scopeId: number): Observable<AdminAction | null> {
     // Si el ID es 0 (Global), enviamos array vacío []
     // para que el backend no valide "scopeIds.0 must be at least 1"
@@ -176,6 +256,13 @@ export class ContextService {
     );
   }
 
+  /**
+   * Obtiene la ruta hoja más profunda del árbol de rutas activadas.
+   * Útil para acceder a los datos y parámetros de la ruta final renderizada.
+   *
+   * @param route - Ruta raíz desde donde empezar a descender
+   * @returns Ruta hoja sin hijos (la más profunda del árbol)
+   */
   private getDeepestRoute(route: ActivatedRoute): ActivatedRoute {
     while (route.firstChild) {
       route = route.firstChild;

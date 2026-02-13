@@ -100,10 +100,18 @@
                     helpHover [helpKey]="'col_bg'"
                     [ngModel]="draft.backgroundColor"
                     (ngModelChange)="updateProperty('backgroundColor', $event)">
-              <option value="white">Blanco</option>
-              <option value="neutral">Gris</option>
-              <option value="brand-light">Marca Claro</option>
-              <option value="brand-dark">Marca Oscuro</option>
+              <option value="transparent">Transparente</option>
+              <option value="brand-primary" style="background-color: #1B4F72; color: white;">Primary</option>
+              <option value="brand-secondary" style="background-color: #F4CB42; color: #2C3E50;">Secondary</option>
+              <option value="brand-accent" style="background-color: #48C9B0; color: white;">Accent</option>
+              <option value="danger" style="background-color: #DC3545; color: white;">Danger</option>
+              <option value="brand-primary-light" style="background-color: #C5D7E4; color: #2C3E50;">Primary Light</option>
+              <option value="brand-secondary-light" style="background-color: #FDF3D7; color: #2C3E50;">Secondary Light</option>
+              <option value="brand-accent-light" style="background-color: #D0F0E8; color: #2C3E50;">Accent Light</option>
+              <option value="danger-light" style="background-color: #F8D7DA; color: #2C3E50;">Danger Light</option>
+              <option value="neutral-dark" style="background-color: #2C3E50; color: white;">Neutral Dark</option>
+              <option value="neutral-medium" style="background-color: #D5D8DC; color: #2C3E50;">Neutral Medium</option>
+              <option value="neutral-light" style="background-color: #F7F9FA; color: #2C3E50;">Neutral Light</option>
             </select>
           </div>
 
@@ -154,18 +162,11 @@
           class="preview-area"
           [ngClass]="{
             'ds-seg-wrapper-full': draft.fullWidthBackground,
-            'ds-seg-bg-white': draft.backgroundColor === 'white',
-            'ds-seg-bg-neutral': draft.backgroundColor === 'neutral',
-            'ds-seg-bg-brand-light': draft.backgroundColor === 'brand-light',
-            'ds-seg-bg-brand-dark': draft.backgroundColor === 'brand-dark',
             'ds-seg-text-default': draft.textColor === 'default',
             'ds-seg-text-brand': draft.textColor === 'brand',
-            'ds-seg-text-white': draft.textColor === 'white',
-            'ds-seg-pad-none': draft.verticalPadding === 'none' && !draft.fullWidthBackground,
-            'ds-seg-pad-small': draft.verticalPadding === 'small' && !draft.fullWidthBackground,
-            'ds-seg-pad-normal': draft.verticalPadding === 'normal' && !draft.fullWidthBackground,
-            'ds-seg-pad-large': draft.verticalPadding === 'large' && !draft.fullWidthBackground
-          }">
+            'ds-seg-text-white': draft.textColor === 'white'
+          }"
+          [class]="draft.fullWidthBackground && draft.backgroundColor ? 'bg-' + draft.backgroundColor : ''">
           <div
             class="ds-layout-grid"
             [attr.data-layout]="draft.distribution"
@@ -173,17 +174,18 @@
               'ds-seg-width-standard': draft.containerWidth === 'standard' || !draft.containerWidth,
               'ds-seg-width-narrow': draft.containerWidth === 'narrow',
               'ds-seg-width-full': draft.containerWidth === 'full',
-              'ds-seg-pad-none': draft.verticalPadding === 'none' && draft.fullWidthBackground,
-              'ds-seg-pad-small': draft.verticalPadding === 'small' && draft.fullWidthBackground,
-              'ds-seg-pad-normal': draft.verticalPadding === 'normal' && draft.fullWidthBackground,
-              'ds-seg-pad-large': draft.verticalPadding === 'large' && draft.fullWidthBackground
-            }">
+              'ds-seg-pad-none': draft.verticalPadding === 'none',
+              'ds-seg-pad-small': draft.verticalPadding === 'small',
+              'ds-seg-pad-normal': draft.verticalPadding === 'normal',
+              'ds-seg-pad-large': draft.verticalPadding === 'large'
+            }"
+            [class]="!draft.fullWidthBackground && draft.backgroundColor ? 'bg-' + draft.backgroundColor : ''">
             @for (col of draft.columns; track col.id; let idx = $index) {
             <div class="ds-layout-cell ds-user-content bg-white/50 p-2 rounded border border-dashed border-gray-300">
               @if (draft.distribution !== '1') { <div class="text-xs text-gray-400 text-center mb-1">COL {{idx+1}}</div>
               }
 
-              <editor [init]="tinyConfig" [(ngModel)]="col.contentHtml" placeholder="Escribe el contenido...">
+              <editor [init]="tinyConfig()" [(ngModel)]="col.contentHtml" placeholder="Escribe el contenido...">
               </editor>
 
             </div>

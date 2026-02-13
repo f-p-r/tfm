@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, signal, input, output, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, signal, input, output, effect, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
@@ -51,44 +51,87 @@ export class ContentSegmentsEditorComponent {
 
   private helpService = inject(HelpContentService);
   private activeEditorRef: any = null;
+  private tinyEditors: any[] = [];
 
-  readonly tinyConfig: any = {
-    base_url: '/assets/tinymce',
-    license_key: 'gpl',
-    suffix: '.min',
-    height: 600,
-    menubar: false,
-    plugins: 'lists link image table code help wordcount quickbars',
-    toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',
-    quickbars_image_toolbar: 'alignleft aligncenter alignright alignnone | image',
-    quickbars_insert_toolbar: false,
-    color_map: [
-      "000000", "Negro",
-      "808080", "Gris",
-      "FFFFFF", "Blanco",
-      "EF4444", "Rojo",
-      "3B82F6", "Azul",
-      "10B981", "Verde",
-      "F59E0B", "Amarillo"
-    ],
-    branding: false,
-    statusbar: false,
-    content_style: `
-      img { max-width: 100%; height: auto; }
-    `,
-    content_css: '/css/editor-content.css',
-    setup: (editor: any) => {
-      editor.ui.registry.addButton('customImage', {
-        icon: 'image',
-        tooltip: 'Insertar Imagen',
-        onAction: () => {
-          this.activeEditorRef = editor;
-          this.mediaPickerContext.set('editor');
-          this.showMediaPicker.set(true);
-        }
-      });
-    }
+  // Mapa de colores para TinyMCE
+  private readonly colorMap: Record<string, string> = {
+    'transparent': 'transparent',
+    'brand-primary': '#1B4F72',
+    'brand-secondary': '#F4CB42',
+    'brand-accent': '#48C9B0',
+    'danger': '#DC3545',
+    'brand-primary-light': '#C5D7E4',
+    'brand-secondary-light': '#FDF3D7',
+    'brand-accent-light': '#D0F0E8',
+    'danger-light': '#F8D7DA',
+    'neutral-dark': '#2C3E50',
+    'neutral-medium': '#D5D8DC',
+    'neutral-light': '#F7F9FA'
   };
+
+  readonly tinyConfig = computed(() => {
+    const draft = this.editingDraft();
+    const bgColor = (draft as any)?.backgroundColor;
+    const hexColor = bgColor ? (this.colorMap[bgColor] || 'transparent') : 'transparent';
+
+    return {
+      base_url: '/assets/tinymce',
+      license_key: 'gpl',
+      suffix: '.min',
+      height: 600,
+      menubar: false,
+      plugins: 'lists link image table code help wordcount quickbars',
+      toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',
+      quickbars_image_toolbar: 'alignleft aligncenter alignright alignnone | image',
+      quickbars_insert_toolbar: false,
+      color_map: [
+        "1B4F72", "Primary",
+        "F4CB42", "Secondary",
+        "48C9B0", "Accent",
+        "DC3545", "Danger",
+        "C5D7E4", "Primary Light",
+        "FDF3D7", "Secondary Light",
+        "D0F0E8", "Accent Light",
+        "F8D7DA", "Danger Light",
+        "2C3E50", "Neutral Dark",
+        "D5D8DC", "Neutral Medium",
+        "F7F9FA", "Neutral Light",
+        "000000", "Negro",
+        "FFFFFF", "Blanco"
+      ],
+      branding: false,
+      statusbar: false,
+      content_style: `
+        body { background-color: ${hexColor}; }
+        img { max-width: 100%; height: auto; }
+      `,
+      content_css: '/css/editor-content.css',
+      setup: (editor: any) => {
+        editor.ui.registry.addButton('customImage', {
+          icon: 'image',
+          tooltip: 'Insertar Imagen',
+          onAction: () => {
+            this.activeEditorRef = editor;
+            this.mediaPickerContext.set('editor');
+            this.showMediaPicker.set(true);
+          }
+        });
+
+        // Guardar referencia del editor
+        editor.on('init', () => {
+          this.tinyEditors.push(editor);
+        });
+
+        // Limpiar referencia cuando se destruya
+        editor.on('remove', () => {
+          const index = this.tinyEditors.indexOf(editor);
+          if (index > -1) {
+            this.tinyEditors.splice(index, 1);
+          }
+        });
+      }
+    };
+  });
 
   constructor() {
     effect(() => {
@@ -96,6 +139,20 @@ export class ContentSegmentsEditorComponent {
       if (c && c.segments) {
         this.segments.set(JSON.parse(JSON.stringify(c.segments)));
       }
+    });
+
+    // Actualizar color de fondo de editores cuando cambie backgroundColor
+    effect(() => {
+      const draft = this.editingDraft();
+      const bgColor = (draft as any)?.backgroundColor;
+      const hexColor = bgColor ? (this.colorMap[bgColor] || 'transparent') : 'transparent';
+
+      // Actualizar todos los editores activos
+      this.tinyEditors.forEach(editor => {
+        if (editor.getBody()) {
+          editor.getBody().style.backgroundColor = hexColor;
+        }
+      });
     });
 
     this.helpService.setPack(CONTENT_EDITOR_HELP);

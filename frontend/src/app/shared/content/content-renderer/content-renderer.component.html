@@ -8,19 +8,11 @@
       class="segment-wrapper"
       [ngClass]="{
         'ds-seg-wrapper-full': seg.fullWidthBackground,
-        'ds-seg-bg-white': seg.backgroundColor === 'white',
-        'ds-seg-bg-neutral': seg.backgroundColor === 'neutral',
-        'ds-seg-bg-brand-light': seg.backgroundColor === 'brand-light',
-        'ds-seg-bg-brand-dark': seg.backgroundColor === 'brand-dark',
         'ds-seg-text-default': seg.textColor === 'default',
         'ds-seg-text-brand': seg.textColor === 'brand',
-        'ds-seg-text-white': seg.textColor === 'white',
-        'ds-seg-pad-none': seg.verticalPadding === 'none' && !seg.fullWidthBackground,
-        'ds-seg-pad-small': seg.verticalPadding === 'small' && !seg.fullWidthBackground,
-        'ds-seg-pad-normal': seg.verticalPadding === 'normal' && !seg.fullWidthBackground,
-        'ds-seg-pad-large': seg.verticalPadding === 'large' && !seg.fullWidthBackground
+        'ds-seg-text-white': seg.textColor === 'white'
       }"
-      [class]="seg.classNames || ''">
+      [class]="(seg.fullWidthBackground && seg.backgroundColor ? 'bg-' + seg.backgroundColor : '') + ' ' + (seg.classNames || '')">
       <div
         class="ds-layout-grid"
         [attr.data-layout]="seg.distribution"
@@ -28,12 +20,13 @@
           'ds-seg-width-standard': seg.containerWidth === 'standard' || !seg.containerWidth,
           'ds-seg-width-narrow': seg.containerWidth === 'narrow',
           'ds-seg-width-full': seg.containerWidth === 'full',
-          'ds-seg-pad-none': seg.verticalPadding === 'none' && seg.fullWidthBackground,
-          'ds-seg-pad-small': seg.verticalPadding === 'small' && seg.fullWidthBackground,
-          'ds-seg-pad-normal': seg.verticalPadding === 'normal' && seg.fullWidthBackground,
-          'ds-seg-pad-large': seg.verticalPadding === 'large' && seg.fullWidthBackground
-        }">
-
+          'ds-seg-pad-none': seg.verticalPadding === 'none',
+          'ds-seg-pad-small': seg.verticalPadding === 'small',
+          'ds-seg-pad-normal': seg.verticalPadding === 'normal',
+          'ds-seg-pad-large': seg.verticalPadding === 'large'
+        }"
+        [class]="!seg.fullWidthBackground && seg.backgroundColor ? 'bg-' + seg.backgroundColor : ''"
+      >
         @for (col of seg.columns; track col.id) {
         <div class="ds-layout-cell ds-user-content" [innerHTML]="sanitize(col.contentHtml)">
         </div>

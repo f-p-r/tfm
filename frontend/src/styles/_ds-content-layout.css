@@ -40,51 +40,6 @@
 .ds-seg-pad-normal { padding-top: 3rem; padding-bottom: 3rem; }
 .ds-seg-pad-large  { padding-top: 5rem; padding-bottom: 5rem; }
 
-/* === 4. COLORES DE FONDO === */
-.ds-seg-bg-white       { background-color: #ffffff; }
-.ds-seg-bg-neutral     { background-color: var(--color-neutral-light); }
-.ds-seg-bg-brand-light { background-color: #eaf6fa; }
-.ds-seg-bg-brand-dark  { background-color: var(--color-brand-primary); }
-
-/* === 5. COLORES DE TEXTO === */
-
-/* Texto por defecto (Gris oscuro) */
-.ds-seg-text-default {
-  color: var(--color-neutral-dark);
-}
-
-/* Texto Corporativo */
-.ds-seg-text-brand {
-  color: var(--color-brand-primary);
-}
-.ds-seg-text-brand h1, .ds-seg-text-brand h2, .ds-seg-text-brand h3,
-.ds-seg-text-brand p, .ds-seg-text-brand li {
-  color: var(--color-brand-primary) !important;
-}
-
-/* Texto Blanco (Para fondos oscuros) */
-.ds-seg-text-white {
-  color: #ffffff;
-}
-
-/* Forzamos blanco en todos los hijos para vencer al CSS base */
-.ds-seg-text-white h1,
-.ds-seg-text-white h2,
-.ds-seg-text-white h3,
-.ds-seg-text-white p,
-.ds-seg-text-white ul,
-.ds-seg-text-white li,
-.ds-seg-text-white span,
-.ds-seg-text-white strong {
-  color: #ffffff !important;
-}
-
-/* Enlaces en modo texto blanco (azul clarito para contraste) */
-.ds-seg-text-white a {
-  color: #bfdbfe !important;
-  text-decoration: underline;
-}
-
 /* === 5. ANCHO DEL CONTENEDOR === */
 .ds-seg-width-standard {
   width: 100%;

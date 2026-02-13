@@ -37,7 +37,7 @@ import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/
 
       <!-- Sidebar -->
       <aside id="admin-sidebar" class="ds-admin-sidebar">
-        <app-admin-menu [items]="menuItems" [demoMode]="true" />
+        <app-admin-menu [items]="menuItems" />
       </aside>
 
       <!-- Main content -->
@@ -96,7 +96,7 @@ import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/
 })
 export class AdminPageDemoPage {
 
-  // Configuración del menú lateral
+  // Configuración del menú lateral (datos de demo hardcoded)
   menuItems: AdminMenuItem[] = [
     {
       label: 'Dashboard',

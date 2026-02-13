@@ -2,9 +2,20 @@
 
 @theme {
   /* Colores */
+  --color-transparent: transparent;
+
   --color-brand-primary: #1B4F72;
   --color-brand-secondary: #F4CB42;
   --color-brand-accent: #48C9B0;
+
+  /* Colores claros para fondos */
+  --color-brand-primary-light: #C5D7E4;
+  --color-brand-secondary-light: #FDF3D7;
+  --color-brand-accent-light: #D0F0E8;
+
+  /* Colores de alerta/error */
+  --color-danger: #DC3545;
+  --color-danger-light: #F8D7DA;
 
   --color-neutral-light: #F7F9FA;
   --color-neutral-medium: #D5D8DC;
@@ -116,10 +127,16 @@
   }
 
   /* Base común para controles */
+  .ds-input, .ds-textarea{
+    @apply py-1;
+  }
   .ds-input,
   .ds-select,
   .ds-textarea {
-    @apply w-full px-3 py-1 rounded-lg border border-neutral-medium bg-white text-neutral-dark placeholder:text-neutral-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
+    @apply w-full px-3 rounded-lg border border-neutral-medium bg-white text-neutral-dark placeholder:text-neutral-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
+  }
+  .ds-select {
+    @apply py-1.5;
   }
 
   /* Formato checkbox (label a la derecha)*/
