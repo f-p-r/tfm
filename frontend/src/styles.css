@@ -462,7 +462,7 @@
   /* Footer de paginación: AÑADIDO shrink-0 para que nunca se aplaste */
   .ds-table-pagination {
     @apply bg-white border-t border-neutral-medium p-3;
-    @apply flex items-center justify-between text-xs text-neutral-500;
+    @apply flex items-center text-xs text-neutral-500;
     @apply z-20 relative shrink-0;
   }
 
