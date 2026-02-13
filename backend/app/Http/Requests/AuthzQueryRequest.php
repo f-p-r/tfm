@@ -9,15 +9,15 @@ use Illuminate\Validation\Rule;
 class AuthzQueryRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Api para consultar autorizaciones
      */
     public function authorize(): bool
     {
-        return true; // Auth handled by middleware
+        return true; // gestionado por middleware
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Obtener las reglas de validación que se aplican a la solicitud.
      */
     public function rules(): array
     {

@@ -15,6 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
         \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
     ]);
+
+        // Agregar middleware de diagnóstico de rendimiento solo en local
+        if (env('APP_ENV') === 'local') {
+            $middleware->alias([
+                'perf' => \App\Http\Middleware\PerformanceDiagnostics::class,
+            ]);
+        }
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

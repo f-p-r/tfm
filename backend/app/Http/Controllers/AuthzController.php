@@ -15,7 +15,7 @@ class AuthzController extends Controller
     ) {}
 
     /**
-     * Query user permissions for a specific scope.
+     * Consultar permisos de usuario para un ámbito específico.
      */
     public function query(Request $request): JsonResponse
     {
