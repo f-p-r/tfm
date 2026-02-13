@@ -192,12 +192,12 @@
 
   /* Contenedor centrado estándar con márgenes laterales - usar como clase en div */
   .ds-container {
-    @apply mx-auto w-full max-w-7xl;
+    @apply mx-auto w-full max-w-7xl px-1.5 sm:px-2.5;
   }
 
   /* Contenedor centrado estrecho para formularios */
   .ds-container-narrow {
-    @apply mx-auto w-full max-w-lg;
+    @apply mx-auto w-full max-w-lg px-1.5 sm:px-2.5;
   }
 
   /* === Navegación === */
@@ -209,7 +209,19 @@
 
   /* Contenedor interno de la barra de navegación */
   .ds-nav-inner {
-    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-7xl pr-4 md:pr-6;
+    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-7xl;
+  }
+
+  @media (max-width: 767px) {
+    .ds-nav-inner {
+      @apply pr-1.5;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .ds-nav-inner {
+      @apply pr-2.5;
+    }
   }
 
   /* Zona de marca/logo */
@@ -244,7 +256,7 @@
 
   /* Lista de enlaces móvil con centrado y ancho máximo */
   .ds-nav-mobile-list {
-    @apply flex flex-col divide-y divide-neutral-medium mx-auto w-full max-w-7xl;
+    @apply flex flex-col divide-y divide-neutral-medium mx-auto w-full max-w-7xl px-1.5 sm:px-2.5;
   }
 
   /* Link individual en móvil */
@@ -404,7 +416,7 @@
 
   /* Ajuste para el contenido principal para que no quede tapado por el navbar fijo */
   .ds-admin-main {
-    @apply w-full flex flex-col overflow-hidden;
+    @apply w-full flex flex-col overflow-hidden px-1.5 sm:px-2.5;
   }
 
   /* === Tablas de datos === */
