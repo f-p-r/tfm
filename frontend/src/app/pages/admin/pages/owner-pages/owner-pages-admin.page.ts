@@ -6,10 +6,16 @@ import { PagesService } from '../../../../core/pages/pages.service';
 import { OwnerPagesSettingsService } from '../../../../core/pages/owner-pages-settings.service';
 import { PageSummaryDTO, PageDTO, PageOwnerType, PageOwnerScope } from '../../../../shared/content/page.dto';
 import { ContentSegmentsPreviewComponent } from '../../../../shared/content/segments-preview/content-segments-preview.component';
+import { AdminSidebarContainerComponent } from '../../../../components/admin-sidebar/admin-sidebar-container.component';
 
 @Component({
   selector: 'app-owner-pages-admin',
-  imports: [CommonModule, FormsModule, ContentSegmentsPreviewComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ContentSegmentsPreviewComponent,
+    AdminSidebarContainerComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './owner-pages-admin.page.html',
   styleUrl: './owner-pages-admin.page.css',

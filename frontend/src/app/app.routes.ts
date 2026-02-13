@@ -17,6 +17,7 @@ import { PagePreviewPage } from './pages/admin/pages/owner-pages/page-preview.pa
 import { PageViewerPage } from './pages/page-viewer/page-viewer.page';
 import { PageEntityResolver } from './core/pages/page-entity.resolver';
 import { AdminPage } from './pages/admin/admin.page';
+import { requirePermission } from './guards/permission.guard';
 
 export const routes: Routes = [
   // Public page viewer routes (must be before admin routes)
@@ -98,6 +99,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminPage,
+    canActivate: [requirePermission('admin')],
   },
 
   // Admin: gestión de páginas
@@ -105,31 +107,38 @@ export const routes: Routes = [
   {
     path: 'admin/pages/1',
     component: OwnerPagesAdminPage,
+    canActivate: [requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/1/create',
     component: PageCreateAdminPage,
+    canActivate: [requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/1/edit/:pageId',
     component: PageEditAdminPage,
+    canActivate: [requirePermission('pages.edit')],
   },
   // Páginas de owner (scopeType 2/3 con scopeId)
   {
     path: 'admin/pages/:ownerType/:ownerId',
     component: OwnerPagesAdminPage,
+    canActivate: [requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/:ownerType/:ownerId/create',
     component: PageCreateAdminPage,
+    canActivate: [requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/:ownerType/:ownerId/edit/:pageId',
     component: PageEditAdminPage,
+    canActivate: [requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/preview',
     component: PagePreviewPage,
+    canActivate: [requirePermission('pages.edit')],
   },
 
   { path: '**', redirectTo: '' },

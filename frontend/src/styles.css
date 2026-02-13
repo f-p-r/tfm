@@ -209,7 +209,7 @@
 
   /* Contenedor interno de la barra de navegación */
   .ds-nav-inner {
-    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-7xl;
+    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-7xl px-1.5 sm:px-2.5;
   }
 
   @media (max-width: 767px) {

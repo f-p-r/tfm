@@ -102,6 +102,12 @@ export class ContextService {
         // Actualizar ContextStore → esto dispara recarga automática de permisos en PermissionsStore
         this.contextStore.setScope(ctx.type, ctx.id === 0 ? null : ctx.id, 'router');
       }),
+      // ESPERAR a que los permisos estén cargados antes de verificar
+      switchMap(ctx => {
+        return this.permissionsStore.waitForLoad().pipe(
+          map(() => ctx) // Mantener el contexto
+        );
+      }),
       map(ctx => {
         const actions: AdminAction[] = [];
 

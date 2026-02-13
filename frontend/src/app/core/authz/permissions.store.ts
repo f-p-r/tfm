@@ -32,6 +32,8 @@
  */
 
 import { Injectable, inject, signal, computed, effect } from '@angular/core';
+import { Observable, of, Subject } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { AuthzService } from './authz.service';
 import { ContextStore } from '../context/context.store';
 import { isBreakdownResponse } from './authz.models';
@@ -40,6 +42,9 @@ import { isBreakdownResponse } from './authz.models';
 export class PermissionsStore {
   private readonly authz = inject(AuthzService);
   private readonly contextStore = inject(ContextStore);
+
+  /** Subject que emite cuando los permisos terminan de cargarse */
+  private readonly loadComplete$ = new Subject<void>();
 
   // -------------------------------------------------------------------------
   // ESTADO
@@ -125,6 +130,7 @@ export class PermissionsStore {
 
           this.permissions.set(effectivePermissions);
           this.loading.set(false);
+          this.loadComplete$.next(); // Notificar que terminó la carga
 
           console.log(`✅ [PermissionsStore] ${effectivePermissions.length} permisos cargados:`, effectivePermissions);
         }
@@ -133,6 +139,7 @@ export class PermissionsStore {
         console.error('❌ [PermissionsStore] Error al cargar permisos:', err);
         this.permissions.set([]);
         this.loading.set(false);
+        this.loadComplete$.next(); // Notificar que terminó (aunque con error)
 
         // Si es 401, limpiar caché (sesión perdida)
         if (err.status === 401) {
@@ -174,6 +181,23 @@ export class PermissionsStore {
    */
   hasAnyPermission(permissions: string[]): boolean {
     return permissions.some(perm => this.hasPermission(perm));
+  }
+
+  /**
+   * Devuelve un Observable que se completa cuando los permisos terminan de cargarse.
+   * Si ya están cargados (loading=false), se completa inmediatamente.
+   * Útil para esperar a que los permisos estén listos antes de hacer verificaciones.
+   *
+   * @returns Observable<void> que se completa cuando la carga termina
+   */
+  waitForLoad(): Observable<void> {
+    // Si no está cargando, completar inmediatamente
+    if (!this.loading()) {
+      return of(void 0);
+    }
+
+    // Esperar a la próxima emisión de loadComplete$
+    return this.loadComplete$.pipe(first());
   }
 
   /**

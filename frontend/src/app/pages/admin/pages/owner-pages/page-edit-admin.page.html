@@ -1,7 +1,16 @@
-<div class="ds-container">
-  <div class="page-edit-admin">
-    <!-- Loading state -->
-    @if (isLoading()) {
+<!-- Admin Shell -->
+<div class="ds-admin-shell">
+
+  <!-- Sidebar -->
+  <aside id="admin-sidebar" class="ds-admin-sidebar">
+    <app-admin-sidebar-container />
+  </aside>
+
+  <!-- Main content -->
+  <main class="ds-admin-main ds-container">
+    <div class="page-edit-admin">
+      <!-- Loading state -->
+      @if (isLoading()) {
     <p>Cargando página...</p>
     } @else if (errorMessage()) {
     <div class="error-message">
@@ -67,7 +76,7 @@
     <!-- Editor section -->
     <div class="editor-section">
       <h2>Contenido</h2>
-      <div class="ds-container">
+      <div >
         <app-content-segments-editor [initialContent]="content()" [scopeType]="+(ownerType()||0)"
           [scopeId]="ownerId() ?? 0" (contentChange)="onContentChange($event)" />
       </div>
@@ -92,5 +101,7 @@
       </div>
     </div>
     }
-  </div>
+    </div>
+  </main>
+
 </div>

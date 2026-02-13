@@ -19,7 +19,7 @@ export interface AdminAction {
  * Acciones de administración para Scope Global (WebScope.GLOBAL)
  */
 export const GLOBAL_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
-  { label: 'Páginas', route: '/admin/pages', permission: 'pages.edit', icon: '📄', category: 'Contenido' },
+  { label: 'Páginas', route: '/admin/pages/1', permission: 'pages.edit', icon: '📄', category: 'Contenido' },
   { label: 'Asociaciones', route: '/admin/asociaciones', permission: 'admin', icon: '🏛️', category: 'Gestión' },
   { label: 'Juegos', route: '/admin/juegos', permission: 'admin', icon: '🎴', category: 'Gestión' },
   { label: 'Usuarios', route: '/admin/users', permission: 'admin', icon: '👥', category: 'Gestión' },
