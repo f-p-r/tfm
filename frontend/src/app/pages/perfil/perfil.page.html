@@ -30,12 +30,18 @@
         <div class="space-y-3">
           <div>
             <p class="text-sm font-semibold text-neutral-medium">Nombre de usuario</p>
-            <p class="text-neutral-dark">{{ user()?.username || '—' }}</p>
+            <p class="text-neutral-dark">{{ fullUserData()?.username || user()?.username || '—' }}</p>
           </div>
 
           <div>
             <p class="text-sm font-semibold text-neutral-medium">Fecha de registro</p>
-            <p class="text-neutral-dark">{{ user()?.createdAt || '—' }}</p>
+            <p class="text-neutral-dark">
+              @if (fullUserData()?.createdAt) {
+                {{ fullUserData()!.createdAt | date:'dd/MM/yyyy HH:mm' }}
+              } @else {
+                —
+              }
+            </p>
           </div>
         </div>
       </div>

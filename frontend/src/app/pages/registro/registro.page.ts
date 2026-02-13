@@ -58,7 +58,9 @@ export class RegistroPage {
           // Éxito
           this.success.set(true);
           setTimeout(() => {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/login'], {
+              queryParams: { newUser: username }
+            });
           }, 2000);
         }
       },

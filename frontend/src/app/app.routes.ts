@@ -21,28 +21,29 @@ import { PageEntityResolver } from './core/pages/page-entity.resolver';
 import { AdminPage } from './pages/admin/admin.page';
 import { requirePermission } from './guards/permission.guard';
 import { requireAuth } from './guards/auth.guard';
+import { resolveScopeGuard } from './guards/resolve-scope.guard';
 
 export const routes: Routes = [
   // Public page viewer routes (must be before admin routes)
-  { path: '', pathMatch: 'full', component: PageViewerPage },
-  { path: 'paginas/:slug', component: PageViewerPage , resolve: { entity: PageEntityResolver }},
-  { path: 'login', component: LoginPage },
-  { path: 'registro', component: RegistroPage },
-  { path: 'auth/callback', component: AuthCallbackPage },
-  { path: 'styleguide', component: StyleguidePage },
+  { path: '', pathMatch: 'full', component: PageViewerPage, canActivate: [resolveScopeGuard] },
+  { path: 'paginas/:slug', component: PageViewerPage, canActivate: [resolveScopeGuard], resolve: { entity: PageEntityResolver }},
+  { path: 'login', component: LoginPage, canActivate: [resolveScopeGuard] },
+  { path: 'registro', component: RegistroPage, canActivate: [resolveScopeGuard] },
+  { path: 'auth/callback', component: AuthCallbackPage, canActivate: [resolveScopeGuard] },
+  { path: 'styleguide', component: StyleguidePage, canActivate: [resolveScopeGuard] },
 
   // User profile
-  { path: 'perfil', component: PerfilPage, canActivate: [requireAuth] },
+  { path: 'perfil', component: PerfilPage, canActivate: [resolveScopeGuard, requireAuth] },
 
   // Ruta de juegos con páginas
-  { path: 'juegos/:slug', component: PageViewerPage },
+  { path: 'juegos/:slug', component: PageViewerPage, canActivate: [gameBySlugGuard] },
   { path: 'juegos/:slug/asociaciones', component: GameAssociationsPage, canActivate: [gameBySlugGuard] },
-  { path: 'juegos/:slug/:pagina', component: PageViewerPage, resolve:{ entity: PageEntityResolver } },
+  { path: 'juegos/:slug/:pagina', component: PageViewerPage, canActivate: [gameBySlugGuard], resolve:{ entity: PageEntityResolver } },
 
   // Rutas de asociaciones con páginas
-  { path: 'asociaciones', component: AssociationsPage },
-  { path: 'asociaciones/:slug', component: PageViewerPage },
-  { path: 'asociaciones/:slug/:pagina', component: PageViewerPage, resolve:{ entity: PageEntityResolver } },
+  { path: 'asociaciones', component: AssociationsPage, canActivate: [resolveScopeGuard] },
+  { path: 'asociaciones/:slug', component: PageViewerPage, canActivate: [associationBySlugGuard] },
+  { path: 'asociaciones/:slug/:pagina', component: PageViewerPage, canActivate: [associationBySlugGuard], resolve:{ entity: PageEntityResolver } },
   {
     path: 'prototypes',
     children: [
@@ -106,7 +107,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminPage,
-    canActivate: [requirePermission('admin')],
+    canActivate: [resolveScopeGuard, requirePermission('admin')],
   },
 
   // Admin: gestión de páginas
@@ -114,38 +115,38 @@ export const routes: Routes = [
   {
     path: 'admin/pages/1',
     component: OwnerPagesAdminPage,
-    canActivate: [requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/1/create',
     component: PageCreateAdminPage,
-    canActivate: [requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/1/edit/:pageId',
     component: PageEditAdminPage,
-    canActivate: [requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
   // Páginas de owner (scopeType 2/3 con scopeId)
   {
     path: 'admin/pages/:ownerType/:ownerId',
     component: OwnerPagesAdminPage,
-    canActivate: [requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/:ownerType/:ownerId/create',
     component: PageCreateAdminPage,
-    canActivate: [requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/:ownerType/:ownerId/edit/:pageId',
     component: PageEditAdminPage,
-    canActivate: [requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/preview',
     component: PagePreviewPage,
-    canActivate: [requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
 
   { path: '**', redirectTo: '' },

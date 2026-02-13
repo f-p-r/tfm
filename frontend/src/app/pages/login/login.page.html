@@ -7,6 +7,13 @@
 
     <!-- Contenedor con borde redondeado -->
     <div class="bg-white border border-neutral-medium rounded-lg p-6 shadow-sm">
+      <!-- Mensaje de éxito (registro completado) -->
+      @if (successMessage()) {
+        <div class="ds-alert ds-alert-success mb-6">
+          {{ successMessage() }}
+        </div>
+      }
+
       <!-- Error general -->
       @if (generalError()) {
         <div class="ds-alert ds-alert-error mb-6">

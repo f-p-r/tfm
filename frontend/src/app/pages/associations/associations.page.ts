@@ -98,10 +98,8 @@ export class AssociationsPage {
   readonly error = signal<string | null>(null);
 
   constructor() {
-    // Establecer contexto global al entrar en la página
-    this.contextStore.setGlobal('router');
-
     // Effect que carga asociaciones cuando cambia el contexto
+    // El scope ya está establecido por resolveScopeGuard antes de llegar aquí
     effect(() => {
       const scopeType = this.contextStore.scopeType();
       const scopeId = this.contextStore.scopeId();

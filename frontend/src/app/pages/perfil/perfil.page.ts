@@ -1,11 +1,13 @@
 import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 import { UsersService } from '../../core/users/users.service';
+import { User } from '../../core/auth/user.model';
 
 @Component({
   selector: 'app-perfil-page',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './perfil.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -15,6 +17,7 @@ export class PerfilPage implements OnInit {
   private readonly usersService = inject(UsersService);
 
   readonly user = this.authService.currentUser;
+  readonly fullUserData = signal<User | null>(null);
   readonly isLoading = signal(false);
   readonly successMessage = signal<string | null>(null);
   readonly generalError = signal<string | null>(null);
@@ -34,10 +37,27 @@ export class PerfilPage implements OnInit {
 
   ngOnInit(): void {
     const currentUser = this.user();
-    if (currentUser) {
-      this.dataForm.patchValue({
-        name: currentUser.name,
-        email: currentUser.email,
+    if (currentUser && currentUser.id) {
+      // Cargar datos completos del usuario incluyendo createdAt, updatedAt, etc.
+      this.usersService.getById(currentUser.id).subscribe({
+        next: (response) => {
+          if (!response.errors && response.data) {
+            this.fullUserData.set(response.data);
+            this.dataForm.patchValue({
+              name: response.data.name,
+              email: response.data.email || '',
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error al cargar datos completos del usuario:', error);
+          // Fallback: usar datos básicos del currentUser
+          this.fullUserData.set(currentUser);
+          this.dataForm.patchValue({
+            name: currentUser.name,
+            email: currentUser.email || '',
+          });
+        }
       });
     }
   }
@@ -65,8 +85,9 @@ export class PerfilPage implements OnInit {
         if (response.errors) {
           this.handleErrors(response.errorsList || {});
         } else if (response.data) {
-          // Actualizar el signal del AuthService con los nuevos datos
+          // Actualizar ambos signals con los nuevos datos
           this.authService.currentUser.set(response.data);
+          this.fullUserData.set(response.data);
           this.successMessage.set('Datos actualizados correctamente');
           this.scrollToTop();
         }
