@@ -58,8 +58,10 @@ export class AuthService {
   login(username: string, password: string): Observable<User> {
     return this.getCsrfCookie().pipe(
       switchMap(() =>
-        this.http.post<User>(`${this.apiBaseUrl}/api/auth/login`, { username, password })
+        this.http.post<AuthResponse>(`${this.apiBaseUrl}/api/auth/login`, { username, password })
           .pipe(
+            // Mapear respuesta { user: {...} } a User
+            map(response => response.user),
             // Al hacer login explícito, guardamos el usuario
             tap(user => this.currentUser.set(user)),
             catchError((error) => this.handleError(error))

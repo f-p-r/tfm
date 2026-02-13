@@ -16,12 +16,14 @@ import { ContextStore } from '../../core/context/context.store';
 import { PermissionsStore } from '../../core/authz/permissions.store';
 import { ADMIN_ACTIONS_BY_SCOPE } from '../../core/admin/admin-actions.constants';
 import { JsonPipe } from '@angular/common';
+import { HasPermissionDirective } from '../../shared/directives';
 
 @Component({
   selector: 'app-admin-page',
   imports: [
     AdminSidebarContainerComponent,
-    JsonPipe
+    JsonPipe,
+    HasPermissionDirective
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -55,6 +57,48 @@ import { JsonPipe } from '@angular/common';
               El contenido de esta página se adaptará según el contexto actual
               (Global, Asociación o Juego) y mostrará información relevante del scope activo.
             </p>
+
+            <!-- Ejemplo de uso de directiva *hasPermission -->
+            <div class="mt-6 border-t border-neutral-light pt-6">
+              <h3 class="h4 mb-4">Acciones rápidas</h3>
+              <div class="flex gap-3 flex-wrap">
+                <!-- Botón visible solo con permiso pages.edit -->
+                <button
+                  *hasPermission="'pages.edit'"
+                  type="button"
+                  class="ds-button ds-button-primary"
+                >
+                  Gestionar páginas
+                </button>
+
+                <!-- Botón visible solo con permiso users.manage -->
+                <button
+                  *hasPermission="'users.manage'"
+                  type="button"
+                  class="ds-button ds-button-secondary"
+                >
+                  Gestionar usuarios
+                </button>
+
+                <!-- Botón visible si tiene AL MENOS UNO de estos permisos -->
+                <button
+                  *hasPermission="['games.manage', 'associations.manage']"
+                  type="button"
+                  class="ds-button ds-button-secondary"
+                >
+                  Gestionar entidades
+                </button>
+
+                <!-- Botón visible solo si tiene TODOS estos permisos -->
+                <button
+                  *hasPermission="['admin', 'config.manage']; mode: 'all'"
+                  type="button"
+                  class="ds-button ds-button-danger"
+                >
+                  Configuración avanzada
+                </button>
+              </div>
+            </div>
           </div>
 
           <!-- Debug info -->

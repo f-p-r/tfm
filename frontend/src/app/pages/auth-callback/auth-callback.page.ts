@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
-import { AuthStore } from '../../core/auth/auth.store';
 import { User } from '../../core/auth/user.model';
 
 @Component({
@@ -15,7 +14,6 @@ export class AuthCallbackPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
-  private readonly authStore = inject(AuthStore);
 
   readonly status = signal<'processing' | 'success' | 'error'>('processing');
   readonly message = signal<string>('Procesando autenticación...');
@@ -33,7 +31,8 @@ export class AuthCallbackPage implements OnInit {
 
     this.authService.me().subscribe({
       next: (user: User) => {
-        this.authStore.setUser(user);
+        // Actualizar el signal en AuthService
+        this.authService.currentUser.set(user);
         this.status.set('success');
         this.message.set('Autenticación exitosa. Redirigiendo...');
         setTimeout(() => this.router.navigate(['/']), 1000);

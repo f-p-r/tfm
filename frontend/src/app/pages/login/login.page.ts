@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
-import { AuthStore } from '../../core/auth/auth.store';
 import { isLaravelValidationError } from '../../core/auth/laravel-validation-error';
 import { environment } from '../../../environments/environment';
 import { User } from '../../core/auth/user.model';
@@ -18,7 +17,6 @@ import { User } from '../../core/auth/user.model';
 export class LoginPage {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
-  private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
 
@@ -44,7 +42,7 @@ export class LoginPage {
 
     this.authService.login(username, password).subscribe({
       next: (user: User) => {
-        this.authStore.setUser(user);
+        // El AuthService ya actualiza currentUser signal automáticamente
         this.router.navigate(['/']);
       },
       error: (error: { status: number; message?: string; errors?: Record<string, string[]> }) => {
