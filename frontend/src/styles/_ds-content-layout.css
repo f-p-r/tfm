@@ -43,7 +43,7 @@
 /* === 5. ANCHO DEL CONTENEDOR === */
 .ds-seg-width-standard {
   width: 100%;
-  max-width: 72rem; /* ~1152px */
+  max-width: var(--container-7xl);
   margin: 0 auto;
 }
 .ds-seg-width-narrow {

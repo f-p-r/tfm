@@ -192,7 +192,7 @@
 
   /* Contenedor centrado estándar con márgenes laterales - usar como clase en div */
   .ds-container {
-    @apply mx-auto w-full max-w-6xl;
+    @apply mx-auto w-full max-w-7xl;
   }
 
   /* Contenedor centrado estrecho para formularios */
@@ -209,7 +209,7 @@
 
   /* Contenedor interno de la barra de navegación */
   .ds-nav-inner {
-    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-6xl pr-4 md:pr-6;
+    @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-7xl pr-4 md:pr-6;
   }
 
   /* Zona de marca/logo */
@@ -244,7 +244,7 @@
 
   /* Lista de enlaces móvil con centrado y ancho máximo */
   .ds-nav-mobile-list {
-    @apply flex flex-col divide-y divide-neutral-medium mx-auto w-full max-w-6xl;
+    @apply flex flex-col divide-y divide-neutral-medium mx-auto w-full max-w-7xl;
   }
 
   /* Link individual en móvil */
