@@ -88,7 +88,7 @@ export class AdminUsersPage {
     { key: 'username', label: 'Usuario', type: 'text', align: 'left' },
     { key: 'name', label: 'Nombre', type: 'text', align: 'left' },
     { key: 'email', label: 'Email', type: 'text', align: 'left' },
-    { key: 'createdAt', label: 'Fecha creación', type: 'date', align: 'left' }
+    { key: 'createdAt', label: 'Fecha creación', type: 'date', align: 'center' }
   ];
 
   // Acciones disponibles

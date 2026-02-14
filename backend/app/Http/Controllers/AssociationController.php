@@ -15,7 +15,7 @@ class AssociationController extends Controller
      */
     public function bySlug(string $slug, Request $request): JsonResponse
     {
-        $query = Association::query()->with(['games', 'country', 'region'])->where('slug', $slug);
+        $query = Association::query()->with(['games', 'country', 'region', 'owner'])->where('slug', $slug);
 
         if (!$request->boolean('include_disabled')) {
             $query->where('disabled', false);
@@ -37,7 +37,7 @@ class AssociationController extends Controller
             $query->where('disabled', false);
         }
 
-        $associations = $query->with(['games', 'country', 'region'])->get();
+        $associations = $query->with(['games', 'country', 'region', 'owner'])->get();
         return response()->json($associations);
     }
 
@@ -66,7 +66,12 @@ class AssociationController extends Controller
                 },
             ],
             'web' => 'nullable|url|max:2048',
+            'external_url' => 'nullable|url|max:2048',
             'disabled' => 'boolean',
+            'management' => 'nullable|boolean',
+            'province' => 'nullable|string|max:255',
+            'homePageId' => 'nullable|integer|exists:pages,id',
+            'owner_id' => 'nullable|integer|exists:users,id',
             'game_ids' => 'sometimes|array',
             'game_ids.*' => 'integer|exists:games,id',
         ]);
@@ -87,7 +92,12 @@ class AssociationController extends Controller
             'country_id' => $validated['country_id'] ?? null,
             'region_id' => $validated['region_id'] ?? null,
             'web' => $validated['web'] ?? null,
+            'external_url' => $validated['external_url'] ?? null,
             'disabled' => $validated['disabled'] ?? false,
+            'management' => $validated['management'] ?? null,
+            'province' => $validated['province'] ?? null,
+            'homePageId' => $validated['homePageId'] ?? null,
+            'owner_id' => $validated['owner_id'] ?? null,
         ]);
 
         // Sync games if provided
@@ -95,7 +105,7 @@ class AssociationController extends Controller
             $association->games()->sync($validated['game_ids']);
         }
 
-        $association->load('games', 'country', 'region');
+        $association->load('games', 'country', 'region', 'owner');
         return response()->json($association, 201);
     }
 
@@ -104,7 +114,7 @@ class AssociationController extends Controller
      */
     public function show(Association $association): JsonResponse
     {
-        $association->load('games', 'country', 'region');
+        $association->load('games', 'country', 'region', 'owner');
         return response()->json($association);
     }
 
@@ -148,7 +158,12 @@ class AssociationController extends Controller
                 },
             ],
             'web' => 'nullable|url|max:2048',
+            'external_url' => 'nullable|url|max:2048',
             'disabled' => 'boolean',
+            'management' => 'nullable|boolean',
+            'province' => 'nullable|string|max:255',
+            'homePageId' => 'nullable|integer|exists:pages,id',
+            'owner_id' => 'nullable|integer|exists:users,id',
             'game_ids' => 'sometimes|array',
             'game_ids.*' => 'integer|exists:games,id',
         ]);
@@ -162,7 +177,12 @@ class AssociationController extends Controller
             'country_id' => $validated['country_id'] ?? $association->country_id,
             'region_id' => $validated['region_id'] ?? $association->region_id,
             'web' => $validated['web'] ?? $association->web,
+            'external_url' => $validated['external_url'] ?? $association->external_url,
             'disabled' => $validated['disabled'] ?? $association->disabled,
+            'management' => $validated['management'] ?? $association->management,
+            'province' => $validated['province'] ?? $association->province,
+            'homePageId' => $validated['homePageId'] ?? $association->homePageId,
+            'owner_id' => $validated['owner_id'] ?? $association->owner_id,
         ]);
 
         // Sync games if provided
@@ -170,7 +190,7 @@ class AssociationController extends Controller
             $association->games()->sync($validated['game_ids']);
         }
 
-        $association->load('games', 'country', 'region');
+        $association->load('games', 'country', 'region', 'owner');
         return response()->json($association);
     }
 

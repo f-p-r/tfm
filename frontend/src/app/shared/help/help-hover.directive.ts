@@ -1,12 +1,12 @@
 /**
- * Directiva para mostrar ayuda contextual en hover/focus (solo en desktop).
+ * Directiva para mostrar ayuda contextual en hover (solo en desktop).
  *
  * Comportamiento:
  * - Solo se activa en dispositivos con hover (pointer: fine)
- * - mouseenter: abre popover SIN botón cerrar
+ * - mouseenter: abre popover SIN botón cerrar (solo si el campo NO tiene focus)
  * - mouseleave: cierra popover (excepto si tiene foco)
- * - focusin: abre popover CON botón cerrar
- * - focusout: cierra popover
+ * - focusin: cierra popover (para que no interfiera con dropdowns)
+ * - focusout: permite mostrar el popover de nuevo en hover
  *
  * Uso con helpKey (recomendado):
  * ```html
@@ -68,6 +68,7 @@ export class HelpHoverDirective {
   @HostListener('mouseenter')
   onMouseEnter(): void {
     if (!this.supportsHover) return;
+    if (this.isFocused) return; // No mostrar popup si el campo tiene focus
     const title = this.resolvedTitle();
     const text = this.resolvedText();
     if (!title || !text) return;
@@ -85,12 +86,8 @@ export class HelpHoverDirective {
 
   @HostListener('focusin')
   onFocusIn(): void {
-    const title = this.resolvedTitle();
-    const text = this.resolvedText();
-    if (!title || !text) return;
-
     this.isFocused = true;
-    this.helpOverlay.open(this.elementRef.nativeElement, title, text, true);
+    this.helpOverlay.close(); // Cerrar popup cuando el campo recibe focus
   }
 
   @HostListener('focusout')

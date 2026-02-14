@@ -25,7 +25,7 @@ export class HelpOverlayService {
     const popover = document.createElement('div');
     popover.className = 'ds-popover';
     popover.style.position = 'absolute';
-    popover.style.zIndex = '1000';
+    popover.style.zIndex = '10000';
 
     // Título
     const titleEl = document.createElement('div');

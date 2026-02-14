@@ -12,6 +12,8 @@ export interface Association {
   region_id?: string;
   web?: string;
   disabled: boolean;
+  management?: boolean;
+  owner_id?: number;
   games?: Array<{
     id: number;
     name: string;
@@ -26,6 +28,12 @@ export interface Association {
   region?: {
     id: string;
     name: string;
+  };
+  owner?: {
+    id: number;
+    username: string;
+    name: string;
+    email: string;
   };
   created_at?: string;
   updated_at?: string;

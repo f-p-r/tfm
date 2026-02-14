@@ -57,7 +57,7 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
               </th>
             }
             @if (actions.length) {
-              <th class="px-4 py-3 text-xs font-semibold text-neutral-dark uppercase tracking-wider border-b border-neutral-medium bg-neutral-light text-right sticky top-0 z-10">
+              <th class="px-4 py-3 text-xs font-semibold text-neutral-dark uppercase tracking-wider border-b border-neutral-medium bg-neutral-light text-center sticky top-0 z-10">
                 Acciones
               </th>
             }
@@ -81,7 +81,7 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
                   </td>
                 }
                 @if (actions.length) {
-                  <td class="px-4 py-3 text-right whitespace-nowrap">
+                  <td class="px-4 py-3 text-center whitespace-nowrap">
                     @for (a of actions; track a.action) {
                       <button class="ds-btn-sm ds-btn-primary ml-3" (click)="onAction(a.action, row)">{{ a.label }}</button>
                     }

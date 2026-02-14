@@ -19,6 +19,7 @@ import { PageViewerPage } from './pages/page-viewer/page-viewer.page';
 import { PageEntityResolver } from './core/pages/page-entity.resolver';
 import { AdminPage } from './pages/admin/admin.page';
 import { AdminGamesPage } from './pages/admin/admin-games.page';
+import { AdminAssociationsPage } from './pages/admin/admin-associations.page';
 import { AdminUsersPage } from './pages/admin/admin-users.page';
 import { requirePermission } from './guards/permission.guard';
 import { requireAuth } from './guards/auth.guard';
@@ -115,6 +116,13 @@ export const routes: Routes = [
   {
     path: 'admin/juegos',
     component: AdminGamesPage,
+    canActivate: [resolveScopeGuard, requirePermission('admin')],
+  },
+
+  // Admin: gestión de asociaciones
+  {
+    path: 'admin/asociaciones',
+    component: AdminAssociationsPage,
     canActivate: [resolveScopeGuard, requirePermission('admin')],
   },
 
