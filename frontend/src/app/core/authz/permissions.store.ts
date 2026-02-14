@@ -36,12 +36,14 @@ import { Observable, of, Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { AuthzService } from './authz.service';
 import { ContextStore } from '../context/context.store';
+import { AuthService } from '../auth/auth.service';
 import { isBreakdownResponse } from './authz.models';
 
 @Injectable({ providedIn: 'root' })
 export class PermissionsStore {
   private readonly authz = inject(AuthzService);
   private readonly contextStore = inject(ContextStore);
+  private readonly authService = inject(AuthService);
 
   /** Subject que emite cuando los permisos terminan de cargarse */
   private readonly loadComplete$ = new Subject<void>();
@@ -77,13 +79,30 @@ export class PermissionsStore {
   // -------------------------------------------------------------------------
 
   constructor() {
-    // Auto-recarga de permisos cuando cambia el scope en ContextStore
+    // Effect 1: Auto-limpieza y recarga cuando cambia el estado de autenticación
+    effect(() => {
+      const user = this.authService.currentUser();
+
+      if (user === null) {
+        // Usuario deslogueado → Limpiar permisos inmediatamente
+        console.log('🧹 [PermissionsStore] Usuario deslogueado → Limpiando permisos');
+        this.permissions.set([]);
+        this.lastLoadedScopeKey.set(null);
+      } else {
+        // Usuario autenticado → Recargar permisos para el scope actual
+        console.log('✅ [PermissionsStore] Usuario autenticado → Recargando permisos');
+        this.loadForCurrentScope();
+      }
+    });
+
+    // Effect 2: Auto-recarga cuando cambia el scope (solo si hay usuario autenticado)
     effect(() => {
       const scopeKey = this.contextStore.scopeKey();
       const lastKey = this.lastLoadedScopeKey();
+      const user = this.authService.currentUser();
 
-      // Solo recargar si cambió el scope
-      if (scopeKey !== lastKey) {
+      // Solo recargar si hay usuario Y el scope cambió
+      if (user && scopeKey !== lastKey) {
         console.log(`🔐 [PermissionsStore] Scope cambió de "${lastKey}" a "${scopeKey}" → Recargando permisos`);
         this.loadForCurrentScope();
       }

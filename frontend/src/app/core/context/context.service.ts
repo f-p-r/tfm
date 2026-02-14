@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, effect } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute, Data } from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { filter, map, catchError, switchMap } from 'rxjs/operators';
@@ -63,6 +63,7 @@ export class ContextService {
    * - Publica las acciones en adminActions$
    */
   constructor() {
+    // Recalcular admin actions en cada navegación
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.getDeepestRoute(this.route)),
@@ -77,6 +78,32 @@ export class ContextService {
       })
     ).subscribe(actions => {
       this.adminActionsSubject.next(actions);
+    });
+
+    // Effect: Recalcular admin actions cuando cambia el usuario o los permisos
+    effect(() => {
+      // Detectar cambios en usuario autenticado
+      const user = this.authService.currentUser();
+      // Detectar cambios en permisos (usando allPermissions como trigger)
+      const permissions = this.permissionsStore.allPermissions();
+
+      console.log('🔄 [ContextService] Cambio detectado en usuario/permisos → Recalculando admin actions');
+
+      // Si no hay usuario, limpiar acciones
+      if (!user) {
+        this.adminActionsSubject.next([]);
+        return;
+      }
+
+      // Recalcular acciones con la ruta actual
+      const route = this.getDeepestRoute(this.route);
+      const data = route.snapshot.data;
+      const params = route.snapshot.params;
+      const url = this.router.url;
+
+      this.calculateAdminActions(data, params, url).subscribe(actions => {
+        this.adminActionsSubject.next(actions);
+      });
     });
   }
 
