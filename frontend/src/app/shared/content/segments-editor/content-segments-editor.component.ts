@@ -40,6 +40,7 @@ export class ContentSegmentsEditorComponent {
   readonly scopeId = input<number | null>(null);
 
   readonly contentChange = output<PageContentDTO>();
+  readonly editingStateChange = output<boolean>();
 
   readonly segments = signal<SegmentDTO[]>([]);
   readonly editingId = signal<string | null>(null);
@@ -200,6 +201,7 @@ export class ContentSegmentsEditorComponent {
     if (seg) {
       this.editingId.set(id);
       this.editingDraft.set(JSON.parse(JSON.stringify(seg)));
+      this.editingStateChange.emit(true);
     }
   }
 
@@ -207,6 +209,7 @@ export class ContentSegmentsEditorComponent {
     this.editingId.set(null);
     this.editingDraft.set(null);
     this.activeEditorRef = null;
+    this.editingStateChange.emit(false);
   }
 
   saveEdit() {

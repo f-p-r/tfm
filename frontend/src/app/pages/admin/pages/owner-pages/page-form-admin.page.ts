@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PagesService } from '../../../../core/pages/pages.service';
-import { PageOwnerType, PageCreateDTO, PageOwnerScope } from '../../../../shared/content/page.dto';
+import { PageOwnerType, PageCreateDTO, PageUpdateDTO, PageDTO, PageOwnerScope } from '../../../../shared/content/page.dto';
 import { PageContentDTO } from '../../../../shared/content/page-content.dto';
 import { ContentSegmentsEditorComponent } from '../../../../shared/content/segments-editor/content-segments-editor.component';
 import { HelpIComponent } from '../../../../shared/help/help-i/help-i.component';
@@ -12,22 +12,40 @@ import { HelpContentService } from '../../../../shared/help/help-content.service
 import { PAGE_CREATE_PACK } from './page-create.pack';
 import { AdminSidebarContainerComponent } from '../../../../components/admin-sidebar/admin-sidebar-container.component';
 
+/**
+ * Componente unificado para crear y editar páginas de contenido.
+ * El modo (create/edit) se determina automáticamente según la presencia del parámetro pageId en la ruta.
+ */
 @Component({
-  selector: 'app-page-create-admin',
-  imports: [CommonModule, FormsModule, ContentSegmentsEditorComponent, HelpIComponent, HelpHoverDirective, AdminSidebarContainerComponent],
+  selector: 'app-page-form-admin',
+  imports: [
+    CommonModule,
+    FormsModule,
+    ContentSegmentsEditorComponent,
+    HelpIComponent,
+    HelpHoverDirective,
+    AdminSidebarContainerComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  templateUrl: './page-create-admin.page.html',
-  styleUrl: './page-create-admin.page.css',
+  templateUrl: './page-form-admin.page.html',
+  styleUrl: './page-form-admin.page.css',
 })
-export class PageCreateAdminPage implements OnInit {
+export class PageFormAdminPage implements OnInit {
   private readonly pagesService = inject(PagesService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly helpContent = inject(HelpContentService);
 
   // Route params
+  readonly pageId = signal<number | null>(null);
   readonly ownerType = signal<PageOwnerType | null>(null);
   readonly ownerId = signal<number | null>(null);
+
+  // Mode detection
+  readonly isEditMode = computed(() => this.pageId() !== null);
+
+  // Datos originales (solo en edit)
+  readonly originalPage = signal<PageDTO | null>(null);
 
   // Form fields
   readonly title = signal('');
@@ -38,18 +56,38 @@ export class PageCreateAdminPage implements OnInit {
     schemaVersion: 1,
     segments: [],
   });
+  readonly editorInitialContent = signal<PageContentDTO | null>(null);
 
   // States
-  readonly isCreating = signal(false);
+  readonly isLoading = signal(false);
+  readonly isSaving = signal(false);
+  readonly isEditingSegment = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly validationErrors = signal<Record<string, string[]>>({});
 
   // Computed
+  readonly hasValidContent = computed(() => {
+    return this.content().segments.length > 0;
+  });
+
   readonly canCreate = computed(() => {
     const hasTitle = this.title().trim() !== '';
     const hasSlug = this.slug().trim() !== '';
-    const hasSegments = this.content().segments.length > 0;
-    return hasTitle && hasSlug && hasSegments;
+    return hasTitle && hasSlug && this.hasValidContent();
+  });
+
+  readonly hasChanges = computed(() => {
+    if (!this.isEditMode()) return false;
+
+    const original = this.originalPage();
+    if (!original) return false;
+
+    return (
+      this.title() !== original.title ||
+      this.slug() !== original.slug ||
+      this.published() !== original.published ||
+      JSON.stringify(this.content()) !== JSON.stringify(original.content)
+    );
   });
 
   readonly ownerTypeLabel = computed(() => {
@@ -58,6 +96,22 @@ export class PageCreateAdminPage implements OnInit {
     if (type === PageOwnerScope.ASSOCIATION) return 'Asociación';
     if (type === PageOwnerScope.GAME) return 'Juego';
     return 'Owner';
+  });
+
+  readonly pageTitle = computed(() => {
+    if (this.isEditMode()) {
+      const title = this.title();
+      return title ? `Página ${title}` : 'Editar página';
+    }
+    return 'Nueva página';
+  });
+
+  readonly isSubmitDisabled = computed(() => {
+    if (this.isEditingSegment()) return true;
+    if (this.isEditMode()) {
+      return !this.hasChanges() || !this.hasValidContent() || this.isSaving();
+    }
+    return !this.canCreate() || this.isSaving();
   });
 
   constructor() {
@@ -73,32 +127,49 @@ export class PageCreateAdminPage implements OnInit {
 
   ngOnInit(): void {
     // Parse route params
+    let pageIdParam = this.route.snapshot.paramMap.get('pageId');
     let ownerTypeParam = this.route.snapshot.paramMap.get('ownerType');
     let ownerIdParam = this.route.snapshot.paramMap.get('ownerId');
 
-    // Si no hay paramMap, intentar parsear desde URL (para rutas estáticas como /admin/pages/1/create)
+    // Si no hay paramMap, intentar parsear desde URL
     if (!ownerTypeParam) {
       const urlSegments = this.route.snapshot.url;
-      // URL esperada: /admin/pages/1/create o /admin/pages/:ownerType/:ownerId/create
+      // URL esperada: /admin/pages/1/create o /admin/pages/1/edit/123
       if (urlSegments.length >= 2 && urlSegments[0].path === 'admin' && urlSegments[1].path === 'pages') {
         ownerTypeParam = urlSegments[2]?.path ?? null;
-        ownerIdParam = urlSegments[3]?.path ?? null;
+
+        // Si el siguiente segmento es 'create' o 'edit', entonces ownerType='1' sin ownerId
+        if (urlSegments[3]?.path === 'create') {
+          ownerIdParam = null;
+        } else if (urlSegments[3]?.path === 'edit') {
+          ownerIdParam = null;
+          pageIdParam = urlSegments[4]?.path ?? null;
+        } else {
+          // Tiene ownerId
+          ownerIdParam = urlSegments[3]?.path ?? null;
+          // Buscar 'create' o 'edit'
+          if (urlSegments[4]?.path === 'create') {
+            pageIdParam = null;
+          } else if (urlSegments[4]?.path === 'edit') {
+            pageIdParam = urlSegments[5]?.path ?? null;
+          }
+        }
       }
     }
 
+    // Validate and set ownerType
     if (!ownerTypeParam) {
       this.errorMessage.set('Parámetro ownerType no válido');
       return;
     }
 
     const parsedOwnerType = this.parseOwnerType(ownerTypeParam);
-
     if (parsedOwnerType === null) {
       this.errorMessage.set('Parámetro ownerType no válido');
       return;
     }
 
-    // Para scopeType 1 (global), ownerId es opcional
+    // Parse ownerId
     let parsedOwnerId: number | null = null;
     if (parsedOwnerType !== '1' && ownerIdParam) {
       parsedOwnerId = parseInt(ownerIdParam, 10);
@@ -108,8 +179,23 @@ export class PageCreateAdminPage implements OnInit {
       }
     }
 
+    // Parse pageId if in edit mode
+    if (pageIdParam) {
+      const parsedPageId = parseInt(pageIdParam, 10);
+      if (isNaN(parsedPageId)) {
+        this.errorMessage.set('ID de página no válido');
+        return;
+      }
+      this.pageId.set(parsedPageId);
+    }
+
     this.ownerType.set(parsedOwnerType);
     this.ownerId.set(parsedOwnerId);
+
+    // Load page if in edit mode
+    if (this.isEditMode()) {
+      this.loadPage();
+    }
   }
 
   private parseOwnerType(param: string): PageOwnerType | null {
@@ -126,11 +212,61 @@ export class PageCreateAdminPage implements OnInit {
     return param as PageOwnerType;
   }
 
+  private loadPage(): void {
+    const id = this.pageId();
+    if (id === null) return;
+
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    this.pagesService.getById(id).subscribe({
+      next: (page) => {
+        if (!page) {
+          this.errorMessage.set('Página no encontrada');
+          this.isLoading.set(false);
+          return;
+        }
+
+        this.originalPage.set(page);
+        this.title.set(page.title);
+        this.slug.set(page.slug);
+        this.published.set(page.published);
+        this.classNames.set(page.content.classNames ?? '');
+        this.content.set(page.content);
+        this.editorInitialContent.set(JSON.parse(JSON.stringify(page.content)));
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+
+        if (err.status === 404) {
+          this.errorMessage.set('Página no encontrada');
+        } else {
+          this.errorMessage.set(err.message || 'Error al cargar la página');
+        }
+
+        console.error(err);
+      },
+    });
+  }
+
   onContentChange(newContent: PageContentDTO): void {
     this.content.set(newContent);
   }
 
-  onCreate(): void {
+  onEditingStateChange(isEditing: boolean): void {
+    this.isEditingSegment.set(isEditing);
+  }
+
+  onSubmit(): void {
+    if (this.isEditMode()) {
+      this.onSave();
+    } else {
+      this.onCreate();
+    }
+  }
+
+  private onCreate(): void {
     const ownerType = this.ownerType();
     const ownerId = this.ownerId();
 
@@ -164,14 +300,14 @@ export class PageCreateAdminPage implements OnInit {
       content: this.content(),
     };
 
-    this.isCreating.set(true);
+    this.isSaving.set(true);
     this.errorMessage.set(null);
     this.validationErrors.set({});
 
     this.pagesService.create(input).subscribe({
       next: (createdPage) => {
-        this.isCreating.set(false);
-        // Navigate to edit page or back to list
+        this.isSaving.set(false);
+        // Navigate to edit page
         if (ownerType === '1') {
           this.router.navigate(['/admin/pages', '1', 'edit', createdPage.id]);
         } else {
@@ -179,13 +315,56 @@ export class PageCreateAdminPage implements OnInit {
         }
       },
       error: (err) => {
-        this.isCreating.set(false);
+        this.isSaving.set(false);
 
         if (err.status === 422) {
           this.errorMessage.set('Error de validación');
           this.validationErrors.set(err.errors || {});
         } else {
           this.errorMessage.set(err.message || 'Error al crear la página');
+          this.validationErrors.set({});
+        }
+
+        console.error(err);
+      },
+    });
+  }
+
+  private onSave(): void {
+    const id = this.pageId();
+    if (id === null) return;
+
+    // Validar que tenga contenido
+    if (!this.hasValidContent()) {
+      this.errorMessage.set('La página debe tener al menos un segmento de contenido');
+      return;
+    }
+
+    const patch: PageUpdateDTO = {
+      title: this.title(),
+      slug: this.slug(),
+      published: this.published(),
+      content: this.content(),
+    };
+
+    this.isSaving.set(true);
+    this.errorMessage.set(null);
+    this.validationErrors.set({});
+
+    this.pagesService.update(id, patch).subscribe({
+      next: (updatedPage) => {
+        this.originalPage.set(updatedPage);
+        this.isSaving.set(false);
+        alert('Página guardada correctamente');
+      },
+      error: (err) => {
+        this.isSaving.set(false);
+
+        if (err.status === 422) {
+          this.errorMessage.set('Error de validación');
+          this.validationErrors.set(err.errors || {});
+        } else {
+          this.errorMessage.set(err.message || 'Error al guardar la página');
           this.validationErrors.set({});
         }
 

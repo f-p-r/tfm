@@ -425,7 +425,7 @@
 
 
   .ds-admin-shell {
-    @apply flex bg-admin-bg text-sm relative overflow-hidden;
+    @apply flex  text-sm relative overflow-hidden;
   }
 
   /* Sidebar: FLOTANTE, debajo del navbar y con z-index alto */

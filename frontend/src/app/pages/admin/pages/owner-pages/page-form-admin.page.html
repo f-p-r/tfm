@@ -8,9 +8,13 @@
 
   <!-- Main content -->
   <main class="ds-admin-main ds-container">
-    <div class="page-create-admin">
-      <!-- Error state -->
-      @if (errorMessage() && ownerType() === null) {
+    <div class="page-form-admin">
+      <h1 class="page-main-title">{{ pageTitle() }}</h1>
+
+      <!-- Loading state (solo en modo edición) -->
+      @if (isEditMode() && isLoading()) {
+        <p>Cargando página...</p>
+      } @else if (errorMessage() && (isEditMode() || ownerType() === null)) {
         <div class="error-message">
           <p>{{ errorMessage() }}</p>
           <button class="ds-btn ds-btn-secondary" (click)="onCancel()">Volver</button>
@@ -35,7 +39,7 @@
                   helpKey="title"
                   [(ngModel)]="title"
                   placeholder="Título de la página"
-                  [disabled]="isCreating()"
+                  [disabled]="isSaving()"
                 />
               </div>
 
@@ -54,7 +58,7 @@
                   [(ngModel)]="slug"
                   placeholder="slug-pagina"
                   maxlength="25"
-                  [disabled]="isCreating()"
+                  [disabled]="isSaving()"
                 />
                 @if (validationErrors()['slug']) {
                   <div class="error-field">
@@ -80,14 +84,14 @@
                   helpKey="classNames"
                   [(ngModel)]="classNames"
                   placeholder="ds-clase-1 ds-clase-2"
-                  [disabled]="isCreating()"
+                  [disabled]="isSaving()"
                 />
               </div>
 
               <div class="ds-field ds-field-checkbox-grid">
                 <div class="ds-label-with-help">
                   <label class="ds-checkbox-label ds-label" helpHover helpKey="published">
-                    <input type="checkbox" [(ngModel)]="published" [disabled]="isCreating()" />
+                    <input type="checkbox" [(ngModel)]="published" [disabled]="isSaving()" />
                     <span>Página publicada</span>
                   </label>
                   <app-help-i helpKey="published"></app-help-i>
@@ -102,10 +106,11 @@
           <h2>Contenido</h2>
           <div>
             <app-content-segments-editor
-              [initialContent]="content()"
+              [initialContent]="editorInitialContent()"
               [scopeType]="+(ownerType()||0)"
               [scopeId]="ownerId() ?? 0"
               (contentChange)="onContentChange($event)"
+              (editingStateChange)="onEditingStateChange($event)"
             />
             @if (content().segments.length === 0) {
               <p class="ds-help text-muted" style="display: block; margin-top: 0.5rem;">
@@ -122,18 +127,32 @@
           }
 
           <div class="actions-buttons">
-            <button class="ds-btn ds-btn-danger" (click)="onCancel()" [disabled]="isCreating()">
+            <button
+              class="ds-btn"
+              [class.ds-btn-danger]="!isEditingSegment() && !isSaving()"
+              [class.ds-btn-disabled]="isEditingSegment() || isSaving()"
+              (click)="onCancel()"
+              [disabled]="isEditingSegment() || isSaving()"
+            >
               Cancelar
             </button>
-            <button class="ds-btn ds-btn-secondary" (click)="openPreview()" [disabled]="isCreating()">
+            <button
+              class="ds-btn"
+              [class.ds-btn-secondary]="!isEditingSegment() && !isSaving()"
+              [class.ds-btn-disabled]="isEditingSegment() || isSaving()"
+              (click)="openPreview()"
+              [disabled]="isEditingSegment() || isSaving()"
+            >
               Vista previa
             </button>
             <button
-              class="ds-btn ds-btn-primary"
-              (click)="onCreate()"
-              [disabled]="!canCreate() || isCreating()"
+              class="ds-btn"
+              [class.ds-btn-primary]="!isSubmitDisabled()"
+              [class.ds-btn-disabled]="isSubmitDisabled()"
+              (click)="onSubmit()"
+              [disabled]="isSubmitDisabled()"
             >
-              {{ isCreating() ? 'Creando...' : 'Crear página' }}
+              {{ isSaving() ? (isEditMode() ? 'Guardando...' : 'Creando...') : (isEditMode() ? 'Guardar cambios' : 'Crear página') }}
             </button>
           </div>
         </div>

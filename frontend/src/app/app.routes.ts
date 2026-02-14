@@ -13,8 +13,7 @@ import { AssociationsPage } from './pages/associations/associations.page';
 import { AssociationPage } from './pages/associations/association/association.page';
 import { associationBySlugGuard } from './core/associations/association-by-slug.guard';
 import { OwnerPagesAdminPage } from './pages/admin/pages/owner-pages/owner-pages-admin.page';
-import { PageEditAdminPage } from './pages/admin/pages/owner-pages/page-edit-admin.page';
-import { PageCreateAdminPage } from './pages/admin/pages/owner-pages/page-create-admin.page';
+import { PageFormAdminPage } from './pages/admin/pages/owner-pages/page-form-admin.page';
 import { PagePreviewPage } from './pages/admin/pages/owner-pages/page-preview.page';
 import { PageViewerPage } from './pages/page-viewer/page-viewer.page';
 import { PageEntityResolver } from './core/pages/page-entity.resolver';
@@ -127,12 +126,12 @@ export const routes: Routes = [
   },
   {
     path: 'admin/pages/1/create',
-    component: PageCreateAdminPage,
+    component: PageFormAdminPage,
     canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/1/edit/:pageId',
-    component: PageEditAdminPage,
+    component: PageFormAdminPage,
     canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
   // Páginas de owner (scopeType 2/3 con scopeId)
@@ -143,12 +142,12 @@ export const routes: Routes = [
   },
   {
     path: 'admin/pages/:ownerType/:ownerId/create',
-    component: PageCreateAdminPage,
+    component: PageFormAdminPage,
     canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/:ownerType/:ownerId/edit/:pageId',
-    component: PageEditAdminPage,
+    component: PageFormAdminPage,
     canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
   },
   {

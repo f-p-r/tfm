@@ -171,7 +171,7 @@
             class="ds-layout-grid"
             [attr.data-layout]="draft.distribution"
             [ngClass]="{
-              'ds-seg-width-standard': draft.containerWidth === 'standard' || !draft.containerWidth,
+              '': draft.containerWidth === 'standard' || !draft.containerWidth,
               'ds-seg-width-narrow': draft.containerWidth === 'narrow',
               'ds-seg-width-full': draft.containerWidth === 'full',
               'ds-seg-pad-none': draft.verticalPadding === 'none',
@@ -181,7 +181,7 @@
             }"
             [class]="!draft.fullWidthBackground && draft.backgroundColor ? 'bg-' + draft.backgroundColor : ''">
             @for (col of draft.columns; track col.id; let idx = $index) {
-            <div class="ds-layout-cell ds-user-content bg-white/50 p-2 rounded border border-dashed border-gray-300">
+            <div class="ds-layout-cell ds-user-content bg-white/50">
               @if (draft.distribution !== '1') { <div class="text-xs text-gray-400 text-center mb-1">COL {{idx+1}}</div>
               }
 
