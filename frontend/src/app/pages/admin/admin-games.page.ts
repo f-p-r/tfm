@@ -54,13 +54,10 @@ import { Game } from '../../core/games/games.models';
           <div class="ds-table-card flex-1">
             <app-admin-table
               [columns]="columns"
-              [data]="paginatedData()"
+              [data]="transformedGames()"
               [actions]="actions"
-              [total]="totalGames()"
-              [page]="currentPage()"
               [pageSize]="pageSize"
               [isLoading]="isLoading()"
-              (pageChange)="onPageChange($event)"
               (action)="onAction($event)"
             />
           </div>
@@ -105,12 +102,11 @@ export class AdminGamesPage {
   // Confirmación
   protected readonly confirmationMessage = signal<string | null>(null);
 
-  // Paginación
-  protected readonly currentPage = signal(1);
-  protected readonly pageSize = 15;
-
   // Estado de carga
   protected readonly isLoading = signal(false);
+
+  // Tamaño de página para la tabla
+  protected readonly pageSize = 15;
 
   // Configuración de columnas
   protected readonly columns: AdminTableColumn[] = [
@@ -139,24 +135,11 @@ export class AdminGamesPage {
     { action: 'edit', label: 'Modificar' }
   ];
 
-  // Datos ordenados alfabéticamente
-  protected readonly allGames = computed(() => {
-    const list = this.games();
-    return [...list].sort((a, b) => a.name.localeCompare(b.name));
-  });
-
-  // Total de juegos
-  protected readonly totalGames = computed(() => this.allGames().length);
-
-  // Datos paginados
-  protected readonly paginatedData = computed(() => {
-    const games = this.allGames();
-    const start = (this.currentPage() - 1) * this.pageSize;
-    const end = start + this.pageSize;
-
-    return games.slice(start, end).map(game => ({
+  // Datos transformados (convertir boolean disabled a string para badges)
+  protected readonly transformedGames = computed(() => {
+    return this.games().map(game => ({
       ...game,
-      disabled: game.disabled.toString() // Convertir boolean a string para badges
+      disabled: game.disabled.toString()
     }));
   });
 
@@ -175,10 +158,6 @@ export class AdminGamesPage {
       },
       error: () => this.isLoading.set(false)
     });
-  }
-
-  protected onPageChange(page: number) {
-    this.currentPage.set(page);
   }
 
   protected onCreateGame() {

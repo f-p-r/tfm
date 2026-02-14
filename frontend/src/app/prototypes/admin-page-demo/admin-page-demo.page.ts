@@ -89,8 +89,6 @@ import { isBreakdownResponse } from '../../core/authz/authz.models';
               [columns]="tableColumns"
               [data]="tableData"
               [actions]="tableActions"
-              [total]="142"
-              [page]="1"
               [pageSize]="15"
               (action)="onTableAction($event)" />
 

@@ -1,5 +1,18 @@
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+/**
+ * Componente de tabla administrativa con funcionalidades integradas:
+ *
+ * - **Ordenación**: Click en cabeceras para ordenar ascendente/descendente
+ * - **Paginación**: Automática con controles de navegación
+ * - **Tipos de datos**: Soporta texto, números, fechas y badges
+ * - **Acciones**: Botones configurables por fila
+ * - **Alineación**: Configurable por columna (left/center/right)
+ *
+ * Recibe todos los datos y gestiona internamente el ordenamiento y paginación.
+ * No requiere lógica externa para estas funcionalidades.
+ */
+
+import { Component, EventEmitter, Input, Output, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminTableColumn, AdminTableAction } from './admin-table.model';
 
@@ -7,6 +20,7 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
   selector: 'app-admin-table',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     :host {
       /* El propio componente es el contenedor Flex vertical */
@@ -16,6 +30,14 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
       height: 100%;     /* Intenta ocupar toda la altura que le den */
       background-color: white;
     }
+    .sortable-header {
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.2s;
+    }
+    .sortable-header:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
   `],
   template: `
     <div class="flex-1 overflow-auto relative">
@@ -23,7 +45,16 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
         <thead class="bg-neutral-light sticky top-0 z-10 shadow-sm">
           <tr>
             @for (col of columns; track col.key) {
-              <th [class]="getHeaderClass(col)">{{ col.label }}</th>
+              <th [class]="getHeaderClass(col)" class="sortable-header" (click)="onHeaderClick(col.key)">
+                <div class="flex items-center gap-2" [class.justify-end]="col.align === 'right'" [class.justify-center]="col.align === 'center'">
+                  <span>{{ col.label }}</span>
+                  @if (sortedColumn() === col.key) {
+                    <span class="text-brand-primary">
+                      {{ sortDirection() === 'asc' ? '▲' : '▼' }}
+                    </span>
+                  }
+                </div>
+              </th>
             }
             @if (actions.length) {
               <th class="px-4 py-3 text-xs font-semibold text-neutral-dark uppercase tracking-wider border-b border-neutral-medium bg-neutral-light text-right sticky top-0 z-10">
@@ -35,10 +66,10 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
         <tbody class="divide-y divide-neutral-light">
           @if (isLoading) {
             <tr><td [attr.colspan]="columns.length + (actions.length ? 1 : 0)" class="p-8 text-center text-neutral-500">Cargando...</td></tr>
-          } @else if (data.length === 0) {
+          } @else if (displayedData().length === 0) {
             <tr><td [attr.colspan]="columns.length + (actions.length ? 1 : 0)" class="p-8 text-center text-neutral-500">No hay registros.</td></tr>
           } @else {
-            @for (row of data; track row) {
+            @for (row of displayedData(); track row) {
               <tr class="hover:bg-neutral-50 transition-colors">
                 @for (col of columns; track col.key) {
                   <td [class]="getCellClass(col)">
@@ -65,47 +96,129 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
 
     <div class="ds-table-pagination border-t border-neutral-medium shrink-0 p-3 flex items-center justify-center gap-4 bg-white z-20">
       <button class="px-2 py-1 border border-neutral-medium rounded hover:bg-neutral-light disabled:opacity-50"
-        [disabled]="page === 1" (click)="changePage(page - 1)">&lt;</button>
+        [disabled]="currentPage() === 1" (click)="changePage(currentPage() - 1)">&lt;</button>
 
       <span class="text-xs text-neutral-500">
-        Mostrando <strong>{{ startItem }}-{{ endItem }}</strong> de <strong>{{ total }}</strong>
+        Mostrando <strong>{{ startItem() }}-{{ endItem() }}</strong> de <strong>{{ totalItems() }}</strong>
       </span>
 
       <button class="px-2 py-1 border border-neutral-medium rounded hover:bg-neutral-light disabled:opacity-50"
-        [disabled]="endItem >= total" (click)="changePage(page + 1)">&gt;</button>
+        [disabled]="endItem() >= totalItems()" (click)="changePage(currentPage() + 1)">&gt;</button>
     </div>
   `
 })
 export class AdminTableComponent {
-  // Inputs y lógica idénticos
+  // Inputs
   @Input() columns: AdminTableColumn[] = [];
-  @Input() data: any[] = [];
+  @Input() set data(value: any[]) { this.allData.set(value); }
   @Input() actions: AdminTableAction[] = [];
-  @Input() total = 0;
-  @Input() page = 1;
   @Input() pageSize = 15;
   @Input() isLoading = false;
-  @Output() pageChange = new EventEmitter<number>();
+
   @Output() action = new EventEmitter<{action: string, row: any}>();
 
-  get startItem() { if(this.total===0) return 0; return ((this.page - 1) * this.pageSize) + 1; }
-  get endItem() { return Math.min(this.page * this.pageSize, this.total); }
+  // Estado interno
+  private readonly allData = signal<any[]>([]);
+  protected readonly sortedColumn = signal<string | null>(null);
+  protected readonly sortDirection = signal<'asc' | 'desc'>('asc');
+  protected readonly currentPage = signal(1);
 
-  changePage(p: number) { this.pageChange.emit(p); }
-  onAction(a: string, r: any) { this.action.emit({ action: a, row: r }); }
+  // Datos ordenados
+  private readonly sortedData = computed(() => {
+    const data = this.allData();
+    const column = this.sortedColumn();
+    const direction = this.sortDirection();
 
-  getHeaderClass(col: any) {
+    if (!column) return data;
+
+    return [...data].sort((a, b) => {
+      let aVal = a[column];
+      let bVal = b[column];
+
+      // Manejo especial para fechas
+      const col = this.columns.find(c => c.key === column);
+      if (col?.type === 'date') {
+        aVal = new Date(aVal || 0).getTime();
+        bVal = new Date(bVal || 0).getTime();
+      }
+
+      // Manejo especial para números
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return direction === 'asc' ? aVal - bVal : bVal - aVal;
+      }
+
+      // Manejo para strings (case insensitive)
+      const aStr = String(aVal || '').toLowerCase();
+      const bStr = String(bVal || '').toLowerCase();
+
+      const comparison = aStr.localeCompare(bStr);
+      return direction === 'asc' ? comparison : -comparison;
+    });
+  });
+
+  // Total de items
+  protected readonly totalItems = computed(() => this.sortedData().length);
+
+  // Datos paginados (página actual)
+  protected readonly displayedData = computed(() => {
+    const data = this.sortedData();
+    const start = (this.currentPage() - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return data.slice(start, end);
+  });
+
+  // Paginación helpers
+  protected readonly startItem = computed(() => {
+    if (this.totalItems() === 0) return 0;
+    return (this.currentPage() - 1) * this.pageSize + 1;
+  });
+
+  protected readonly endItem = computed(() => {
+    return Math.min(this.currentPage() * this.pageSize, this.totalItems());
+  });
+
+  // Métodos
+  protected onHeaderClick(columnKey: string) {
+    if (this.sortedColumn() === columnKey) {
+      // Alternar dirección en la misma columna
+      this.sortDirection.set(this.sortDirection() === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Nueva columna, empezar con ascendente
+      this.sortedColumn.set(columnKey);
+      this.sortDirection.set('asc');
+    }
+    // Reset a página 1 al cambiar ordenación
+    this.currentPage.set(1);
+  }
+
+  protected changePage(page: number) {
+    this.currentPage.set(page);
+  }
+
+  protected onAction(actionName: string, row: any) {
+    this.action.emit({ action: actionName, row });
+  }
+
+  // Helpers para estilos
+  protected getHeaderClass(col: AdminTableColumn): string {
     const baseClass = 'px-4 py-3 text-xs font-semibold text-neutral-dark uppercase tracking-wider border-b border-neutral-medium bg-neutral-light';
     if (col.align === 'right') return baseClass + ' text-right';
     if (col.align === 'center') return baseClass + ' text-center';
     return baseClass;
   }
-  getCellClass(col: any) {
+
+  protected getCellClass(col: AdminTableColumn): string {
     const baseClass = 'px-4 py-3 align-middle';
     if (col.align === 'right') return baseClass + ' text-right';
     if (col.align === 'center') return baseClass + ' text-center';
     return baseClass;
   }
-  getBadgeClass(col: any, v: string) { return col.badgeConfig?.[v] || ''; }
-  getBadgeLabel(col: any, v: string) { return col.badgeLabels?.[v] || v; }
+
+  protected getBadgeClass(col: AdminTableColumn, value: string): string {
+    return col.badgeConfig?.[value] || '';
+  }
+
+  protected getBadgeLabel(col: AdminTableColumn, value: string): string {
+    return col.badgeLabels?.[value] || value;
+  }
 }

@@ -53,13 +53,10 @@ import { User } from '../../core/auth/user.model';
           <div class="ds-table-card flex-1">
             <app-admin-table
               [columns]="columns"
-              [data]="paginatedData()"
+              [data]="users()"
               [actions]="actions"
-              [total]="totalUsers()"
-              [page]="currentPage()"
               [pageSize]="pageSize"
               [isLoading]="isLoading()"
-              (pageChange)="onPageChange($event)"
               (action)="onAction($event)"
             />
           </div>
@@ -74,17 +71,16 @@ export class AdminUsersPage {
   private readonly usersService = inject(UsersService);
 
   // Datos locales
-  private readonly users = signal<User[]>([]);
+  protected readonly users = signal<User[]>([]);
 
   // Confirmación
   protected readonly confirmationMessage = signal<string | null>(null);
 
-  // Paginación
-  protected readonly currentPage = signal(1);
-  protected readonly pageSize = 15;
-
   // Estado de carga
   protected readonly isLoading = signal(false);
+
+  // Tamaño de página para la tabla
+  protected readonly pageSize = 15;
 
   // Configuración de columnas
   protected readonly columns: AdminTableColumn[] = [
@@ -100,27 +96,6 @@ export class AdminUsersPage {
     { action: 'reset-password', label: 'Restablecer contraseña' }
   ];
 
-  // Datos ordenados por fecha de creación (más recientes primero)
-  protected readonly allUsers = computed(() => {
-    const list = this.users();
-    return [...list].sort((a, b) => {
-      const dateA = new Date(a.createdAt || 0).getTime();
-      const dateB = new Date(b.createdAt || 0).getTime();
-      return dateB - dateA; // Descendente
-    });
-  });
-
-  // Total de usuarios
-  protected readonly totalUsers = computed(() => this.allUsers().length);
-
-  // Datos paginados
-  protected readonly paginatedData = computed(() => {
-    const users = this.allUsers();
-    const start = (this.currentPage() - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    return users.slice(start, end);
-  });
-
   constructor() {
     // Cargar usuarios al inicializar
     this.loadUsers();
@@ -135,10 +110,6 @@ export class AdminUsersPage {
       },
       error: () => this.isLoading.set(false)
     });
-  }
-
-  protected onPageChange(page: number) {
-    this.currentPage.set(page);
   }
 
   protected onAction(event: { action: string; row: any }) {
