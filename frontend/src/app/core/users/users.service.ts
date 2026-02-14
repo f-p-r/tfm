@@ -31,6 +31,14 @@ export class UsersService {
   private readonly apiBaseUrl = environment.apiBaseUrl;
 
   /**
+   * Obtener todos los usuarios
+   * GET /api/users
+   */
+  getAll(): Observable<{ data: User[] }> {
+    return this.http.get<{ data: User[] }>(`${this.apiBaseUrl}/api/users`);
+  }
+
+  /**
    * Crear un nuevo usuario (registro público)
    * POST /api/users
    */

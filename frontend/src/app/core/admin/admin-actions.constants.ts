@@ -22,7 +22,7 @@ export const GLOBAL_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
   { label: 'Páginas', route: '/admin/pages/1', permission: 'pages.edit', icon: '📄', category: 'Contenido' },
   { label: 'Asociaciones', route: '/admin/asociaciones', permission: 'admin', icon: '🏛️', category: 'Gestión' },
   { label: 'Juegos', route: '/admin/juegos', permission: 'admin', icon: '🎴', category: 'Gestión' },
-  { label: 'Usuarios', route: '/admin/users', permission: 'admin', icon: '👥', category: 'Gestión' },
+  { label: 'Usuarios', route: '/admin/usuarios', permission: 'admin', icon: '👥', category: 'Gestión' },
   { label: 'Medios', route: '/admin/media', permission: 'global.media.view', icon: '🖼️', category: 'Contenido' },
   { label: 'Parámetros del Sitio', route: '/admin/site-params', permission: 'admin', icon: '⚙️', category: 'Sistema', iconClass: 'hover:rotate-90 transition-transform duration-500' },
 ] as const;
