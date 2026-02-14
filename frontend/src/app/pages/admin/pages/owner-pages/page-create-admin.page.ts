@@ -6,10 +6,15 @@ import { PagesService } from '../../../../core/pages/pages.service';
 import { PageOwnerType, PageCreateDTO, PageOwnerScope } from '../../../../shared/content/page.dto';
 import { PageContentDTO } from '../../../../shared/content/page-content.dto';
 import { ContentSegmentsEditorComponent } from '../../../../shared/content/segments-editor/content-segments-editor.component';
+import { HelpIComponent } from '../../../../shared/help/help-i/help-i.component';
+import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive';
+import { HelpContentService } from '../../../../shared/help/help-content.service';
+import { PAGE_CREATE_PACK } from './page-create.pack';
+import { AdminSidebarContainerComponent } from '../../../../components/admin-sidebar/admin-sidebar-container.component';
 
 @Component({
   selector: 'app-page-create-admin',
-  imports: [CommonModule, FormsModule, ContentSegmentsEditorComponent],
+  imports: [CommonModule, FormsModule, ContentSegmentsEditorComponent, HelpIComponent, HelpHoverDirective, AdminSidebarContainerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './page-create-admin.page.html',
   styleUrl: './page-create-admin.page.css',
@@ -18,6 +23,7 @@ export class PageCreateAdminPage implements OnInit {
   private readonly pagesService = inject(PagesService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly helpContent = inject(HelpContentService);
 
   // Route params
   readonly ownerType = signal<PageOwnerType | null>(null);
@@ -40,7 +46,10 @@ export class PageCreateAdminPage implements OnInit {
 
   // Computed
   readonly canCreate = computed(() => {
-    return this.title().trim() !== '' && this.slug().trim() !== '';
+    const hasTitle = this.title().trim() !== '';
+    const hasSlug = this.slug().trim() !== '';
+    const hasSegments = this.content().segments.length > 0;
+    return hasTitle && hasSlug && hasSegments;
   });
 
   readonly ownerTypeLabel = computed(() => {
@@ -52,6 +61,9 @@ export class PageCreateAdminPage implements OnInit {
   });
 
   constructor() {
+    // Establecer el pack de ayuda para esta pantalla
+    this.helpContent.setPack(PAGE_CREATE_PACK);
+
     // Sync classNames changes to content
     effect(() => {
       const classNamesValue = this.classNames();
@@ -134,7 +146,12 @@ export class PageCreateAdminPage implements OnInit {
     }
 
     if (!this.canCreate()) {
-      this.errorMessage.set('Título y slug son obligatorios');
+      // Determinar qué está faltando
+      if (this.title().trim() === '' || this.slug().trim() === '') {
+        this.errorMessage.set('Título y slug son obligatorios');
+      } else if (this.content().segments.length === 0) {
+        this.errorMessage.set('La página ha de tener al menos un segmento');
+      }
       return;
     }
 

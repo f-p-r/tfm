@@ -1,122 +1,144 @@
-<ds-main>
-  <ds-page [title]="'Crear nueva página - ' + ownerTypeLabel() + ' #' + ownerId()">
-    <ds-container>
-      <div class="page-create-admin">
-        @if (errorMessage() && ownerType() === null) {
-          <div class="error-message">
-            <p>{{ errorMessage() }}</p>
-            <button class="btn-secondary" (click)="onCancel()">Volver</button>
-          </div>
-        } @else {
-          <!-- Form section -->
-          <div class="form-section">
-            <h2>Datos de la página</h2>
+<!-- Admin Shell -->
+<div class="ds-admin-shell">
 
-            <div class="form-group">
-              <label for="title">Título *</label>
-              <input
-                type="text"
-                id="title"
-                class="form-control"
-                [(ngModel)]="title"
-                placeholder="Título de la página"
-                [disabled]="isCreating()"
-              />
-            </div>
+  <!-- Sidebar -->
+  <aside id="admin-sidebar" class="ds-admin-sidebar">
+    <app-admin-sidebar-container />
+  </aside>
 
-            <div class="form-group">
-              <label for="slug">Slug (URL) *</label>
-              <input
-                type="text"
-                id="slug"
-                class="form-control"
-                [(ngModel)]="slug"
-                placeholder="slug-de-la-pagina"
-                [disabled]="isCreating()"
-              />
-              <small class="form-help">Debe ser único dentro del owner. Ejemplo: contacto, actividades, noticias</small>
-              @if (validationErrors()['slug']) {
-                <div class="error-field">
-                  @for (error of validationErrors()['slug']; track error) {
-                    <small class="text-danger">{{ error }}</small>
-                  }
+  <!-- Main content -->
+  <main class="ds-admin-main ds-container">
+    <div class="page-create-admin">
+      <!-- Error state -->
+      @if (errorMessage() && ownerType() === null) {
+        <div class="error-message">
+          <p>{{ errorMessage() }}</p>
+          <button class="ds-btn ds-btn-secondary" (click)="onCancel()">Volver</button>
+        </div>
+      } @else {
+        <!-- Form section -->
+        <div class="form-section">
+          <h2>Datos de la página</h2>
+
+          <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-4">
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="title">Título</label>
+                  <app-help-i helpKey="title"></app-help-i>
                 </div>
-              }
-            </div>
-
-            <div class="form-group">
-              <label class="ds-checkbox-label">
                 <input
-                  type="checkbox"
-                  [(ngModel)]="published"
+                  type="text"
+                  id="title"
+                  class="ds-input"
+                  helpHover
+                  helpKey="title"
+                  [(ngModel)]="title"
+                  placeholder="Título de la página"
                   [disabled]="isCreating()"
                 />
-                <span>Publicar inmediatamente</span>
-              </label>
-              <small class="form-help">
-                {{ published() ? 'La página será publicada y visible' : 'La página se creará como borrador' }}
-              </small>
+              </div>
+
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="slug">Slug (URL)</label>
+                  <app-help-i helpKey="slug"></app-help-i>
+                </div>
+                <input
+                  type="text"
+                  id="slug"
+                  class="ds-input"
+                  [class.ds-control-error]="validationErrors()['slug']"
+                  helpHover
+                  helpKey="slug"
+                  [(ngModel)]="slug"
+                  placeholder="slug-pagina"
+                  maxlength="25"
+                  [disabled]="isCreating()"
+                />
+                @if (validationErrors()['slug']) {
+                  <div class="error-field">
+                    @for (error of validationErrors()['slug']; track error) {
+                      <p class="ds-error">{{ error }}</p>
+                    }
+                  </div>
+                }
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="classNames">Clases CSS (avanzado)</label>
-              <input
-                type="text"
-                id="classNames"
-                class="form-control"
-                [(ngModel)]="classNames"
-                placeholder="ds-clase-1 ds-clase-2"
-                [disabled]="isCreating()"
-              />
-              <small class="form-help">Clases CSS separadas por espacios (solo clases ds-)</small>
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4">
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="classNames">Clases CSS (avanzado)</label>
+                  <app-help-i helpKey="classNames"></app-help-i>
+                </div>
+                <input
+                  type="text"
+                  id="classNames"
+                  class="ds-input"
+                  helpHover
+                  helpKey="classNames"
+                  [(ngModel)]="classNames"
+                  placeholder="ds-clase-1 ds-clase-2"
+                  [disabled]="isCreating()"
+                />
+              </div>
+
+              <div class="ds-field ds-field-checkbox-grid">
+                <div class="ds-label-with-help">
+                  <label class="ds-checkbox-label ds-label" helpHover helpKey="published">
+                    <input type="checkbox" [(ngModel)]="published" [disabled]="isCreating()" />
+                    <span>Página publicada</span>
+                  </label>
+                  <app-help-i helpKey="published"></app-help-i>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          <!-- Editor section -->
-          <div class="editor-section">
-            <h2>Contenido</h2>
-            <div class="ds-container">
-              <app-content-segments-editor
-                [content]="content()"
-                [scopeType]="2"
-                [scopeId]="ownerId() ?? 0"
-                (contentChange)="onContentChange($event)"
-              />
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="actions-section">
-            @if (errorMessage()) {
-              <div class="error-inline">{{ errorMessage() }}</div>
+        <!-- Editor section -->
+        <div class="editor-section">
+          <h2>Contenido</h2>
+          <div>
+            <app-content-segments-editor
+              [initialContent]="content()"
+              [scopeType]="+(ownerType()||0)"
+              [scopeId]="ownerId() ?? 0"
+              (contentChange)="onContentChange($event)"
+            />
+            @if (content().segments.length === 0) {
+              <p class="ds-help text-muted" style="display: block; margin-top: 0.5rem;">
+                * La página debe tener al menos un segmento de contenido
+              </p>
             }
-
-            <div class="actions-buttons">
-              <button
-                class="btn-secondary"
-                (click)="onCancel()"
-                [disabled]="isCreating()"
-              >
-                Cancelar
-              </button>
-              <button
-                class="btn-secondary"
-                (click)="openPreview()"
-                [disabled]="isCreating()"
-              >
-                Vista previa
-              </button>
-              <button
-                class="btn-primary"
-                (click)="onCreate()"
-                [disabled]="!canCreate() || isCreating()"
-              >
-                {{ isCreating() ? 'Creando...' : 'Crear página' }}
-              </button>
-            </div>
           </div>
-        }
-      </div>
-    </ds-container>
-  </ds-page>
-</ds-main>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-section">
+          @if (errorMessage()) {
+            <div class="error-inline">{{ errorMessage() }}</div>
+          }
+
+          <div class="actions-buttons">
+            <button class="ds-btn ds-btn-danger" (click)="onCancel()" [disabled]="isCreating()">
+              Cancelar
+            </button>
+            <button class="ds-btn ds-btn-secondary" (click)="openPreview()" [disabled]="isCreating()">
+              Vista previa
+            </button>
+            <button
+              class="ds-btn ds-btn-primary"
+              (click)="onCreate()"
+              [disabled]="!canCreate() || isCreating()"
+            >
+              {{ isCreating() ? 'Creando...' : 'Crear página' }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </main>
+
+</div>

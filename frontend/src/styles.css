@@ -204,7 +204,7 @@
      para alinear visualmente el checkbox con el input del campo adyacente */
   .ds-field-checkbox-grid {
     @media (min-width: 768px) {
-      padding-top: 2.5rem;
+      padding-top: 2.2rem;
     }
   }
 
