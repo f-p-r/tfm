@@ -16,12 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
         \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
     ]);
 
-        // Agregar middleware de diagnóstico de rendimiento solo en local
-        if (env('APP_ENV') === 'local') {
-            $middleware->alias([
-                'perf' => \App\Http\Middleware\PerformanceDiagnostics::class,
-            ]);
-        }
+        // Middleware aliases
+        $middleware->alias([
+            'perf' => \App\Http\Middleware\PerformanceDiagnostics::class,
+            'log-admin-pages-errors' => \App\Http\Middleware\LogAdminPagesErrors::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

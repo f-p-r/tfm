@@ -43,6 +43,31 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Performance Diagnostics
+    |--------------------------------------------------------------------------
+    |
+    | Enable/disable performance diagnostics logging. When enabled, logs
+    | request timing, query count, and memory usage for monitored routes.
+    | Set to true in .env to enable: PERFORMANCE_DIAGNOSTICS_ENABLED=true
+    |
+    */
+
+    'performance_diagnostics_enabled' => env('PERFORMANCE_DIAGNOSTICS_ENABLED', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Pages Error Logging
+    |--------------------------------------------------------------------------
+    |
+    | Enable/disable error logging for /api/admin/pages endpoints.
+    | Set to true in .env to enable: LOG_ADMIN_PAGES_ERRORS=true
+    |
+    */
+
+    'log_admin_pages_errors' => env('LOG_ADMIN_PAGES_ERRORS', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
     |

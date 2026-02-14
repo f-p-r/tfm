@@ -22,7 +22,7 @@ use App\Http\Controllers\PublicSiteParamsController;
 // Ping endpoint (no DB, for diagnostics)
 Route::get('ping', function () {
     return response()->json(['ok' => true]);
-})->middleware(config('app.env') === 'local' ? 'perf' : 'throttle:api');
+})->middleware(['perf', 'throttle:api']);
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -63,13 +63,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Authorization query endpoint
     Route::post('authz/query', [AuthzController::class, 'query'])
-        ->middleware(config('app.env') === 'local' ? 'perf' : '');
+        ->middleware('perf');
     Route::apiResource('tournaments', TournamentController::class);
 
     // Internal Links Resolver
     Route::get('internal-links/resolve', [InternalLinksController::class, 'resolve']);
 
-    Route::prefix('admin')->middleware(config('app.env') === 'local' ? ['perf'] : [])->group(function () {
+    Route::prefix('admin')->middleware(['perf', 'log-admin-pages-errors'])->group(function () {
         Route::get('pages', [AdminPagesController::class, 'indexByOwner']);
         Route::get('pages/{page}', [AdminPagesController::class, 'show']);
         Route::post('pages', [AdminPagesController::class, 'store']);

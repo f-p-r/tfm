@@ -12,6 +12,13 @@ use Illuminate\Http\JsonResponse;
 
 class PublicPagesController extends Controller
 {
+    /**
+     * Obtiene la página home de un owner específico.
+     * La página home se determina por el campo homePageId del owner.
+     *
+     * @param PublicHomePageRequest $request
+     * @return JsonResponse
+     */
     public function home(PublicHomePageRequest $request): JsonResponse
     {
         $ownerType = $request->getOwnerType();
@@ -22,13 +29,13 @@ class PublicPagesController extends Controller
             return response()->json(['message' => 'Owner type no soportado.'], 501);
         }
 
-        // For GLOBAL ownerType, ownerId is always 0
+        // Para el ownerType GLOBAL, el ownerId es siempre 0
         if ($ownerType === (string)ScopeType::GLOBAL->value) {
             $ownerId = 0;
             $homePageId = null;
-            // TODO: implement logic to get homePageId for GLOBAL scope
+            // TODO: implementar lógica para obtener homePageId del scope GLOBAL
             if (! $homePageId) {
-                return response()->json(['message' => 'Home page not found.'], 404);
+                return response()->json(['message' => 'Página de inicio no encontrada.'], 404);
             }
 
             $page = Page::query()
@@ -39,7 +46,7 @@ class PublicPagesController extends Controller
                 ->first();
 
             if (! $page) {
-                return response()->json(['message' => 'Page not found.'], 404);
+                return response()->json(['message' => 'Página no encontrada.'], 404);
             }
 
             return response()->json($this->mapPage($page));
@@ -48,13 +55,14 @@ class PublicPagesController extends Controller
         $owner = $this->resolveOwnerBySlug($ownerType, $ownerSlug);
 
         if (! $owner) {
-            return response()->json(['message' => 'Owner not found.'], 404);
+            return response()->json(['message' => 'Propietario no encontrado.'], 404);
         }
 
         if (! $owner->homePageId) {
-            return response()->json(['message' => 'Home page not found.'], 404);
+            return response()->json(['message' => 'Página de inicio no encontrada.'], 404);
         }
 
+        // Buscar la página configurada como home
         $page = Page::query()
             ->where('id', $owner->homePageId)
             ->where('owner_type', $ownerType)
@@ -63,12 +71,19 @@ class PublicPagesController extends Controller
             ->first();
 
         if (! $page) {
-            return response()->json(['message' => 'Page not found.'], 404);
+            return response()->json(['message' => 'Página no encontrada.'], 404);
         }
 
         return response()->json($this->mapPage($page));
     }
 
+    /**
+     * Obtiene una página específica por el slug del owner y el slug de la página.
+     * Solo devuelve páginas publicadas.
+     *
+     * @param PublicByOwnerSlugRequest $request
+     * @return JsonResponse
+     */
     public function byOwnerSlug(PublicByOwnerSlugRequest $request): JsonResponse
     {
         $ownerType = $request->getOwnerType();
@@ -80,7 +95,7 @@ class PublicPagesController extends Controller
             return response()->json(['message' => 'Owner type no soportado.'], 501);
         }
 
-        // For GLOBAL ownerType, ownerId is always 0
+        // Para el ownerType GLOBAL, el ownerId es siempre 0
         if ($ownerType === (string)ScopeType::GLOBAL->value) {
             $ownerId = 0;
 
@@ -92,7 +107,7 @@ class PublicPagesController extends Controller
                 ->first();
 
             if (! $page) {
-                return response()->json(['message' => 'Page not found.'], 404);
+                return response()->json(['message' => 'Página no encontrada.'], 404);
             }
 
             return response()->json($this->mapPage($page));
@@ -101,9 +116,10 @@ class PublicPagesController extends Controller
         $owner = $this->resolveOwnerBySlug($ownerType, $ownerSlug);
 
         if (! $owner) {
-            return response()->json(['message' => 'Owner not found.'], 404);
+            return response()->json(['message' => 'Propietario no encontrado.'], 404);
         }
 
+        // Buscar la página por su slug
         $page = Page::query()
             ->where('owner_type', $ownerType)
             ->where('owner_id', $owner->id)
@@ -112,22 +128,36 @@ class PublicPagesController extends Controller
             ->first();
 
         if (! $page) {
-            return response()->json(['message' => 'Page not found.'], 404);
+            return response()->json(['message' => 'Página no encontrada.'], 404);
         }
 
         return response()->json($this->mapPage($page));
     }
 
+    /**
+     * Muestra una página específica por su ID.
+     * Solo devuelve páginas publicadas.
+     *
+     * @param Page $page
+     * @return JsonResponse
+     */
     public function show(Page $page): JsonResponse
     {
         // Solo mostrar páginas publicadas en endpoints públicos
         if (!$page->published) {
-            return response()->json(['message' => 'Page not found.'], 404);
+            return response()->json(['message' => 'Página no encontrada.'], 404);
         }
 
         return response()->json($this->mapPage($page));
     }
 
+    /**
+     * Resuelve el owner (Association o Game) a partir de su tipo y slug.
+     *
+     * @param string $ownerType Tipo de owner (ASSOCIATION o GAME)
+     * @param string $ownerSlug Slug del owner
+     * @return Association|Game|null El owner encontrado o null
+     */
     private function resolveOwnerBySlug(string $ownerType, string $ownerSlug): Association|Game|null
     {
         if ($ownerType === (string)ScopeType::ASSOCIATION->value) {
@@ -141,6 +171,12 @@ class PublicPagesController extends Controller
         return null;
     }
 
+    /**
+     * Verifica si el tipo de owner es soportado por el sistema.
+     *
+     * @param string $ownerType Tipo de owner a verificar
+     * @return bool True si el tipo es soportado
+     */
     private function isSupportedOwnerType(string $ownerType): bool
     {
         return in_array($ownerType, [
@@ -150,6 +186,13 @@ class PublicPagesController extends Controller
         ], true);
     }
 
+    /**
+     * Mapea una página a su representación para la API pública.
+     * Excluye campos sensibles y solo incluye información necesaria.
+     *
+     * @param Page $page Página a mapear
+     * @return array Representación de la página para la API
+     */
     private function mapPage(Page $page): array
     {
         return [

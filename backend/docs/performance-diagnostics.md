@@ -15,9 +15,16 @@ curl http://localhost:8000/api/ping
 **Propósito:** Medir la latencia base del servidor/entorno sin la sobrecarga de DB o lógica de negocio.
 
 ### 2. Middleware de Diagnóstico de Performance
-Mide automáticamente el rendimiento de los endpoints configurados (por defecto: rutas `/api/admin/*`).
+Mide automáticamente el rendimiento de los endpoints configurados.
 
 **Ubicación:** `app/Http/Middleware/PerformanceDiagnostics.php`
+
+**Estado por defecto:** ❌ DESACTIVADO
+
+**Cómo activar:** Agregar en el archivo `.env`:
+```env
+PERFORMANCE_DIAGNOSTICS_ENABLED=true
+```
 
 **Métricas capturadas:**
 - `total_time_ms`: Tiempo total del request en milisegundos
@@ -27,8 +34,35 @@ Mide automáticamente el rendimiento de los endpoints configurados (por defecto:
 - `non_query_time_ms`: Tiempo dedicado a lógica de aplicación (no DB)
 - `memory_mb`: Pico de memoria utilizada
 
-## 📊 Ejemplo de Log
+### 3. Logging de Errores en Admin Pages
+Registra automáticamente todos los errores (códigos 4xx, 5xx) y excepciones en las rutas `/api/admin/pages`.
 
+**Ubicación:** `app/Http/Middleware/LogAdminPagesErrors.php`
+
+**Estado por defecto:** ❌ DESACTIVADO
+
+**Cómo activar:** Agregar en el archivo `.env`:
+```env
+LOG_ADMIN_PAGES_ERRORS=true
+```
+
+**Información registrada en errores:**
+- Método HTTP, URL completa y ruta
+- Código de estado HTTP
+- Datos de la petición (query y body)
+- Contenido de la respuesta
+- Usuario autenticado (si existe)
+- IP del cliente
+
+**Información registrada en excepciones:**
+- Tipo de excepción y mensaje
+- Archivo y línea donde ocurrió
+- Datos de la petición
+- Usuario e IP
+
+## 📊 Ejemplos de Logs
+
+### Performance Diagnostics
 ```json
 {
   "method": "GET",
@@ -40,6 +74,25 @@ Mide automáticamente el rendimiento de los endpoints configurados (por defecto:
   "query_percentage": "72.6%",
   "non_query_time_ms": 67.22,
   "memory_mb": 12.5
+}
+```
+
+### Admin Pages Error
+```json
+{
+  "method": "GET",
+  "url": "http://localhost:8000/api/admin/pages/999",
+  "route": "api/admin/pages/999",
+  "status_code": 404,
+  "request_data": {
+    "query": {},
+    "body": {}
+  },
+  "response_body": {
+    "message": "No query results for model [App\\Models\\Page] 999"
+  },
+  "user_id": 1,
+  "ip": "127.0.0.1"
 }
 ```
 
@@ -206,7 +259,14 @@ $pages = Page::with('owner')->get(); // 2 queries total
 
 3. **Revisar logs:**
    ```bash
+   # Ver todos los logs en tiempo real
+   tail -f storage/logs/laravel.log
+   
+   # Ver solo Performance Diagnostics
    tail -f storage/logs/laravel.log | grep "Performance Diagnostics"
+   
+   # Ver solo errores de Admin Pages
+   tail -f storage/logs/laravel.log | grep "Admin Pages"
    ```
 
 4. **Analizar métricas y aplicar soluciones según la tabla de decisión:**
@@ -223,14 +283,32 @@ $pages = Page::with('owner')->get(); // 2 queries total
 
 ## ⚙️ Configuración
 
-### Activar/Desactivar el diagnóstico
-El middleware solo se activa en `APP_ENV=local`. Para cambiar esto, edita:
+### Activar/Desactivar Performance Diagnostics
 
-**Archivo:** `app/Http/Middleware/PerformanceDiagnostics.php`
-```php
-if (config('app.env') !== 'local') {
-    return $next($request);
-}
+**Estado por defecto:** ❌ DESACTIVADO
+
+Agregar en `.env`:
+```env
+PERFORMANCE_DIAGNOSTICS_ENABLED=true
+```
+
+Para desactivar, simplemente eliminar la variable o establecerla a `false`:
+```env
+PERFORMANCE_DIAGNOSTICS_ENABLED=false
+```
+
+### Activar/Desactivar Logging de Errores en Admin Pages
+
+**Estado por defecto:** ❌ DESACTIVADO
+
+Agregar en `.env`:
+```env
+LOG_ADMIN_PAGES_ERRORS=true
+```
+
+Para desactivar:
+```env
+LOG_ADMIN_PAGES_ERRORS=false
 ```
 
 ### Añadir diagnóstico a más rutas
@@ -243,16 +321,12 @@ Route::prefix('users')->middleware('perf')->group(function () {
 
 // Opción 2: A una ruta individual
 Route::get('some-route', [SomeController::class, 'method'])->middleware('perf');
-
-// Opción 3: Solo en local (recomendado)
-Route::prefix('users')->middleware(config('app.env') === 'local' ? ['perf'] : [])->group(function () {
-    // rutas...
-});
 ```
 
 ### Personalizar umbral de logging
 Puedes modificar el middleware para solo loguear requests lentos:
 
+**Archivo:** `app/Http/Middleware/PerformanceDiagnostics.php`
 ```php
 $totalTime = (microtime(true) - $this->startTime) * 1000;
 

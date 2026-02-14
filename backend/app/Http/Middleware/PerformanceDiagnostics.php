@@ -21,8 +21,8 @@ class PerformanceDiagnostics
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Solo activar en entorno local
-        if (config('app.env') !== 'local') {
+        // Solo activar si está habilitado en configuración
+        if (!config('app.performance_diagnostics_enabled')) {
             return $next($request);
         }
 
