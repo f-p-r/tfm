@@ -42,10 +42,7 @@ export const ASSOCIATION_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
  * Acciones de administración para Scope Juego (WebScope.GAME)
  */
 export const GAME_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
-  { label: 'Páginas', route: '/admin/game/pages', permission: 'game.pages.view', icon: '📄', category: 'Contenido' },
-  { label: 'Medios', route: '/admin/game/media', permission: 'game.media.view', icon: '🖼️', category: 'Contenido' },
-  { label: 'Torneos', route: '/admin/game/tournaments', permission: 'game.tournaments.view', icon: '🏆', category: 'Gestión' },
-  { label: 'Configuración', route: '/admin/game/settings', permission: 'game.settings.view', icon: '⚙️', category: 'Sistema', iconClass: 'hover:rotate-90 transition-transform duration-500' },
+  { label: 'Páginas', route: '/admin/game/pages', permission: 'pages.edit', icon: '📄', category: 'Contenido' }
 ] as const;
 
 /**
