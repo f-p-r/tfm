@@ -386,7 +386,7 @@
 
   /* Link individual en móvil */
   .ds-nav-mobile-link {
-    @apply px-4 md:px-6 py-3 text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary;
+    @apply block px-4 md:px-6 py-3 text-neutral-dark hover:bg-neutral-light hover:text-brand-primary transition-colors focus-visible:outline-2 focus-visible:outline-brand-primary;
   }
 
   /* === Menús desplegables (acciones / usuario / admin) === */
@@ -397,9 +397,9 @@
 
   /** === Menú desplegable === */
 
-  /* Panel flotante: alineado a la derecha y tamaño según contenido. En vista móvil alinea a la izquierda */
+  /* Panel flotante: alineado a la derecha y tamaño según contenido. En vista móvil oculto completamente */
   .ds-menu-panel {
-    @apply absolute left-0 md:right-0 md:left-auto min-w-max rounded-lg border border-neutral-medium bg-white shadow-lg;
+    @apply hidden md:block absolute left-0 md:right-0 md:left-auto min-w-max rounded-lg border border-neutral-medium bg-white shadow-lg;
   }
 
   /* Idem alineado a la izquierda, para posiciones iniciales demasiado a la izquierda que puedan hacer que el menú se salga de la pantalla */
@@ -412,11 +412,14 @@
   /* Lista de items */
   .ds-menu-list {
     @apply py-1 whitespace-nowrap;
+    display: flex;
+    flex-direction: column;
   }
 
   /* Item base (sirve para <a> o <button>) */
   .ds-menu-item {
     @apply block w-full px-4 py-2 text-left text-sm text-neutral-dark transition-colors hover:bg-neutral-light hover:text-brand-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
+    display: block !important;
   }
 
   /* Variantes */
