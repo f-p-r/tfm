@@ -186,8 +186,8 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
       })
     );
   }
-
-  // Prioridad 5: Rutas /admin/{scopeType}/* (contextuales)
+/****** @@@ borrar cuando se compruebe que funcionan rutas admin/asociacion y admin/juego
+  // Prioridad 5: Rutas /admin/{scopeType}/* (contextuales con número)
   // Ejemplo: /admin/2/socios, /admin/3/configuracion
   // Verifican que el scope actual coincida con el scopeType de la URL
   const adminScopeMatch = url.match(/^\/admin\/(\d+)/);
@@ -200,6 +200,30 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
 
     // Verificar que el scope actual coincide con la URL y tiene scopeId definido
     if (currentScopeType === urlScopeType && currentScopeId !== null && currentScopeId !== undefined) {
+      console.log(`✅ [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
+      return permissionsStore.waitForLoad().pipe(map(() => true));
+    } else {
+      console.warn(`⚠️ [resolveScopeGuard] Scope no coincide o sin scopeId → Redirect a /`);
+      router.navigateByUrl('/');
+      return of(false);
+    }
+  }
+@@@ ********/
+
+  // Prioridad 5: Rutas /admin/{scopeName}/* (contextuales con nombre semántico)
+  // Ejemplo: /admin/asociacion/members, /admin/juego/tournaments
+  // Verifican que el scope actual coincida con el nombre semántico de la URL
+  const adminSemanticMatch = url.match(/^\/admin\/(asociacion|juego)\//);
+  if (adminSemanticMatch) {
+    const scopeName = adminSemanticMatch[1];
+    const expectedScope = scopeName === 'asociacion' ? WebScope.ASSOCIATION : WebScope.GAME;
+    const currentScopeType = contextStore.scopeType();
+    const currentScopeId = contextStore.scopeId();
+
+    console.log(`🎯 [resolveScopeGuard] Ruta /admin/${scopeName} → Verificando scope actual ${currentScopeType}:${currentScopeId} (esperado: ${expectedScope})`);
+
+    // Verificar que el scope actual coincide con el esperado y tiene scopeId definido
+    if (currentScopeType === expectedScope && currentScopeId !== null && currentScopeId !== undefined) {
       console.log(`✅ [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
       return permissionsStore.waitForLoad().pipe(map(() => true));
     } else {
