@@ -197,10 +197,10 @@ export const routes: Routes = [
     component: PageFormAdminPage,
     canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
   },
+  // Vista previa: sin guards porque solo lee sessionStorage del editor
   {
     path: 'admin/pages/preview',
     component: PagePreviewPage,
-    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
   },
 
   { path: '**', redirectTo: '' },

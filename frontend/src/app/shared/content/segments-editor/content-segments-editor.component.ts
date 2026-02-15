@@ -166,7 +166,7 @@ export class ContentSegmentsEditorComponent {
       type: 'columns',
       distribution: initialDist as any,
       verticalPadding: 'normal',
-      backgroundColor: 'white',
+      backgroundColor: 'transparent',
       textColor: 'default',
       containerWidth: 'standard',
       fullWidthBackground: false,

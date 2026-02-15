@@ -12,7 +12,10 @@ export interface ColumnsSegmentDTO {
   distribution: '1' | '1-1' | '2-1' | '1-2' | '3-1' | '1-3' | '1-1-1' | '1-2-1' | '2-1-1' | '1-1-2' | '1-1-1-1';
   columns: ColumnBlock[];
   verticalPadding?: 'none' | 'small' | 'normal' | 'large';
-  backgroundColor?: 'white' | 'neutral' | 'brand-light' | 'brand-dark';
+  backgroundColor?: 'transparent' | 'white' | 'neutral' | 'brand-light' | 'brand-dark' |
+                    'brand-primary' | 'brand-secondary' | 'brand-accent' | 'danger' |
+                    'brand-primary-light' | 'brand-secondary-light' | 'brand-accent-light' | 'danger-light' |
+                    'neutral-dark' | 'neutral-medium' | 'neutral-light';
   textColor?: 'default' | 'white' | 'brand';
   containerWidth?: 'standard' | 'narrow' | 'full';
   fullWidthBackground?: boolean;
