@@ -37,4 +37,13 @@ class Game extends Model
     {
         return $this->belongsToMany(Association::class);
     }
+
+    /**
+     * Get the contact info for this game.
+     */
+    public function contactInfo()
+    {
+        return $this->hasMany(ContactInfo::class, 'owner_id')
+            ->where('owner_type', 3);
+    }
 }

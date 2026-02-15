@@ -99,6 +99,15 @@ class Association extends Model
     }
 
     /**
+     * Get the contact info for this association.
+     */
+    public function contactInfo(): HasMany
+    {
+        return $this->hasMany(ContactInfo::class, 'owner_id')
+            ->where('owner_type', 2);
+    }
+
+    /**
      * Get the has_internal_web attribute.
      * Returns true if there is a page with owner_type=2 and owner_id matching this association.
      */

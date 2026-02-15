@@ -11,7 +11,10 @@ import { GameAssociationsPage } from './pages/games/game-associations/game-assoc
 import { gameBySlugGuard } from './guards/game-by-slug.guard';
 import { AssociationsPage } from './pages/associations/associations.page';
 import { AssociationPage } from './pages/associations/association/association.page';
+import { AssociationMembersPage } from './pages/associations/association-members/association-members.page';
+import { AssociationContactPage } from './pages/associations/association-contact/association-contact.page';
 import { associationBySlugGuard } from './guards/association-by-slug.guard';
+import { ContactPage } from './pages/contact/contact.page';
 import { OwnerPagesAdminPage } from './pages/admin/pages/owner-pages/owner-pages-admin.page';
 import { PageFormAdminPage } from './pages/admin/pages/owner-pages/page-form-admin.page';
 import { PagePreviewPage } from './pages/admin/pages/owner-pages/page-preview.page';
@@ -22,6 +25,7 @@ import { AdminGamesPage } from './pages/admin/admin-games.page';
 import { AdminAssociationsPage } from './pages/admin/admin-associations.page';
 import { AdminUsersPage } from './pages/admin/admin-users.page';
 import { AdminMemberStatusesPage } from './pages/admin/admin-member-statuses.page';
+import { AdminContactPage } from './pages/admin/admin-contact.page';
 import { requirePermission, requireAnyPermission } from './guards/permission.guard';
 import { requireAuth } from './guards/auth.guard';
 import { resolveScopeGuard } from './guards/resolve-scope.guard';
@@ -38,6 +42,9 @@ export const routes: Routes = [
   // User profile
   { path: 'perfil', component: PerfilPage, canActivate: [resolveScopeGuard, requireAuth] },
 
+  // Contact page
+  { path: 'contacto', component: ContactPage, canActivate: [resolveScopeGuard] },
+
   // Ruta de juegos con páginas
   { path: 'juegos/:slug', component: PageViewerPage, canActivate: [gameBySlugGuard] },
   { path: 'juegos/:slug/asociaciones', component: GameAssociationsPage, canActivate: [gameBySlugGuard] },
@@ -46,6 +53,8 @@ export const routes: Routes = [
   // Rutas de asociaciones con páginas
   { path: 'asociaciones', component: AssociationsPage, canActivate: [resolveScopeGuard] },
   { path: 'asociaciones/:slug', component: PageViewerPage, canActivate: [associationBySlugGuard] },
+  { path: 'asociaciones/:slug/socios', component: AssociationMembersPage, canActivate: [associationBySlugGuard] },
+  { path: 'asociaciones/:slug/contacto', component: AssociationContactPage, canActivate: [associationBySlugGuard] },
   { path: 'asociaciones/:slug/:pagina', component: PageViewerPage, canActivate: [associationBySlugGuard], resolve:{ entity: PageEntityResolver } },
   {
     path: 'prototypes',
@@ -146,6 +155,18 @@ export const routes: Routes = [
   {
     path: 'admin/asociacion/estados',
     component: AdminMemberStatusesPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('admin')],
+  },
+
+  // Admin: gestión de contactos
+  {
+    path: 'admin/contactos',
+    component: AdminContactPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('admin')],
+  },
+  {
+    path: 'admin/asociacion/contactos',
+    component: AdminContactPage,
     canActivate: [resolveScopeGuard, requireAuth, requirePermission('admin')],
   },
 

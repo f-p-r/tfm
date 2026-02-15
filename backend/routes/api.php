@@ -19,6 +19,7 @@ use App\Http\Controllers\AdminSiteParamsController;
 use App\Http\Controllers\PublicPagesController;
 use App\Http\Controllers\PublicSiteParamsController;
 use App\Http\Controllers\RoleGrantController;
+use App\Http\Controllers\ContactInfoController;
 
 // Ping endpoint (no DB, for diagnostics)
 Route::get('ping', function () {
@@ -114,3 +115,11 @@ Route::get('pages/{page}', [PublicPagesController::class, 'show']);
 
 // Public Site Params endpoints (sin autenticación)
 Route::get('site-params/{id}', [PublicSiteParamsController::class, 'show']);
+
+// Contact Info endpoints
+Route::get('contact-info', [ContactInfoController::class, 'index']);
+Route::get('contact-info/{contactInfo}', [ContactInfoController::class, 'show']);
+Route::post('contact-info', [ContactInfoController::class, 'store'])->middleware('auth:sanctum');
+Route::put('contact-info/{contactInfo}', [ContactInfoController::class, 'update'])->middleware('auth:sanctum');
+Route::patch('contact-info/{contactInfo}', [ContactInfoController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('contact-info/{contactInfo}', [ContactInfoController::class, 'destroy'])->middleware('auth:sanctum');

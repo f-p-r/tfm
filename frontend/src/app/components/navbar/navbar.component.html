@@ -47,7 +47,54 @@
 
     <div class="ds-nav-links">
       @if (!isAdmin()) {
-        <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'desktop-games', cssClass: 'ds-nav-link', onChange: onDesktopGameChange.bind(this)}"></ng-container>
+        <!-- Selector de juegos: solo si NO estamos en scope de asociación -->
+        @if (!isAssociationScope()) {
+          <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'desktop-games', cssClass: 'ds-nav-link', onChange: onDesktopGameChange.bind(this)}"></ng-container>
+        }
+
+        <!-- Dropdown de asociación: solo si estamos en scope de asociación -->
+        @if (isAssociationScope() && associationShortname()) {
+          <div class="ds-menu relative inline-block">
+            <button
+              type="button"
+              class="ds-nav-link flex items-center gap-1 font-semibold"
+              [attr.aria-expanded]="associationMenuOpen()"
+              (click)="toggleAssociationMenu()"
+            >
+              {{ associationShortname() }}
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+
+            @if (associationMenuOpen()) {
+              <div class="ds-menu-panel absolute right-0 mt-2 w-56 bg-white border border-neutral-medium rounded-lg shadow-lg z-50">
+                <div class="ds-menu-list p-1">
+                  <a
+                    [routerLink]="['/asociaciones', associationSlug(), 'socios']"
+                    class="ds-menu-item block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light rounded"
+                    (click)="closeAssociationMenu()"
+                  >
+                    👥 Socios
+                  </a>
+                  <a
+                    [routerLink]="['/asociaciones', associationSlug(), 'contacto']"
+                    class="ds-menu-item block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light rounded"
+                    (click)="closeAssociationMenu()"
+                  >
+                    📧 Contacto
+                  </a>
+                  <div class="border-t border-neutral-medium my-1"></div>
+                  <a
+                    routerLink="/asociaciones"
+                    class="ds-menu-item block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light rounded"
+                    (click)="closeAssociationMenu()"
+                  >
+                    🚪 Ver todas las asociaciones
+                  </a>
+                </div>
+              </div>
+            }
+          </div>
+        }
       }
 
       <ng-container *ngTemplateOutlet="navItemsList; context: {cssClass: 'ds-nav-link', onNavigate: noop.bind(this)}"></ng-container>
@@ -115,9 +162,42 @@
     <div class="ds-nav-mobile">
       <div class="ds-nav-mobile-list">
         @if (!isAdmin()) {
-          <div class="border-b border-neutral-medium">
-            <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'mobile-games-select', cssClass: 'ds-nav-mobile-link w-full border-0', onChange: onMobileGameChange.bind(this)}"></ng-container>
-          </div>
+          <!-- Selector de juegos móvil: solo si NO estamos en scope de asociación -->
+          @if (!isAssociationScope()) {
+            <div class="border-b border-neutral-medium">
+              <ng-container *ngTemplateOutlet="gamesSelector; context: {id: 'mobile-games-select', cssClass: 'ds-nav-mobile-link w-full border-0', onChange: onMobileGameChange.bind(this)}"></ng-container>
+            </div>
+          }
+
+          <!-- Menú de asociación móvil: solo si estamos en scope de asociación -->
+          @if (isAssociationScope() && associationShortname()) {
+            <div class="border-b border-neutral-medium pb-2">
+              <div class="px-4 py-2 text-xs font-semibold text-neutral-medium uppercase tracking-wider">
+                {{ associationShortname() }}
+              </div>
+              <a
+                [routerLink]="['/asociaciones', associationSlug(), 'socios']"
+                class="ds-nav-mobile-link"
+                (click)="closeMobileMenu()"
+              >
+                👥 Socios
+              </a>
+              <a
+                [routerLink]="['/asociaciones', associationSlug(), 'contacto']"
+                class="ds-nav-mobile-link"
+                (click)="closeMobileMenu()"
+              >
+                📧 Contacto
+              </a>
+              <a
+                routerLink="/asociaciones"
+                class="ds-nav-mobile-link"
+                (click)="closeMobileMenu()"
+              >
+                🚪 Ver todas las asociaciones
+              </a>
+            </div>
+          }
         }
 
         <ng-container *ngTemplateOutlet="navItemsList; context: {cssClass: 'ds-nav-mobile-link', onNavigate: closeMobileMenu.bind(this)}"></ng-container>

@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, input, signal, inject, computed, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal, inject, computed, effect, ElementRef } from '@angular/core';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs';
+import { filter, fromEvent } from 'rxjs';
 import { NgTemplateOutlet } from '@angular/common';
 
 // Stores y Servicios
@@ -39,11 +39,13 @@ export class NavbarComponent {
   // ... Estados ...
   readonly mobileMenuOpen = signal(false);
   readonly adminMenuOpen = signal(false); // <--- Control del dropdown admin
+  readonly associationMenuOpen = signal(false); // <--- Control del dropdown asociación
   readonly gamesQuery = signal('');
   readonly helpOpen = signal(false);
 
   // ... Inyecciones ...
   private readonly router = inject(Router);
+  private readonly elementRef = inject(ElementRef);
   readonly gamesStore = inject(GamesStore);
   readonly contextStore = inject(ContextStore);
   private readonly associationsResolve = inject(AssociationsResolveService);
@@ -63,6 +65,35 @@ export class NavbarComponent {
     return list.filter((g: Game) => g.name.toLowerCase().includes(q));
   });
 
+  /** Shortname de la asociación actual (cuando scope es ASSOCIATION) */
+  readonly associationShortname = computed(() => {
+    if (this.contextStore.scopeType() === WebScope.ASSOCIATION) {
+      const scopeId = this.contextStore.scopeId();
+      if (scopeId) {
+        const association = this.associationsResolve.getById(scopeId);
+        return association?.shortname || association?.name || '';
+      }
+    }
+    return '';
+  });
+
+  /** Slug de la asociación actual (cuando scope es ASSOCIATION) */
+  readonly associationSlug = computed(() => {
+    if (this.contextStore.scopeType() === WebScope.ASSOCIATION) {
+      const scopeId = this.contextStore.scopeId();
+      if (scopeId) {
+        const association = this.associationsResolve.getById(scopeId);
+        return association?.slug || '';
+      }
+    }
+    return '';
+  });
+
+  /** Indica si el scope actual es una asociación */
+  readonly isAssociationScope = computed(() =>
+    this.contextStore.scopeType() === WebScope.ASSOCIATION
+  );
+
   /**
    * Elementos de navegación ESTÁNDAR.
    * NOTA: Ya no incluimos aquí las adminActions, se gestionan aparte en el HTML
@@ -78,11 +109,17 @@ export class NavbarComponent {
     }
 
     // 2. MODO PÚBLICO
-    const items: NavItem[] = [
-      { label: 'Asociaciones', type: 'link', route: '/asociaciones' },
+    const items: NavItem[] = [];
+
+    // Solo mostrar 'Asociaciones' si NO estamos en scope de asociación
+    if (this.contextStore.scopeType() !== WebScope.ASSOCIATION) {
+      items.push({ label: 'Asociaciones', type: 'link', route: '/asociaciones' });
+    }
+
+    items.push(
       { label: 'Eventos', type: 'link', route: '/events' },
-      { label: 'Noticias', type: 'link', route: '/news' },
-    ];
+      { label: 'Noticias', type: 'link', route: '/news' }
+    );
 
     // Botón de ayuda siempre al final
     items.push({ label: '?', type: 'button', onClick: () => this.openHelp() });
@@ -102,12 +139,28 @@ export class NavbarComponent {
         // Cerrar todos los menús al navegar
         this.closeMobileMenu();
         this.closeAdminMenu();
+        this.closeAssociationMenu();
 
         // Cerrar sidebar en mobile al navegar
         if (window.innerWidth < 768) {
           const sidebar = document.getElementById('admin-sidebar');
           if (sidebar) {
             sidebar.classList.add('ds-admin-sidebar-closed');
+          }
+        }
+      });
+
+    // Cerrar dropdowns al hacer clic fuera del navbar
+    fromEvent<MouseEvent>(document, 'click')
+      .pipe(takeUntilDestroyed())
+      .subscribe((event) => {
+        // Solo cerramos si el clic fue fuera del componente navbar
+        if (!this.elementRef.nativeElement.contains(event.target)) {
+          if (this.adminMenuOpen()) {
+            this.closeAdminMenu();
+          }
+          if (this.associationMenuOpen()) {
+            this.closeAssociationMenu();
           }
         }
       });
@@ -140,6 +193,14 @@ export class NavbarComponent {
 
   closeAdminMenu(): void {
     this.adminMenuOpen.set(false);
+  }
+
+  toggleAssociationMenu(): void {
+    this.associationMenuOpen.update(v => !v);
+  }
+
+  closeAssociationMenu(): void {
+    this.associationMenuOpen.set(false);
   }
 
   get displayName(): string {

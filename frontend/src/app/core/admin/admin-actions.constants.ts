@@ -20,6 +20,7 @@ export interface AdminAction {
  */
 export const GLOBAL_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
   { label: 'Páginas', route: '/admin/pages/1', permission: 'pages.edit', icon: '📄', category: 'Contenido' },
+  { label: 'Contactos', route: '/admin/contactos', permission: 'admin', icon: '📞', category: 'Contenido' },
   { label: 'Asociaciones', route: '/admin/asociaciones', permission: 'admin', icon: '🏛️', category: 'Gestión' },
   { label: 'Juegos', route: '/admin/juegos', permission: 'admin', icon: '🎴', category: 'Gestión' },
   { label: 'Usuarios', route: '/admin/usuarios', permission: 'admin', icon: '👥', category: 'Gestión' },
@@ -32,6 +33,7 @@ export const GLOBAL_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
  */
 export const ASSOCIATION_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
   { label: 'Páginas', route: '/admin/pages/2', permission: 'pages.edit', icon: '📄', category: 'Contenido' },
+  { label: 'Contactos', route: '/admin/asociacion/contactos', permission: 'admin', icon: '📞', category: 'Contenido' },
   { label: 'Miembros', route: '/admin/asociacion/membros', permission: 'admin', icon: '👥', category: 'Gestión' },
   { label: 'Estados de los socios', route: '/admin/asociacion/estados', permission: 'admin', icon: '⚙️', category: 'Gestión' , iconClass: 'hover:rotate-90 transition-transform duration-500' },
 ] as const;
