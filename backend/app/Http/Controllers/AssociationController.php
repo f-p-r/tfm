@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Association;
+use App\Models\AssociationMemberStatusType;
 use App\Rules\CanonicalSlug;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -105,7 +106,18 @@ class AssociationController extends Controller
             $association->games()->sync($validated['game_ids']);
         }
 
-        $association->load('games', 'country', 'region', 'owner');
+        // Create association_member_statuses for each existing type
+        $statusTypes = AssociationMemberStatusType::all();
+        foreach ($statusTypes as $statusType) {
+            $association->memberStatuses()->create([
+                'type' => $statusType->id,
+                'order' => $statusType->id,
+                'name' => $statusType->name,
+                'description' => '',
+            ]);
+        }
+
+        $association->load('games', 'country', 'region', 'owner', 'memberStatuses');
         return response()->json($association, 201);
     }
 

@@ -118,6 +118,11 @@
     @apply bg-red-100 text-danger;
   }
 
+  /* Baja/Inactivo: Gris (Deshabilitado) */
+  .ds-badge-inactive {
+    @apply bg-neutral-medium text-neutral-dark opacity-60;
+  }
+
   /* === Alertas / Notificaciones === */
 
   /* Clase base para alertas */

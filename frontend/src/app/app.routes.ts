@@ -21,6 +21,7 @@ import { AdminPage } from './pages/admin/admin.page';
 import { AdminGamesPage } from './pages/admin/admin-games.page';
 import { AdminAssociationsPage } from './pages/admin/admin-associations.page';
 import { AdminUsersPage } from './pages/admin/admin-users.page';
+import { AdminMemberStatusesPage } from './pages/admin/admin-member-statuses.page';
 import { requirePermission, requireAnyPermission } from './guards/permission.guard';
 import { requireAuth } from './guards/auth.guard';
 import { resolveScopeGuard } from './guards/resolve-scope.guard';
@@ -138,6 +139,13 @@ export const routes: Routes = [
   {
     path: 'admin/usuarios',
     component: AdminUsersPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('admin')],
+  },
+
+  // Admin: gestión de estados de miembros de asociaciones
+  {
+    path: 'admin/asociacion/estados',
+    component: AdminMemberStatusesPage,
     canActivate: [resolveScopeGuard, requireAuth, requirePermission('admin')],
   },
 

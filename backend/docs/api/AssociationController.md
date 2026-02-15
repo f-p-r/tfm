@@ -222,10 +222,39 @@ Crear una nueva asociación.
       "name": "Administrator",
       "email": "admin@example.com"
     },
+    "member_statuses": [
+      {
+        "id": 1,
+        "association_id": 1,
+        "type": 1,
+        "order": 1,
+        "name": "Solicitud de ingreso",
+        "description": "",
+        "created_at": "...",
+        "updated_at": "..."
+      },
+      {
+        "id": 2,
+        "association_id": 1,
+        "type": 2,
+        "order": 2,
+        "name": "Activo",
+        "description": "",
+        "created_at": "...",
+        "updated_at": "..."
+      }
+      // ... más estados según association_member_status_types
+    ],
     "created_at": "...",
     "updated_at": "..."
   }
   ```
+
+**Nota:** Al crear una asociación, se crean automáticamente registros en `association_member_statuses` para cada tipo existente en `association_member_status_types`. Estos estados iniciales tienen:
+- `type` = ID del tipo de estado
+- `order` = ID del tipo de estado
+- `name` = Nombre del tipo de estado
+- `description` = '' (vacío)
 
 - **422 Unprocessable Entity** - Error de validación
   - Región especificada sin país

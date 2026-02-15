@@ -33,6 +33,7 @@ export const GLOBAL_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
 export const ASSOCIATION_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
   { label: 'Páginas', route: '/admin/pages/2', permission: 'pages.edit', icon: '📄', category: 'Contenido' },
   { label: 'Miembros', route: '/admin/asociacion/membros', permission: 'admin', icon: '👥', category: 'Gestión' },
+  { label: 'Estados de los socios', route: '/admin/asociacion/estados', permission: 'admin', icon: '⚙️', category: 'Gestión' , iconClass: 'hover:rotate-90 transition-transform duration-500' },
 ] as const;
 
 /**

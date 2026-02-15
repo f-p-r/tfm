@@ -1,4 +1,4 @@
 {
-  "(and :count more error)|(and :count more errors)": "(y :count error m\u00e1s)|(y :count errores m\u00e1s)",
-  "The given data was invalid.": "Los datos proporcionados no son v\u00e1lidos."
+  "(and :count more error)|(and :count more errors)": "(y :count error más)|(y :count errores más)",
+  "The given data was invalid.": "Los datos proporcionados no son válidos."
 }
