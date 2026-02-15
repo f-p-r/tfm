@@ -85,7 +85,11 @@ export class ContentSegmentsEditorComponent {
       height: 600,
       menubar: false,
       plugins: 'lists link image table code help wordcount quickbars',
-      toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',
+      toolbar: 'undo redo | blocks styles | bold italic forecolor | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',
+      style_formats: [
+        { title: 'Parrafo normal (16px)', block: 'p', classes: 'ds-p-normal' },
+        { title: 'Parrafo hero (24px)', block: 'p', classes: 'ds-p-hero' }
+      ],
       quickbars_image_toolbar: 'alignleft aligncenter alignright alignnone | image',
       quickbars_insert_toolbar: false,
       color_map: [

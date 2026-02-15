@@ -15,11 +15,16 @@ body {
   color: #2C3E50;
 }
 
+/* Me aseguro de que los segmentos renderizados dentro de una página de administración mantengan el tamaño de fuente por defecto en lugar
+   del reducido propio de las páginas de administración */
+.ds-admin-shell .content-renderer{
+  font-size: 16px;
+}
+
 h1 {
   font-family: "Inter Tight", "Inter", sans-serif;
   font-size: 2.25rem;
   font-weight: 700;
-  /*color: #2C3E50;*/
   margin-bottom: 1rem;
 }
 
@@ -27,7 +32,6 @@ h2 {
   font-family: "Inter Tight", "Inter", sans-serif;
   font-size: 1.875rem;
   font-weight: 600;
-  /*color: #2C3E50;*/
   margin-bottom: 0.875rem;
 }
 
@@ -35,12 +39,22 @@ h3 {
   font-family: "Inter Tight", "Inter", sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
-  /*color: #2C3E50;*/
   margin-bottom: 0.75rem;
 }
 
 p {
   line-height: 1.625;
+}
+
+p.ds-p-normal {
+  font-size: 16px;
+  line-height: 1.625;
+}
+
+p.ds-p-hero {
+  font-size: 24px;
+  line-height: 1.6;
+  font-weight: 500;
 }
 /* Configuración de espaciado de imágenes en el editor y segmentos */
 body.mce-content-body,

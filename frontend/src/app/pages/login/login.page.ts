@@ -27,7 +27,7 @@ export class LoginPage implements OnInit {
   });
 
   readonly generalError = signal<string | null>(null);
-  readonly fieldErrors = signal<Record<string, string[]>>({});
+  readonly fieldErrors = signal<Record<string, string>>({});
   readonly isSubmitting = signal(false);
   readonly successMessage = signal<string | null>(null);
 
@@ -62,17 +62,39 @@ export class LoginPage implements OnInit {
         // El AuthService ya actualiza currentUser signal automáticamente
         this.router.navigate(['/']);
       },
-      error: (error: { status: number; message?: string; errors?: Record<string, string[]> }) => {
+      error: (errorResponse: any) => {
         this.isSubmitting.set(false);
 
-        if (error.status === 401) {
-          this.generalError.set('Credenciales inválidas');
-        } else if (error.status === 422 && isLaravelValidationError(error)) {
-          this.fieldErrors.set(error.errors || {});
-          if (error.message) {
-            this.generalError.set(error.message);
+        // Formato 1: Respuesta exitosa pero con errores de validación (errors: true, errorsList: {...})
+        if (errorResponse.errors === true && errorResponse.errorsList) {
+          const backendErrors: Record<string, string> = {};
+          Object.entries(errorResponse.errorsList).forEach(([field, message]) => {
+            backendErrors[field] = message as string;
+          });
+          this.fieldErrors.set(backendErrors);
+
+          // Si hay un error sin campo específico (ej: 'id', 'general'), mostrarlo como error general
+          if (errorResponse.errorsList['id'] || errorResponse.errorsList['general']) {
+            this.generalError.set(errorResponse.errorsList['id'] || errorResponse.errorsList['general']);
           }
-        } else {
+        }
+        // Formato 2: Error HTTP estándar
+        else if (errorResponse.status === 401) {
+          this.generalError.set('Credenciales inválidas');
+        }
+        // Formato 3: Error Laravel (422 con errors)
+        else if (errorResponse.status === 422 && isLaravelValidationError(errorResponse)) {
+          const backendErrors: Record<string, string> = {};
+          Object.entries(errorResponse.errors || {}).forEach(([field, messages]) => {
+            backendErrors[field] = (messages as string[])[0];
+          });
+          this.fieldErrors.set(backendErrors);
+          if (errorResponse.message) {
+            this.generalError.set(errorResponse.message);
+          }
+        }
+        // Fallback: mensaje genérico
+        else {
           this.generalError.set('Ha ocurrido un error. Por favor, inténtalo de nuevo.');
         }
       },
@@ -92,7 +114,6 @@ export class LoginPage implements OnInit {
   }
 
   getFieldError(field: string): string | null {
-    const errors = this.fieldErrors()[field];
-    return errors && errors.length > 0 ? errors[0] : null;
+    return this.fieldErrors()[field] || null;
   }
 }

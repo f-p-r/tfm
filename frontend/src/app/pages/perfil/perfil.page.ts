@@ -144,20 +144,40 @@ export class PerfilPage implements OnInit {
   }
 
   private handleErrors(errors: Record<string, string>): void {
-    this.fieldErrors.set(errors);
-    if (errors['id']) {
-      this.generalError.set(errors['id']);
+    // Separar errores de campo vs errores generales
+    const formFields = ['name', 'email', 'password', 'passwordConfirmation'];
+    const fieldErrs: Record<string, string> = {};
+    const generalErrs: string[] = [];
+
+    Object.entries(errors).forEach(([field, message]) => {
+      if (formFields.includes(field)) {
+        fieldErrs[field] = message;
+      } else {
+        generalErrs.push(message);
+      }
+    });
+
+    this.fieldErrors.set(fieldErrs);
+    if (generalErrs.length > 0) {
+      this.generalError.set(generalErrs.join('. '));
     }
   }
 
-  private handleHttpError(error: any): void {
-    if (error.status === 422 && error.error?.errors) {
+  private handleHttpError(errorResponse: any): void {
+    // Formato 1: {errors: true, errorsList: {...}} en el body del error
+    if (errorResponse.error?.errors === true && errorResponse.error?.errorsList) {
+      this.handleErrors(errorResponse.error.errorsList);
+    }
+    // Formato 2: Error 422 con estructura Laravel (errors como array de mensajes)
+    else if (errorResponse.status === 422 && errorResponse.error?.errors) {
       const backendErrors: Record<string, string> = {};
-      Object.entries(error.error.errors).forEach(([field, messages]) => {
+      Object.entries(errorResponse.error.errors).forEach(([field, messages]) => {
         backendErrors[field] = (messages as string[])[0];
       });
       this.fieldErrors.set(backendErrors);
-    } else {
+    }
+    // Formato 3: Mensaje genérico
+    else {
       this.generalError.set('Ha ocurrido un error. Por favor, inténtalo de nuevo.');
     }
   }

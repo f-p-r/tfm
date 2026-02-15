@@ -31,7 +31,7 @@ export const GLOBAL_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
  * Acciones de administración para Scope Asociación (WebScope.ASSOCIATION)
  */
 export const ASSOCIATION_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
-  { label: 'Páginas', route: '/admin/pages/2', permission: 'association.pages.view', icon: '📄', category: 'Contenido' },
+  { label: 'Páginas', route: '/admin/pages/2', permission: 'pages.edit', icon: '📄', category: 'Contenido' },
   { label: 'Miembros', route: '/admin/asociacion/membros', permission: 'admin', icon: '👥', category: 'Gestión' },
 ] as const;
 

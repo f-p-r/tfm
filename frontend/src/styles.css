@@ -496,9 +496,18 @@
     @apply text-white;
   }
 
+  /* Tipografia de parrafos del editor */
+  .ds-p-normal {
+    @apply text-base leading-relaxed;
+  }
+
+  .ds-p-hero {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
   /* === Layout administración === */
-
-
   .ds-admin-shell {
     @apply flex  text-sm relative overflow-hidden;
   }
@@ -621,3 +630,4 @@
     @apply text-base leading-relaxed text-neutral-dark;
   }
 }
+
