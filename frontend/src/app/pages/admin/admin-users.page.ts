@@ -3,7 +3,8 @@
  *
  * Muestra la lista completa de usuarios con funcionalidad de:
  * - Visualización en tabla paginada
- * - Restablecer contraseña (acción pendiente de implementación)
+ * - Gestión de roles por usuario
+ * - Restablecer contraseña
  *
  * Requiere permiso 'admin' para acceder.
  */
@@ -14,12 +15,14 @@ import { AdminTableComponent } from '../../components/core/admin/table/admin-tab
 import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/table/admin-table.model';
 import { UsersService } from '../../core/users/users.service';
 import { User } from '../../core/auth/user.model';
+import { UserRoleManagementModalComponent } from '../../components/core/admin/user-role-management-modal/user-role-management-modal.component';
 
 @Component({
   selector: 'app-admin-users-page',
   imports: [
     AdminSidebarContainerComponent,
-    AdminTableComponent
+    AdminTableComponent,
+    UserRoleManagementModalComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -65,6 +68,17 @@ import { User } from '../../core/auth/user.model';
       </main>
 
     </div>
+
+    <!-- Modal de gestión de roles -->
+    @if (showRoleManagementModal() && selectedUser()) {
+      <app-user-role-management-modal
+        [userId]="selectedUserId()"
+        [username]="selectedUsername()"
+        (close)="onCloseRoleModal()"
+        (resetPassword)="onResetPasswordFromModal()"
+        (roleChanged)="onRoleChanged()"
+      />
+    }
   `
 })
 export class AdminUsersPage {
@@ -93,8 +107,16 @@ export class AdminUsersPage {
 
   // Acciones disponibles
   protected readonly actions: AdminTableAction[] = [
-    { action: 'reset-password', label: 'Restablecer contraseña' }
+    { action: 'manage', label: 'Gestión' }
   ];
+
+  // Estado del modal
+  protected readonly showRoleManagementModal = signal(false);
+  protected readonly selectedUser = signal<User | undefined>(undefined);
+
+  // Computed signals para pasar al modal (con valores por defecto)
+  protected readonly selectedUserId = computed(() => this.selectedUser()?.id ?? 0);
+  protected readonly selectedUsername = computed(() => this.selectedUser()?.username ?? '');
 
   constructor() {
     // Cargar usuarios al inicializar
@@ -113,12 +135,36 @@ export class AdminUsersPage {
   }
 
   protected onAction(event: { action: string; row: any }) {
-    if (event.action === 'reset-password') {
-      const username = event.row.username;
+    if (event.action === 'manage') {
+      // Buscar el usuario completo
+      const user = this.users().find(u => u.id === event.row.id);
+      if (user) {
+        this.selectedUser.set(user);
+        this.showRoleManagementModal.set(true);
+        this.confirmationMessage.set(null); // Limpiar mensaje previo
+      }
+    }
+  }
+
+  protected onCloseRoleModal() {
+    this.showRoleManagementModal.set(false);
+    this.selectedUser.set(undefined);
+  }
+
+  protected onResetPasswordFromModal() {
+    const user = this.selectedUser();
+    if (user) {
       this.confirmationMessage.set(
-        `Se ha restablecido la contraseña del usuario "${username}".\n(Acción no implementada)`
+        `Se ha restablecido la contraseña del usuario "${user.username}".\n(Acción no implementada)`
       );
+      this.showRoleManagementModal.set(false);
+      this.selectedUser.set(undefined);
       setTimeout(() => this.confirmationMessage.set(null), 5000);
     }
+  }
+
+  protected onRoleChanged() {
+    // No cerramos el modal, solo mostramos mensaje cuando se cierre
+    // El modal ya recarga su lista interna
   }
 }

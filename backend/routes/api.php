@@ -18,6 +18,7 @@ use App\Http\Controllers\AdminOwnerHomePageController;
 use App\Http\Controllers\AdminSiteParamsController;
 use App\Http\Controllers\PublicPagesController;
 use App\Http\Controllers\PublicSiteParamsController;
+use App\Http\Controllers\RoleGrantController;
 
 // Ping endpoint (no DB, for diagnostics)
 Route::get('ping', function () {
@@ -60,6 +61,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // User Associations (memberships)
     Route::apiResource('user-associations', UserAssociationController::class);
+
+    // Role Grants (require admin permission)
+    Route::apiResource('role-grants', RoleGrantController::class);
 
     // Authorization query endpoint
     Route::post('authz/query', [AuthzController::class, 'query'])

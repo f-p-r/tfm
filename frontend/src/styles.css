@@ -278,6 +278,25 @@
     }
   }
 
+  /* === Pestañas (Tabs) === */
+
+  /* Contenedor de pestañas */
+  .ds-tabs {
+    @apply flex gap-1 border-b border-neutral-medium;
+  }
+
+  /* Pestaña individual */
+  .ds-tab {
+    @apply px-4 py-2 text-sm font-medium text-neutral-dark rounded-t-lg transition-colors;
+    @apply hover:bg-neutral-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2;
+    @apply border-b-2 border-transparent;
+  }
+
+  /* Pestaña activa */
+  .ds-tab-active {
+    @apply text-brand-primary border-brand-primary bg-neutral-light;
+  }
+
   /* === Layout y Contenedores === */
 
   /* Wrapper global de la aplicación - usar como clase en div */
