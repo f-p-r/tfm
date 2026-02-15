@@ -1,10 +1,10 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn, ActivatedRouteSnapshot } from '@angular/router';
 import { map, catchError, of } from 'rxjs';
-import { AssociationsResolveService } from './associations-resolve.service';
-import { ContextStore } from '../context/context.store';
-import { WebScope } from '../web-scope.constants';
-import { slugify } from '../../shared/utils/slugify';
+import { AssociationsResolveService } from '../core/associations/associations-resolve.service';
+import { ContextStore } from '../core/context/context.store';
+import { WebScope } from '../core/web-scope.constants';
+import { slugify } from '../shared/utils/slugify';
 
 /**
  * Guard para rutas de asociaciones individuales (/asociaciones/:slug).

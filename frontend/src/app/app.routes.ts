@@ -11,7 +11,7 @@ import { GameAssociationsPage } from './pages/games/game-associations/game-assoc
 import { gameBySlugGuard } from './guards/game-by-slug.guard';
 import { AssociationsPage } from './pages/associations/associations.page';
 import { AssociationPage } from './pages/associations/association/association.page';
-import { associationBySlugGuard } from './core/associations/association-by-slug.guard';
+import { associationBySlugGuard } from './guards/association-by-slug.guard';
 import { OwnerPagesAdminPage } from './pages/admin/pages/owner-pages/owner-pages-admin.page';
 import { PageFormAdminPage } from './pages/admin/pages/owner-pages/page-form-admin.page';
 import { PagePreviewPage } from './pages/admin/pages/owner-pages/page-preview.page';

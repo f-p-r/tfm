@@ -19,7 +19,7 @@ Aunque `POST /api/users` no requiere autenticación, **sí verifica que la petic
    await axios.get('http://backend/sanctum/csrf-cookie');
    ```
 2. Luego registrar usuario:
-   ```typescript
+   ```typescript 
    await axios.post('http://backend/api/users', userData);
    ```
 
