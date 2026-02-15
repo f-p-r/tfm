@@ -10,7 +10,7 @@
  * El componente se actualiza automáticamente cuando cambia el scope o los permisos.
  */
 
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
 import { ContextStore } from '../../core/context/context.store';
 import { PermissionsStore } from '../../core/authz/permissions.store';
@@ -23,12 +23,42 @@ import { AdminMenuComponent } from '../core/admin/admin-menu/admin-menu.componen
   imports: [AdminMenuComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-admin-menu [items]="authorizedMenuItems()" />
+    <!-- Botón hamburguesa flotante para móvil (solo visible cuando sidebar está cerrado) -->
+    @if (sidebarCollapsed()) {
+      <button
+        type="button"
+        class="ds-mobile-sidebar-toggle"
+        (click)="toggleSidebar()"
+        aria-label="Abrir menú">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    }
+
+    <!-- Overlay para móvil -->
+    @if (!sidebarCollapsed()) {
+      <div class="ds-sidebar-overlay" (click)="toggleSidebar()"></div>
+    }
+
+    <!-- Sidebar -->
+    <aside
+      id="admin-sidebar"
+      class="ds-admin-sidebar"
+      [class.ds-admin-sidebar-closed]="sidebarCollapsed()">
+      <app-admin-menu
+        [items]="authorizedMenuItems()"
+        [collapsed]="sidebarCollapsed()"
+        (toggleCollapsed)="toggleSidebar()" />
+    </aside>
   `
 })
 export class AdminSidebarContainerComponent {
   private contextStore = inject(ContextStore);
   private permissionsStore = inject(PermissionsStore);
+
+  // Estado del sidebar (false = expandido por defecto)
+  readonly sidebarCollapsed = signal(false);
 
   /**
    * Items del menú autorizados según el scope y permisos del usuario.
@@ -58,5 +88,9 @@ export class AdminSidebarContainerComponent {
       iconClass: action.iconClass,
       helpKey: action.helpKey
     };
+  }
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed.update(collapsed => !collapsed);
   }
 }

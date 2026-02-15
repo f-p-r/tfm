@@ -29,9 +29,7 @@ import { Game } from '../../core/games/games.models';
     <div class="ds-admin-shell">
 
       <!-- Sidebar -->
-      <aside id="admin-sidebar" class="ds-admin-sidebar">
-        <app-admin-sidebar-container />
-      </aside>
+      <app-admin-sidebar-container />
 
       <!-- Main content -->
       <main class="ds-admin-main ds-container">

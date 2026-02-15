@@ -33,9 +33,7 @@ import { MEMBER_STATUS_TYPE_NAMES, MEMBER_STATUS_TYPE_BADGES } from '../../core/
     <div class="ds-admin-shell">
 
       <!-- Sidebar -->
-      <aside id="admin-sidebar" class="ds-admin-sidebar">
-        <app-admin-sidebar-container />
-      </aside>
+      <app-admin-sidebar-container />
 
       <!-- Main content -->
       <main class="ds-admin-main ds-container">

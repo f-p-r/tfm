@@ -519,17 +519,85 @@
 
   /* Sidebar: FLOTANTE, debajo del navbar y con z-index alto */
   .ds-admin-sidebar {
-    @apply bg-admin-sidebar flex flex-col fixed z-50 transition-all duration-300 ease-in-out;
+    @apply bg-admin-sidebar flex flex-col fixed z-50 transition-all duration-300 ease-in-out overflow-x-hidden;
     top: 4rem;
     bottom: 0;
-    width: 16rem;
+    width: 17rem;
     left: 0;
     box-shadow: 10px 0 15px -3px rgba(0, 0, 0, 0.2);
   }
 
-  /* Estado cerrado: sacamos el menú lateral de la vista */
-  .ds-admin-sidebar-closed {
-    @apply -translate-x-full opacity-0 pointer-events-none;
+  /* Header del sidebar con botón hamburguesa */
+  .ds-sidebar-header {
+    @apply flex items-center justify-start border-b border-admin-sidebar-hover;
+    height: 3.5rem;
+    flex-shrink: 0;
+    padding-left: 0;
+  }
+
+  .ds-sidebar-toggle {
+    @apply text-neutral-medium hover:text-white hover:bg-admin-sidebar-hover rounded-md p-2 transition-colors;
+  }
+
+  /* Overlay oscuro para móvil */
+  .ds-sidebar-overlay {
+    @apply fixed inset-0 bg-black/50 z-40 transition-opacity duration-300;
+    display: none;
+  }
+
+  /* Botón hamburguesa flotante para móvil */
+  .ds-mobile-sidebar-toggle {
+    @apply fixed z-50 bg-brand-primary text-white rounded-full p-2 shadow-lg transition-all;
+    top: 4rem;
+    left: 0;
+    display: none;
+  }
+
+  .ds-mobile-sidebar-toggle:hover {
+    @apply brightness-90 scale-110;
+  }
+
+  /* En móvil: comportamiento drawer completo */
+  @media (max-width: 768px) {
+    /* Estado cerrado: ocultar completamente */
+    .ds-admin-sidebar-closed {
+      @apply -translate-x-full;
+    }
+
+    /* Mostrar botón flotante cuando sidebar está cerrado */
+    .ds-mobile-sidebar-toggle {
+      display: block;
+    }
+
+    /* Mostrar overlay cuando está abierto */
+    .ds-sidebar-overlay {
+      display: block;
+    }
+  }
+
+  /* En desktop: comportamiento collapse */
+  @media (min-width: 769px) {
+    /* Estado cerrado: mostrar solo botón hamburguesa */
+    .ds-admin-sidebar-closed {
+      width: 3rem;
+    }
+
+    /* Ocultar labels de menú cuando está colapsado */
+    .ds-admin-sidebar-closed .ds-admin-nav-item span:not(:first-child),
+    .ds-admin-sidebar-closed .ds-admin-nav-item .font-medium,
+    .ds-admin-sidebar-closed nav > div {
+      @apply hidden;
+    }
+
+    /* Centrar iconos cuando está colapsado */
+    .ds-admin-sidebar-closed .ds-admin-nav-item {
+      @apply justify-center px-1;
+    }
+
+    /* No mostrar overlay en desktop */
+    .ds-sidebar-overlay {
+      display: none !important;
+    }
   }
 
   /* Navbar: Ocupa todo el ancho, z-index superior al sidebar */
@@ -539,7 +607,7 @@
 
   /* Items del Menú: Texto claro y brillo en iconos */
   .ds-admin-nav-item {
-    @apply flex items-center gap-3 px-4 py-3 mx-2 rounded-md transition-colors cursor-pointer;
+    @apply flex items-center gap-3 px-4 py-3 mx-2 rounded-md transition-colors cursor-pointer whitespace-nowrap;
     @apply text-neutral-medium hover:bg-admin-sidebar-hover hover:text-white;
   }
 

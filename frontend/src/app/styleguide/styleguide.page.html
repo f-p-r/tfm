@@ -481,8 +481,11 @@
     <div class="ds-admin-shell" id="admin-demo-shell" style="height: 700px; overflow: hidden;">
 
       <!-- Sidebar: !top-0 solo para esta demo dentro de contenedor (en páginas reales usa top: 4rem del CSS) -->
-      <aside class="ds-admin-sidebar !absolute !z-50 !top-0" id="admin-sidebar">
-          <app-admin-menu [items]="demoMenuItems">
+      <aside class="ds-admin-sidebar !absolute !z-50 !top-0" id="admin-sidebar" [class.ds-admin-sidebar-closed]="sidebarCollapsed()">
+          <app-admin-menu
+            [items]="demoMenuItems"
+            [collapsed]="sidebarCollapsed()"
+            (toggleCollapsed)="toggleSidebar()">
           </app-admin-menu>
       </aside>
 

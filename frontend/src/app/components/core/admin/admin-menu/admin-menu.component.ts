@@ -8,7 +8,7 @@
  *
  * NO verifica permisos (esa responsabilidad es del componente contenedor).
  */
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdminMenuItem } from '../../../../core/admin/admin-menu.model';
@@ -18,11 +18,24 @@ import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive
   selector: 'app-admin-menu',
   imports: [CommonModule, RouterModule, HelpHoverDirective],
   template: `
-    <nav class="flex-1 py-6 space-y-1 overflow-y-auto">
+    <!-- Botón hamburguesa -->
+    <div class="ds-sidebar-header">
+      <button
+        type="button"
+        class="ds-sidebar-toggle"
+        (click)="toggleCollapsed.emit()"
+        aria-label="Alternar menú">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="flex-1 py-6 space-y-1 overflow-y-auto overflow-x-hidden">
       @for (item of items; track item.label) {
 
         @if (isNewCategory(item, $index)) {
-           <div class="px-6 mt-6 mb-2 text-xs font-bold text-neutral-medium uppercase tracking-wider opacity-70">
+           <div class="px-4 mt-6 mb-2 text-xs font-bold text-neutral-medium uppercase tracking-wider opacity-70">
              {{ item.category }}
            </div>
         }
@@ -47,6 +60,8 @@ import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive
 })
 export class AdminMenuComponent {
   @Input() items: AdminMenuItem[] = [];
+  @Input() collapsed = false;
+  @Output() toggleCollapsed = new EventEmitter<void>();
 
   isNewCategory(item: AdminMenuItem, index: number): boolean {
     if (!item.category) return false;

@@ -99,10 +99,9 @@ export class NavbarComponent {
    * NOTA: Ya no incluimos aquí las adminActions, se gestionan aparte en el HTML
    */
   readonly navItems = computed<NavItem[]>(() => {
-    // 1. MODO ADMINISTRACIÓN (Panel interno)
+    // 1. MODO ADMINISTRACIÓN
     if (this.isAdmin()) {
       return [
-        { label: 'Panel', type: 'button', onClick: () => this.toggleAdminSidebar() },
         { label: 'Salir de Admin', type: 'button', onClick: () => this.exitAdmin() },
         { label: '?', type: 'button', onClick: () => this.openHelp() },
       ];
@@ -270,14 +269,6 @@ export class NavbarComponent {
   }
 
   noop(): void {}
-
-  toggleAdminSidebar(): void {
-    const sidebar = document.getElementById('admin-sidebar');
-    if (sidebar) {
-      sidebar.classList.toggle('ds-admin-sidebar-closed');
-    }
-    this.closeMobileMenu();
-  }
 
   exitAdmin(): void {
     this.router.navigateByUrl('/');

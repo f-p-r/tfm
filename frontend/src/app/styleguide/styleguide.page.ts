@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Componentes de UI Globales
@@ -29,6 +29,9 @@ import { AdminTableColumn, AdminTableAction } from '../components/core/admin/tab
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StyleguidePage {
+
+  // Estado del sidebar para demo
+  sidebarCollapsed = signal(false);
 
   // --- 1. CONFIGURACIÓN DEL MENÚ LATERAL ---
   public demoMenuItems: AdminMenuItem[] = [
@@ -129,5 +132,9 @@ export class StyleguidePage {
   // --- 3. MANEJADORES DE EVENTOS ---
   onTableAction(event: { action: string, row: any }) {
     console.log('Acción tabla:', event.action, event.row);
+  }
+
+  toggleSidebar() {
+    this.sidebarCollapsed.update(collapsed => !collapsed);
   }
 }
