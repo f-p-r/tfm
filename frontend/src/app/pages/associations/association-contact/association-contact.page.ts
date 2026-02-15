@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, computed, signal, effect } from '@angular/core';
+import { Router } from '@angular/router';
 import { ContextStore } from '../../../core/context/context.store';
 import { AssociationsResolveService } from '../../../core/associations/associations-resolve.service';
 import { ContactApiService } from '../../../core/contact/contact-api.service';
@@ -16,10 +17,17 @@ import { ContactCardComponent } from '../../../shared/contact/contact-card.compo
   template: `
     <div class="ds-container py-8">
       <header class="border-b border-neutral-medium pb-4">
-        <h1 class="h1 text-brand-primary">Contacto</h1>
-        @if (associationName()) {
-          <p class="text-sm text-neutral-dark mt-1">{{ associationName() }}</p>
-        }
+        <div class="flex justify-between items-start">
+          <div>
+            <h1 class="h1 text-brand-primary">Contacto</h1>
+            @if (associationName()) {
+              <p class="text-sm text-neutral-dark mt-1">{{ associationName() }}</p>
+            }
+          </div>
+          <button class="ds-btn ds-btn-secondary" (click)="onGoBack()">
+            Volver
+          </button>
+        </div>
       </header>
 
       <section class="mt-8">
@@ -44,6 +52,7 @@ export class AssociationContactPage {
   private readonly contextStore = inject(ContextStore);
   private readonly associationsResolve = inject(AssociationsResolveService);
   private readonly contactApi = inject(ContactApiService);
+  private readonly router = inject(Router);
 
   readonly associationName = computed(() => {
     const scopeId = this.contextStore.scopeId();
@@ -66,6 +75,12 @@ export class AssociationContactPage {
         this.loadContacts(associationId);
       }
     });
+  }
+
+  protected onGoBack(): void {
+    const currentUrl = this.router.url;
+    const backUrl = currentUrl.replace(/\/contacto$/, '');
+    this.router.navigateByUrl(backUrl || '/');
   }
 
   private loadContacts(associationId: number): void {

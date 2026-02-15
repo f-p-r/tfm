@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ContactApiService } from '../../core/contact/contact-api.service';
 import { ContactInfo } from '../../core/contact/contact.models';
 import { ContactCardComponent } from '../../shared/contact/contact-card.component';
@@ -14,8 +15,15 @@ import { ContactCardComponent } from '../../shared/contact/contact-card.componen
   template: `
     <div class="ds-container py-8">
       <header class="border-b border-neutral-medium pb-4">
-        <h1 class="h1 text-brand-primary">Contacto</h1>
-        <p class="text-sm text-neutral-dark mt-1">Naipeando</p>
+        <div class="flex justify-between items-start">
+          <div>
+            <h1 class="h1 text-brand-primary">Contacto</h1>
+            <p class="text-sm text-neutral-dark mt-1">Naipeando</p>
+          </div>
+          <button class="ds-btn ds-btn-secondary" (click)="onGoBack()">
+            Volver
+          </button>
+        </div>
       </header>
 
       <section class="mt-8">
@@ -38,6 +46,7 @@ import { ContactCardComponent } from '../../shared/contact/contact-card.componen
 })
 export class ContactPage implements OnInit {
   private readonly contactApi = inject(ContactApiService);
+  private readonly router = inject(Router);
 
   readonly contacts = signal<ContactInfo[]>([]);
   readonly loading = signal(true);
@@ -45,6 +54,10 @@ export class ContactPage implements OnInit {
 
   ngOnInit(): void {
     this.loadContacts();
+  }
+
+  protected onGoBack(): void {
+    this.router.navigateByUrl('/');
   }
 
   private loadContacts(): void {

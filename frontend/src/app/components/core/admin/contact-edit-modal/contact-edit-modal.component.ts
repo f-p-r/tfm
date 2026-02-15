@@ -250,7 +250,7 @@ export class ContactEditModalComponent implements OnInit {
   readonly categories = Object.entries(CONTACT_CATEGORIES).map(([value, label]) => ({ value, label }));
 
   form!: FormGroup;
-  
+
   /** Signal del tipo de contacto actual (se inicializa en ngOnInit) */
   private contactTypeValue = signal<ContactType | null>(null);
 
