@@ -80,14 +80,20 @@ export class ContextService {
       this.adminActionsSubject.next(actions);
     });
 
-    // Effect: Recalcular admin actions cuando cambia el usuario o los permisos
+    // Effect: Recalcular admin actions cuando cambia el usuario, permisos o scope
     effect(() => {
       // Detectar cambios en usuario autenticado
       const user = this.authService.currentUser();
       // Detectar cambios en permisos (usando allPermissions como trigger)
       const permissions = this.permissionsStore.allPermissions();
+      // Detectar si los permisos están cargando
+      const isLoading = this.permissionsStore.isLoading();
+      // Detectar cambios en scope
+      const scopeType = this.contextStore.scopeType();
+      const scopeId = this.contextStore.scopeId();
 
-      console.log('🔄 [ContextService] Cambio detectado en usuario/permisos → Recalculando admin actions');
+      console.log('🔄 [ContextService] Cambio detectado → Recalculando admin actions');
+      console.log('🔄 [ContextService] Usuario:', user?.username, 'Permisos:', permissions.length, 'Loading:', isLoading, 'Scope:', `${scopeType}:${scopeId}`);
 
       // Si no hay usuario, limpiar acciones
       if (!user) {
@@ -95,15 +101,38 @@ export class ContextService {
         return;
       }
 
-      // Recalcular acciones con la ruta actual
+      // Si los permisos están cargando, esperar (no calcular todavía)
+      if (isLoading) {
+        console.log('⏳ [ContextService] Permisos cargando... Esperando...');
+        return;
+      }
+
+      // Recalcular acciones con la ruta actual (sin esperar, ya tenemos los permisos)
       const route = this.getDeepestRoute(this.route);
       const data = route.snapshot.data;
       const params = route.snapshot.params;
       const url = this.router.url;
 
-      this.calculateAdminActions(data, params, url).subscribe(actions => {
-        this.adminActionsSubject.next(actions);
-      });
+      // IMPORTANTE: No usar waitForLoad() aquí, ya tenemos los permisos en el signal 'permissions'
+      // El effect se dispara cuando 'permissions' cambia, así que siempre están actualizados
+      const actions: AdminAction[] = [];
+
+      // A) Editar Entidad
+      if (data['entity']) {
+        const editAction = this.checkEntityEdit(data['entity']);
+        if (editAction) {
+          actions.push(editAction);
+        }
+      }
+
+      // B) Administrar Contexto
+      const adminAction = this.checkContextAdmin(scopeType, scopeId ?? 0);
+      if (adminAction) {
+        actions.push(adminAction);
+      }
+
+      console.log('🔄 [ContextService] Acciones calculadas en effect:', actions);
+      this.adminActionsSubject.next(actions);
     });
   }
 
@@ -180,9 +209,14 @@ export class ContextService {
   }
 
   /**
-   * Verifica si el usuario tiene permiso 'admin' en el contexto actual.
-   * Si tiene permiso, devuelve una AdminAction para acceder al panel de administración.
+   * Verifica si el usuario tiene ALGÚN permiso en el contexto actual.
+   * Si tiene al menos un permiso, devuelve una AdminAction para acceder al panel de administración.
    * Verificación síncrona desde PermissionsStore (sin HTTP).
+   *
+   * Lógica:
+   * - Si tiene permiso 'admin': muestra botón "Administración" / "Administrar X"
+   * - Si tiene cualquier otro permiso (ej: pages.edit): muestra botón "Administrar X"
+   * - Si no tiene ningún permiso: no muestra botón
    *
    * Etiqueta según scope:
    * - Global: "Administración"
@@ -191,13 +225,17 @@ export class ContextService {
    *
    * @param scopeType - Tipo de scope (WebScope.GLOBAL, ASSOCIATION, GAME)
    * @param scopeId - ID del scope (0 para global)
-   * @returns AdminAction si tiene permiso, null si no
+   * @returns AdminAction si tiene algún permiso, null si no
    */
   private checkContextAdmin(scopeType: number, scopeId: number): AdminAction | null {
-    const hasPermission = this.permissionsStore.hasPermission(this.PERM_ADMIN);
-    console.log(`🔍 [ContextService] 5. Permiso Admin (${this.PERM_ADMIN}):`, hasPermission ? 'APROBADO' : 'DENEGADO');
+    // Verificar si tiene al menos un permiso en este scope
+    const allPermissions = this.permissionsStore.allPermissions();
+    const hasAnyPermission = allPermissions.length > 0;
 
-    if (hasPermission) {
+    console.log(`🔍 [ContextService] 5. Permisos en scope actual:`, allPermissions);
+    console.log(`🔍 [ContextService] 5. ¿Tiene algún permiso?:`, hasAnyPermission ? 'SÍ' : 'NO');
+
+    if (hasAnyPermission) {
       let label = 'Administración';
       let route = ['/admin'];
 

@@ -11,6 +11,7 @@ import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive
 import { HelpContentService } from '../../../../shared/help/help-content.service';
 import { PAGE_CREATE_PACK } from './page-create.pack';
 import { AdminSidebarContainerComponent } from '../../../../components/admin-sidebar/admin-sidebar-container.component';
+import { ContextStore } from '../../../../core/context/context.store';
 
 /**
  * Componente unificado para crear y editar páginas de contenido.
@@ -35,6 +36,7 @@ export class PageFormAdminPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly helpContent = inject(HelpContentService);
+  private readonly contextStore = inject(ContextStore);
 
   // Route params
   readonly pageId = signal<number | null>(null);
@@ -170,11 +172,32 @@ export class PageFormAdminPage implements OnInit {
     }
 
     // Parse ownerId
+    // 1. Si es global (tipo 1): ownerId es null
+    // 2. Si hay ownerId en la URL: usar ese
+    // 3. Si NO hay ownerId en la URL pero es tipo 2/3: leer del ContextStore
     let parsedOwnerId: number | null = null;
-    if (parsedOwnerType !== '1' && ownerIdParam) {
+
+    if (parsedOwnerType === '1') {
+      // Global: no necesita ownerId
+      parsedOwnerId = null;
+    } else if (ownerIdParam) {
+      // Hay ownerId explícito en la URL
       parsedOwnerId = parseInt(ownerIdParam, 10);
       if (isNaN(parsedOwnerId)) {
         this.errorMessage.set('Parámetro ownerId no válido');
+        return;
+      }
+    } else {
+      // NO hay ownerId en la URL → leer del contexto actual
+      const scopeType = this.contextStore.scopeType();
+      const scopeId = this.contextStore.scopeId();
+
+      // Verificar que el contexto actual coincida con el ownerType
+      if (scopeType.toString() === parsedOwnerType && scopeId !== null) {
+        parsedOwnerId = scopeId;
+        console.log(`📌 [PageFormAdmin] Usando scopeId del contexto: ${parsedOwnerId}`);
+      } else {
+        this.errorMessage.set(`ownerType ${parsedOwnerType} requiere ownerId pero no está en la URL ni en el contexto actual`);
         return;
       }
     }

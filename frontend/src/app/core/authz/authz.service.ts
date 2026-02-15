@@ -65,6 +65,7 @@ export class AuthzService {
     // Si hay entrada en caché válida (no expirada), devolverla
     const cached = this.getFromCache(cacheKey);
     if (cached) {
+      console.log(`💾 [AuthzService] Usando caché para: ${cacheKey}`);
       return new Observable((subscriber) => {
         subscriber.next(cached);
         subscriber.complete();
@@ -73,9 +74,11 @@ export class AuthzService {
 
     // Si ya hay una llamada en vuelo para esta clave, reutilizarla
     if (this.inFlight.has(cacheKey)) {
+      console.log(`⏳ [AuthzService] Reutilizando petición en vuelo para: ${cacheKey}`);
       return this.inFlight.get(cacheKey)!;
     }
 
+    console.log(`🌐 [AuthzService] Nueva petición HTTP para: ${cacheKey}`);
     // Hacer la llamada al backend, deduplicarla y cachearla
     const request$ = this.api.query(req).pipe(
       tap((res) => this.setInCache(cacheKey, res)),
@@ -106,7 +109,13 @@ export class AuthzService {
    * Útil para invalidación manual o cambios de sesión.
    */
   clearCache(): void {
+    const entriesCount = this.cache.size;
+    const inFlightCount = this.inFlight.size;
+
     this.cache.clear();
+    this.inFlight.clear();
+
+    console.log(`🧹 [AuthzService] Caché limpiada: ${entriesCount} entradas, ${inFlightCount} peticiones en vuelo eliminadas`);
   }
 
   /**

@@ -41,11 +41,15 @@ import { of } from 'rxjs';
 /**
  * Guard funcional que resuelve el scope de contexto antes de continuar.
  *
- * Lógica de resolución:
+ * Lógica de resolución (por orden de prioridad):
  * 1. Si route.data['entity'] existe → usa entity.ownerType y entity.ownerId
- * 2. Si URL comienza con /asociaciones/:slug → resuelve asociación
- * 3. Si URL comienza con /juegos/:slug → resuelve juego
- * 4. Fallback → establece scope GLOBAL
+ * 1.5. Si URL es /admin/pages/{scopeType} sin ownerId → verifica scope actual coincida
+ * 2. Si hay parámetros ownerType/ownerId → establece ese scope (ej: /admin/pages/2/5)
+ * 3. Si URL comienza con /asociaciones/:slug → resuelve asociación
+ * 4. Si URL comienza con /juegos/:slug → resuelve juego
+ * 5. Si URL es /admin/{scopeType}/* → verifica que scope actual coincida, sino redirect a /
+ * 6. Si URL es /admin raíz → preserva scope actual si existe
+ * 7. Fallback → establece scope GLOBAL
  *
  * Después de determinar el scope:
  * - Actualiza ContextStore (dispara recarga de permisos automáticamente)
@@ -59,9 +63,22 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
   const associationsResolve = inject(AssociationsResolveService);
   const router = inject(Router);
 
-  const url = router.url;
+  // IMPORTANTE: Construir la URL destino desde el route, no usar router.url
+  // router.url devuelve la URL actual (antes de navegar), no la destino
+  const urlSegments = route.pathFromRoot
+    .map(r => r.url.map(segment => segment.path))
+    .reduce((acc, segments) => acc.concat(segments), [])
+    .filter(segment => segment);
+  const url = '/' + urlSegments.join('/');
+
   const data = route.data;
   const params = route.params;
+
+  console.log(`🎯 [resolveScopeGuard] ============================================`);
+  console.log(`🎯 [resolveScopeGuard] URL DESTINO: "${url}"`);
+  console.log(`🎯 [resolveScopeGuard] router.url (anterior): "${router.url}"`);
+  console.log(`🎯 [resolveScopeGuard] Scope actual ANTES: ${contextStore.scopeType()}:${contextStore.scopeId()}`);
+  console.log(`🎯 [resolveScopeGuard] ============================================`);
 
   // Prioridad 1: Entity desde resolver
   if (data['entity']) {
@@ -73,6 +90,33 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
     contextStore.setScope(scopeType, scopeId, 'router');
 
     return permissionsStore.waitForLoad().pipe(map(() => true));
+  }
+
+  // Prioridad 1.5: Rutas /admin/pages/{scopeType} contextuales (sin ownerId explícito)
+  // Ejemplo: /admin/pages/2, /admin/pages/3/create, /admin/pages/3/edit/10
+  // Verifican que el scope actual coincida con el scopeType de la URL
+  const pagesContextMatch = url.match(/^\/admin\/pages\/(\d+)/);
+
+  if (pagesContextMatch && !params['ownerId']) {
+    const urlScopeType = parseInt(pagesContextMatch[1], 10);
+
+    // Solo para scopes contextuales (> 1: asociaciones y juegos)
+    if (urlScopeType > 1) {
+      const currentScopeType = contextStore.scopeType();
+      const currentScopeId = contextStore.scopeId();
+
+      console.log(`🎯 [resolveScopeGuard] Ruta /admin/pages/${urlScopeType} contextual → Verificando scope actual ${currentScopeType}:${currentScopeId}`);
+
+      // Verificar que el scope actual coincide con la URL y tiene scopeId definido
+      if (currentScopeType === urlScopeType && currentScopeId !== null && currentScopeId !== undefined) {
+        console.log(`✅ [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
+        return permissionsStore.waitForLoad().pipe(map(() => true));
+      } else {
+        console.warn(`⚠️ [resolveScopeGuard] Scope no coincide o sin scopeId → Redirect a /`);
+        router.navigateByUrl('/');
+        return of(false);
+      }
+    }
   }
 
   // Prioridad 2: Parámetros ownerType/ownerId en la URL (ej: /admin/pages/:ownerType/:ownerId)
@@ -143,7 +187,51 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
     );
   }
 
-  // Fallback: Scope GLOBAL (para /admin, /perfil, /login, etc)
+  // Prioridad 5: Rutas /admin/{scopeType}/* (contextuales)
+  // Ejemplo: /admin/2/socios, /admin/3/configuracion
+  // Verifican que el scope actual coincida con el scopeType de la URL
+  const adminScopeMatch = url.match(/^\/admin\/(\d+)/);
+  if (adminScopeMatch) {
+    const urlScopeType = parseInt(adminScopeMatch[1], 10);
+    const currentScopeType = contextStore.scopeType();
+    const currentScopeId = contextStore.scopeId();
+
+    console.log(`🎯 [resolveScopeGuard] Ruta /admin/${urlScopeType} → Verificando scope actual ${currentScopeType}:${currentScopeId}`);
+
+    // Verificar que el scope actual coincide con la URL y tiene scopeId definido
+    if (currentScopeType === urlScopeType && currentScopeId !== null && currentScopeId !== undefined) {
+      console.log(`✅ [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
+      return permissionsStore.waitForLoad().pipe(map(() => true));
+    } else {
+      console.warn(`⚠️ [resolveScopeGuard] Scope no coincide o sin scopeId → Redirect a /`);
+      router.navigateByUrl('/');
+      return of(false);
+    }
+  }
+
+  // Prioridad 6: /admin raíz (preservar scope actual si existe)
+  // Usar startsWith para manejar query params y hash
+  const isAdminRoot = url === '/admin' || url === '/admin/' || url.startsWith('/admin?') || url.startsWith('/admin#');
+
+  if (isAdminRoot) {
+    const currentScopeType = contextStore.scopeType();
+    const currentScopeId = contextStore.scopeId();
+
+    console.log(`🎯 [resolveScopeGuard] /admin raíz detectado (url: ${url})`);
+    console.log(`🎯 [resolveScopeGuard] Scope actual leído: ${currentScopeType}:${currentScopeId}`);
+
+    if (currentScopeType !== null && currentScopeType !== undefined) {
+      console.log(`✅ [resolveScopeGuard] /admin raíz → Preservando scope actual ${currentScopeType}:${currentScopeId}`);
+      return permissionsStore.waitForLoad().pipe(map(() => true));
+    }
+
+    // Si no hay scope actual, establecer GLOBAL y devolver
+    console.log(`🎯 [resolveScopeGuard] /admin raíz sin scope previo → Estableciendo GLOBAL`);
+    contextStore.setGlobal('router');
+    return permissionsStore.waitForLoad().pipe(map(() => true));
+  }
+
+  // Fallback: Scope GLOBAL (para /perfil, /login, /admin sin contexto previo, etc)
   console.log(`🎯 [resolveScopeGuard] Ruta sin scope específico → Scope GLOBAL`);
   contextStore.setGlobal('router');
 

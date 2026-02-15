@@ -21,7 +21,7 @@ import { AdminPage } from './pages/admin/admin.page';
 import { AdminGamesPage } from './pages/admin/admin-games.page';
 import { AdminAssociationsPage } from './pages/admin/admin-associations.page';
 import { AdminUsersPage } from './pages/admin/admin-users.page';
-import { requirePermission } from './guards/permission.guard';
+import { requirePermission, requireAnyPermission } from './guards/permission.guard';
 import { requireAuth } from './guards/auth.guard';
 import { resolveScopeGuard } from './guards/resolve-scope.guard';
 
@@ -105,32 +105,32 @@ export const routes: Routes = [
     ],
   },
 
-  // Admin: página principal
+  // Admin: página principal (requiere cualquier permiso en el scope actual)
   {
     path: 'admin',
     component: AdminPage,
-    canActivate: [resolveScopeGuard, requirePermission('admin')],
+    canActivate: [resolveScopeGuard, requireAuth, requireAnyPermission()],
   },
 
   // Admin: gestión de juegos
   {
     path: 'admin/juegos',
     component: AdminGamesPage,
-    canActivate: [resolveScopeGuard, requirePermission('admin')],
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('admin')],
   },
 
   // Admin: gestión de asociaciones
   {
     path: 'admin/asociaciones',
     component: AdminAssociationsPage,
-    canActivate: [resolveScopeGuard, requirePermission('admin')],
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('admin')],
   },
 
   // Admin: gestión de usuarios
   {
     path: 'admin/usuarios',
     component: AdminUsersPage,
-    canActivate: [resolveScopeGuard, requirePermission('admin')],
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('admin')],
   },
 
   // Admin: gestión de páginas
@@ -138,38 +138,69 @@ export const routes: Routes = [
   {
     path: 'admin/pages/1',
     component: OwnerPagesAdminPage,
-    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
+  },
+  // Páginas contextuales (scopeType 2/3 sin scopeId explícito, usa scope del contexto)
+  {
+    path: 'admin/pages/2',
+    component: OwnerPagesAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
+  },
+  {
+    path: 'admin/pages/2/create',
+    component: PageFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
+  },
+  {
+    path: 'admin/pages/2/edit/:pageId',
+    component: PageFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
+  },
+  {
+    path: 'admin/pages/3',
+    component: OwnerPagesAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
+  },
+  {
+    path: 'admin/pages/3/create',
+    component: PageFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
+  },
+  {
+    path: 'admin/pages/3/edit/:pageId',
+    component: PageFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/1/create',
     component: PageFormAdminPage,
-    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/1/edit/:pageId',
     component: PageFormAdminPage,
-    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
   },
   // Páginas de owner (scopeType 2/3 con scopeId)
   {
     path: 'admin/pages/:ownerType/:ownerId',
     component: OwnerPagesAdminPage,
-    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/:ownerType/:ownerId/create',
     component: PageFormAdminPage,
-    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/:ownerType/:ownerId/edit/:pageId',
     component: PageFormAdminPage,
-    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
   },
   {
     path: 'admin/pages/preview',
     component: PagePreviewPage,
-    canActivate: [resolveScopeGuard, requirePermission('pages.edit')],
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('pages.edit')],
   },
 
   { path: '**', redirectTo: '' },

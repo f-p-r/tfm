@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed, Injector } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { tap, catchError, switchMap, map } from 'rxjs/operators';
@@ -15,6 +15,7 @@ interface AuthResponse {
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
+  private readonly injector = inject(Injector);
   private readonly apiBaseUrl = environment.apiBaseUrl;
   private csrfReady = false;
 
@@ -87,8 +88,29 @@ export class AuthService {
     return this.http
       .post<void>(`${this.apiBaseUrl}/api/auth/logout`, {})
       .pipe(
-        // Al salir, limpiamos la señal
-        tap(() => this.currentUser.set(null)),
+        // Al salir, limpiamos la señal de usuario y toda la caché de permisos
+        tap(() => {
+          console.log('🧹 [AuthService] Iniciando limpieza de logout...');
+
+          this.currentUser.set(null);
+          console.log('🧹 [AuthService] Usuario limpiado');
+
+          // Inyección lazy para evitar dependencia circular
+          // Solo importamos cuando realmente necesitamos limpiar
+          import('../authz/permissions.store').then(({ PermissionsStore }) => {
+            const permissionsStore = this.injector.get(PermissionsStore);
+            permissionsStore.clear();
+            console.log('🧹 [AuthService] PermissionsStore limpiado');
+          });
+
+          import('../authz/authz.service').then(({ AuthzService }) => {
+            const authzService = this.injector.get(AuthzService);
+            authzService.clearCache();
+            console.log('🧹 [AuthService] AuthzService caché limpiada');
+          });
+
+          console.log('✅ [AuthService] Logout completo: usuario y permisos limpiados');
+        }),
         catchError((error) => this.handleError(error))
       );
   }

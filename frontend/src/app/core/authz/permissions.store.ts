@@ -88,9 +88,10 @@ export class PermissionsStore {
         console.log('🧹 [PermissionsStore] Usuario deslogueado → Limpiando permisos');
         this.permissions.set([]);
         this.lastLoadedScopeKey.set(null);
+        this.loading.set(false);
       } else {
         // Usuario autenticado → Recargar permisos para el scope actual
-        console.log('✅ [PermissionsStore] Usuario autenticado → Recargando permisos');
+        console.log('✅ [PermissionsStore] Usuario autenticado:', user.username, '→ Recargando permisos');
         this.loadForCurrentScope();
       }
     });
@@ -244,8 +245,11 @@ export class PermissionsStore {
    * Útil al hacer logout o cambiar de usuario.
    */
   clear(): void {
-    console.log('🧹 [PermissionsStore] Limpiando permisos');
+    console.log('🧹 [PermissionsStore] Limpiando permisos manualmente');
+    console.log('🧹 [PermissionsStore] Permisos antes de limpiar:', this.permissions());
     this.permissions.set([]);
     this.lastLoadedScopeKey.set(null);
+    this.loading.set(false);
+    console.log('🧹 [PermissionsStore] Permisos después de limpiar:', this.permissions());
   }
 }

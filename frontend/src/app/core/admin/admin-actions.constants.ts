@@ -42,7 +42,7 @@ export const ASSOCIATION_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
  * Acciones de administración para Scope Juego (WebScope.GAME)
  */
 export const GAME_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
-  { label: 'Páginas', route: '/admin/game/pages', permission: 'pages.edit', icon: '📄', category: 'Contenido' }
+  { label: 'Páginas', route: '/admin/pages/3', permission: 'pages.edit', icon: '📄', category: 'Contenido' }
 ] as const;
 
 /**

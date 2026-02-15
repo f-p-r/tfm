@@ -7,6 +7,7 @@ import { OwnerPagesSettingsService } from '../../../../core/pages/owner-pages-se
 import { PageSummaryDTO, PageDTO, PageOwnerType, PageOwnerScope } from '../../../../shared/content/page.dto';
 import { ContentSegmentsPreviewComponent } from '../../../../shared/content/segments-preview/content-segments-preview.component';
 import { AdminSidebarContainerComponent } from '../../../../components/admin-sidebar/admin-sidebar-container.component';
+import { ContextStore } from '../../../../core/context/context.store';
 
 @Component({
   selector: 'app-owner-pages-admin',
@@ -25,6 +26,7 @@ export class OwnerPagesAdminPage implements OnInit {
   private readonly settingsService = inject(OwnerPagesSettingsService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly contextStore = inject(ContextStore);
 
   // Route params
   readonly ownerType = signal<PageOwnerType | null>(null);
@@ -86,7 +88,7 @@ export class OwnerPagesAdminPage implements OnInit {
     // Si no hay paramMap, intentar parsear desde URL (para rutas estáticas como /admin/pages/1)
     if (!ownerTypeParam) {
       const urlSegments = this.route.snapshot.url;
-      // URL esperada: /admin/pages/1 o /admin/pages/:ownerType/:ownerId
+      // URL esperada: /admin/pages/1 o /admin/pages/:ownerType/:ownerId o /admin/pages/:ownerType
       if (urlSegments.length >= 2 && urlSegments[0].path === 'admin' && urlSegments[1].path === 'pages') {
         ownerTypeParam = urlSegments[2]?.path ?? null;
         ownerIdParam = urlSegments[3]?.path ?? null;
@@ -105,12 +107,33 @@ export class OwnerPagesAdminPage implements OnInit {
       return;
     }
 
-    // Para scopeType 1 (global), ownerId es opcional
+    // Determinar ownerId:
+    // 1. Si es global (tipo 1): ownerId es null
+    // 2. Si hay ownerId en la URL: usar ese
+    // 3. Si NO hay ownerId en la URL pero es tipo 2/3: leer del ContextStore
     let parsedOwnerId: number | null = null;
-    if (parsedOwnerType !== '1' && ownerIdParam) {
+
+    if (parsedOwnerType === '1') {
+      // Global: no necesita ownerId
+      parsedOwnerId = null;
+    } else if (ownerIdParam) {
+      // Hay ownerId explícito en la URL
       parsedOwnerId = parseInt(ownerIdParam, 10);
       if (isNaN(parsedOwnerId)) {
         console.error('Invalid ownerId param');
+        return;
+      }
+    } else {
+      // NO hay ownerId en la URL → leer del contexto actual
+      const scopeType = this.contextStore.scopeType();
+      const scopeId = this.contextStore.scopeId();
+
+      // Verificar que el contexto actual coincida con el ownerType
+      if (scopeType.toString() === parsedOwnerType && scopeId !== null) {
+        parsedOwnerId = scopeId;
+        console.log(`📌 [OwnerPagesAdmin] Usando scopeId del contexto: ${parsedOwnerId}`);
+      } else {
+        console.error(`⚠️ [OwnerPagesAdmin] ownerType ${parsedOwnerType} requiere ownerId pero no está en la URL ni en el contexto actual (${scopeType}:${scopeId})`);
         return;
       }
     }
