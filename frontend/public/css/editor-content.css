@@ -19,7 +19,7 @@ h1 {
   font-family: "Inter Tight", "Inter", sans-serif;
   font-size: 2.25rem;
   font-weight: 700;
-  color: #2C3E50;
+  /*color: #2C3E50;*/
   margin-bottom: 1rem;
 }
 
@@ -27,7 +27,7 @@ h2 {
   font-family: "Inter Tight", "Inter", sans-serif;
   font-size: 1.875rem;
   font-weight: 600;
-  color: #2C3E50;
+  /*color: #2C3E50;*/
   margin-bottom: 0.875rem;
 }
 
@@ -35,7 +35,7 @@ h3 {
   font-family: "Inter Tight", "Inter", sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #2C3E50;
+  /*color: #2C3E50;*/
   margin-bottom: 0.75rem;
 }
 

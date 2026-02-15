@@ -67,13 +67,16 @@ export class ContentSegmentsEditorComponent {
     'danger-light': '#F8D7DA',
     'neutral-dark': '#2C3E50',
     'neutral-medium': '#D5D8DC',
-    'neutral-light': '#F7F9FA'
+    'neutral-light': '#F7F9FA',
+    'white': '#FFFFFF'
   };
 
   readonly tinyConfig = computed(() => {
     const draft = this.editingDraft();
     const bgColor = (draft as any)?.backgroundColor;
-    const hexColor = bgColor ? (this.colorMap[bgColor] || 'transparent') : 'transparent';
+    const textColor = (draft as any)?.textColor;
+    const bgHexColor = bgColor ? (this.colorMap[bgColor] || 'transparent') : 'transparent';
+    const textHexColor = textColor && textColor !== 'default' ? (this.colorMap[textColor] || '') : '';
 
     return {
       base_url: '/assets/tinymce',
@@ -103,7 +106,10 @@ export class ContentSegmentsEditorComponent {
       branding: false,
       statusbar: false,
       content_style: `
-        body { background-color: ${hexColor}; }
+        body {
+          background-color: ${bgHexColor};
+          ${textHexColor ? 'color: ' + textHexColor + ';' : ''}
+        }
         img { max-width: 100%; height: auto; }
       `,
       content_css: '/css/editor-content.css',
@@ -142,16 +148,23 @@ export class ContentSegmentsEditorComponent {
       }
     });
 
-    // Actualizar color de fondo de editores cuando cambie backgroundColor
+    // Actualizar color de fondo y texto de editores cuando cambien backgroundColor o textColor
     effect(() => {
       const draft = this.editingDraft();
       const bgColor = (draft as any)?.backgroundColor;
-      const hexColor = bgColor ? (this.colorMap[bgColor] || 'transparent') : 'transparent';
+      const textColor = (draft as any)?.textColor;
+      const bgHexColor = bgColor ? (this.colorMap[bgColor] || 'transparent') : 'transparent';
+      const textHexColor = textColor && textColor !== 'default' ? (this.colorMap[textColor] || '') : '';
 
       // Actualizar todos los editores activos
       this.tinyEditors.forEach(editor => {
         if (editor.getBody()) {
-          editor.getBody().style.backgroundColor = hexColor;
+          editor.getBody().style.backgroundColor = bgHexColor;
+          if (textHexColor) {
+            editor.getBody().style.color = textHexColor;
+          } else {
+            editor.getBody().style.color = '';
+          }
         }
       });
     });

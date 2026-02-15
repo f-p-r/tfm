@@ -6,13 +6,9 @@
     <section
       [attr.id]="seg.anchorId || null"
       class="segment-wrapper"
-      [ngClass]="{
-        'ds-seg-wrapper-full': seg.fullWidthBackground,
-        'ds-seg-text-default': seg.textColor === 'default',
-        'ds-seg-text-brand': seg.textColor === 'brand',
-        'ds-seg-text-white': seg.textColor === 'white'
-      }"
-      [class]="(seg.fullWidthBackground && seg.backgroundColor ? 'bg-' + seg.backgroundColor : '') + ' ' + (seg.classNames || '')">
+      [class.ds-seg-wrapper-full]="seg.fullWidthBackground"
+      [class]="(seg.backgroundColor && seg.backgroundColor !== 'transparent' ? 'bg-' + seg.backgroundColor : '') + (seg.textColor && seg.textColor !== 'default' ? ' text-' + seg.textColor : '') + (seg.classNames ? ' ' + seg.classNames : '')"
+      [style.display]="seg.fullWidthBackground && seg.backgroundColor ? null : 'contents'">
       <div
         class="ds-layout-grid"
         [attr.data-layout]="seg.distribution"

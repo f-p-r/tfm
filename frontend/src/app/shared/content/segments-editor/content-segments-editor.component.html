@@ -117,7 +117,7 @@
 
           <div class="ds-field">
             <div class="ds-label-with-help">
-              <label class="ds-label">Texto</label>
+              <label class="ds-label">Color texto</label>
               <app-help-i helpKey="col_text_color"></app-help-i>
             </div>
             <select class="ds-select"
@@ -125,7 +125,17 @@
                     [ngModel]="draft.textColor"
                     (ngModelChange)="updateProperty('textColor', $event)">
               <option value="default">Default</option>
-              <option value="brand">Azul</option>
+              <option value="brand-primary" style="background-color: #1B4F72; color: white;">Primary</option>
+              <option value="brand-secondary" style="background-color: #F4CB42; color: #2C3E50;">Secondary</option>
+              <option value="brand-accent" style="background-color: #48C9B0; color: white;">Accent</option>
+              <option value="danger" style="background-color: #DC3545; color: white;">Danger</option>
+              <option value="brand-primary-light" style="background-color: #C5D7E4; color: #2C3E50;">Primary Light</option>
+              <option value="brand-secondary-light" style="background-color: #FDF3D7; color: #2C3E50;">Secondary Light</option>
+              <option value="brand-accent-light" style="background-color: #D0F0E8; color: #2C3E50;">Accent Light</option>
+              <option value="danger-light" style="background-color: #F8D7DA; color: #2C3E50;">Danger Light</option>
+              <option value="neutral-dark" style="background-color: #2C3E50; color: white;">Neutral Dark</option>
+              <option value="neutral-medium" style="background-color: #D5D8DC; color: #2C3E50;">Neutral Medium</option>
+              <option value="neutral-light" style="background-color: #F7F9FA; color: #2C3E50;">Neutral Light</option>
               <option value="white">Blanco</option>
             </select>
           </div>
@@ -160,13 +170,8 @@
 
         <div
           class="preview-area"
-          [ngClass]="{
-            'ds-seg-wrapper-full': draft.fullWidthBackground,
-            'ds-seg-text-default': draft.textColor === 'default',
-            'ds-seg-text-brand': draft.textColor === 'brand',
-            'ds-seg-text-white': draft.textColor === 'white'
-          }"
-          [class]="draft.fullWidthBackground && draft.backgroundColor ? 'bg-' + draft.backgroundColor : ''">
+          [class.ds-seg-wrapper-full]="draft.fullWidthBackground"
+          [class]="(draft.backgroundColor && draft.backgroundColor !== 'transparent' ? 'bg-' + draft.backgroundColor : '') + (draft.textColor && draft.textColor !== 'default' ? ' text-' + draft.textColor : '')">
           <div
             class="ds-layout-grid"
             [attr.data-layout]="draft.distribution"

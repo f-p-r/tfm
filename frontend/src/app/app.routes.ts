@@ -96,6 +96,14 @@ export const routes: Routes = [
           import('./prototypes/color-demo/color-demo.page').then((m) => m.ColorDemoPage),
       },
       {
+        // Prototipo theme-color-cards: combinaciones de colores de @theme
+        path: 'theme-color-cards',
+        loadComponent: () =>
+          import('./prototypes/theme-color-cards/theme-color-cards.page').then(
+            (m) => m.ThemeColorCardsPage,
+          ),
+      },
+      {
         // Prototipo admin-page-demo: layout completo de administración
         path: 'admin-page-demo',
         loadComponent: () =>

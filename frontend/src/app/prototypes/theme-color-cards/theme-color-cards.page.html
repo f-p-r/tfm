@@ -1,0 +1,34 @@
+<main class="ds-main">
+  <section class="ds-page">
+    <div class="ds-container">
+      <header class="mb-6">
+        <h1 class="h2 mb-2">Theme Color Cards</h1>
+        <p class="p">
+          Combinaciones de <code>background</code> y color de texto basadas en <code>@theme</code> de
+          <code>src/styles.css</code>.
+        </p>
+        <p class="text-sm text-neutral-medium mt-2">
+          Total de combinaciones v&aacute;lidas (sin repetir color para fondo y texto): {{ cards.length }}
+        </p>
+      </header>
+
+      <div class="flex flex-col gap-4">
+        @for (card of cards; track card.id) {
+          <article class="w-full rounded-xl border border-neutral-medium p-6" [ngClass]="card.background.bgClass">
+            <p class="text-xs mb-4 opacity-80" [ngClass]="card.text.textClass">
+              Fondo: {{ card.background.cssVar }} ({{ card.background.hex }}) | Texto:
+              {{ card.text.cssVar }} ({{ card.text.hex }})
+            </p>
+
+            <h1 class="h1 mb-2" [ngClass]="card.text.textClass">H1 de ejemplo</h1>
+            <h2 class="h2 mb-2" [ngClass]="card.text.textClass">H2 de ejemplo</h2>
+            <h3 class="h3 mb-2" [ngClass]="card.text.textClass">H3 de ejemplo</h3>
+            <p class="p" [ngClass]="card.text.textClass">
+              Texto normal de ejemplo para validar contraste y legibilidad en la combinaci&oacute;n.
+            </p>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+</main>

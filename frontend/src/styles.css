@@ -3,6 +3,7 @@
 @theme {
   /* Colores */
   --color-transparent: transparent;
+  --color-white: #FFFFFF;
 
   --color-brand-primary: #1B4F72;
   --color-brand-secondary: #F4CB42;
