@@ -13,7 +13,7 @@ class MediaSeeder extends Seeder
         Media::create([
             'scope_type' => 'global',
             'scope_id' => null,
-            'url' => '/storage/media/global-logo.png',
+            'url' => '/media/global-logo.png',
             'created_by' => 1,
             'created_at' => now()->subDays(10),
         ]);
@@ -21,7 +21,7 @@ class MediaSeeder extends Seeder
         Media::create([
             'scope_type' => 'global',
             'scope_id' => null,
-            'url' => '/storage/media/global-banner.jpg',
+            'url' => '/media/global-banner.jpg',
             'created_by' => 1,
             'created_at' => now()->subDays(8),
         ]);
@@ -30,7 +30,7 @@ class MediaSeeder extends Seeder
         Media::create([
             'scope_type' => 'association',
             'scope_id' => 15,
-            'url' => '/storage/media/association-15-logo.png',
+            'url' => '/media/association-15-logo.png',
             'created_by' => 1,
             'created_at' => now()->subDays(5),
         ]);
@@ -38,7 +38,7 @@ class MediaSeeder extends Seeder
         Media::create([
             'scope_type' => 'association',
             'scope_id' => 15,
-            'url' => '/storage/media/association-15-cover.jpg',
+            'url' => '/media/association-15-cover.jpg',
             'created_by' => 1,
             'created_at' => now()->subDays(3),
         ]);
@@ -46,7 +46,7 @@ class MediaSeeder extends Seeder
         Media::create([
             'scope_type' => 'association',
             'scope_id' => 15,
-            'url' => '/storage/media/association-15-recent.png',
+            'url' => '/media/association-15-recent.png',
             'created_by' => 1,
             'created_at' => now()->subHours(2),
         ]);
@@ -55,7 +55,7 @@ class MediaSeeder extends Seeder
         Media::create([
             'scope_type' => 'game',
             'scope_id' => 5,
-            'url' => '/storage/media/game-5-screenshot.png',
+            'url' => '/media/game-5-screenshot.png',
             'created_by' => 1,
             'created_at' => now()->subDays(2),
         ]);
@@ -63,7 +63,7 @@ class MediaSeeder extends Seeder
         Media::create([
             'scope_type' => 'game',
             'scope_id' => 5,
-            'url' => '/storage/media/game-5-poster.jpg',
+            'url' => '/media/game-5-poster.jpg',
             'created_by' => 1,
             'created_at' => now()->subHours(1),
         ]);
@@ -72,7 +72,7 @@ class MediaSeeder extends Seeder
         Media::create([
             'scope_type' => 'game',
             'scope_id' => 12,
-            'url' => '/storage/media/game-12-thumbnail.png',
+            'url' => '/media/game-12-thumbnail.png',
             'created_by' => 1,
             'created_at' => now()->subDays(7),
         ]);
@@ -81,7 +81,7 @@ class MediaSeeder extends Seeder
         Media::create([
             'scope_type' => 'association',
             'scope_id' => 23,
-            'url' => '/storage/media/association-23-badge.png',
+            'url' => '/media/association-23-badge.png',
             'created_by' => 1,
             'created_at' => now()->subDays(4),
         ]);

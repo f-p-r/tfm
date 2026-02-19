@@ -1,13 +1,14 @@
 ﻿<#
 Uso rapido:
-  powershell -ExecutionPolicy Bypass -File .\deploy-frontend.ps1 -BackendUrl "https://tfmbackend.lawebdeperez.es" -CreateZip
+  powershell -ExecutionPolicy Bypass -File .\deploy-frontend.ps1 -BackendUrl "https://tfmbackend.lawebdeperez.es"
 
 Parametros principales:
   -BackendUrl  (obligatorio) URL base del backend en produccion
   -ReleaseRoot (opcional)   carpeta de salida de releases (por defecto: .\releases)
-  -CreateZip   (opcional)   genera tambien un .zip de la release
   -SkipNpmCi   (opcional)   omite npm ci
   -NoHtaccess  (opcional)   no crea .htaccess para fallback SPA
+
+  ! Importante: el archivo .htaccess se genera en UTF-8 sin BOM para evitar errores 500 en hosting.
 #>
 [CmdletBinding()]
 param(
@@ -16,8 +17,6 @@ param(
   [string]$BackendUrl,
 
   [string]$ReleaseRoot = '.\\releases',
-
-  [switch]$CreateZip,
 
   [switch]$SkipNpmCi,
 
@@ -51,17 +50,17 @@ try {
   }
 
   if (-not $SkipNpmCi) {
-    Write-Host '[1/5] Instalando dependencias (npm ci)...'
+    Write-Host '[1/4] Instalando dependencias (npm ci)...'
     & npm.cmd ci
     if ($LASTEXITCODE -ne 0) {
       throw 'Fallo npm ci.'
     }
   }
   else {
-    Write-Host '[1/5] Omitiendo npm ci (solicitado).'
+    Write-Host '[1/4] Omitiendo npm ci (solicitado).'
   }
 
-  Write-Host '[2/5] Actualizando apiBaseUrl de produccion...'
+  Write-Host '[2/4] Actualizando apiBaseUrl de produccion...'
   $environmentPath = Join-Path $scriptDir 'src/environments/environment.ts'
   $content = Get-Content -Path $environmentPath -Raw
   $pattern = "apiBaseUrl:\s*'[^']*'"
@@ -73,7 +72,7 @@ try {
   $updated = [regex]::Replace($content, $pattern, "apiBaseUrl: '$BackendUrl'", 1)
   Set-Content -Path $environmentPath -Value $updated -NoNewline -Encoding UTF8
 
-  Write-Host '[3/5] Generando build de produccion...'
+  Write-Host '[3/4] Generando build de produccion...'
   & npm.cmd run build -- --configuration production
   if ($LASTEXITCODE -ne 0) {
     throw 'Fallo la build de produccion.'
@@ -108,7 +107,7 @@ try {
   $releaseId = Get-Date -Format 'yyyy-MM-dd_HHmm'
   $releaseDir = Join-Path $releaseBase $releaseId
 
-  Write-Host "[4/5] Creando carpeta de release: $releaseDir"
+  Write-Host "[4/4] Creando carpeta de release: $releaseDir"
   New-Item -ItemType Directory -Path $releaseDir -Force | Out-Null
   Copy-Item -Path (Join-Path $buildOutputDir '*') -Destination $releaseDir -Recurse -Force
 
@@ -122,29 +121,14 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.html [L]
 "@
-    Set-Content -Path $htaccessPath -Value $htaccess -NoNewline -Encoding UTF8
-  }
-
-  $zipPath = $null
-  if ($CreateZip) {
-    Write-Host '[5/5] Creando paquete ZIP...'
-    $zipPath = "$releaseDir.zip"
-    if (Test-Path $zipPath) {
-      Remove-Item -Path $zipPath -Force
-    }
-    Compress-Archive -Path (Join-Path $releaseDir '*') -DestinationPath $zipPath -Force
-  }
-  else {
-    Write-Host '[5/5] ZIP omitido. Usa -CreateZip para activarlo.'
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($htaccessPath, $htaccess, $utf8NoBom)
   }
 
   Write-Host ''
   Write-Host 'Release generada correctamente:'
   Write-Host "  Origen build  : $buildOutputDir"
   Write-Host "  Carpeta release: $releaseDir"
-  if ($zipPath) {
-    Write-Host "  Paquete ZIP   : $zipPath"
-  }
   Write-Host ''
   Write-Host 'Sube el contenido de la carpeta release al document root del subdominio frontend.'
 }

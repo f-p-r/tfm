@@ -144,8 +144,8 @@ class MediaController extends Controller
 
             Log::info('Nombre generado', ['filename' => $filename]);
 
-            // Guardar el archivo en storage/app/public/media usando el disco público
-            $path = Storage::disk('public')->putFileAs('media', $file, $filename);
+            // Guardar el archivo directamente en public/media
+            $path = Storage::disk('public_media')->putFileAs('', $file, $filename);
 
             Log::info('Archivo guardado', ['path' => $path]);
 
@@ -158,7 +158,7 @@ class MediaController extends Controller
             }
 
             // Verificar que el archivo se guardó correctamente
-            $exists = Storage::disk('public')->exists($path);
+            $exists = Storage::disk('public_media')->exists($path);
             Log::info('Verificación de existencia', ['exists' => $exists, 'path' => $path]);
 
             if (! $exists) {
@@ -170,7 +170,7 @@ class MediaController extends Controller
             }
 
             // Construir URL relativa para la base de datos
-            $url = '/storage/media/' . $filename;
+            $url = '/media/' . $filename;
 
             // Crear registro en la base de datos
             $media = Media::create([
