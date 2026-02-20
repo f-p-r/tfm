@@ -27,11 +27,16 @@
                 "glob": "**/*",
                 "input": "./node_modules/tinymce",
                 "output": "/assets/tinymce"
+              },
+              {
+                "glob": "editor-content.css",
+                "input": "src",
+                "output": "/css"
               }
             ],
             "styles": [
               "src/styles.css",
-              "public/css/editor-content.css"
+              "src/editor-content.css"
             ],
             "fileReplacements": []
           },
