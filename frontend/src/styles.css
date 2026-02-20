@@ -36,7 +36,7 @@
 /* === Fuentes ===
 
   Debido a que tinyMce no puede usar este archivo css, los fuentes y otras características de estilo se definen
-  en public/css/editor-content.css para que el contenido del editor se vea igual que el contenido final. Index.html
+  en editor-content.css para que el contenido del editor se vea igual que el contenido final. Index.html
   también importa ese css para que el contenido renderizado en la web tenga el mismo estilo.
 */
 
@@ -329,7 +329,8 @@
 
   /* Barra de navegación superior */
   .ds-nav {
-    @apply sticky top-0 z-[100] bg-white border-b border-neutral-medium h-16;
+    @apply sticky top-0 z-[100] bg-white border-b border-neutral-medium h-16 ;
+    font-size: 14px;
   }
 
   /* Contenedor interno de la barra de navegación */
@@ -622,6 +623,11 @@
   /* Ajuste para el contenido principal para que no quede tapado por el navbar fijo */
   .ds-admin-main {
     @apply w-full flex flex-col overflow-hidden px-1.5 sm:px-2.5;
+  }
+
+  /* Subtítulo de página administrativa (ej: nombre de contexto bajo el título principal) */
+  .ds-admin-page-subtitle {
+    @apply text-neutral-dark mt-2;
   }
 
   /* === Tablas de datos === */

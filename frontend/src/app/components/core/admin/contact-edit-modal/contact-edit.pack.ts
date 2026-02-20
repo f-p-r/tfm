@@ -1,4 +1,4 @@
-import { HelpPack } from '../help.types';
+import { HelpPack } from '../../../../shared/help/help.types';
 
 /**
  * Pack de ayuda para el modal de edición de contactos.

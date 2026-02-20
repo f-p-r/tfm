@@ -14,6 +14,7 @@ export interface Association {
   disabled: boolean;
   management?: boolean;
   owner_id?: number;
+  game_ids?: number[]; // IDs de juegos asociados (para create/update)
   games?: Array<{
     id: number;
     name: string;

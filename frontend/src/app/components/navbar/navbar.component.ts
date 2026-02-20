@@ -102,7 +102,7 @@ export class NavbarComponent {
     // 1. MODO ADMINISTRACIÓN
     if (this.isAdmin()) {
       return [
-        { label: 'Salir de Admin', type: 'button', onClick: () => this.exitAdmin() },
+        { label: '❌ Admin.', type: 'button', onClick: () => this.exitAdmin() },
         { label: '?', type: 'button', onClick: () => this.openHelp() },
       ];
     }

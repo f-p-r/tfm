@@ -22,7 +22,7 @@ import { ContactInfo, CreateContactInfo } from '../../../../core/contact/contact
 import { HelpIComponent } from '../../../../shared/help/help-i/help-i.component';
 import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive';
 import { HelpContentService } from '../../../../shared/help/help-content.service';
-import { CONTACT_EDIT_HELP_PACK } from '../../../../shared/help/packs/contact-edit.pack';
+import { CONTACT_EDIT_HELP_PACK } from './contact-edit.pack';
 
 @Component({
   selector: 'app-contact-edit-modal',
