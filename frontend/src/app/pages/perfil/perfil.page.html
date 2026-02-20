@@ -54,14 +54,19 @@
 
           <!-- Campo Nombre -->
           <div class="ds-field">
-            <label for="name" class="ds-label">
-              Nombre completo
-            </label>
+            <div class="ds-label-with-help">
+              <label for="name" class="ds-label">
+                Nombre completo
+              </label>
+              <app-help-i helpKey="name" />
+            </div>
             <input
               id="name"
               formControlName="name"
               type="text"
               required
+              helpHover
+              helpKey="name"
               class="ds-input"
               [class.ds-control-error]="getFieldError('name')"
             />
@@ -74,14 +79,19 @@
 
           <!-- Campo Email -->
           <div class="ds-field">
-            <label for="email" class="ds-label">
-              Email
-            </label>
+            <div class="ds-label-with-help">
+              <label for="email" class="ds-label">
+                Email
+              </label>
+              <app-help-i helpKey="email" />
+            </div>
             <input
               id="email"
               formControlName="email"
               type="email"
               required
+              helpHover
+              helpKey="email"
               class="ds-input"
               [class.ds-control-error]="getFieldError('email')"
             />
@@ -118,14 +128,19 @@
 
           <!-- Campo Nueva contraseña -->
           <div class="ds-field">
-            <label for="password" class="ds-label">
-              Nueva contraseña
-            </label>
+            <div class="ds-label-with-help">
+              <label for="password" class="ds-label">
+                Nueva contraseña
+              </label>
+              <app-help-i helpKey="password" />
+            </div>
             <input
               id="password"
               formControlName="password"
               type="password"
               required
+              helpHover
+              helpKey="password"
               class="ds-input"
               [class.ds-control-error]="getFieldError('password')"
             />
@@ -139,14 +154,19 @@
 
           <!-- Campo Confirmar contraseña -->
           <div class="ds-field">
-            <label for="passwordConfirmation" class="ds-label">
-              Confirmar contraseña
-            </label>
+            <div class="ds-label-with-help">
+              <label for="passwordConfirmation" class="ds-label">
+                Confirmar contraseña
+              </label>
+              <app-help-i helpKey="passwordConfirmation" />
+            </div>
             <input
               id="passwordConfirmation"
               formControlName="passwordConfirmation"
               type="password"
               required
+              helpHover
+              helpKey="passwordConfirmation"
               class="ds-input"
               [class.ds-control-error]="getFieldError('passwordConfirmation')"
             />

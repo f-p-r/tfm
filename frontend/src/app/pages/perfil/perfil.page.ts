@@ -4,10 +4,14 @@ import { DatePipe } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 import { UsersService } from '../../core/users/users.service';
 import { User } from '../../core/auth/user.model';
+import { HelpHoverDirective } from '../../shared/help/help-hover.directive';
+import { HelpIComponent } from '../../shared/help/help-i/help-i.component';
+import { HelpContentService } from '../../shared/help/help-content.service';
+import { PERFIL_HELP } from './perfil.help';
 
 @Component({
   selector: 'app-perfil-page',
-  imports: [ReactiveFormsModule, DatePipe],
+  imports: [ReactiveFormsModule, DatePipe, HelpHoverDirective, HelpIComponent],
   templateUrl: './perfil.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -15,6 +19,11 @@ export class PerfilPage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly usersService = inject(UsersService);
+  private readonly helpContent = inject(HelpContentService);
+
+  constructor() {
+    this.helpContent.setPack(PERFIL_HELP);
+  }
 
   readonly user = this.authService.currentUser;
   readonly fullUserData = signal<User | null>(null);
