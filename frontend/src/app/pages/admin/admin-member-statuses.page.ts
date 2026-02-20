@@ -12,6 +12,7 @@
 
 import { ChangeDetectionStrategy, Component, inject, signal, computed, viewChild } from '@angular/core';
 import { AdminSidebarContainerComponent } from '../../components/admin-sidebar/admin-sidebar-container.component';
+import { AdminPageSubtitleComponent } from '../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { AdminTableComponent } from '../../components/core/admin/table/admin-table.component';
 import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/table/admin-table.model';
 import { MemberStatusApiService } from '../../core/associations/member-status-api.service';
@@ -24,6 +25,7 @@ import { MEMBER_STATUS_TYPE_NAMES, MEMBER_STATUS_TYPE_BADGES } from '../../core/
   selector: 'app-admin-member-statuses-page',
   imports: [
     AdminSidebarContainerComponent,
+    AdminPageSubtitleComponent,
     AdminTableComponent,
     MemberStatusEditModalComponent
   ],
@@ -43,6 +45,7 @@ import { MEMBER_STATUS_TYPE_NAMES, MEMBER_STATUS_TYPE_BADGES } from '../../core/
           <div class="mb-6 shrink-0 flex justify-between items-start">
             <div>
               <h1 class="h1">Gestión de Estados de Miembros</h1>
+              <app-admin-page-subtitle />
               <p class="text-neutral-medium mt-2">
                 Configura los estados disponibles para los miembros de esta asociación
               </p>

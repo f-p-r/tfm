@@ -10,6 +10,7 @@
 
 import { ChangeDetectionStrategy, Component, inject, signal, computed, viewChild } from '@angular/core';
 import { AdminSidebarContainerComponent } from '../../components/admin-sidebar/admin-sidebar-container.component';
+import { AdminPageSubtitleComponent } from '../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { AdminTableComponent } from '../../components/core/admin/table/admin-table.component';
 import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/table/admin-table.model';
 import { GamesApiService } from '../../core/games/games-api.service';
@@ -20,6 +21,7 @@ import { Game } from '../../core/games/games.models';
   selector: 'app-admin-games-page',
   imports: [
     AdminSidebarContainerComponent,
+    AdminPageSubtitleComponent,
     AdminTableComponent,
     GameEditModalComponent
   ],
@@ -39,6 +41,7 @@ import { Game } from '../../core/games/games.models';
           <div class="mb-6 shrink-0 flex justify-between items-start">
             <div>
               <h1 class="h1">Gestión de Juegos</h1>
+              <app-admin-page-subtitle />
               <p class="text-neutral-medium mt-2">
                 Administra los juegos disponibles en la plataforma
               </p>

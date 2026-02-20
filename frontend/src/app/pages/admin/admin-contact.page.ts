@@ -13,6 +13,7 @@
 
 import { ChangeDetectionStrategy, Component, inject, signal, computed, viewChild } from '@angular/core';
 import { AdminSidebarContainerComponent } from '../../components/admin-sidebar/admin-sidebar-container.component';
+import { AdminPageSubtitleComponent } from '../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { AdminTableComponent } from '../../components/core/admin/table/admin-table.component';
 import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/table/admin-table.model';
 import { ContactApiService } from '../../core/contact/contact-api.service';
@@ -26,6 +27,7 @@ import { WebScope } from '../../core/web-scope.constants';
   selector: 'app-admin-contact-page',
   imports: [
     AdminSidebarContainerComponent,
+    AdminPageSubtitleComponent,
     AdminTableComponent,
     ContactEditModalComponent
   ],
@@ -45,9 +47,7 @@ import { WebScope } from '../../core/web-scope.constants';
           <div class="mb-6 shrink-0 flex justify-between items-start">
             <div>
               <h1 class="h1">Gestión de Contactos</h1>
-              <p class="text-neutral-medium mt-2">
-                Configura los canales de contacto para {{ scopeName() }}
-              </p>
+              <app-admin-page-subtitle />
             </div>
             <button class="ds-btn ds-btn-primary" (click)="onCreateContact()">
               Crear contacto

@@ -7,6 +7,7 @@ import { OwnerPagesSettingsService } from '../../../../core/pages/owner-pages-se
 import { PageSummaryDTO, PageDTO, PageOwnerType, PageOwnerScope } from '../../../../shared/content/page.dto';
 import { ContentSegmentsPreviewComponent } from '../../../../shared/content/segments-preview/content-segments-preview.component';
 import { AdminSidebarContainerComponent } from '../../../../components/admin-sidebar/admin-sidebar-container.component';
+import { AdminPageSubtitleComponent } from '../../../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { ContextStore } from '../../../../core/context/context.store';
 
 @Component({
@@ -15,7 +16,8 @@ import { ContextStore } from '../../../../core/context/context.store';
     CommonModule,
     FormsModule,
     ContentSegmentsPreviewComponent,
-    AdminSidebarContainerComponent
+    AdminSidebarContainerComponent,
+    AdminPageSubtitleComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './owner-pages-admin.page.html',

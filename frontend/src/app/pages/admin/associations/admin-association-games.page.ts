@@ -15,10 +15,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { Location } from '@angular/common';
 import { AdminSidebarContainerComponent } from '../../../components/admin-sidebar/admin-sidebar-container.component';
+import { AdminPageSubtitleComponent } from '../../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { AdminTableComponent } from '../../../components/core/admin/table/admin-table.component';
 import { AdminTableColumn, AdminTableAction } from '../../../components/core/admin/table/admin-table.model';
 import { AssociationsApiService } from '../../../core/associations/associations-api.service';
-import { AssociationsResolveService } from '../../../core/associations/associations-resolve.service';
 import { GamesApiService } from '../../../core/games/games-api.service';
 import { Game } from '../../../core/games/games.models';
 import { ContextStore } from '../../../core/context/context.store';
@@ -27,6 +27,7 @@ import { ContextStore } from '../../../core/context/context.store';
   selector: 'app-admin-association-games-page',
   imports: [
     AdminSidebarContainerComponent,
+    AdminPageSubtitleComponent,
     AdminTableComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,9 +45,7 @@ import { ContextStore } from '../../../core/context/context.store';
           <!-- Page header -->
           <div class="mb-6 shrink-0">
             <h1 class="h1">Juegos Relacionados</h1>
-            @if (associationName()) {
-              <p class="ds-admin-page-subtitle">{{ associationName() }}</p>
-            }
+            <app-admin-page-subtitle />
           </div>
 
           <!-- Alerta informativa -->
@@ -214,21 +213,12 @@ import { ContextStore } from '../../../core/context/context.store';
 })
 export class AdminAssociationGamesPage {
   private readonly contextStore = inject(ContextStore);
-  private readonly associationsResolve = inject(AssociationsResolveService);
   private readonly associationsApi = inject(AssociationsApiService);
   private readonly gamesApi = inject(GamesApiService);
   private readonly location = inject(Location);
 
   // Datos de la asociación
   protected readonly associationId = computed(() => this.contextStore.scopeId());
-  protected readonly associationName = computed(() => {
-    const id = this.associationId();
-    if (id) {
-      const association = this.associationsResolve.getById(id);
-      return association?.name;
-    }
-    return null;
-  });
 
   // Todos los juegos del sistema
   protected readonly allGames = signal<Game[]>([]);

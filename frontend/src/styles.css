@@ -630,6 +630,11 @@
     @apply text-neutral-dark mt-2;
   }
 
+  /* Botón de ayuda en navbar (círculo) */
+  .ds-nav-help-button {
+    @apply bg-brand-primary text-white font-bold rounded-full w-6 h-6 flex items-center justify-center text-sm ml-3;
+  }
+
   /* === Tablas de datos === */
 
   /* Estructura para tablas Admin (Layout Flex con header fijo) */

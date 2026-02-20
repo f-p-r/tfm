@@ -10,6 +10,7 @@
 
 import { ChangeDetectionStrategy, Component, inject, signal, computed, viewChild } from '@angular/core';
 import { AdminSidebarContainerComponent } from '../../components/admin-sidebar/admin-sidebar-container.component';
+import { AdminPageSubtitleComponent } from '../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { AdminTableComponent } from '../../components/core/admin/table/admin-table.component';
 import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/table/admin-table.model';
 import { AssociationsApiService } from '../../core/associations/associations-api.service';
@@ -20,6 +21,7 @@ import { AssociationEditModalComponent } from '../../components/core/admin/assoc
   selector: 'app-admin-associations-page',
   imports: [
     AdminSidebarContainerComponent,
+    AdminPageSubtitleComponent,
     AdminTableComponent,
     AssociationEditModalComponent
   ],
@@ -44,7 +46,10 @@ import { AssociationEditModalComponent } from '../../components/core/admin/assoc
 
           <!-- Page header -->
           <div class="mb-6 shrink-0 flex items-center justify-between">
-            <h1 class="h1">Gestión de Asociaciones</h1>
+            <div>
+              <h1 class="h1">Gestión de Asociaciones</h1>
+              <app-admin-page-subtitle />
+            </div>
             <button class="ds-btn ds-btn-primary" (click)="onCreateAssociation()">
               Crear asociación
             </button>

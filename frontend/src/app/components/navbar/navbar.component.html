@@ -19,7 +19,13 @@
       @if (item.type === 'link') {
         <a [routerLink]="item.route" [class]="cssClass" (click)="onNavigate()">{{ item.label }}</a>
       } @else {
-        <button type="button" [class]="cssClass" [class.text-left]="cssClass === 'ds-nav-mobile-link'" (click)="item.onClick?.(); onNavigate()" [attr.aria-label]="item.label === '?' ? 'Ayuda' : undefined">{{ item.label }}</button>
+        <button
+          type="button"
+          [class]="item.label === '?' && cssClass === 'ds-nav-link' ? 'ds-nav-help-button' : cssClass"
+          [class.text-left]="cssClass === 'ds-nav-mobile-link'"
+          (click)="item.onClick?.(); onNavigate()"
+          [attr.aria-label]="item.label === '?' ? 'Ayuda' : undefined"
+        >{{ item.label === '?' && cssClass === 'ds-nav-mobile-link' ? 'Ayuda' : item.label }}</button>
       }
     }
   }

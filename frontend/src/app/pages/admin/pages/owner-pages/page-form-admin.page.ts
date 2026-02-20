@@ -11,6 +11,7 @@ import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive
 import { HelpContentService } from '../../../../shared/help/help-content.service';
 import { PAGE_CREATE_PACK } from './page-create.pack';
 import { AdminSidebarContainerComponent } from '../../../../components/admin-sidebar/admin-sidebar-container.component';
+import { AdminPageSubtitleComponent } from '../../../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { ContextStore } from '../../../../core/context/context.store';
 
 /**
@@ -25,7 +26,8 @@ import { ContextStore } from '../../../../core/context/context.store';
     ContentSegmentsEditorComponent,
     HelpIComponent,
     HelpHoverDirective,
-    AdminSidebarContainerComponent
+    AdminSidebarContainerComponent,
+    AdminPageSubtitleComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './page-form-admin.page.html',

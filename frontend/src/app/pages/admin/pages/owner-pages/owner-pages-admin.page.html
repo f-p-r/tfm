@@ -9,11 +9,14 @@
     <div class="pages-admin">
       <!-- Header con botón crear -->
       <div class="admin-header">
-      <h2>Páginas</h2>
-      <button class="ds-btn ds-btn-primary" (click)="onCreatePage()" [disabled]="isLoadingPages()">
-        <span>+ Crear página</span>
-      </button>
-    </div>
+        <div class="flex-1">
+          <h2>Páginas</h2>
+          <app-admin-page-subtitle />
+        </div>
+        <button class="ds-btn ds-btn-primary ml-6" (click)="onCreatePage()" [disabled]="isLoadingPages()">
+          <span>+ Crear página</span>
+        </button>
+      </div>
 
     <!-- Loading state -->
     @if (isLoadingPages()) {

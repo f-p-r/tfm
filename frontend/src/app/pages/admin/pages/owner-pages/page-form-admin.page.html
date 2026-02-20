@@ -7,8 +7,10 @@
   <!-- Main content -->
   <main class="ds-admin-main ds-container">
     <div class="page-form-admin">
-      <h1 class="page-main-title">{{ pageTitle() }}</h1>
-
+      <div>
+        <h1 class="page-main-title">{{ pageTitle() }}</h1>
+        <app-admin-page-subtitle />
+      </div>
       <!-- Loading state (solo en modo edición) -->
       @if (isEditMode() && isLoading()) {
         <p>Cargando página...</p>

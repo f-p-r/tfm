@@ -12,11 +12,10 @@
 
 import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/core';
 import { AdminSidebarContainerComponent } from '../../components/admin-sidebar/admin-sidebar-container.component';
+import { AdminPageSubtitleComponent } from '../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { ContextStore } from '../../core/context/context.store';
 import { PermissionsStore } from '../../core/authz/permissions.store';
 import { ADMIN_ACTIONS_BY_SCOPE } from '../../core/admin/admin-actions.constants';
-import { AssociationsResolveService } from '../../core/associations/associations-resolve.service';
-import { GamesStore } from '../../core/games/games.store';
 import { WebScope } from '../../core/web-scope.constants';
 import { JsonPipe } from '@angular/common';
 import { HasPermissionDirective } from '../../shared/directives';
@@ -25,6 +24,7 @@ import { HasPermissionDirective } from '../../shared/directives';
   selector: 'app-admin-page',
   imports: [
     AdminSidebarContainerComponent,
+    AdminPageSubtitleComponent,
     JsonPipe,
     HasPermissionDirective
   ],
@@ -43,9 +43,7 @@ import { HasPermissionDirective } from '../../shared/directives';
           <!-- Page header -->
           <div class="mb-6 shrink-0">
             <h1 class="h1">Panel de Administración</h1>
-            <p class="text-neutral-medium mt-2">
-              {{ scopeDisplayName() || 'Gestión y configuración del sistema' }}
-            </p>
+            <app-admin-page-subtitle />
           </div>
 
           <!-- Content area -->
@@ -154,33 +152,6 @@ import { HasPermissionDirective } from '../../shared/directives';
 export class AdminPage {
   protected readonly contextStore = inject(ContextStore);
   protected readonly permissionsStore = inject(PermissionsStore);
-  private readonly associationsResolve = inject(AssociationsResolveService);
-  private readonly gamesStore = inject(GamesStore);
-
-  /**
-   * Nombre del scope actual para mostrar en el header.
-   * Solo para asociaciones y juegos (scope !== GLOBAL).
-   */
-  protected readonly scopeDisplayName = computed(() => {
-    const scopeType = this.contextStore.scopeType();
-    const scopeId = this.contextStore.scopeId();
-
-    if (scopeType === WebScope.GLOBAL) {
-      return null; // Mostrar texto por defecto
-    }
-
-    if (scopeType === WebScope.ASSOCIATION && scopeId) {
-      const association = this.associationsResolve.getById(scopeId);
-      return association?.name || null;
-    }
-
-    if (scopeType === WebScope.GAME && scopeId) {
-      const game = this.gamesStore.getById(scopeId);
-      return game?.name || null;
-    }
-
-    return null;
-  });
 
   /**
    * Todos los permisos del usuario en el scope actual.

@@ -11,6 +11,7 @@
 
 import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { AdminSidebarContainerComponent } from '../../components/admin-sidebar/admin-sidebar-container.component';
+import { AdminPageSubtitleComponent } from '../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { AdminTableComponent } from '../../components/core/admin/table/admin-table.component';
 import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/table/admin-table.model';
 import { UsersService } from '../../core/users/users.service';
@@ -21,6 +22,7 @@ import { UserRoleManagementModalComponent } from '../../components/core/admin/us
   selector: 'app-admin-users-page',
   imports: [
     AdminSidebarContainerComponent,
+    AdminPageSubtitleComponent,
     AdminTableComponent,
     UserRoleManagementModalComponent
   ],
@@ -39,6 +41,7 @@ import { UserRoleManagementModalComponent } from '../../components/core/admin/us
           <!-- Page header -->
           <div class="mb-6 shrink-0">
             <h1 class="h1">Gestión de Usuarios</h1>
+            <app-admin-page-subtitle />
           </div>
 
           <!-- Mensaje de confirmación -->
