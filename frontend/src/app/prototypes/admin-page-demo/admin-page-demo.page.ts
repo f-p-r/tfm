@@ -96,7 +96,7 @@ import { isBreakdownResponse } from '../../core/authz/authz.models';
 
           <!-- Debug info -->
           <div class="mt-6 bg-gray-100 rounded-lg border border-gray-300 p-4 text-sm">
-            <h3 class="font-bold mb-2">🔍 Debug - Contexto actual:</h3>
+            <h3 class="font-bold mb-2"><span class="material-symbols-outlined" style="vertical-align: middle;">search</span> Debug - Contexto actual:</h3>
             <div class="space-y-1 font-mono">
               <div>scopeType: <strong>{{ contextStore.scopeType() }}</strong></div>
               <div>scopeId: <strong>{{ contextStore.scopeId() }}</strong></div>
@@ -105,7 +105,7 @@ import { isBreakdownResponse } from '../../core/authz/authz.models';
 
           <!-- Debug permisos -->
           <div class="mt-4 bg-blue-50 rounded-lg border border-blue-300 p-4 text-sm">
-            <h3 class="font-bold mb-2">🔐 Debug - Permisos del usuario:</h3>
+            <h3 class="font-bold mb-2"><span class="material-symbols-outlined" style="vertical-align: middle;">lock</span> Debug - Permisos del usuario:</h3>
             @if (userPermissions(); as perms) {
               <div class="space-y-2">
                 <div class="font-mono">
@@ -153,7 +153,7 @@ export class AdminPageDemoPage {
             return [];
           }),
           catchError(err => {
-            console.error('❌ [AdminPageDemo] Error al obtener permisos del usuario:', err);
+            console.error('[ERROR] [AdminPageDemo] Error al obtener permisos del usuario:', err);
             return of([]);
           })
         );
@@ -166,31 +166,31 @@ export class AdminPageDemoPage {
   menuItems: AdminMenuItem[] = [
     {
       label: 'Dashboard',
-      icon: '📊',
+      icon: 'dashboard',
       route: '/prototypes/admin-page-demo',
       category: 'General'
     },
     {
       label: 'Socios',
-      icon: '👥',
+      icon: 'group',
       route: '/admin/socios',
       category: 'Gestión'
     },
     {
       label: 'Noticias',
-      icon: '📰',
+      icon: 'newspaper',
       route: '/admin/noticias',
       category: 'Gestión'
     },
     {
       label: 'Torneos',
-      icon: '🏆',
+      icon: 'emoji_events',
       route: '/admin/torneos',
       category: 'Gestión'
     },
     {
       label: 'Configuración',
-      icon: '⚙️',
+      icon: 'settings',
       route: '/admin/settings',
       category: 'Sistema',
       iconClass: 'hover:rotate-90 transition-transform duration-500'

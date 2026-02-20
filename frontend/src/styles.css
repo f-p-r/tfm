@@ -632,7 +632,71 @@
 
   /* Botón de ayuda en navbar (círculo) */
   .ds-nav-help-button {
-    @apply bg-brand-primary text-white font-bold rounded-full w-6 h-6 flex items-center justify-center text-sm ml-3;
+    @apply bg-brand-primary text-white font-bold rounded-full w-6 h-6 flex items-center justify-center text-sm ml-5;
+  }
+
+  /* === Cards === */
+
+  /* Contenedor de lista de cards con espaciado vertical y grid responsive */
+  .ds-cards-container {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+  }
+
+  /* Card base: contenedor con borde, sombra y padding responsive */
+  .ds-card {
+    @apply bg-white rounded-lg border border-neutral-medium shadow-sm p-4 sm:p-6 transition-shadow hover:shadow-md;
+  }
+
+  /* Cabecera de card: título + badges */
+  .ds-card-header {
+    @apply flex flex-wrap items-center gap-2 mb-3 pb-3 border-b border-neutral-light;
+  }
+
+  /* Título de card: enlace destacado */
+  .ds-card-title {
+    @apply text-lg sm:text-xl font-semibold text-brand-primary hover:text-brand-accent transition-colors;
+  }
+
+  /* Cuerpo de card: contenido principal */
+  .ds-card-body {
+    @apply flex flex-col gap-3;
+  }
+
+  /* Sección dentro del body */
+  .ds-card-section {
+    @apply flex flex-col gap-1;
+  }
+
+  /* Etiqueta de campo en card */
+  .ds-card-label {
+    @apply text-sm font-semibold text-neutral-dark;
+  }
+
+  /* Texto de contenido en card */
+  .ds-card-text {
+    @apply text-sm text-neutral-dark leading-relaxed;
+  }
+
+  /* Enlaces dentro de cards */
+  .ds-card-link {
+    @apply inline-flex items-center gap-1 text-sm font-medium text-brand-primary hover:text-brand-accent hover:underline transition-colors;
+  }
+
+  /* Separador de secciones (línea horizontal con margen) */
+  .ds-section-separator {
+    @apply my-8 border-t-2 border-neutral-medium;
+  }
+
+  /* Cards de asociaciones */
+
+  /* Header de card de asociación con fondo brand-primary y bordes redondeados superiores */
+  .ds-card-assoc-header {
+    @apply bg-brand-primary px-4 sm:px-6 py-3 -m-4 sm:-m-6 mb-4 sm:mb-6 rounded-t-lg;
+  }
+
+  /* Título de card de asociación (enlace) */
+  .ds-card-assoc-title {
+    @apply text-lg sm:text-xl font-semibold text-neutral-light hover:text-brand-secondary transition-colors;
   }
 
   /* === Tablas de datos === */

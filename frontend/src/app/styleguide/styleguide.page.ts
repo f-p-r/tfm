@@ -37,27 +37,27 @@ export class StyleguidePage {
   public demoMenuItems: AdminMenuItem[] = [
     {
       label: 'Dashboard',
-      icon: '📊',
+      icon: 'dashboard',
       route: '/admin',
       category: 'General'
     },
     {
       label: 'Socios',
-      icon: '👥',
+      icon: 'group',
       route: '/admin/socios',
       permission: 'users.view', // Ejemplo de permiso
       category: 'Gestión'
     },
     {
       label: 'Noticias',
-      icon: '📰',
+      icon: 'newspaper',
       route: '/admin/noticias',
       permission: 'news.view',
       category: 'Gestión'
     },
     {
       label: 'Configuración',
-      icon: '⚙️',
+      icon: 'settings',
       route: '/admin/settings',
       permission: 'settings.edit',
       category: 'Sistema',

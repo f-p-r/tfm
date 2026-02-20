@@ -102,7 +102,7 @@ import { HasPermissionDirective } from '../../shared/directives';
 
           <!-- Debug info -->
           <div class="mt-6 bg-gray-100 rounded-lg border border-gray-300 p-4 text-sm">
-            <h3 class="font-bold mb-2">🔍 Debug - Contexto actual:</h3>
+            <h3 class="font-bold mb-2"><span class="material-symbols-outlined" style="vertical-align: middle;">search</span> Debug - Contexto actual:</h3>
             <div class="space-y-1 font-mono">
               <div>scopeType: <strong>{{ contextStore.scopeType() }}</strong></div>
               <div>scopeId: <strong>{{ contextStore.scopeId() }}</strong></div>
@@ -111,7 +111,7 @@ import { HasPermissionDirective } from '../../shared/directives';
 
           <!-- Debug permisos -->
           <div class="mt-4 bg-blue-50 rounded-lg border border-blue-300 p-4 text-sm">
-            <h3 class="font-bold mb-2">🔐 Debug - Permisos del usuario:</h3>
+            <h3 class="font-bold mb-2"><span class="material-symbols-outlined" style="vertical-align: middle;">lock</span> Debug - Permisos del usuario:</h3>
             @if (userPermissions(); as perms) {
               <div class="space-y-2">
                 <div class="font-mono">
@@ -124,7 +124,7 @@ import { HasPermissionDirective } from '../../shared/directives';
 
           <!-- Debug verificación -->
           <div class="mt-4 bg-yellow-50 rounded-lg border border-yellow-300 p-4 text-sm">
-            <h3 class="font-bold mb-2">⚙️ Debug - Verificación de acciones:</h3>
+            <h3 class="font-bold mb-2"><span class="material-symbols-outlined" style="vertical-align: middle;">settings</span> Debug - Verificación de acciones:</h3>
             @if (debugPermissions(); as debug) {
               <div class="space-y-2">
                 <div class="font-mono">

@@ -91,7 +91,7 @@ export class PermissionsStore {
         this.loading.set(false);
       } else {
         // Usuario autenticado → Recargar permisos para el scope actual
-        console.log('✅ [PermissionsStore] Usuario autenticado:', user.username, '→ Recargando permisos');
+        console.log('[OK] [PermissionsStore] Usuario autenticado:', user.username, '→ Recargando permisos');
         this.loadForCurrentScope();
       }
     });
@@ -104,7 +104,7 @@ export class PermissionsStore {
 
       // Solo recargar si hay usuario Y el scope cambió
       if (user && scopeKey !== lastKey) {
-        console.log(`🔐 [PermissionsStore] Scope cambió de "${lastKey}" a "${scopeKey}" → Recargando permisos`);
+        console.log(`[>] [PermissionsStore] Scope cambió de "${lastKey}" a "${scopeKey}" → Recargando permisos`);
         this.loadForCurrentScope();
       }
     });
@@ -127,7 +127,7 @@ export class PermissionsStore {
     this.loading.set(true);
     this.lastLoadedScopeKey.set(scopeKey);
 
-    console.log(`🔐 [PermissionsStore] Cargando permisos para scope ${scopeType}:${scopeId}`);
+    console.log(`[>] [PermissionsStore] Cargando permisos para scope ${scopeType}:${scopeId}`);
 
     this.authz.query({
       scopeType: scopeType,
@@ -152,11 +152,11 @@ export class PermissionsStore {
           this.loading.set(false);
           this.loadComplete$.next(); // Notificar que terminó la carga
 
-          console.log(`✅ [PermissionsStore] ${effectivePermissions.length} permisos cargados:`, effectivePermissions);
+          console.log(`[OK] [PermissionsStore] ${effectivePermissions.length} permisos cargados:`, effectivePermissions);
         }
       },
       error: (err) => {
-        console.error('❌ [PermissionsStore] Error al cargar permisos:', err);
+        console.error('[ERROR] [PermissionsStore] Error al cargar permisos:', err);
         this.permissions.set([]);
         this.loading.set(false);
         this.loadComplete$.next(); // Notificar que terminó (aunque con error)

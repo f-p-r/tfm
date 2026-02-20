@@ -109,7 +109,7 @@ export class AuthService {
             console.log('🧹 [AuthService] AuthzService caché limpiada');
           });
 
-          console.log('✅ [AuthService] Logout completo: usuario y permisos limpiados');
+          console.log('[OK] [AuthService] Logout completo: usuario y permisos limpiados');
         }),
         catchError((error) => this.handleError(error))
       );

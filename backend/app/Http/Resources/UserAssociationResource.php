@@ -35,15 +35,21 @@ class UserAssociationResource extends JsonResource
                 'slug' => $this->association->slug,
                 'shortname' => $this->association->shortname,
             ]),
-            'status' => $this->whenLoaded('status', fn() => $this->status ? [
-                'id' => $this->status->id,
-                'name' => $this->status->name,
-                'order' => $this->status->order,
-                'type' => $this->status->whenLoaded('statusType', fn() => [
-                    'id' => $this->status->statusType->id,
-                    'name' => $this->status->statusType->name,
-                ]),
-            ] : null),
+            'status' => $this->whenLoaded('status', function() {
+                if (!$this->status) {
+                    return null;
+                }
+
+                return [
+                    'id' => $this->status->id,
+                    'name' => $this->status->name,
+                    'order' => $this->status->order,
+                    'type' => $this->status->relationLoaded('statusType') && $this->status->statusType ? [
+                        'id' => $this->status->statusType->id,
+                        'name' => $this->status->statusType->name,
+                    ] : null,
+                ];
+            }),
         ];
     }
 }

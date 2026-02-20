@@ -54,7 +54,7 @@ export const routes: Routes = [
   // Rutas de asociaciones con páginas
   { path: 'asociaciones', component: AssociationsPage, canActivate: [resolveScopeGuard] },
   { path: 'asociaciones/:slug', component: PageViewerPage, canActivate: [associationBySlugGuard] },
-  { path: 'asociaciones/:slug/socios', component: AssociationMembersPage, canActivate: [associationBySlugGuard] },
+  { path: 'asociaciones/:slug/socios', component: AssociationMembersPage, canActivate: [associationBySlugGuard, requireAuth] },
   { path: 'asociaciones/:slug/contacto', component: AssociationContactPage, canActivate: [associationBySlugGuard] },
   { path: 'asociaciones/:slug/:pagina', component: PageViewerPage, canActivate: [associationBySlugGuard], resolve:{ entity: PageEntityResolver } },
   {
@@ -119,6 +119,14 @@ export const routes: Routes = [
         path: 'admin-page-demo',
         loadComponent: () =>
           import('./prototypes/admin-page-demo/admin-page-demo.page').then((m) => m.AdminPageDemoPage),
+      },
+      {
+        // Prototipo associations-cards: diseño de cards para listado de asociaciones
+        path: 'associations-cards',
+        loadComponent: () =>
+          import('./prototypes/associations-cards/associations-cards.page').then(
+            (m) => m.AssociationsCardsPrototypePage,
+          ),
       },
       { path: '**', component: PrototypeHostPage },
     ],

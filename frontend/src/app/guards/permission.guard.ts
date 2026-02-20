@@ -35,11 +35,11 @@ export function requirePermission(permission: string): CanActivateFn {
         const hasPermission = permissionsStore.hasPermission(permission);
 
         if (!hasPermission) {
-          console.warn(`🚫 [PermissionGuard] Acceso denegado: permiso '${permission}' requerido`);
+          console.warn(`[DENY] [PermissionGuard] Acceso denegado: permiso '${permission}' requerido`);
           router.navigate(['/']);
           resolve(false);
         } else {
-          console.log(`✅ [PermissionGuard] Acceso permitido: permiso '${permission}' concedido`);
+          console.log(`[OK] [PermissionGuard] Acceso permitido: permiso '${permission}' concedido`);
           resolve(true);
         }
       });
@@ -73,11 +73,11 @@ export function requireAnyPermission(): CanActivateFn {
         const hasAnyPermission = allPermissions.length > 0;
 
         if (!hasAnyPermission) {
-          console.warn(`🚫 [PermissionGuard] Acceso denegado: se requiere al menos un permiso en este scope`);
+          console.warn(`[DENY] [PermissionGuard] Acceso denegado: se requiere al menos un permiso en este scope`);
           router.navigate(['/']);
           resolve(false);
         } else {
-          console.log(`✅ [PermissionGuard] Acceso permitido: usuario tiene ${allPermissions.length} permisos`);
+          console.log(`[OK] [PermissionGuard] Acceso permitido: usuario tiene ${allPermissions.length} permisos`);
           resolve(true);
         }
       });

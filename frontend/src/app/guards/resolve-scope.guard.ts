@@ -74,11 +74,11 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
   const data = route.data;
   const params = route.params;
 
-  console.log(`🎯 [resolveScopeGuard] ============================================`);
-  console.log(`🎯 [resolveScopeGuard] URL DESTINO: "${url}"`);
-  console.log(`🎯 [resolveScopeGuard] router.url (anterior): "${router.url}"`);
-  console.log(`🎯 [resolveScopeGuard] Scope actual ANTES: ${contextStore.scopeType()}:${contextStore.scopeId()}`);
-  console.log(`🎯 [resolveScopeGuard] ============================================`);
+  console.log(`[>] [resolveScopeGuard] ============================================`);
+  console.log(`[>] [resolveScopeGuard] URL DESTINO: "${url}"`);
+  console.log(`[>] [resolveScopeGuard] router.url (anterior): "${router.url}"`);
+  console.log(`[>] [resolveScopeGuard] Scope actual ANTES: ${contextStore.scopeType()}:${contextStore.scopeId()}`);
+  console.log(`[>] [resolveScopeGuard] ============================================`);
 
   // Prioridad 1: Entity desde resolver
   if (data['entity']) {
@@ -86,7 +86,7 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
     const scopeType = entity.ownerType;
     const scopeId = entity.ownerId === 0 ? null : entity.ownerId;
 
-    console.log(`🎯 [resolveScopeGuard] Detectada entity → Scope ${scopeType}:${scopeId}`);
+    console.log(`[>] [resolveScopeGuard] Detectada entity → Scope ${scopeType}:${scopeId}`);
     contextStore.setScope(scopeType, scopeId, 'router');
 
     return permissionsStore.waitForLoad().pipe(map(() => true));
@@ -105,14 +105,14 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
       const currentScopeType = contextStore.scopeType();
       const currentScopeId = contextStore.scopeId();
 
-      console.log(`🎯 [resolveScopeGuard] Ruta /admin/pages/${urlScopeType} contextual → Verificando scope actual ${currentScopeType}:${currentScopeId}`);
+      console.log(`[>] [resolveScopeGuard] Ruta /admin/pages/${urlScopeType} contextual → Verificando scope actual ${currentScopeType}:${currentScopeId}`);
 
       // Verificar que el scope actual coincide con la URL y tiene scopeId definido
       if (currentScopeType === urlScopeType && currentScopeId !== null && currentScopeId !== undefined) {
-        console.log(`✅ [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
+        console.log(`[OK] [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
         return permissionsStore.waitForLoad().pipe(map(() => true));
       } else {
-        console.warn(`⚠️ [resolveScopeGuard] Scope no coincide o sin scopeId → Redirect a /`);
+        console.warn(`[WARN] [resolveScopeGuard] Scope no coincide o sin scopeId → Redirect a /`);
         router.navigateByUrl('/');
         return of(false);
       }
@@ -129,7 +129,7 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
 
     if (!isNaN(ownerType) && !isNaN(ownerId)) {
       const scopeId = ownerId === 0 ? null : ownerId;
-      console.log(`🎯 [resolveScopeGuard] Detectados ownerType/ownerId → Scope ${ownerType}:${scopeId}`);
+      console.log(`[>] [resolveScopeGuard] Detectados ownerType/ownerId → Scope ${ownerType}:${scopeId}`);
       contextStore.setScope(ownerType, scopeId, 'router');
 
       return permissionsStore.waitForLoad().pipe(map(() => true));
@@ -140,17 +140,17 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
   const assocSlug = url.startsWith('/asociaciones/') ? (params['slug'] || params['assocSlug']) : undefined;
 
   if (assocSlug) {
-    console.log(`🎯 [resolveScopeGuard] Detectada ruta de asociación: ${assocSlug}`);
+    console.log(`[>] [resolveScopeGuard] Detectada ruta de asociación: ${assocSlug}`);
 
     return associationsResolve.resolveBySlug(assocSlug).pipe(
       map(association => {
         contextStore.setScope(WebScope.ASSOCIATION, association.id, 'router');
-        console.log(`✅ [resolveScopeGuard] Asociación resuelta → Scope ${WebScope.ASSOCIATION}:${association.id}`);
+        console.log(`[OK] [resolveScopeGuard] Asociación resuelta → Scope ${WebScope.ASSOCIATION}:${association.id}`);
       }),
       switchMap(() => permissionsStore.waitForLoad()),
       map(() => true),
       catchError(() => {
-        console.warn(`⚠️ [resolveScopeGuard] Asociación no encontrada: ${assocSlug} → Scope GLOBAL`);
+        console.warn(`[WARN] [resolveScopeGuard] Asociación no encontrada: ${assocSlug} → Scope GLOBAL`);
         contextStore.setGlobal('router');
         return permissionsStore.waitForLoad().pipe(map(() => true));
       })
@@ -161,7 +161,7 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
   const gameSlug = url.startsWith('/juegos/') ? (params['slug'] || params['gameSlug']) : undefined;
 
   if (gameSlug) {
-    console.log(`🎯 [resolveScopeGuard] Detectada ruta de juego: ${gameSlug}`);
+    console.log(`[>] [resolveScopeGuard] Detectada ruta de juego: ${gameSlug}`);
 
     // Usar loadOnce() para aprovechar caché (TTL 5 min) o cargar si es necesario
     return gamesStore.loadOnce().pipe(
@@ -171,16 +171,16 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
 
         if (game) {
           contextStore.setScope(WebScope.GAME, game.id, 'router');
-          console.log(`✅ [resolveScopeGuard] Juego resuelto → Scope ${WebScope.GAME}:${game.id}`);
+          console.log(`[OK] [resolveScopeGuard] Juego resuelto → Scope ${WebScope.GAME}:${game.id}`);
         } else {
-          console.warn(`⚠️ [resolveScopeGuard] Juego no encontrado: ${gameSlug} → Scope GLOBAL`);
+          console.warn(`[WARN] [resolveScopeGuard] Juego no encontrado: ${gameSlug} → Scope GLOBAL`);
           contextStore.setGlobal('router');
         }
       }),
       switchMap(() => permissionsStore.waitForLoad()),
       map(() => true),
       catchError(() => {
-        console.warn(`⚠️ [resolveScopeGuard] Error cargando juegos → Scope GLOBAL`);
+        console.warn(`[WARN] [resolveScopeGuard] Error cargando juegos → Scope GLOBAL`);
         contextStore.setGlobal('router');
         return permissionsStore.waitForLoad().pipe(map(() => true));
       })
@@ -196,14 +196,14 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
     const currentScopeType = contextStore.scopeType();
     const currentScopeId = contextStore.scopeId();
 
-    console.log(`🎯 [resolveScopeGuard] Ruta /admin/${urlScopeType} → Verificando scope actual ${currentScopeType}:${currentScopeId}`);
+    console.log(`[>] [resolveScopeGuard] Ruta /admin/${urlScopeType} → Verificando scope actual ${currentScopeType}:${currentScopeId}`);
 
     // Verificar que el scope actual coincide con la URL y tiene scopeId definido
     if (currentScopeType === urlScopeType && currentScopeId !== null && currentScopeId !== undefined) {
-      console.log(`✅ [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
+      console.log(`[OK] [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
       return permissionsStore.waitForLoad().pipe(map(() => true));
     } else {
-      console.warn(`⚠️ [resolveScopeGuard] Scope no coincide o sin scopeId → Redirect a /`);
+      console.warn(`[WARN] [resolveScopeGuard] Scope no coincide o sin scopeId → Redirect a /`);
       router.navigateByUrl('/');
       return of(false);
     }
@@ -220,14 +220,14 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
     const currentScopeType = contextStore.scopeType();
     const currentScopeId = contextStore.scopeId();
 
-    console.log(`🎯 [resolveScopeGuard] Ruta /admin/${scopeName} → Verificando scope actual ${currentScopeType}:${currentScopeId} (esperado: ${expectedScope})`);
+    console.log(`[>] [resolveScopeGuard] Ruta /admin/${scopeName} → Verificando scope actual ${currentScopeType}:${currentScopeId} (esperado: ${expectedScope})`);
 
     // Verificar que el scope actual coincide con el esperado y tiene scopeId definido
     if (currentScopeType === expectedScope && currentScopeId !== null && currentScopeId !== undefined) {
-      console.log(`✅ [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
+      console.log(`[OK] [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
       return permissionsStore.waitForLoad().pipe(map(() => true));
     } else {
-      console.warn(`⚠️ [resolveScopeGuard] Scope no coincide o sin scopeId → Redirect a /`);
+      console.warn(`[WARN] [resolveScopeGuard] Scope no coincide o sin scopeId → Redirect a /`);
       router.navigateByUrl('/');
       return of(false);
     }
@@ -241,22 +241,41 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
     const currentScopeType = contextStore.scopeType();
     const currentScopeId = contextStore.scopeId();
 
-    console.log(`🎯 [resolveScopeGuard] /admin raíz detectado (url: ${url})`);
-    console.log(`🎯 [resolveScopeGuard] Scope actual leído: ${currentScopeType}:${currentScopeId}`);
+    console.log(`[>] [resolveScopeGuard] /admin raíz detectado (url: ${url})`);
+    console.log(`[>] [resolveScopeGuard] Scope actual leído: ${currentScopeType}:${currentScopeId}`);
 
     if (currentScopeType !== null && currentScopeType !== undefined) {
-      console.log(`✅ [resolveScopeGuard] /admin raíz → Preservando scope actual ${currentScopeType}:${currentScopeId}`);
+      console.log(`[OK] [resolveScopeGuard] /admin raíz → Preservando scope actual ${currentScopeType}:${currentScopeId}`);
       return permissionsStore.waitForLoad().pipe(map(() => true));
     }
 
     // Si no hay scope actual, establecer GLOBAL y devolver
-    console.log(`🎯 [resolveScopeGuard] /admin raíz sin scope previo → Estableciendo GLOBAL`);
+    console.log(`[>] [resolveScopeGuard] /admin raíz sin scope previo → Estableciendo GLOBAL`);
     contextStore.setGlobal('router');
     return permissionsStore.waitForLoad().pipe(map(() => true));
   }
 
-  // Fallback: Scope GLOBAL (para /perfil, /login, /admin sin contexto previo, etc)
-  console.log(`🎯 [resolveScopeGuard] Ruta sin scope específico → Scope GLOBAL`);
+  // Prioridad 7: Ruta /asociaciones (listado) - Preservar scope GAME si existe
+  if (url === '/asociaciones' || url === '/asociaciones/' || url.startsWith('/asociaciones?')) {
+    const currentScopeType = contextStore.scopeType();
+    const currentScopeId = contextStore.scopeId();
+
+    console.log(`[>] [resolveScopeGuard] /asociaciones raíz → Scope actual ${currentScopeType}:${currentScopeId}`);
+
+    // Si estamos en scope GAME, preservarlo para filtrar asociaciones
+    if (currentScopeType === WebScope.GAME && currentScopeId !== null) {
+      console.log(`[OK] [resolveScopeGuard] Preservando scope GAME ${currentScopeId} para filtrar asociaciones`);
+      return permissionsStore.waitForLoad().pipe(map(() => true));
+    }
+
+    // Para cualquier otro scope, establecer GLOBAL
+    console.log(`[>] [resolveScopeGuard] Estableciendo scope GLOBAL para asociaciones`);
+    contextStore.setGlobal('router');
+    return permissionsStore.waitForLoad().pipe(map(() => true));
+  }
+
+  // Fallback: Scope GLOBAL (para /perfil, /login, etc)
+  console.log(`[>] [resolveScopeGuard] Ruta sin scope específico → Scope GLOBAL`);
   contextStore.setGlobal('router');
 
   return permissionsStore.waitForLoad().pipe(map(() => true));

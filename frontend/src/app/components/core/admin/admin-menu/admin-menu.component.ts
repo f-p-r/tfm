@@ -47,7 +47,7 @@ import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive
            helpHover
            [helpKey]="item.helpKey">
 
-          <span class="text-xl transition-transform group-hover:scale-110 brightness-200 saturate-150"
+          <span class="material-symbols-outlined text-xl transition-transform group-hover:scale-110"
                 [ngClass]="item.iconClass || ''">
             {{ item.icon }}
           </span>

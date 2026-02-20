@@ -197,7 +197,7 @@ export class PageFormAdminPage implements OnInit {
       // Verificar que el contexto actual coincida con el ownerType
       if (scopeType.toString() === parsedOwnerType && scopeId !== null) {
         parsedOwnerId = scopeId;
-        console.log(`📌 [PageFormAdmin] Usando scopeId del contexto: ${parsedOwnerId}`);
+        console.log(`[INFO] [PageFormAdmin] Usando scopeId del contexto: ${parsedOwnerId}`);
       } else {
         this.errorMessage.set(`ownerType ${parsedOwnerType} requiere ownerId pero no está en la URL ni en el contexto actual`);
         return;

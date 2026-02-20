@@ -153,7 +153,7 @@ export class ContextService {
     const scopeType = this.contextStore.scopeType();
     const scopeId = this.contextStore.scopeId() ?? 0;
 
-    console.log(`🔍 [ContextService] 3. Scope actual: ${scopeType}:${scopeId} (establecido por guards)`);
+    console.log(`[>] [ContextService] 3. Scope actual: ${scopeType}:${scopeId} (establecido por guards)`);
 
     // ESPERAR a que los permisos estén cargados antes de verificar
     return this.permissionsStore.waitForLoad().pipe(
@@ -162,7 +162,7 @@ export class ContextService {
 
         // A) Editar Entidad
         if (data['entity']) {
-          console.log('🔍 [ContextService] -> Detectada entidad, verificando permiso edición...');
+          console.log('[>] [ContextService] -> Detectada entidad, verificando permiso edición...');
           const editAction = this.checkEntityEdit(data['entity']);
           if (editAction) {
             actions.push(editAction);
@@ -170,17 +170,17 @@ export class ContextService {
         }
 
         // B) Administrar Contexto
-        console.log(`🔍 [ContextService] -> Verificando admin de contexto (Type: ${scopeType}, ID: ${scopeId})...`);
+        console.log(`[>] [ContextService] -> Verificando admin de contexto (Type: ${scopeType}, ID: ${scopeId})...`);
         const adminAction = this.checkContextAdmin(scopeType, scopeId);
         if (adminAction) {
           actions.push(adminAction);
         }
 
-        console.log('🔍 [ContextService] 4. Acciones finales calculadas:', actions);
+        console.log('[>] [ContextService] 4. Acciones finales calculadas:', actions);
         return actions;
       }),
       catchError(err => {
-        console.error('❌ [ContextService] Error fatal:', err);
+        console.error('[ERROR] [ContextService] Error fatal:', err);
         return of([]);
       })
     );
@@ -196,7 +196,7 @@ export class ContextService {
    */
   private checkEntityEdit(entity: OwnableEntity): AdminAction | null {
     const hasPermission = this.permissionsStore.hasPermission(this.PERM_PAGE_EDIT);
-    console.log(`🔍 [ContextService] 4. Permiso Edición (${this.PERM_PAGE_EDIT}):`, hasPermission ? 'APROBADO' : 'DENEGADO');
+    console.log(`[>] [ContextService] 4. Permiso Edición (${this.PERM_PAGE_EDIT}):`, hasPermission ? 'APROBADO' : 'DENEGADO');
 
     if (hasPermission) {
       return {
@@ -232,8 +232,8 @@ export class ContextService {
     const allPermissions = this.permissionsStore.allPermissions();
     const hasAnyPermission = allPermissions.length > 0;
 
-    console.log(`🔍 [ContextService] 5. Permisos en scope actual:`, allPermissions);
-    console.log(`🔍 [ContextService] 5. ¿Tiene algún permiso?:`, hasAnyPermission ? 'SÍ' : 'NO');
+    console.log(`[>] [ContextService] 5. Permisos en scope actual:`, allPermissions);
+    console.log(`[>] [ContextService] 5. ¿Tiene algún permiso?:`, hasAnyPermission ? 'SÍ' : 'NO');
 
     if (hasAnyPermission) {
       let label = 'Administración';

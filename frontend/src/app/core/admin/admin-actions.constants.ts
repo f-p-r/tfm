@@ -19,31 +19,31 @@ export interface AdminAction {
  * Acciones de administración para Scope Global (WebScope.GLOBAL)
  */
 export const GLOBAL_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
-  { label: 'Páginas', route: '/admin/pages/1', permission: 'pages.edit', icon: '📄', category: 'Contenido' },
-  { label: 'Contactos', route: '/admin/contactos', permission: 'admin', icon: '📞', category: 'Contenido' },
-  { label: 'Asociaciones', route: '/admin/asociaciones', permission: 'admin', icon: '🏛️', category: 'Gestión' },
-  { label: 'Juegos', route: '/admin/juegos', permission: 'admin', icon: '🎴', category: 'Gestión' },
-  { label: 'Usuarios', route: '/admin/usuarios', permission: 'admin', icon: '👥', category: 'Gestión' },
-  { label: 'Medios', route: '/admin/media', permission: 'global.media.view', icon: '🖼️', category: 'Contenido' },
-  { label: 'Parámetros del Sitio', route: '/admin/site-params', permission: 'admin', icon: '⚙️', category: 'Sistema', iconClass: 'hover:rotate-90 transition-transform duration-500' },
+  { label: 'Páginas', route: '/admin/pages/1', permission: 'pages.edit', icon: 'description', category: 'Contenido' },
+  { label: 'Contactos', route: '/admin/contactos', permission: 'admin', icon: 'call', category: 'Contenido' },
+  { label: 'Asociaciones', route: '/admin/asociaciones', permission: 'admin', icon: 'account_balance', category: 'Gestión' },
+  { label: 'Juegos', route: '/admin/juegos', permission: 'admin', icon: 'casino', category: 'Gestión' },
+  { label: 'Usuarios', route: '/admin/usuarios', permission: 'admin', icon: 'group', category: 'Gestión' },
+  { label: 'Medios', route: '/admin/media', permission: 'global.media.view', icon: 'photo_library', category: 'Contenido' },
+  { label: 'Parámetros del Sitio', route: '/admin/site-params', permission: 'admin', icon: 'settings', category: 'Sistema', iconClass: 'hover:rotate-90 transition-transform duration-500' },
 ] as const;
 
 /**
  * Acciones de administración para Scope Asociación (WebScope.ASSOCIATION)
  */
 export const ASSOCIATION_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
-  { label: 'Juegos relacionados', route: '/admin/asociacion/juegos_relacionados', permission: 'admin', icon: '🎴', category: 'Gestión' },
-  { label: 'Páginas', route: '/admin/pages/2', permission: 'pages.edit', icon: '📄', category: 'Contenido' },
-  { label: 'Contactos', route: '/admin/asociacion/contactos', permission: 'admin', icon: '📞', category: 'Contenido' },
-  { label: 'Miembros', route: '/admin/asociacion/membros', permission: 'admin', icon: '👥', category: 'Gestión' },
-  { label: 'Estados de los socios', route: '/admin/asociacion/estados', permission: 'admin', icon: '⚙️', category: 'Gestión' , iconClass: 'hover:rotate-90 transition-transform duration-500' },
+  { label: 'Juegos relacionados', route: '/admin/asociacion/juegos_relacionados', permission: 'admin', icon: 'casino', category: 'Gestión' },
+  { label: 'Páginas', route: '/admin/pages/2', permission: 'pages.edit', icon: 'description', category: 'Contenido' },
+  { label: 'Contactos', route: '/admin/asociacion/contactos', permission: 'admin', icon: 'call', category: 'Contenido' },
+  { label: 'Miembros', route: '/admin/asociacion/membros', permission: 'admin', icon: 'group', category: 'Gestión' },
+  { label: 'Estados de los socios', route: '/admin/asociacion/estados', permission: 'admin', icon: 'settings', category: 'Gestión' , iconClass: 'hover:rotate-90 transition-transform duration-500' },
 ] as const;
 
 /**
  * Acciones de administración para Scope Juego (WebScope.GAME)
  */
 export const GAME_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
-  { label: 'Páginas', route: '/admin/pages/3', permission: 'pages.edit', icon: '📄', category: 'Contenido' }
+  { label: 'Páginas', route: '/admin/pages/3', permission: 'pages.edit', icon: 'description', category: 'Contenido' }
 ] as const;
 
 /**

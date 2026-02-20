@@ -59,8 +59,9 @@ export class LoginPage implements OnInit {
 
     this.authService.login(username, password).subscribe({
       next: (user: User) => {
-        // El AuthService ya actualiza currentUser signal automáticamente
-        this.router.navigate(['/']);
+        // Redirigir a returnUrl si existe, sino al home
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+        this.router.navigate([returnUrl]);
       },
       error: (errorResponse: any) => {
         this.isSubmitting.set(false);

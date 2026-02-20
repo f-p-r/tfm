@@ -21,11 +21,22 @@
       } @else {
         <button
           type="button"
-          [class]="item.label === '?' && cssClass === 'ds-nav-link' ? 'ds-nav-help-button' : cssClass"
+          [class]="cssClass"
           [class.text-left]="cssClass === 'ds-nav-mobile-link'"
           (click)="item.onClick?.(); onNavigate()"
           [attr.aria-label]="item.label === '?' ? 'Ayuda' : undefined"
-        >{{ item.label === '?' && cssClass === 'ds-nav-mobile-link' ? 'Ayuda' : item.label }}</button>
+          [attr.title]="item.label === '?' ? 'Ayuda' : undefined"
+        >
+          @if (item.label === '?') {
+            @if (cssClass === 'ds-nav-mobile-link') {
+              <span class="material-symbols-outlined inline-block align-text-bottom mr-1" style="font-size: 1.2em;">help</span> Ayuda
+            } @else {
+              <span class="material-symbols-outlined" style="font-size: 2em; font-weight: 700; vertical-align: middle;">help</span>
+            }
+          } @else {
+            {{ item.label }}
+          }
+        </button>
       }
     }
   }
@@ -79,14 +90,14 @@
                     class="ds-menu-item block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light rounded"
                     (click)="closeAssociationMenu()"
                   >
-                    👥 Socios
+                    <span class="material-symbols-outlined inline-block align-text-bottom mr-1" style="font-size: 1.2em;">group</span> Socios / Admisión
                   </a>
                   <a
                     [routerLink]="['/asociaciones', associationSlug(), 'contacto']"
                     class="ds-menu-item block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light rounded"
                     (click)="closeAssociationMenu()"
                   >
-                    📧 Contacto
+                    <span class="material-symbols-outlined inline-block align-text-bottom mr-1" style="font-size: 1.2em;">mail</span> Contacto
                   </a>
                   <div class="border-t border-neutral-medium my-1"></div>
                   <a
@@ -94,7 +105,7 @@
                     class="ds-menu-item block px-4 py-2 text-sm text-neutral-dark hover:bg-neutral-light rounded"
                     (click)="closeAssociationMenu()"
                   >
-                    🚪 Ver todas las asociaciones
+                    <span class="material-symbols-outlined inline-block align-text-bottom mr-1" style="font-size: 1.2em;">exit_to_app</span> Ver todas las asociaciones
                   </a>
                 </div>
               </div>
@@ -144,6 +155,16 @@
             </a>
           }
         }
+
+        <button
+          type="button"
+          class="ds-nav-link"
+          (click)="openHelp()"
+          aria-label="Ayuda"
+          title="Ayuda"
+        >
+          <span class="material-symbols-outlined" style="font-size: 2em; font-weight: 700; vertical-align: middle;">help</span>
+        </button>
       }
     </div>
 
@@ -186,21 +207,21 @@
                 class="ds-nav-mobile-link"
                 (click)="closeMobileMenu()"
               >
-                👥 Socios
+                <span class="material-symbols-outlined inline-block align-text-bottom mr-1" style="font-size: 1.2em;">group</span> Socios
               </a>
               <a
                 [routerLink]="['/asociaciones', associationSlug(), 'contacto']"
                 class="ds-nav-mobile-link"
                 (click)="closeMobileMenu()"
               >
-                📧 Contacto
+                <span class="material-symbols-outlined inline-block align-text-bottom mr-1" style="font-size: 1.2em;">mail</span> Contacto
               </a>
               <a
                 routerLink="/asociaciones"
                 class="ds-nav-mobile-link"
                 (click)="closeMobileMenu()"
               >
-                🚪 Ver todas las asociaciones
+                <span class="material-symbols-outlined inline-block align-text-bottom mr-1" style="font-size: 1.2em;">exit_to_app</span> Ver todas las asociaciones
               </a>
             </div>
           }
@@ -210,6 +231,15 @@
 
         @if (!isAdmin()) {
           <ng-container *ngTemplateOutlet="adminMobileList"></ng-container>
+
+          <button
+            type="button"
+            class="ds-nav-mobile-link text-left"
+            (click)="openHelp(); closeMobileMenu()"
+            aria-label="Ayuda"
+          >
+            <span class="material-symbols-outlined inline-block align-text-bottom mr-1" style="font-size: 1.2em;">help</span> Ayuda
+          </button>
         }
       </div>
     </div>

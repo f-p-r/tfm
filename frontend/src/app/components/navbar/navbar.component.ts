@@ -102,7 +102,7 @@ export class NavbarComponent {
     // 1. MODO ADMINISTRACIÓN
     if (this.isAdmin()) {
       return [
-        { label: '❌ Admin.', type: 'button', onClick: () => this.exitAdmin() },
+        { label: 'Salir Admin.', type: 'button', onClick: () => this.exitAdmin() },
         { label: '?', type: 'button', onClick: () => this.openHelp() },
       ];
     }
@@ -119,9 +119,6 @@ export class NavbarComponent {
       { label: 'Eventos', type: 'link', route: '/events' },
       { label: 'Noticias', type: 'link', route: '/news' }
     );
-
-    // Botón de ayuda siempre al final
-    items.push({ label: '?', type: 'button', onClick: () => this.openHelp() });
 
     return items;
   });
