@@ -1,6 +1,9 @@
 @if (variant() === 'desktop') {
   @if (!isAuthenticated()) {
-    <a routerLink="/login" class="ds-nav-link">Entrar</a>
+    <a routerLink="/login" class="ds-nav-link flex items-center gap-1.5">
+      <span class="material-symbols-outlined" style="font-size: 1.25rem;">person_add</span>
+      <span>Entrar</span>
+    </a>
   } @else {
     <div class="relative inline-block">
       <button
@@ -40,7 +43,10 @@
 
 @if (variant() === 'mobile') {
   @if (!isAuthenticated()) {
-    <a routerLink="/login" class="ds-nav-mobile-link">Entrar</a>
+    <a routerLink="/login" class="ds-nav-mobile-link flex items-center gap-2">
+      <span class="material-symbols-outlined" style="font-size: 1.25rem;">person_add</span>
+      <span>Entrar</span>
+    </a>
   } @else {
     <div class="border-t border-neutral-medium pt-2 mt-2">
       <button
