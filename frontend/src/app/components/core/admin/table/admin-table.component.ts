@@ -76,6 +76,7 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
                     @switch (col.type) {
                       @case ('badge') { <span class="ds-badge" [ngClass]="getBadgeClass(col, row[col.key])">{{ getBadgeLabel(col, row[col.key]) }}</span> }
                       @case ('date') { <span class="text-neutral-500 text-xs">{{ row[col.key] | date:'dd/MM/yyyy' }}</span> }
+                      @case ('link') { <a [href]="getLinkHref(col, row[col.key])" class="text-brand-primary hover:text-brand-accent hover:underline">{{ row[col.key] }}</a> }
                       @default { <span class="text-neutral-dark">{{ row[col.key] }}</span> }
                     }
                   </td>
@@ -220,5 +221,11 @@ export class AdminTableComponent {
 
   protected getBadgeLabel(col: AdminTableColumn, value: string): string {
     return col.badgeLabels?.[value] || value;
+  }
+
+  protected getLinkHref(col: AdminTableColumn, value: string): string {
+    if (!value) return '#';
+    const prefix = col.linkPrefix || '';
+    return prefix + value;
   }
 }

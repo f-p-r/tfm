@@ -27,6 +27,7 @@ import { AdminUsersPage } from './pages/admin/admin-users.page';
 import { AdminMemberStatusesPage } from './pages/admin/admin-member-statuses.page';
 import { AdminContactPage } from './pages/admin/admin-contact.page';
 import { AdminAssociationGamesPage } from './pages/admin/associations/admin-association-games.page';
+import { AdminAssociationMembersPage } from './pages/admin/admin-association-members.page';
 import { requirePermission, requireAnyPermission } from './guards/permission.guard';
 import { requireAuth } from './guards/auth.guard';
 import { resolveScopeGuard } from './guards/resolve-scope.guard';
@@ -164,6 +165,13 @@ export const routes: Routes = [
   {
     path: 'admin/asociacion/estados',
     component: AdminMemberStatusesPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission('admin')],
+  },
+
+  // Admin: gestión de miembros de asociaciones
+  {
+    path: 'admin/asociacion/miembros',
+    component: AdminAssociationMembersPage,
     canActivate: [resolveScopeGuard, requireAuth, requirePermission('admin')],
   },
 

@@ -36,7 +36,7 @@ export const ASSOCIATION_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
   { label: 'Páginas', route: '/admin/pages/2', permission: 'pages.edit', icon: 'description', category: 'Contenido' },
   { label: 'Contactos', route: '/admin/asociacion/contactos', permission: 'admin', icon: 'call', category: 'Contenido' },
   { label: 'Miembros', route: '/admin/asociacion/miembros', permission: 'admin', icon: 'group', category: 'Gestión' },
-  { label: 'Estados de los socios', route: '/admin/asociacion/estados', permission: 'admin', icon: 'settings', category: 'Gestión' , iconClass: 'hover:rotate-90 transition-transform duration-500' },
+  { label: 'Estados de los miembros', route: '/admin/asociacion/estados', permission: 'admin', icon: 'settings', category: 'Gestión' , iconClass: 'hover:rotate-90 transition-transform duration-500' },
 ] as const;
 
 /**

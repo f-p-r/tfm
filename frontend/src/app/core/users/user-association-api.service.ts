@@ -63,4 +63,21 @@ export class UserAssociationApiService {
   }): Observable<UserAssociation> {
     return this.http.post<UserAssociation>(this.baseUrl, data);
   }
+
+  /**
+   * Actualiza una membresía existente.
+   *
+   * @param id ID de la membresía.
+   * @param data Datos a actualizar.
+   * @returns Observable con la membresía actualizada.
+   */
+  update(id: number, data: {
+    user_id?: number;
+    association_id?: number;
+    association_user_id?: string;
+    joined_at?: string;
+    status_id?: number;
+  }): Observable<UserAssociation> {
+    return this.http.patch<UserAssociation>(`${this.baseUrl}/${id}`, data);
+  }
 }

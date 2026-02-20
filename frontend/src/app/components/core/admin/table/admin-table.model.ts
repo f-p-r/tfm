@@ -9,7 +9,12 @@ export interface AdminTableColumn {
   label: string;
 
   /** Tipo de renderizado */
-  type?: 'text' | 'date' | 'badge' | 'actions';
+  type?: 'text' | 'date' | 'badge' | 'link' | 'actions';
+
+  /** * Solo para type='link'. Prefijo para el href (ej: 'mailto:', 'tel:', 'https://').
+   * Si no se especifica, se asume que el valor ya contiene el prefijo.
+   */
+  linkPrefix?: string;
 
   /** * Solo para type='badge'. Mapa de valor -> clase CSS.
    * Ej: { 'active': 'ds-badge-active', 'pending': 'ds-badge-request' }
