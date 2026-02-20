@@ -21,39 +21,86 @@ import { MEMBER_STATUS_TYPES } from '../../../core/associations/member-status.co
   imports: [],
   template: `
     <div class="ds-container py-8">
-      <header class="border-b border-neutral-medium pb-4">
-        <h1 class="h1">{{ pageTitle() }}</h1>
-        @if (associationName()) {
-          <p class="text-sm text-neutral-dark mt-1">{{ associationName() }}</p>
-        }
-      </header>
+      <div class="max-w-2xl">
+        <header class="border-b border-neutral-medium pb-4">
+          <h1 class="h1">{{ pageTitle() }}</h1>
+          @if (associationName()) {
+            <p class="text-sm text-neutral-dark mt-1">{{ associationName() }}</p>
+          }
+        </header>
 
-      <section class="mt-6">
-        <!-- Estado de carga -->
-        @if (isLoading()) {
-          <div class="bg-neutral-light border border-neutral-medium rounded-lg p-8 text-center">
-            <p class="text-neutral-dark">Cargando...</p>
-          </div>
-        }
+        <section class="mt-6">
+          <!-- Estado de carga -->
+          @if (isLoading()) {
+            <div class="bg-neutral-light border border-neutral-medium rounded-lg p-8 text-center">
+              <p class="text-neutral-dark">Cargando...</p>
+            </div>
+          }
 
-        <!-- Usuario NO relacionado con la asociación: Formulario de solicitud -->
-        @else if (membershipStatus() === 'not-member') {
-          <div class="bg-white border border-neutral-medium rounded-lg p-6 max-w-2xl mx-auto">
-            <p class="text-neutral-dark mb-6">
-              Para solicitar tu membresía en esta asociación, por favor confirma tu solicitud pulsando el botón a continuación.
-              La asociación revisará tu solicitud y te contactará para los siguientes pasos.
-            </p>
+          <!-- Usuario NO relacionado con la asociación: Formulario de solicitud -->
+          @else if (membershipStatus() === 'not-member') {
+            <div class="bg-white border border-neutral-medium rounded-lg p-6 max-w-2xl mx-auto">
+              <p class="text-neutral-dark mb-6">
+                Para solicitar tu membresía en esta asociación, por favor confirma tu solicitud pulsando el botón a continuación.
+                La asociación revisará tu solicitud y te contactará para los siguientes pasos.
+              </p>
 
-            @if (errorMessage()) {
-              <div class="ds-alert ds-alert-error mb-4">
-                {{ errorMessage() }}
-              </div>
-            }
+              @if (errorMessage()) {
+                <div class="ds-alert ds-alert-error mb-4">
+                  {{ errorMessage() }}
+                </div>
+              }
 
-            @if (confirmationMessage()) {
-              <div class="ds-alert ds-alert-success mb-4">
-                {{ confirmationMessage() }}
-              </div>
+              @if (confirmationMessage()) {
+                <div class="ds-alert ds-alert-success mb-4">
+                  {{ confirmationMessage() }}
+                </div>
+                <div class="flex justify-center">
+                  <button
+                    type="button"
+                    (click)="goToAssociation()"
+                    class="ds-btn ds-btn-primary"
+                  >
+                    Volver
+                  </button>
+                </div>
+              } @else {
+                <div class="flex gap-3 justify-end">
+                  <button
+                    type="button"
+                    (click)="goToAssociation()"
+                    class="ds-btn ds-btn-secondary"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    (click)="requestMembership()"
+                    [disabled]="isSubmitting()"
+                    class="ds-btn ds-btn-primary"
+                  >
+                    {{ isSubmitting() ? 'Procesando...' : 'Confirmar solicitud' }}
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Usuario con solicitud PENDIENTE (status.type.id = 1) -->
+          @else if (membershipStatus() === 'pending') {
+            <div class="bg-neutral-light border border-neutral-medium rounded-lg p-8">
+              @if (confirmationMessage()) {
+                <div class="ds-alert ds-alert-success mb-6">
+                  {{ confirmationMessage() }}
+                </div>
+              }
+              <p class="text-neutral-dark text-lg mb-4">
+                Ya has solicitado inscribirte en la asociación. Se te informará por correo electrónico los pasos siguientes.
+              </p>
+              <p class="text-neutral-dark text-sm mb-6">
+                Para cualquier consulta, comunícate con la asociación en cualquiera de las opciones que podrás ver en el apartado "Contacto",
+                clicando en el nombre de la asociación en la barra superior.
+              </p>
               <div class="flex justify-center">
                 <button
                   type="button"
@@ -63,76 +110,31 @@ import { MEMBER_STATUS_TYPES } from '../../../core/associations/member-status.co
                   Volver
                 </button>
               </div>
-            } @else {
-              <div class="flex gap-3 justify-end">
+            </div>
+          }
+
+          <!-- Usuario ya es MIEMBRO (otros estados) -->
+          @else if (membershipStatus() === 'member') {
+            <div class="bg-neutral-light border border-neutral-medium rounded-lg p-8 text-center">
+              <p class="text-neutral-dark text-lg mb-4">
+                Esta sección está en desarrollo.
+              </p>
+              <p class="text-neutral-medium text-sm mb-6">
+                Aquí podrás acceder al área de socios.
+              </p>
+              <div class="flex justify-center">
                 <button
                   type="button"
                   (click)="goToAssociation()"
-                  class="ds-btn ds-btn-secondary"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="button"
-                  (click)="requestMembership()"
-                  [disabled]="isSubmitting()"
                   class="ds-btn ds-btn-primary"
                 >
-                  {{ isSubmitting() ? 'Procesando...' : 'Confirmar solicitud' }}
+                  Volver
                 </button>
               </div>
-            }
-          </div>
-        }
-
-        <!-- Usuario con solicitud PENDIENTE (status.type.id = 1) -->
-        @else if (membershipStatus() === 'pending') {
-          <div class="bg-neutral-light border border-neutral-medium rounded-lg p-8">
-            @if (confirmationMessage()) {
-              <div class="ds-alert ds-alert-success mb-6">
-                {{ confirmationMessage() }}
-              </div>
-            }
-            <p class="text-neutral-dark text-lg mb-4">
-              Ya has solicitado inscribirte en la asociación. Se te informará por correo electrónico los pasos siguientes.
-            </p>
-            <p class="text-neutral-dark text-sm mb-6">
-              Para cualquier consulta, comunícate con la asociación en cualquiera de las opciones que podrás ver en el apartado "Contacto",
-              clicando en el nombre de la asociación en la barra superior.
-            </p>
-            <div class="flex justify-center">
-              <button
-                type="button"
-                (click)="goToAssociation()"
-                class="ds-btn ds-btn-primary"
-              >
-                Volver
-              </button>
             </div>
-          </div>
-        }
-
-        <!-- Usuario ya es MIEMBRO (otros estados) -->
-        @else if (membershipStatus() === 'member') {
-          <div class="bg-neutral-light border border-neutral-medium rounded-lg p-8 text-center">
-            <p class="text-neutral-dark text-lg mb-4">
-              Esta sección está en desarrollo.
-            </p>
-            <p class="text-neutral-medium text-sm mb-6">
-              Aquí podrás acceder al área de socios.
-            </p>
-            <div class="flex justify-center">
-              <button
-                type="button"
-                (click)="goToAssociation()"
-                class="ds-btn ds-btn-primary"
-              >
-                Volver
-              </button>
-            </div>
-          </div>
-        }
-      </section>
+          }
+        </section>
+      </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
