@@ -259,16 +259,24 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
   if (url === '/asociaciones' || url === '/asociaciones/' || url.startsWith('/asociaciones?')) {
     const currentScopeType = contextStore.scopeType();
     const currentScopeId = contextStore.scopeId();
+    const selectedGameId = gamesStore.selectedGameId();
 
-    console.log(`[>] [resolveScopeGuard] /asociaciones raíz → Scope actual ${currentScopeType}:${currentScopeId}`);
+    console.log(`[>] [resolveScopeGuard] /asociaciones raíz → Scope actual ${currentScopeType}:${currentScopeId}, selectedGameId: ${selectedGameId}`);
 
-    // Si estamos en scope GAME, preservarlo para filtrar asociaciones
+    // Caso 1: Ya estamos en scope GAME, preservarlo para filtrar asociaciones
     if (currentScopeType === WebScope.GAME && currentScopeId !== null) {
       console.log(`[OK] [resolveScopeGuard] Preservando scope GAME ${currentScopeId} para filtrar asociaciones`);
       return permissionsStore.waitForLoad().pipe(map(() => true));
     }
 
-    // Para cualquier otro scope, establecer GLOBAL
+    // Caso 2: No estamos en GAME pero hay juego seleccionado → restaurar scope GAME
+    if (selectedGameId !== null) {
+      console.log(`[OK] [resolveScopeGuard] Restaurando scope GAME ${selectedGameId} desde selectedGameId`);
+      contextStore.setScope(WebScope.GAME, selectedGameId, 'router');
+      return permissionsStore.waitForLoad().pipe(map(() => true));
+    }
+
+    // Caso 3: Sin juego seleccionado → establecer GLOBAL
     console.log(`[>] [resolveScopeGuard] Estableciendo scope GLOBAL para asociaciones`);
     contextStore.setGlobal('router');
     return permissionsStore.waitForLoad().pipe(map(() => true));
