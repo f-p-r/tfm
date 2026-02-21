@@ -9,50 +9,47 @@ use App\Services\AuthorizationService;
 class NewsPolicy
 {
     /**
-     * Crear noticias: requiere permiso 'news.create' en el scope de la noticia
+     * Crear noticias: requiere permiso 'news.edit' en el scope de la noticia
      */
-    public function create(User $user, ?int $associationId = null, ?int $gameId = null): bool
+    public function create(User $user, int $scopeType, ?int $scopeId = null): bool
     {
         $authService = app(AuthorizationService::class);
-        $scope = $authService->getScopeForContent($associationId, $gameId);
 
         return $authService->userHasPermissionInScope(
             $user,
-            'news.create',
-            $scope['scope_type'],
-            $scope['scope_id']
+            'news.edit',
+            $scopeType,
+            $scopeId
         );
     }
 
     /**
-     * Actualizar noticias: requiere permiso 'news.update' en el scope de la noticia
+     * Actualizar noticias: requiere permiso 'news.edit' en el scope de la noticia
      */
     public function update(User $user, News $news): bool
     {
         $authService = app(AuthorizationService::class);
-        $scope = $authService->getScopeForContent($news->association_id, $news->game_id);
 
         return $authService->userHasPermissionInScope(
             $user,
-            'news.update',
-            $scope['scope_type'],
-            $scope['scope_id']
+            'news.edit',
+            $news->scope_type,
+            $news->scope_id
         );
     }
 
     /**
-     * Publicar noticias: requiere permiso 'news.publish' en el scope de la noticia
+     * Eliminar noticias: requiere permiso 'news.edit' en el scope de la noticia
      */
-    public function publish(User $user, News $news): bool
+    public function delete(User $user, News $news): bool
     {
         $authService = app(AuthorizationService::class);
-        $scope = $authService->getScopeForContent($news->association_id, $news->game_id);
 
         return $authService->userHasPermissionInScope(
             $user,
-            'news.publish',
-            $scope['scope_type'],
-            $scope['scope_id']
+            'news.edit',
+            $news->scope_type,
+            $news->scope_id
         );
     }
 }

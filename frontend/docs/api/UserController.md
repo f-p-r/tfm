@@ -4,6 +4,34 @@ Controlador para gestión de usuarios (CRUD completo).
 
 **Estado:** ✅ Implementado
 
+## Autenticación
+
+- **POST /api/users** (registro): ❌ **No requiere autenticación**
+- **GET, PUT, PATCH, DELETE**: ✅ Requieren autenticación (Sanctum)
+
+## Verificación de Origen (Frontend SPA)
+
+Aunque `POST /api/users` no requiere autenticación, **sí verifica que la petición venga del frontend** mediante `EnsureFrontendRequestsAreStateful`.
+
+**Flujo desde el frontend:**
+1. Primero obtener cookie CSRF:
+   ```typescript
+   await axios.get('http://backend/sanctum/csrf-cookie');
+   ```
+2. Luego registrar usuario:
+   ```typescript 
+   await axios.post('http://backend/api/users', userData);
+   ```
+
+Laravel verificará:
+- ✅ Dominio en `SANCTUM_STATEFUL_DOMAINS`
+- ✅ Cookie de sesión válida
+- ✅ Token CSRF válido
+
+Esto protege contra peticiones no autorizadas de otros orígenes.
+
+---
+
 ## Formato de Respuestas
 
 ### Respuestas Exitosas
@@ -32,8 +60,6 @@ Todas las respuestas con errores incluyen:
 ---
 
 ## Endpoints
-
-Todos los endpoints requieren autenticación (Sanctum).
 
 ### GET /api/users
 Listar todos los usuarios ordenados por fecha de creación (más recientes primero).
@@ -68,9 +94,11 @@ curl -X GET "http://localhost:8000/api/users" \
 ---
 
 ### POST /api/users
-Crear un nuevo usuario.
+Crear un nuevo usuario (registro público).
 
-**Autenticación:** Requerida (Sanctum)
+**Autenticación:** ❌ **No requerida** (endpoint público para registro)
+
+**Origen verificado:** Sí (debe venir del frontend SPA configurado)
 
 **Estado:** ✅ Implementado
 
@@ -119,10 +147,23 @@ Crear un nuevo usuario.
 }
 ```
 
-**Ejemplo de uso:**
+**Ejemplo de uso (desde frontend SPA con Axios):**
+```typescript
+// 1. Primero obtener CSRF cookie (si no se ha hecho antes)
+await axios.get('http://localhost:8000/sanctum/csrf-cookie');
+
+// 2. Registrar usuario
+const response = await axios.post('http://localhost:8000/api/users', {
+  name: 'Ana García',
+  username: 'agarcia',
+  email: 'ana@example.com',
+  password: 'password123'
+});
+```
+
+**Ejemplo de uso (curl - para testing):**
 ```bash
 curl -X POST "http://localhost:8000/api/users" \
-  -H "Authorization: Bearer {token}" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Ana García",
@@ -322,9 +363,14 @@ Errores generales no asociados a un campo específico (normalmente errores 500):
 ## Notas de Implementación
 
 ### Seguridad
+- **POST /api/users** (registro) es público pero está protegido por:
+  - ✅ Verificación de origen via `EnsureFrontendRequestsAreStateful`
+  - ✅ Requiere token CSRF válido (debe venir del frontend SPA configurado)
+  - ✅ Solo acepta peticiones de dominios en `SANCTUM_STATEFUL_DOMAINS`
 - Las contraseñas se hashean automáticamente usando `Hash::make()` antes de guardar
 - El password nunca se devuelve en las respuestas (configurado en el modelo User)
 - El `remember_token` tampoco se devuelve
+- Los demás endpoints (GET, PUT, PATCH, DELETE) requieren autenticación Sanctum
 
 ### UserResource
 El recurso formatea los datos del usuario:
@@ -339,7 +385,13 @@ Laravel resuelve automáticamente el usuario por ID en los métodos `show`, `upd
 El método `update()` soporta tanto PUT como PATCH. Todos los campos son opcionales gracias a la regla `sometimes` en `UpdateUserRequest`.
 
 ### Autorización
-Actualmente `authorize()` devuelve `true` en ambos requests. Deberías implementar políticas de autorización según tus necesidades (por ejemplo, solo admins pueden crear usuarios, o usuarios solo pueden actualizar su propio perfil).
+- **POST /api/users** (registro): Público, no requiere autenticación ni autorización especial
+- **GET, PUT, PATCH, DELETE**: Requieren autenticación Sanctum
+- Actualmente `authorize()` devuelve `true` en ambos requests
+- Considera implementar políticas de autorización adicionales:
+  - Solo admins pueden ver lista completa de usuarios
+  - Usuarios solo pueden ver/actualizar su propio perfil
+  - Solo admins pueden eliminar usuarios
 
 ---
 
@@ -349,7 +401,15 @@ Actualmente `authorize()` devuelve `true` en ambos requests. Deberías implement
 |--------|-------------|---------------|
 | 200 | OK | GET exitoso, UPDATE exitoso, DELETE exitoso |
 | 201 | Created | POST exitoso (usuario creado) |
+| 401 | Unauthorized | Endpoints autenticados sin token válido (GET, PUT, PATCH, DELETE) |
+| 419 | Page Expired | Token CSRF inválido o expirado en POST /api/users |
 | 422 | Unprocessable Entity | Errores de validación |
 | 404 | Not Found | Usuario no encontrado (model binding) |
 | 500 | Internal Server Error | Error al ejecutar operación en BD |
+
+**Nota sobre CSRF en registro:**
+- Si recibes **419 Page Expired** en POST /api/users, el frontend debe obtener nuevo CSRF token:
+  ```typescript
+  await axios.get('http://backend/sanctum/csrf-cookie');
+  ```
 

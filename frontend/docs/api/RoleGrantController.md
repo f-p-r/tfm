@@ -2,7 +2,16 @@
 
 Controlador para gestión de asignaciones de roles a usuarios (role grants).
 
-**IMPORTANTE:** Todos los endpoints requieren autenticación y rol de **administrador**.
+**IMPORTANTE:** Todos los endpoints requieren autenticación y **rol admin con scope global** (scope_type=1, scope_id=null).
+
+## Autorización
+
+La autorización para todos los endpoints de role grants verifica que el usuario tenga:
+- Un role grant con rol "admin"
+- scope_type = 1 (global)
+- scope_id = null
+
+Esta verificación se hace contra la tabla `role_grants`, no contra el sistema estándar de roles de Spatie Permission.
 
 ## Endpoints
 

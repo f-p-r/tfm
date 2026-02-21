@@ -20,6 +20,7 @@ use App\Http\Controllers\PublicPagesController;
 use App\Http\Controllers\PublicSiteParamsController;
 use App\Http\Controllers\RoleGrantController;
 use App\Http\Controllers\ContactInfoController;
+use App\Http\Controllers\NewsController;
 
 // Ping endpoint (no DB, for diagnostics)
 Route::get('ping', function () {
@@ -115,6 +116,14 @@ Route::get('pages/{page}', [PublicPagesController::class, 'show']);
 
 // Public Site Params endpoints (sin autenticación)
 Route::get('site-params/{id}', [PublicSiteParamsController::class, 'show']);
+
+// News endpoints
+Route::get('news', [NewsController::class, 'index']);
+Route::get('news/{news}', [NewsController::class, 'show']);
+Route::post('news', [NewsController::class, 'store'])->middleware('auth:sanctum');
+Route::put('news/{news}', [NewsController::class, 'update'])->middleware('auth:sanctum');
+Route::patch('news/{news}', [NewsController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('news/{news}', [NewsController::class, 'destroy'])->middleware('auth:sanctum');
 
 // Contact Info endpoints
 Route::get('contact-info', [ContactInfoController::class, 'index']);
