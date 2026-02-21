@@ -352,7 +352,42 @@
 
   /* Zona de marca/logo */
   .ds-nav-brand {
-    @apply flex items-center gap-2 font-display text-xl font-bold text-brand-primary;
+    @apply flex items-center text-brand-primary;
+    gap: 0.45rem;
+  }
+
+  /* Carta SVG del logo (As de Oros) */
+  .ds-nav-brand-card {
+    width: 30px;
+    height: 38px;
+    flex-shrink: 0;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.15));
+  }
+
+  /* Nombre del logotipo */
+  .ds-nav-brand-text {
+    font-family: "Inter Tight", sans-serif;
+    font-weight: 900;
+    font-size: 1.75rem;
+    letter-spacing: -0.015em;
+    color: #1b4f72;
+  }
+
+  /* Sufijo "-ando" en color acento */
+  .ds-nav-brand-text em {
+    font-style: normal;
+    color: #48c9b0;
+  }
+
+  /* Vista móvil: reducir icono y texto al 70% / tamaño más compacto */
+  @media (max-width: 767px) {
+    .ds-nav-brand-card {
+      width: 21px;
+      height: 26.6px;
+    }
+    .ds-nav-brand-text {
+      font-size: 1.25rem;
+    }
   }
 
   /* Enlaces de navegación desktop */

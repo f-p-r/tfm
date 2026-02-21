@@ -213,6 +213,62 @@
     </div>
   </section>
 
+  <!-- Logo de la aplicación -->
+  <section class="mb-16">
+    <h2 >Logo</h2>
+    <p class= "mb-8">
+      El logotipo combina una carta vertical (As de Oros de la baraja española) con el nombre de la aplicación en
+      tipografía <strong>Inter Tight 900</strong>. La carta usa el color primario como fondo y el dorado
+      <span style="color:#b8950a">■</span> <code>#F4CB42</code> para el símbolo de oros y el «A».
+      El sufijo <em>ando</em> se renderiza en el color de acento <span style="color:#2aa08a">■</span>
+      <code>#48C9B0</code> para aportar dinamismo. En vista móvil ambos elementos se reducen un 30 %.
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Variante desktop (tamaño real) -->
+      <div class="flex flex-col gap-3">
+        <p class="text-sm font-semibold text-neutral-dark">Desktop — fondo blanco</p>
+        <div class="flex items-center p-6 rounded-lg border bg-white">
+          <a class="ds-nav-brand" style="pointer-events:none;">
+            <svg class="ds-nav-brand-card" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect width="30" height="38" rx="4" fill="#1B4F72"/>
+              <circle cx="15" cy="22" r="8" fill="none" stroke="#F4CB42" stroke-width="2.2"/>
+              <circle cx="15" cy="22" r="4" fill="#F4CB42"/>
+              <text x="3" y="11" font-family="serif" font-size="8" font-weight="bold" fill="#F4CB42">A</text>
+            </svg>
+            <span class="ds-nav-brand-text">Naipe<em>ando</em></span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Variante mobile (tamaño reducido) -->
+      <div class="flex flex-col gap-3">
+        <p class="text-sm font-semibold text-neutral-dark">Mobile — fondo blanco</p>
+        <div class="flex items-center p-6 rounded-lg border bg-white">
+          <a class="ds-nav-brand" style="pointer-events:none;">
+            <svg class="ds-nav-brand-card" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+              style="width:21px;height:26.6px;">
+              <rect width="30" height="38" rx="4" fill="#1B4F72"/>
+              <circle cx="15" cy="22" r="8" fill="none" stroke="#F4CB42" stroke-width="2.2"/>
+              <circle cx="15" cy="22" r="4" fill="#F4CB42"/>
+              <text x="3" y="11" font-family="serif" font-size="8" font-weight="bold" fill="#F4CB42">A</text>
+            </svg>
+            <span class="ds-nav-brand-text" style="font-size:1.25rem;">Naipe<em>ando</em></span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Clases utilizadas -->
+    <div class="mt-6 text-sm text-neutral-dark space-y-1">
+      <p><code>.ds-nav-brand</code> — Contenedor flex del logo (gap 0.45 rem)</p>
+      <p><code>.ds-nav-brand-card</code> — SVG de la carta (30×38 px desktop / 21×26.6 px mobile)</p>
+      <p><code>.ds-nav-brand-text</code> — Nombre en Inter Tight 900 (1.75 rem desktop / 1.25 rem mobile)</p>
+      <p><code>.ds-nav-brand-text em</code> — Sufijo «ando» en color acento <span style="color:#48c9b0">■</span> #48C9B0</p>
+    </div>
+  </section>
+
   <!-- Botones + Inputs en filas separadas y responsive -->
   <section class="mb-16">
     <h2 class="h2 mb-8">Botones e Inputs</h2>

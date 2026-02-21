@@ -56,7 +56,17 @@
 
 <nav class="ds-nav" aria-label="Navegación principal">
   <div class="ds-nav-inner">
-    <a routerLink="/" class="ds-nav-brand">Naipeando</a>
+    <a routerLink="/" class="ds-nav-brand">
+      <svg class="ds-nav-brand-card" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="30" height="38" rx="4" fill="#1B4F72"/>
+        <!-- Oros: anillo exterior + núcleo central -->
+        <circle cx="15" cy="22" r="8" fill="none" stroke="#F4CB42" stroke-width="2.2"/>
+        <circle cx="15" cy="22" r="4" fill="#F4CB42"/>
+        <!-- As en esquina superior izquierda -->
+        <text x="3" y="11" font-family="serif" font-size="8" font-weight="bold" fill="#F4CB42">A</text>
+      </svg>
+      <span class="ds-nav-brand-text">Naipe<em>ando</em></span>
+    </a>
 
     @if (isAdmin()) {
       <span class="ds-nav-link font-semibold hidden md:inline">{{ displayName }}</span>
