@@ -1,0 +1,52 @@
+.news-form-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.news-main-title {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #212529;
+}
+
+.error-message {
+  padding: 1rem;
+  background-color: #f8d7da;
+  border: 1px solid #f5c2c7;
+  border-radius: 4px;
+  color: #842029;
+}
+
+.error-message p {
+  margin: 0 0 1rem 0;
+}
+
+.form-section h2,
+.editor-section h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.actions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #dee2e6;
+}
+
+.error-inline {
+  padding: 0.75rem;
+  background-color: #f8d7da;
+  border: 1px solid #f5c2c7;
+  border-radius: 4px;
+  color: #842029;
+}
+
+.actions-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}

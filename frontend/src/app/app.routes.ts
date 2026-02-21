@@ -31,6 +31,9 @@ import { AdminAssociationMembersPage } from './pages/admin/admin-association-mem
 import { requirePermission, requireAnyPermission } from './guards/permission.guard';
 import { requireAuth } from './guards/auth.guard';
 import { resolveScopeGuard } from './guards/resolve-scope.guard';
+import { NewsFormAdminPage } from './pages/admin/news/news-form-admin.page';
+import { NewsListAdminPage } from './pages/admin/news/news-list-admin.page';
+import { PERM } from './core/authz/permissions.constants';
 
 export const routes: Routes = [
   // Public page viewer routes (must be before admin routes)
@@ -262,6 +265,58 @@ export const routes: Routes = [
   {
     path: 'admin/pages/preview',
     component: PagePreviewPage,
+  },
+
+  // Admin: gestión de noticias
+  // Noticias globales
+  {
+    path: 'admin/noticias',
+    component: NewsListAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.NEWS_EDIT)],
+  },
+  // Noticias contextuales de asociación (usa scope del contexto)
+  {
+    path: 'admin/asociacion/noticias',
+    component: NewsListAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.NEWS_EDIT)],
+  },
+  // Noticias contextuales de juego (usa scope del contexto)
+  {
+    path: 'admin/juego/noticias',
+    component: NewsListAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.NEWS_EDIT)],
+  },
+
+  // Formulario de noticias (crear / editar)
+  {
+    path: 'admin/noticias/nueva',
+    component: NewsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.NEWS_EDIT)],
+  },
+  {
+    path: 'admin/noticias/:newsId/editar',
+    component: NewsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.NEWS_EDIT)],
+  },
+  {
+    path: 'admin/asociacion/noticias/nueva',
+    component: NewsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.NEWS_EDIT)],
+  },
+  {
+    path: 'admin/asociacion/noticias/:newsId/editar',
+    component: NewsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.NEWS_EDIT)],
+  },
+  {
+    path: 'admin/juego/noticias/nueva',
+    component: NewsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.NEWS_EDIT)],
+  },
+  {
+    path: 'admin/juego/noticias/:newsId/editar',
+    component: NewsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.NEWS_EDIT)],
   },
 
   { path: '**', redirectTo: '' },

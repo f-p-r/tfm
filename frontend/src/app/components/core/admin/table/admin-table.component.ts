@@ -70,7 +70,7 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
             <tr><td [attr.colspan]="columns.length + (actions.length ? 1 : 0)" class="p-8 text-center text-neutral-500">No hay registros.</td></tr>
           } @else {
             @for (row of displayedData(); track row) {
-              <tr class="hover:bg-neutral-50 transition-colors">
+              <tr class="hover:bg-neutral-50 transition-colors cursor-pointer" (click)="onRowClick(row)">
                 @for (col of columns; track col.key) {
                   <td [class]="getCellClass(col)">
                     @switch (col.type) {
@@ -84,7 +84,7 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
                 @if (actions.length) {
                   <td class="px-4 py-3 text-center whitespace-nowrap">
                     @for (a of actions; track a.action) {
-                      <button class="ds-btn-sm ds-btn-primary ml-3" (click)="onAction(a.action, row)">{{ a.label }}</button>
+                      <button class="ds-btn-sm ds-btn-primary ml-3" (click)="onAction(a.action, row); $event.stopPropagation()">{{ a.label }}</button>
                     }
                   </td>
                 }
@@ -117,6 +117,12 @@ export class AdminTableComponent {
   @Input() isLoading = false;
 
   @Output() action = new EventEmitter<{action: string, row: any}>();
+
+  /**
+   * Emite la fila completa al hacer clic en una fila de la tabla.
+   * Uso opcional: si no se escucha, no tiene efecto.
+   */
+  @Output() rowClick = new EventEmitter<any>();
 
   // Estado interno
   private readonly allData = signal<any[]>([]);
@@ -198,6 +204,10 @@ export class AdminTableComponent {
 
   protected onAction(actionName: string, row: any) {
     this.action.emit({ action: actionName, row });
+  }
+
+  protected onRowClick(row: any) {
+    this.rowClick.emit(row);
   }
 
   // Helpers para estilos
