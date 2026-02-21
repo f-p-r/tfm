@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -58,7 +57,7 @@ interface GameOption {
   styleUrl: './news-form-admin.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewsFormAdminPage implements OnInit, AfterViewInit {
+export class NewsFormAdminPage implements OnInit {
   private readonly newsApi = inject(NewsApiService);
   private readonly associationsApi = inject(AssociationsApiService);
   private readonly contextStore = inject(ContextStore);
@@ -207,15 +206,6 @@ export class NewsFormAdminPage implements OnInit, AfterViewInit {
   // -------------------------------------------------------------------------
   // CICLO DE VIDA
   // -------------------------------------------------------------------------
-
-  /**
-   * ContentSegmentsEditorComponent llama a setPack(CONTENT_EDITOR_HELP) en su
-   * constructor, que se ejecuta DESPUÉS del constructor del padre. Por eso
-   * re-establecemos el pack aquí, una vez que todos los hijos están iniciados.
-   */
-  ngAfterViewInit(): void {
-    this.helpContent.setPack(NEWS_FORM_PACK);
-  }
 
   ngOnInit(): void {
     // Leer el ID de noticia de la ruta (presente solo en edición)

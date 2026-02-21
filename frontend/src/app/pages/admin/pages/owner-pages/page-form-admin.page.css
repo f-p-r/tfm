@@ -5,25 +5,6 @@
   padding-bottom: 5rem;
 }
 
-.page-main-title {
-  margin: 0 0 1rem 0;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #212529;
-}
-
-.error-message {
-  padding: 1rem;
-  background-color: #f8d7da;
-  border: 1px solid #f5c2c7;
-  border-radius: 4px;
-  color: #842029;
-}
-
-.error-message p {
-  margin: 0 0 1rem 0;
-}
-
 .form-section-toggle {
   display: flex;
   align-items: center;
@@ -66,18 +47,10 @@
   flex-direction: column;
   gap: 1rem;
   padding: 0.75rem 1.5rem;
-  border-top: 2px solid #dee2e6;
-  background: white;
+  border-top: 2px solid var(--color-neutral-medium);
+  background: var(--color-white);
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
   transition: left 0.3s ease;
-}
-
-.error-inline {
-  padding: 0.75rem;
-  background-color: #f8d7da;
-  border: 1px solid #f5c2c7;
-  border-radius: 4px;
-  color: #842029;
 }
 
 .actions-buttons {

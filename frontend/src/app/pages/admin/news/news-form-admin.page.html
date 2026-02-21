@@ -8,7 +8,7 @@
   <main class="ds-admin-main ds-container">
     <div class="news-form-admin">
       <div>
-        <h1 class="news-main-title">{{ pageTitle() }}</h1>
+        <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
         <app-admin-page-subtitle />
       </div>
 
@@ -16,8 +16,8 @@
       @if (isEditMode() && isLoading()) {
         <p>Cargando noticia...</p>
       } @else if (errorMessage() && isEditMode() && originalNews() === null) {
-        <div class="error-message">
-          <p>{{ errorMessage() }}</p>
+        <div class="ds-alert ds-alert-error">
+          <p class="mb-4">{{ errorMessage() }}</p>
           <button class="ds-btn ds-btn-secondary" (click)="onCancel()">Volver</button>
         </div>
       } @else {
@@ -197,7 +197,7 @@
         <!-- Acciones -->
         <div class="actions-section">
           @if (errorMessage()) {
-            <div class="error-inline">{{ errorMessage() }}</div>
+            <div class="ds-alert ds-alert-error">{{ errorMessage() }}</div>
           }
 
           <div class="actions-buttons">

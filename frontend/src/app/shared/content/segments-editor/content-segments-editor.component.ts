@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, signal, input, output, effect, inject, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation, signal, input, output, effect, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
@@ -34,7 +34,7 @@ import { ContentSegmentsPreviewComponent } from '../segments-preview/content-seg
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContentSegmentsEditorComponent {
+export class ContentSegmentsEditorComponent implements OnDestroy {
   readonly initialContent = input<PageContentDTO | null>(null);
   readonly scopeType = input.required<number>();
   readonly scopeId = input<number | null>(null);
@@ -172,7 +172,11 @@ export class ContentSegmentsEditorComponent {
       });
     });
 
-    this.helpService.setPack(CONTENT_EDITOR_HELP);
+    this.helpService.mergePack(CONTENT_EDITOR_HELP);
+  }
+
+  ngOnDestroy(): void {
+    this.helpService.removePack(CONTENT_EDITOR_HELP);
   }
 
   addBlock(initialDist: '1' | '1-1' = '1') {
