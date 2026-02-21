@@ -1,7 +1,9 @@
 .news-form-admin {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
+  /* Espacio para que la barra de acciones fixed no tape el último contenido */
+  padding-bottom: 5rem;
 }
 
 .news-main-title {
@@ -23,18 +25,68 @@
   margin: 0 0 1rem 0;
 }
 
-.form-section h2,
+/* Cabecera del bloque colapsable */
+.form-section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #212529;
+  user-select: none;
+}
+
+.form-section-toggle:hover {
+  color: var(--color-brand-primary, #0d6efd);
+}
+
+.form-section-toggle-icon {
+  font-size: 0.9rem;
+  transition: transform 0.25s ease;
+  display: inline-block;
+  width: 1rem;
+  text-align: center;
+}
+
+/* Cuerpo colapsable con animación suave */
+.form-section-body {
+  max-height: 3000px;
+  overflow: hidden;
+  opacity: 1;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+.form-section-body.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
 .editor-section h2 {
   margin-bottom: 1rem;
   font-size: 1.5rem;
 }
 
+/* Barra de acciones fija al fondo de la ventana, alineada con el contenido principal */
 .actions-section {
+  position: fixed;
+  bottom: 0;
+  /* Se desplaza a la derecha del sidebar usando la variable CSS del shell */
+  left: var(--admin-sidebar-w, 17rem);
+  right: 0;
+  background: white;
+  z-index: 60;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-top: 1rem;
+  padding: 0.75rem 1.5rem;
   border-top: 2px solid #dee2e6;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+  transition: left 0.3s ease;
 }
 
 .error-inline {
@@ -47,6 +99,6 @@
 
 .actions-buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 1rem;
 }

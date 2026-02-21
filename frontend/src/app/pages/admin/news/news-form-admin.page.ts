@@ -128,6 +128,12 @@ export class NewsFormAdminPage implements OnInit, AfterViewInit {
   readonly errorMessage = signal<string | null>(null);
   readonly validationErrors = signal<Record<string, string[]>>({});
 
+  /** Controla si el bloque de datos está colapsado */
+  readonly dataCollapsed = signal(false);
+
+  /** Controla si el bloque de contenido está colapsado */
+  readonly contentCollapsed = signal(false);
+
   // -------------------------------------------------------------------------
   // COMPUTED
   // -------------------------------------------------------------------------
@@ -187,6 +193,14 @@ export class NewsFormAdminPage implements OnInit, AfterViewInit {
     effect(() => {
       const cn = this.classNames();
       this.content.update(c => ({ ...c, classNames: cn || undefined }));
+    });
+
+    // Auto-expandir si aparecen errores de validación en los campos de datos
+    effect(() => {
+      const errors = this.validationErrors();
+      if (Object.keys(errors).length > 0) {
+        this.dataCollapsed.set(false);
+      }
     });
   }
 

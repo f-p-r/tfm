@@ -553,7 +553,23 @@
 
   /* === Layout administración === */
   .ds-admin-shell {
-    @apply flex  text-sm relative overflow-hidden;
+    @apply flex text-sm relative overflow-hidden;
+    /* Ancho del sidebar: usado por elementos fixed que necesitan alinearse con el contenido principal */
+    --admin-sidebar-w: 17rem;
+  }
+
+  /* Cuando el sidebar está colapsado en desktop */
+  @media (min-width: 769px) {
+    .ds-admin-shell:has(.ds-admin-sidebar-closed) {
+      --admin-sidebar-w: 3rem;
+    }
+  }
+
+  /* En móvil el sidebar se oculta del todo */
+  @media (max-width: 1399px) {
+    .ds-admin-shell:has(.ds-admin-sidebar-closed) {
+      --admin-sidebar-w: 0rem;
+    }
   }
 
   /* Sidebar: FLOTANTE, debajo del navbar y con z-index alto */
