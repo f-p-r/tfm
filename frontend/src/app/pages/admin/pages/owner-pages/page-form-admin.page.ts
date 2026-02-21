@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, effect, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, AfterViewInit, signal, computed, effect, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -33,7 +33,7 @@ import { ContextStore } from '../../../../core/context/context.store';
   templateUrl: './page-form-admin.page.html',
   styleUrl: './page-form-admin.page.css',
 })
-export class PageFormAdminPage implements OnInit {
+export class PageFormAdminPage implements OnInit, AfterViewInit {
   private readonly pagesService = inject(PagesService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -68,6 +68,9 @@ export class PageFormAdminPage implements OnInit {
   readonly isEditingSegment = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly validationErrors = signal<Record<string, string[]>>({});
+
+  readonly dataCollapsed = signal(false);
+  readonly contentCollapsed = signal(false);
 
   // Computed
   readonly hasValidContent = computed(() => {
@@ -127,6 +130,17 @@ export class PageFormAdminPage implements OnInit {
       const classNamesValue = this.classNames();
       this.content.update(c => ({ ...c, classNames: classNamesValue || undefined }));
     });
+
+    // Auto-expand datos section on validation errors
+    effect(() => {
+      if (Object.keys(this.validationErrors()).length > 0) {
+        this.dataCollapsed.set(false);
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.helpContent.setPack(PAGE_CREATE_PACK);
   }
 
   ngOnInit(): void {

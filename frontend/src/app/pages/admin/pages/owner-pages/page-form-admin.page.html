@@ -22,9 +22,13 @@
       } @else {
         <!-- Form section -->
         <div class="form-section">
-          <h2>Datos de la página</h2>
+          <button class="form-section-toggle" type="button" (click)="dataCollapsed.set(!dataCollapsed())">
+            <span>Datos de la página</span>
+            <span class="form-section-toggle-icon" [style.transform]="dataCollapsed() ? 'rotate(-90deg)' : ''">▾</span>
+          </button>
 
-          <div class="space-y-4">
+          <div class="form-section-body" [class.collapsed]="dataCollapsed()">
+          <div class="space-y-4" style="margin: 0 4px 4px 4px">
             <div class="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-4">
               <div class="ds-field">
                 <div class="ds-label-with-help">
@@ -99,11 +103,17 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
 
         <!-- Editor section -->
         <div class="editor-section">
-          <h2>Contenido</h2>
+          <button class="form-section-toggle" type="button" (click)="contentCollapsed.set(!contentCollapsed())">
+            <span>Contenido</span>
+            <span class="form-section-toggle-icon" [style.transform]="contentCollapsed() ? 'rotate(-90deg)' : ''">▾</span>
+          </button>
+
+          <div class="form-section-body" [class.collapsed]="contentCollapsed()">
           <div>
             <app-content-segments-editor
               [initialContent]="editorInitialContent()"
@@ -117,6 +127,7 @@
                 * La página debe tener al menos un segmento de contenido
               </p>
             }
+          </div>
           </div>
         </div>
 
