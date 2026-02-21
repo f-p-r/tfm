@@ -596,8 +596,8 @@
     @apply brightness-90 scale-110;
   }
 
-  /* En móvil: comportamiento drawer completo */
-  @media (max-width: 768px) {
+  /* En pantallas con ancho inferior a 1400px: comportamiento drawer completo */
+  @media (max-width: 1399px) {
     /* Estado cerrado: ocultar completamente */
     .ds-admin-sidebar-closed {
       @apply -translate-x-full;
