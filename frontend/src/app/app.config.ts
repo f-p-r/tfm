@@ -6,6 +6,7 @@ import { AuthService } from './core/auth/auth.service';
 import { routes } from './app.routes';
 import { credentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { xsrfInterceptor } from './core/interceptors/xsrf.interceptor';
+import { sessionInterceptor } from './core/interceptors/session.interceptor';
 import { Observable } from 'rxjs';
 
 
@@ -20,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([credentialsInterceptor, xsrfInterceptor])
+      withInterceptors([credentialsInterceptor, xsrfInterceptor, sessionInterceptor])
     ),
     // --- BLOQUE DE INICIALIZACIÓN ---
     // Angular esperará a que checkSession() termine antes de pintar la web.

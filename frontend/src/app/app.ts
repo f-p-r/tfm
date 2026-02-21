@@ -1,8 +1,10 @@
-import { Component, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, inject, ChangeDetectionStrategy, DestroyRef, OnInit } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, map, startWith } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { AuthService } from './core/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +13,10 @@ import { NavbarComponent } from './components/navbar/navbar.component';
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class App {
+export class App implements OnInit {
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
   protected readonly title = signal('frontend');
 
   // Signal que indica si la ruta actual NO debe tener navbar
@@ -47,6 +51,19 @@ export class App {
     ),
     { initialValue: this.router.url.startsWith('/admin') }
   );
+
+  ngOnInit(): void {
+    // Opción 2: re-verificar sesión cuando la pestaña vuelve a ser visible.
+    // Cubre el caso en que la cookie caducó mientras la pestaña estaba en segundo plano.
+    fromEvent(document, 'visibilitychange')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        if (document.visibilityState === 'visible' && this.authService.currentUser() !== null) {
+          console.log('[App] Pestaña visible — re-verificando sesión');
+          this.authService.checkSession().subscribe();
+        }
+      });
+  }
 
   private hasNoNavbar(url: string): boolean {
     return url.startsWith('/login') ||
