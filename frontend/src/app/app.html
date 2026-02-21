@@ -1,4 +1,4 @@
-<div class="min-h-dvh bg-neutral-light text-neutral-dark">
+<main class="min-h-dvh bg-neutral-light text-neutral-dark">
 
   @if (!noNavbar()) {
     <app-navbar [isAdmin]="isAdminMode()" />
@@ -8,10 +8,10 @@
     <!-- Layout completamente libre sin wrappers (styleguide, prototypes, preview) -->
     <router-outlet></router-outlet>
   } @else {
-    <main class="ds-main">
+
       <div class="ds-page">
         <router-outlet></router-outlet>
       </div>
-    </main>
+
   }
-</div>
+</main>

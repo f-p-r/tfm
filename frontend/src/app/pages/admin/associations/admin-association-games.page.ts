@@ -96,20 +96,8 @@ import { ContextStore } from '../../../core/context/context.store';
             </div>
           </div>
 
-          <!-- Tabla de juegos asociados -->
-          <div class="ds-table-card flex-1 mb-6">
-            <app-admin-table
-              [columns]="columns"
-              [data]="transformedCurrentGames()"
-              [actions]="actions"
-              [pageSize]="pageSize"
-              [isLoading]="isLoading()"
-              (action)="onAction($event)"
-            />
-          </div>
-
           <!-- Botones de acción -->
-          <div class="flex gap-3 justify-end shrink-0 pb-6">
+          <div class="flex gap-3 justify-end shrink-0 mb-4">
             <button
               class="ds-btn ds-btn-secondary"
               (click)="onCancel()"
@@ -124,6 +112,18 @@ import { ContextStore } from '../../../core/context/context.store';
             >
               {{ isLoading() ? 'Guardando...' : 'Confirmar Cambios' }}
             </button>
+          </div>
+
+          <!-- Tabla de juegos asociados -->
+          <div class="ds-table-card flex-1 min-h-0 mb-4">
+            <app-admin-table
+              [columns]="columns"
+              [data]="transformedCurrentGames()"
+              [actions]="actions"
+              [pageSize]="pageSize"
+              [isLoading]="isLoading()"
+              (action)="onAction($event)"
+            />
           </div>
 
         </div>

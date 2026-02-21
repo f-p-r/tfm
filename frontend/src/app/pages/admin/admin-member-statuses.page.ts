@@ -70,7 +70,7 @@ import { MEMBER_STATUS_TYPE_NAMES, MEMBER_STATUS_TYPE_BADGES } from '../../core/
           }
 
           <!-- Table Card -->
-          <div class="ds-table-card flex-1">
+          <div class="ds-table-card flex-1 min-h-0 mb-4">
             <app-admin-table
               [columns]="columns"
               [data]="statuses()"

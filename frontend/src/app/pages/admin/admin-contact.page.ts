@@ -69,7 +69,7 @@ import { WebScope } from '../../core/web-scope.constants';
           }
 
           <!-- Table Card -->
-          <div class="ds-table-card flex-1">
+          <div class="ds-table-card flex-1 min-h-0 mb-4">
             <app-admin-table
               [columns]="columns"
               [data]="contacts()"

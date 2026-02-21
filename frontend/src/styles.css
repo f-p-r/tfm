@@ -315,6 +315,13 @@
     @apply py-6 px-3 md:py-10;
   }
 
+  /* Cuando ds-page envuelve una shell de administración, cancelar el padding vertical
+     para que el shell ocupe exactamente el viewport menos el navbar */
+  .ds-page:has(.ds-admin-shell) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
   /* Contenedor centrado estándar con márgenes laterales - usar como clase en div */
   .ds-container {
     @apply mx-auto w-full max-w-7xl px-1.5 sm:px-2.5;
@@ -554,6 +561,8 @@
   /* === Layout administración === */
   .ds-admin-shell {
     @apply flex text-sm relative overflow-hidden;
+    /* Altura anclada al viewport menos el navbar, para que flex-1 funcione en la cadena interior */
+    height: calc(100dvh - 4rem);
     /* Ancho del sidebar: usado por elementos fixed que necesitan alinearse con el contenido principal */
     --admin-sidebar-w: 17rem;
   }
@@ -673,7 +682,7 @@
 
   /* Ajuste para el contenido principal para que no quede tapado por el navbar fijo */
   .ds-admin-main {
-    @apply w-full flex flex-col overflow-hidden px-1.5 sm:px-2.5;
+    @apply w-full flex flex-col overflow-hidden px-1.5 sm:px-2.5 flex-1 min-h-0;
   }
 
   /* Subtítulo de página administrativa (ej: nombre de contexto bajo el título principal) */
