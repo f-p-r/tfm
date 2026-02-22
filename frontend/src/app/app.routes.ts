@@ -35,6 +35,7 @@ import { NewsFormAdminPage } from './pages/admin/news/news-form-admin.page';
 import { NewsListAdminPage } from './pages/admin/news/news-list-admin.page';
 import { EventsListAdminPage } from './pages/admin/events/events-list-admin.page';
 import { EventsFormAdminPage } from './pages/admin/events/events-form-admin.page';
+import { EventAttendeesAdminPage } from './pages/admin/events/event-attendees-admin.page';
 import { NewsListPage } from './pages/news/news-list.page';
 import { NewsDetailPage } from './pages/news/news-detail.page';
 import { EventsListPage } from './pages/events/events-list.page';
@@ -382,6 +383,23 @@ export const routes: Routes = [
   {
     path: 'admin/juego/eventos/:eventId/editar',
     component: EventsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+
+  // Inscripciones de evento (admin)
+  {
+    path: 'admin/eventos/:eventId/inscripciones',
+    component: EventAttendeesAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+  {
+    path: 'admin/asociacion/eventos/:eventId/inscripciones',
+    component: EventAttendeesAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+  {
+    path: 'admin/juego/eventos/:eventId/inscripciones',
+    component: EventAttendeesAdminPage,
     canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
   },
 

@@ -16,6 +16,8 @@ import { NewsApiService } from '../../core/news/news-api.service';
 import { NewsSummaryDTO } from '../../core/news/news.models';
 import { AssociationsResolveService } from '../../core/associations/associations-resolve.service';
 import { GamesStore } from '../../core/games/games.store';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { getNewsListHelp } from '../../shared/help/page-content/news-list.help';
 
 /**
  * Página pública de listado de noticias.
@@ -132,6 +134,7 @@ export class NewsListPage {
   });
 
   constructor() {
+    inject(PageHelpService).set(getNewsListHelp(inject(ContextStore).scopeType()));
     effect(() => {
       const scopeType = this.contextStore.scopeType();
       const scopeId = this.contextStore.scopeId();

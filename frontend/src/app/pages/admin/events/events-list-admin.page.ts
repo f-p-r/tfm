@@ -16,6 +16,8 @@ import { ContextStore } from '../../../core/context/context.store';
 import { EventsApiService } from '../../../core/events/events-api.service';
 import { EventSummaryDTO } from '../../../core/events/event.models';
 import { WebScope } from '../../../core/web-scope.constants';
+import { PageHelpService } from '../../../shared/help/page-help.service';
+import { getAdminEventsListHelp } from '../../../shared/help/page-content/admin-events-list.help';
 
 /** Fila de la tabla de eventos — mapeo plano para AdminTableComponent */
 interface EventTableRow {
@@ -49,6 +51,8 @@ interface EventTableRow {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsListAdminPage implements OnInit {
+  constructor() { inject(PageHelpService).set(getAdminEventsListHelp(inject(ContextStore).scopeType())); }
+
   private readonly eventsApi = inject(EventsApiService);
   private readonly contextStore = inject(ContextStore);
   private readonly router = inject(Router);

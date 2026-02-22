@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 import { UserAssociationApiService } from '../../core/users/user-association-api.service';
 import { forkJoin, of } from 'rxjs';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { getAssociationsHelp } from '../../shared/help/page-content/associations.help';
 
 /**
  * Página de listado de asociaciones.
@@ -173,6 +175,7 @@ export class AssociationsPage {
   });
 
   constructor() {
+    inject(PageHelpService).set(getAssociationsHelp(inject(ContextStore).scopeType()));
     // Effect que carga asociaciones cuando cambia el contexto
     // El scope ya está establecido por resolveScopeGuard antes de llegar aquí
     effect(() => {

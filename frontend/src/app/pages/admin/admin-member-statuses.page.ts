@@ -20,6 +20,8 @@ import { MemberStatusEditModalComponent } from '../../components/core/admin/memb
 import { AssociationMemberStatus } from '../../core/associations/member-status.models';
 import { ContextStore } from '../../core/context/context.store';
 import { MEMBER_STATUS_TYPE_NAMES, MEMBER_STATUS_TYPE_BADGES } from '../../core/associations/member-status.constants';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { ADMIN_MEMBER_STATUSES_PAGE_HELP } from '../../shared/help/page-content/admin-member-statuses.help';
 
 @Component({
   selector: 'app-admin-member-statuses-page',
@@ -203,6 +205,7 @@ export class AdminMemberStatusesPage {
   ];
 
   constructor() {
+    inject(PageHelpService).set(ADMIN_MEMBER_STATUSES_PAGE_HELP);
     // Cargar estados al inicializar
     this.loadStatuses();
   }

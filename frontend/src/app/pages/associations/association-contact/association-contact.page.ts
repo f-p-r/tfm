@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, computed, signal, effect } from '@angular/core';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { ContextStore } from '../../../core/context/context.store';
 import { AssociationsResolveService } from '../../../core/associations/associations-resolve.service';
 import { ContactApiService } from '../../../core/contact/contact-api.service';
@@ -52,7 +52,7 @@ export class AssociationContactPage {
   private readonly contextStore = inject(ContextStore);
   private readonly associationsResolve = inject(AssociationsResolveService);
   private readonly contactApi = inject(ContactApiService);
-  private readonly router = inject(Router);
+  private readonly location = inject(Location);
 
   readonly associationName = computed(() => {
     const scopeId = this.contextStore.scopeId();
@@ -78,9 +78,7 @@ export class AssociationContactPage {
   }
 
   protected onGoBack(): void {
-    const currentUrl = this.router.url;
-    const backUrl = currentUrl.replace(/\/contacto$/, '');
-    this.router.navigateByUrl(backUrl || '/');
+    this.location.back();
   }
 
   private loadContacts(associationId: number): void {

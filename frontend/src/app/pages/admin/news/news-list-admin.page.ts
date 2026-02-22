@@ -17,6 +17,8 @@ import { ContextStore } from '../../../core/context/context.store';
 import { NewsApiService } from '../../../core/news/news-api.service';
 import { NewsDTO, NewsSummaryDTO } from '../../../core/news/news.models';
 import { WebScope } from '../../../core/web-scope.constants';
+import { PageHelpService } from '../../../shared/help/page-help.service';
+import { getAdminNewsListHelp } from '../../../shared/help/page-content/admin-news-list.help';
 
 /** Fila de la tabla de noticias — mapeo plano para AdminTableComponent */
 interface NewsTableRow {
@@ -50,6 +52,8 @@ interface NewsTableRow {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewsListAdminPage implements OnInit {
+  constructor() { inject(PageHelpService).set(getAdminNewsListHelp(inject(ContextStore).scopeType())); }
+
   private readonly newsApi = inject(NewsApiService);
   private readonly contextStore = inject(ContextStore);
   private readonly router = inject(Router);

@@ -22,6 +22,8 @@ import { ContactInfo, CreateContactInfo } from '../../core/contact/contact.model
 import { ContextStore } from '../../core/context/context.store';
 import { CONTACT_TYPES, CONTACT_CATEGORIES } from '../../core/contact/contact.constants';
 import { WebScope } from '../../core/web-scope.constants';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { getAdminContactHelp } from '../../shared/help/page-content/admin-contact.help';
 
 @Component({
   selector: 'app-admin-contact-page',
@@ -199,6 +201,7 @@ export class AdminContactPage {
   ];
 
   constructor() {
+    inject(PageHelpService).set(getAdminContactHelp(inject(ContextStore).scopeType()));
     // Cargar contactos al inicializar
     this.loadContacts();
   }

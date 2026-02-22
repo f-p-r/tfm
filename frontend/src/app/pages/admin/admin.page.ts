@@ -19,6 +19,8 @@ import { ADMIN_ACTIONS_BY_SCOPE } from '../../core/admin/admin-actions.constants
 import { WebScope } from '../../core/web-scope.constants';
 import { JsonPipe } from '@angular/common';
 import { HasPermissionDirective } from '../../shared/directives';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { getAdminPageHelp } from '../../shared/help/page-content/admin.help';
 
 @Component({
   selector: 'app-admin-page',
@@ -150,6 +152,11 @@ import { HasPermissionDirective } from '../../shared/directives';
   `
 })
 export class AdminPage {
+  constructor() {
+    const ctx = inject(ContextStore);
+    inject(PageHelpService).set(getAdminPageHelp(ctx.scopeType()));
+  }
+
   protected readonly contextStore = inject(ContextStore);
   protected readonly permissionsStore = inject(PermissionsStore);
 

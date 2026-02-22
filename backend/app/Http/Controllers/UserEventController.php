@@ -178,6 +178,7 @@ class UserEventController extends Controller
                 'id'       => $userEvent->user->id,
                 'username' => $userEvent->user->username,
                 'name'     => $userEvent->user->name,
+                'email'    => $userEvent->user->email,
             ] : null,
             'event'      => $userEvent->event ? [
                 'id'    => $userEvent->event->id,

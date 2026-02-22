@@ -8,6 +8,8 @@ import { HelpHoverDirective } from '../../shared/help/help-hover.directive';
 import { HelpIComponent } from '../../shared/help/help-i/help-i.component';
 import { HelpContentService } from '../../shared/help/help-content.service';
 import { PERFIL_HELP } from './perfil.help';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { PERFIL_PAGE_HELP } from '../../shared/help/page-content/perfil.help';
 
 @Component({
   selector: 'app-perfil-page',
@@ -22,6 +24,7 @@ export class PerfilPage implements OnInit {
   private readonly helpContent = inject(HelpContentService);
 
   constructor() {
+    inject(PageHelpService).set(PERFIL_PAGE_HELP);
     this.helpContent.setPack(PERFIL_HELP);
   }
 

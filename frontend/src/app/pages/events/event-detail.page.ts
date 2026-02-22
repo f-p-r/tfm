@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { WebScope } from '../../core/web-scope.constants';
@@ -20,7 +20,7 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
 
 @Component({
   selector: 'app-event-detail-page',
-  imports: [DatePipe, ContentRendererComponent],
+  imports: [DatePipe, ContentRendererComponent, RouterLink],
   template: `
     <div class="ds-container">
       <div class="pt-6 pb-10">
@@ -41,8 +41,8 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
             >✕ Cerrar</button>
           </header>
 
-          <!-- Metadatos -->
-          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
+          <!-- Metadatos + estado de asistencia / botón de inscripción -->
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
 
             <!-- Fechas -->
             <div class="flex items-baseline gap-x-2">
@@ -76,17 +76,12 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
               <span class="ds-badge ds-badge-association">{{ associationLabel() }}</span>
             }
 
-          </div>
-
-          <!-- Estado de asistencia o botón de inscripción -->
-          <div class="mb-6">
+            <!-- Estado de asistencia o botón de inscripción -->
             @if (attendance(); as att) {
-              <!-- Usuario ya tiene asistencia registrada -->
               <span [class]="'ds-badge ' + attendanceBadgeClass(att.status)">
                 {{ att.statusType.name }}
               </span>
             } @else if (e.registrationOpen) {
-              <!-- Inscripción abierta: el botón siempre visible; si no hay sesión redirige al login -->
               <button
                 type="button"
                 class="ds-btn ds-btn-primary"
@@ -95,13 +90,29 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
               >
                 {{ enrolling() ? 'Enviando...' : 'Solicitar inscripción' }}
               </button>
-              @if (enrollError()) {
-                <p class="ds-error mt-2">{{ enrollError() }}</p>
-              }
             } @else {
               <span class="ds-badge ds-badge-inactive">Inscripción no disponible</span>
             }
+
           </div>
+
+          <!-- Organizado por -->
+          <div class="flex items-center gap-x-3 mb-6">
+            <span class="ds-card-label">Organizado por:</span>
+            <span class="ds-card-text">{{ organizerInfo().name }}</span>
+            <a [routerLink]="organizerInfo().url" class="ds-btn ds-btn-primary ds-btn-sm">Contactar</a>
+          </div>
+
+          <!-- Mensajes de feedback de inscripción -->
+          @if (enrollSuccess()) {
+            <div class="ds-alert ds-alert-success ds-alert-autofade mb-6">
+              <p>Tu solicitud de inscripción ha sido enviada correctamente.</p>
+              <p class="mt-1">Recibirás confirmación en tu correo electrónico.</p>
+            </div>
+          }
+          @if (enrollError()) {
+            <p class="ds-error mb-6">{{ enrollError() }}</p>
+          }
 
           <!-- Contenido enriquecido -->
           @if (e.content) {
@@ -134,6 +145,7 @@ export class EventDetailPage implements OnInit {
 
   readonly enrolling = signal(false);
   readonly enrollError = signal<string | null>(null);
+  readonly enrollSuccess = signal(false);
 
   /** Label de la asociación, resuelto del caché o de forma asíncrona */
   readonly associationLabel = computed<string>(() => {
@@ -190,7 +202,9 @@ export class EventDetailPage implements OnInit {
           statusDate: result.statusDate,
           statusType: result.statusType,
         });
+        this.enrollSuccess.set(true);
         this.enrolling.set(false);
+        setTimeout(() => this.enrollSuccess.set(false), 5000);
       },
       error: () => {
         this.enrollError.set('No se pudo enviar la solicitud. Inténtalo de nuevo.');
@@ -207,6 +221,18 @@ export class EventDetailPage implements OnInit {
       case 3: return 'ds-badge-error';
     }
   }
+
+  /** Nombre y URL del organizador del evento */
+  readonly organizerInfo = computed<{ name: string; url: string }>(() => {
+    const e = this.event();
+    if (e?.scopeType === WebScope.ASSOCIATION && e.scopeId) {
+      const assoc = this.associationsResolve.getById(e.scopeId);
+      const name = assoc?.name ?? `Asociación #${e.scopeId}`;
+      const slug = assoc?.slug ?? '';
+      return { name, url: slug ? `/asociaciones/${slug}/contacto` : '/contacto' };
+    }
+    return { name: 'Naipeando', url: '/contacto' };
+  });
 
   /** Etiqueta corta de ubicación para mostrar junto a las fechas */
   locationLabel(e: EventDTO): string {

@@ -19,6 +19,8 @@ import { MemberStatusApiService } from '../../core/associations/member-status-ap
 import { AssociationMemberStatus } from '../../core/associations/member-status.models';
 import { MEMBER_STATUS_TYPE_BADGES } from '../../core/associations/member-status.constants';
 import { ContextStore } from '../../core/context/context.store';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { ADMIN_MEMBERS_PAGE_HELP } from '../../shared/help/page-content/admin-members.help';
 
 @Component({
   selector: 'app-admin-association-members-page',
@@ -250,6 +252,7 @@ export class AdminAssociationMembersPage {
   });
 
   constructor() {
+    inject(PageHelpService).set(ADMIN_MEMBERS_PAGE_HELP);
     // Cargar datos cuando cambia el scope
     effect(() => {
       const associationId = this.contextStore.scopeId();

@@ -13,6 +13,8 @@ import { PAGE_CREATE_PACK } from './page-create.pack';
 import { AdminSidebarContainerComponent } from '../../../../components/admin-sidebar/admin-sidebar-container.component';
 import { AdminPageSubtitleComponent } from '../../../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { ContextStore } from '../../../../core/context/context.store';
+import { PageHelpService } from '../../../../shared/help/page-help.service';
+import { getAdminPageFormHelp } from '../../../../shared/help/page-content/admin-page-form.help';
 
 /**
  * Componente unificado para crear y editar páginas de contenido.
@@ -122,6 +124,7 @@ export class PageFormAdminPage implements OnInit {
   });
 
   constructor() {
+    inject(PageHelpService).set(getAdminPageFormHelp(inject(ContextStore).scopeType()));
     // Establecer el pack de ayuda para esta pantalla
     this.helpContent.setPack(PAGE_CREATE_PACK);
 

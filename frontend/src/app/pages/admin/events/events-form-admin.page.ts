@@ -26,6 +26,8 @@ import { RegionApiService, RegionDTO } from '../../../core/regions/region-api.se
 import { PageContentDTO } from '../../../shared/content/page-content.dto';
 import { WebScope } from '../../../core/web-scope.constants';
 import { EVENTS_FORM_PACK } from './events-form.pack';
+import { PageHelpService } from '../../../shared/help/page-help.service';
+import { getAdminEventsFormHelp } from '../../../shared/help/page-content/admin-events-form.help';
 
 /** Juego simplificado para el selector de gameId */
 interface GameOption {
@@ -242,6 +244,7 @@ export class EventsFormAdminPage implements OnInit {
   // -------------------------------------------------------------------------
 
   constructor() {
+    inject(PageHelpService).set(getAdminEventsFormHelp(inject(ContextStore).scopeType()));
     this.helpContent.setPack(EVENTS_FORM_PACK);
 
     // Sincronizar classNames con content.classNames

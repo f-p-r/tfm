@@ -24,6 +24,8 @@ import { NewsCreateDTO, NewsDTO, NewsUpdateDTO } from '../../../core/news/news.m
 import { PageContentDTO } from '../../../shared/content/page-content.dto';
 import { WebScope } from '../../../core/web-scope.constants';
 import { NEWS_FORM_PACK } from './news-form.pack';
+import { PageHelpService } from '../../../shared/help/page-help.service';
+import { getAdminNewsFormHelp } from '../../../shared/help/page-content/admin-news-form.help';
 
 /** Juego simplificado para el selector de gameId */
 interface GameOption {
@@ -186,6 +188,7 @@ export class NewsFormAdminPage implements OnInit {
   // -------------------------------------------------------------------------
 
   constructor() {
+    inject(PageHelpService).set(getAdminNewsFormHelp(inject(ContextStore).scopeType()));
     this.helpContent.setPack(NEWS_FORM_PACK);
 
     // Sincronizar classNames con content.classNames

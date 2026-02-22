@@ -77,6 +77,25 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
                       @case ('badge') { <span class="ds-badge" [ngClass]="getBadgeClass(col, row[col.key])">{{ getBadgeLabel(col, row[col.key]) }}</span> }
                       @case ('date') { <span class="text-neutral-500 text-xs">{{ row[col.key] | date:'dd/MM/yyyy' }}</span> }
                       @case ('link') { <a [href]="getLinkHref(col, row[col.key])" class="text-brand-primary hover:text-brand-accent hover:underline">{{ row[col.key] }}</a> }
+                      @case ('select') {
+                        <div class="flex flex-col gap-1">
+                          <select
+                            class="ds-select"
+                            style="width: 20ch"
+                            [value]="row[col.key]"
+                            [disabled]="row['_saving_' + col.key]"
+                            (change)="onCellChange(col.key, row, $event)">
+                            @for (opt of col.selectOptions ?? []; track opt.value) {
+                              <option [value]="opt.value">{{ opt.label }}</option>
+                            }
+                          </select>
+                          @if (row['_saving_' + col.key]) {
+                            <span class="text-xs text-neutral-dark">Guardando…</span>
+                          } @else if (row['_saved_' + col.key]) {
+                            <span class="text-xs text-green-700">✓ Guardado</span>
+                          }
+                        </div>
+                      }
                       @default { <span class="text-neutral-dark">{{ row[col.key] }}</span> }
                     }
                   </td>
@@ -121,6 +140,13 @@ export class AdminTableComponent {
   @Input() isLoading = false;
 
   @Output() action = new EventEmitter<{action: string, row: any}>();
+
+  /**
+   * Emite cuando el usuario cambia el valor de una celda type='select'.
+   * El objeto `row` incluye las propiedades `_saving_<key>` y `_saved_<key>`
+   * que el consumidor puede mutar para mostrar feedback visual.
+   */
+  @Output() cellChange = new EventEmitter<{ col: string; row: any; value: any }>();
 
   /**
    * Emite la fila completa al hacer clic en una fila de la tabla.
@@ -208,6 +234,11 @@ export class AdminTableComponent {
 
   protected onAction(actionName: string, row: any) {
     this.action.emit({ action: actionName, row });
+  }
+
+  protected onCellChange(colKey: string, row: any, event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    this.cellChange.emit({ col: colKey, row, value });
   }
 
   protected onRowClick(row: any) {

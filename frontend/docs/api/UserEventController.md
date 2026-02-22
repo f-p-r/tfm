@@ -56,7 +56,7 @@ Listar asistencias.
       "statusDate": "2026-02-22T10:00:00.000000Z",
       "createdAt": "2026-02-22T10:00:00.000000Z",
       "updatedAt": "2026-02-22T10:00:00.000000Z",
-      "user": { "id": 5, "username": "juanperez", "name": "Juan Pérez" },
+      "user": { "id": 5, "username": "juanperez", "name": "Juan Pérez", "email": "juan@example.com" },
       "event": { "id": 10, "title": "Torneo de Primavera 2026", "slug": "torneo-primavera-2026" },
       "statusType": { "id": 1, "name": "Solicitud pendiente" }
     }

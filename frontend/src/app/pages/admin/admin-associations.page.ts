@@ -16,6 +16,8 @@ import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/
 import { AssociationsApiService } from '../../core/associations/associations-api.service';
 import { Association } from '../../core/associations/associations.models';
 import { AssociationEditModalComponent } from '../../components/core/admin/association-edit-modal/association-edit-modal.component';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { ADMIN_ASSOCIATIONS_PAGE_HELP } from '../../shared/help/page-content/admin-associations.help';
 
 @Component({
   selector: 'app-admin-associations-page',
@@ -151,6 +153,7 @@ export class AdminAssociationsPage {
   });
 
   constructor() {
+    inject(PageHelpService).set(ADMIN_ASSOCIATIONS_PAGE_HELP);
     // Cargar asociaciones al inicializar
     this.loadAssociations();
   }

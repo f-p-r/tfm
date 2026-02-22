@@ -16,6 +16,8 @@ import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/
 import { GamesApiService } from '../../core/games/games-api.service';
 import { GameEditModalComponent } from '../../components/core/admin/game-edit-modal/game-edit-modal.component';
 import { Game } from '../../core/games/games.models';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { ADMIN_GAMES_PAGE_HELP } from '../../shared/help/page-content/admin-games.help';
 
 @Component({
   selector: 'app-admin-games-page',
@@ -145,6 +147,7 @@ export class AdminGamesPage {
   });
 
   constructor() {
+    inject(PageHelpService).set(ADMIN_GAMES_PAGE_HELP);
     // Cargar juegos al inicializar
     this.loadGames();
   }

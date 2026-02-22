@@ -175,6 +175,16 @@
     @apply bg-green-100 border-green-300 text-green-800;
   }
 
+  /* Alerta con desaparición automática: visible 4s, fade-out 1s */
+  .ds-alert-autofade {
+    animation: alertFadeOut 5s ease-in-out forwards;
+  }
+
+  @keyframes alertFadeOut {
+    0%, 80% { opacity: 1; }
+    100%    { opacity: 0; }
+  }
+
   /* === Animaciones === */
 
   /* Animación de aparición suave */

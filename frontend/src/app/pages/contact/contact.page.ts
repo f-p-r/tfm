@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { ContactApiService } from '../../core/contact/contact-api.service';
 import { ContactInfo } from '../../core/contact/contact.models';
 import { ContactCardComponent } from '../../shared/contact/contact-card.component';
@@ -46,7 +46,7 @@ import { ContactCardComponent } from '../../shared/contact/contact-card.componen
 })
 export class ContactPage implements OnInit {
   private readonly contactApi = inject(ContactApiService);
-  private readonly router = inject(Router);
+  private readonly location = inject(Location);
 
   readonly contacts = signal<ContactInfo[]>([]);
   readonly loading = signal(true);
@@ -57,7 +57,7 @@ export class ContactPage implements OnInit {
   }
 
   protected onGoBack(): void {
-    this.router.navigateByUrl('/');
+    this.location.back();
   }
 
   private loadContacts(): void {

@@ -20,6 +20,7 @@
 import { Component, input, output, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HelpPrefsService } from '../help-prefs.service';
+import { PageHelpService } from '../page-help.service';
 
 @Component({
   selector: 'app-help-panel',
@@ -29,7 +30,7 @@ import { HelpPrefsService } from '../help-prefs.service';
     @if (isOpen()) {
       <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" (click)="onBackdropClick()">
         <div
-          class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 space-y-4"
+          class="relative bg-white rounded-2xl shadow-2xl w-full max-w-7xl mx-4 p-6 flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
           (click)="$event.stopPropagation()"
           role="dialog"
           aria-modal="true"
@@ -54,6 +55,13 @@ import { HelpPrefsService } from '../help-prefs.service';
             </label>
           </div>
 
+          @if (pageHelp.html(); as html) {
+            <div class="border-t border-neutral-medium pt-4 space-y-2">
+              <h3 class="text-sm font-semibold text-neutral-dark">Ayuda de esta página</h3>
+              <div class="text-sm text-neutral-dark [&_ul]:list-disc [&_ul]:pl-4 [&_ul]:mt-2 [&_ul]:space-y-1 [&_strong]:font-semibold [&_code]:font-mono [&_code]:text-xs [&_code]:bg-neutral-light [&_code]:px-1 [&_code]:rounded" [innerHTML]="html"></div>
+            </div>
+          }
+
           <div class="flex justify-end pt-2">
             <button
               type="button"
@@ -73,6 +81,7 @@ export class HelpPanelComponent {
   readonly close = output<void>();
 
   readonly helpPrefs = inject(HelpPrefsService);
+  readonly pageHelp = inject(PageHelpService);
 
   @HostListener('document:keydown.escape')
   onEscape(): void {

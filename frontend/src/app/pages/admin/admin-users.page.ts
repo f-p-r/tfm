@@ -17,6 +17,8 @@ import { AdminTableColumn, AdminTableAction } from '../../components/core/admin/
 import { UsersService } from '../../core/users/users.service';
 import { User } from '../../core/auth/user.model';
 import { UserRoleManagementModalComponent } from '../../components/core/admin/user-role-management-modal/user-role-management-modal.component';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { ADMIN_USERS_PAGE_HELP } from '../../shared/help/page-content/admin-users.help';
 
 @Component({
   selector: 'app-admin-users-page',
@@ -120,6 +122,7 @@ export class AdminUsersPage {
   protected readonly selectedUsername = computed(() => this.selectedUser()?.username ?? '');
 
   constructor() {
+    inject(PageHelpService).set(ADMIN_USERS_PAGE_HELP);
     // Cargar usuarios al inicializar
     this.loadUsers();
   }

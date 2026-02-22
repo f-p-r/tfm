@@ -16,6 +16,8 @@ import { EventsApiService } from '../../core/events/events-api.service';
 import { EventSummaryDTO, EventListParams } from '../../core/events/event.models';
 import { AssociationsResolveService } from '../../core/associations/associations-resolve.service';
 import { GamesStore } from '../../core/games/games.store';
+import { PageHelpService } from '../../shared/help/page-help.service';
+import { getEventsListHelp } from '../../shared/help/page-content/events-list.help';
 
 /**
  * Página pública de listado de eventos.
@@ -60,12 +62,17 @@ import { GamesStore } from '../../core/games/games.store';
                 </div>
 
                 <div class="ds-card-body">
-                  <!-- Badge de asistencia: primera línea y exclusiva si existe -->
-                  @if (event.myAttendance) {
-                    <div>
-                      <span [class]="'ds-badge ' + attendanceBadgeClass(event.myAttendance.status)">
-                        {{ event.myAttendance.statusType.name }}
-                      </span>
+                  <!-- Primera línea: badge de asistencia + inscripción abierta -->
+                  @if (event.myAttendance || event.registrationOpen) {
+                    <div class="flex flex-wrap items-center gap-2">
+                      @if (event.myAttendance) {
+                        <span [class]="'ds-badge ' + attendanceBadgeClass(event.myAttendance.status)">
+                          {{ event.myAttendance.statusType.name }}
+                        </span>
+                      }
+                      @if (event.registrationOpen) {
+                        <span class="ds-badge ds-badge-active">Inscripción abierta</span>
+                      }
                     </div>
                   }
 
@@ -109,13 +116,6 @@ import { GamesStore } from '../../core/games/games.store';
                         @if (event.region) { {{ event.region.name }}{{ event.country ? ' — ' : '' }} }
                         @if (event.country) { {{ event.country.name }} }
                       </a>
-                    </div>
-                  }
-
-                  <!-- Inscripción abierta -->
-                  @if (event.registrationOpen) {
-                    <div>
-                      <span class="ds-badge ds-badge-active">Inscripción abierta</span>
                     </div>
                   }
 
@@ -173,6 +173,7 @@ export class EventsListPage {
   });
 
   constructor() {
+    inject(PageHelpService).set(getEventsListHelp(inject(ContextStore).scopeType()));
     effect(() => {
       const scopeType = this.contextStore.scopeType();
       const scopeId = this.contextStore.scopeId();

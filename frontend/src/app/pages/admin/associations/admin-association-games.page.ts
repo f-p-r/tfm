@@ -22,6 +22,8 @@ import { AssociationsApiService } from '../../../core/associations/associations-
 import { GamesApiService } from '../../../core/games/games-api.service';
 import { Game } from '../../../core/games/games.models';
 import { ContextStore } from '../../../core/context/context.store';
+import { PageHelpService } from '../../../shared/help/page-help.service';
+import { ADMIN_ASSOCIATION_GAMES_PAGE_HELP } from '../../../shared/help/page-content/admin-association-games.help';
 
 @Component({
   selector: 'app-admin-association-games-page',
@@ -300,6 +302,7 @@ export class AdminAssociationGamesPage {
   ];
 
   constructor() {
+    inject(PageHelpService).set(ADMIN_ASSOCIATION_GAMES_PAGE_HELP);
     this.loadData();
   }
 

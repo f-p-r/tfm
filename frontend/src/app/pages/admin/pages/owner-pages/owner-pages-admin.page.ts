@@ -9,6 +9,8 @@ import { ContentSegmentsPreviewComponent } from '../../../../shared/content/segm
 import { AdminSidebarContainerComponent } from '../../../../components/admin-sidebar/admin-sidebar-container.component';
 import { AdminPageSubtitleComponent } from '../../../../components/core/admin/admin-page-subtitle/admin-page-subtitle.component';
 import { ContextStore } from '../../../../core/context/context.store';
+import { PageHelpService } from '../../../../shared/help/page-help.service';
+import { getAdminPagesListHelp } from '../../../../shared/help/page-content/admin-pages-list.help';
 
 @Component({
   selector: 'app-owner-pages-admin',
@@ -61,6 +63,7 @@ export class OwnerPagesAdminPage implements OnInit {
   });
 
   constructor() {
+    inject(PageHelpService).set(getAdminPagesListHelp(inject(ContextStore).scopeType()));
     // Load page content when selectedPageId changes
     effect(() => {
       const pageId = this.selectedPageId();
