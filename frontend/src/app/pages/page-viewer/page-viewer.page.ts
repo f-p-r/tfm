@@ -4,7 +4,7 @@ import { PagesService } from '../../core/pages/pages.service';
 import { GamesApiService } from '../../core/games/games-api.service';
 import { AssociationsApiService } from '../../core/associations/associations-api.service';
 import { SiteParamsService } from '../../core/site-params/site-params.service';
-import { PageOwnerScope, PageDTO } from '../../shared/content/page.dto';
+import { PageOwnerScope, PageOwnerType, PageDTO, PageNavItemDTO } from '../../shared/content/page.dto';
 import { ContentRendererComponent } from '../../shared/content/content-renderer/content-renderer.component';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -24,6 +24,21 @@ import { filter } from 'rxjs/operators';
   selector: 'app-page-viewer',
   imports: [ContentRendererComponent],
   template: `
+    @if (navPages().length > 1) {
+      <nav >
+        <div class="ds-container py-2 flex items-center gap-2">
+          <span class="text-xs text-neutral-dark whitespace-nowrap">Ir a:</span>
+          <select
+            class="w-full sm:w-auto text-xs border border-neutral-medium rounded px-3 bg-white text-neutral-dark focus:outline-none focus:ring-2 focus:ring-primary"
+            [value]="page()?.slug"
+            (change)="onPageSelect($event)">
+            @for (p of navPages(); track p.id) {
+              <option [value]="p.slug">{{ p.title }}</option>
+            }
+          </select>
+        </div>
+      </nav>
+    }
     @if (loading()) {
       <div class="ds-loading">Cargando...</div>
     } @else if (error()) {
@@ -53,6 +68,11 @@ export class PageViewerPage implements OnInit, OnDestroy {
   readonly page = signal<PageDTO | null>(null);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+
+  /** Lista de páginas del owner para el selector de navegación */
+  readonly navPages = signal<PageNavItemDTO[]>([]);
+  private navOwnerType: PageOwnerType | null = null;
+  private navOwnerSlug: string | null = null;
 
   private routerSubscription?: Subscription;
 
@@ -89,6 +109,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
 
     // Global homepage: /
     if (!firstSegment || firstSegment === '') {
+      this.loadNavPages(PageOwnerScope.GLOBAL, 'global');
       this.loadGlobalHomepage();
       return;
     }
@@ -100,6 +121,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
         this.showError('Slug de página no especificado');
         return;
       }
+      this.loadNavPages(PageOwnerScope.GLOBAL, 'global');
       this.loadGlobalPage(pageSlug);
       return;
     }
@@ -111,6 +133,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
         this.showError('Slug de juego no especificado');
         return;
       }
+      this.loadNavPages(PageOwnerScope.GAME, gameSlug);
 
       const pageSlug = params['pagina'];
       if (pageSlug) {
@@ -130,6 +153,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
         this.showError('Slug de asociación no especificado');
         return;
       }
+      this.loadNavPages(PageOwnerScope.ASSOCIATION, associationSlug);
 
       const pageSlug = params['pagina'];
       if (pageSlug) {
@@ -143,6 +167,53 @@ export class PageViewerPage implements OnInit, OnDestroy {
     }
 
     this.showError('Ruta no reconocida');
+  }
+
+  private loadNavPages(ownerType: PageOwnerType, ownerSlug: string): void {
+    // Solo recargar si cambia el owner para evitar llamadas innecesarias al navegar entre páginas del mismo owner
+    if (this.navOwnerType === ownerType && this.navOwnerSlug === ownerSlug) return;
+
+    this.navOwnerType = ownerType;
+    this.navOwnerSlug = ownerSlug;
+
+    this.pagesService.listPublicByOwner(ownerType, ownerSlug).subscribe({
+      next: (pages) => {
+        // Home primero, luego el resto en el orden que devuelve el backend (título asc)
+        const sorted = [
+          ...pages.filter(p => p.home),
+          ...pages.filter(p => !p.home),
+        ];
+        this.navPages.set(sorted);
+      },
+      error: () => this.navPages.set([]),
+    });
+  }
+
+  private clearNavPages(): void {
+    this.navOwnerType = null;
+    this.navOwnerSlug = null;
+    this.navPages.set([]);
+  }
+
+  onPageSelect(event: Event): void {
+    const slug = (event.target as HTMLSelectElement).value;
+    const selectedPage = this.navPages().find(p => p.slug === slug);
+    if (!selectedPage || !this.navOwnerSlug || !this.navOwnerType) return;
+
+    let url: string[];
+    if (this.navOwnerType === PageOwnerScope.ASSOCIATION) {
+      url = selectedPage.home
+        ? ['/asociaciones', this.navOwnerSlug]
+        : ['/asociaciones', this.navOwnerSlug, slug];
+    } else if (this.navOwnerType === PageOwnerScope.GAME) {
+      url = selectedPage.home
+        ? ['/juegos', this.navOwnerSlug]
+        : ['/juegos', this.navOwnerSlug, slug];
+    } else {
+      url = selectedPage.home ? ['/'] : ['/paginas', slug];
+    }
+
+    this.router.navigate(url);
   }
 
   private loadGlobalHomepage(): void {

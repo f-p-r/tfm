@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { PageDTO, PageSummaryDTO, PageCreateDTO, PageUpdateDTO, PageOwnerType } from '../../shared/content/page.dto';
+import { PageDTO, PageSummaryDTO, PageCreateDTO, PageUpdateDTO, PageOwnerType, PageNavItemDTO } from '../../shared/content/page.dto';
 import { isLaravelValidationError } from '../auth/laravel-validation-error';
 import { environment } from '../../../environments/environment';
 
@@ -145,6 +145,24 @@ export class PagesService {
           return this.handleError(error);
         })
       );
+  }
+
+  /**
+   * Lista las páginas publicadas de un owner para construir menús de navegación.
+   * GET /api/pages/list-by-owner?ownerType={ownerType}&ownerSlug={ownerSlug}
+   * La página home aparece marcada con home=true. El backend las devuelve por título asc.
+   */
+  listPublicByOwner(
+    ownerType: PageOwnerType,
+    ownerSlug: string,
+  ): Observable<PageNavItemDTO[]> {
+    const params = new HttpParams()
+      .set('ownerType', ownerType)
+      .set('ownerSlug', ownerSlug);
+
+    return this.http
+      .get<PageNavItemDTO[]>(`${this.apiBaseUrl}/api/pages/list-by-owner`, { params })
+      .pipe(catchError((error) => this.handleError(error)));
   }
 
   /**

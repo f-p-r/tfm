@@ -114,6 +114,7 @@ Route::get('regions/{id}', [RegionController::class, 'show']);
 // Public Pages endpoints (sin autenticación)
 Route::get('pages/home', [PublicPagesController::class, 'home']);
 Route::get('pages/by-owner-slug', [PublicPagesController::class, 'byOwnerSlug']);
+Route::get('pages/list-by-owner', [PublicPagesController::class, 'listByOwner']);
 Route::get('pages/{page}', [PublicPagesController::class, 'show']);
 
 // Public Site Params endpoints (sin autenticación)

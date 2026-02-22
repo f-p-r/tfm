@@ -74,3 +74,12 @@ export interface PageUpdateDTO {
   publishedAt?: string | null;
   content?: PageContentDTO;
 }
+
+/** Ítem de navegación devuelto por GET /api/pages/list-by-owner */
+export interface PageNavItemDTO {
+  id: number;
+  slug: string;
+  title: string;
+  /** true si es la home page del owner */
+  home: boolean;
+}

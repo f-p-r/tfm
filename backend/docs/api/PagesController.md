@@ -6,6 +6,7 @@ API para gestión de páginas editables por segmentos (admin) y lectura pública
 ## Conceptos
 
 - `ownerType` **siempre string**. Valores actuales:
+  - `"1"` = Global (toda la plataforma)
   - `"2"` = Association
   - `"3"` = Game
 - `content` es **objeto JSON** con forma:
@@ -249,6 +250,15 @@ Obtener home page publicada por owner.
 - `ownerType` (string, required)
 - `ownerSlug` (string, required)
 
+**Resolución de `homePageId` según `ownerType`:**
+| ownerType | Origen del homePageId |
+|---|---|
+| `"1"` (global) | `site_params` donde `id = 'homepage'` |
+| `"2"` (association) | `associations.homePageId` |
+| `"3"` (game) | `games.homePageId` |
+
+> Para `ownerType=1` (global) el parámetro `ownerSlug` se ignora.
+
 **Respuestas:**
 - **200 OK**
   ```json
@@ -296,3 +306,38 @@ Obtener page publicada por owner y pageSlug.
 - **501 Not Implemented** - `ownerType` no soportado
 
 ````
+
+---
+
+### GET /api/pages/list-by-owner
+Listar paginas publicadas de un owner (id, slug, titulo y si es home page).
+Endpoint pensado para construir menus de navegacion.
+
+**Autenticacion:** No requerida
+
+**Query Parameters:**
+- `ownerType` (string, required)
+- `ownerSlug` (string, required)
+
+**Orden:** `title` ascendente
+
+**Resolucion de `homePageId`:**
+| ownerType | Origen del homePageId |
+|---|---|
+| `"1"` (global) | `site_params` donde `id = 'homepage'` |
+| `"2"` (association) | `associations.homePageId` |
+| `"3"` (game) | `games.homePageId` |
+
+**Respuestas:**
+- **200 OK**
+  ```json
+  [
+    { "id": 1, "slug": "inicio",     "title": "Inicio",     "home": true  },
+    { "id": 2, "slug": "reglamento", "title": "Reglamento", "home": false }
+  ]
+  ```
+- **404 Not Found** - Owner no encontrado
+- **422 Unprocessable Entity** - Faltan parametros obligatorios (`ownerType` o `ownerSlug`)
+- **501 Not Implemented** - `ownerType` no soportado
+
+**Campo `home`:** `true` si el `id` de la pagina coincide con el `homePageId` del owner; `false` en caso contrario. Para `ownerType=1` (global), `ownerSlug` se ignora.

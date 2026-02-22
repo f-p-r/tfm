@@ -8,6 +8,7 @@ use App\Http\Requests\PublicHomePageRequest;
 use App\Models\Association;
 use App\Models\Game;
 use App\Models\Page;
+use App\Models\SiteParam;
 use Illuminate\Http\JsonResponse;
 
 class PublicPagesController extends Controller
@@ -31,9 +32,9 @@ class PublicPagesController extends Controller
 
         // Para el ownerType GLOBAL, el ownerId es siempre 0
         if ($ownerType === (string)ScopeType::GLOBAL->value) {
-            $ownerId = 0;
-            $homePageId = null;
-            // TODO: implementar lógica para obtener homePageId del scope GLOBAL
+            $ownerId    = 0;
+            $param      = SiteParam::find('homepage');
+            $homePageId = $param ? (int)$param->value : null;
             if (! $homePageId) {
                 return response()->json(['message' => 'Página de inicio no encontrada.'], 404);
             }
@@ -132,6 +133,57 @@ class PublicPagesController extends Controller
         }
 
         return response()->json($this->mapPage($page));
+    }
+
+    /**
+     * Devuelve el listado de páginas publicadas de un owner (id, slug, título).
+     * No requiere autenticación.
+     *
+     * @param \Illuminate\Http\Request $request  Parámetros: ownerType, ownerSlug
+     * @return JsonResponse
+     */
+    public function listByOwner(\Illuminate\Http\Request $request): JsonResponse
+    {
+        $ownerType = $request->input('ownerType');
+        $ownerSlug = $request->input('ownerSlug');
+
+        if (! $ownerType || ! $ownerSlug) {
+            return response()->json(['message' => 'Los parámetros ownerType y ownerSlug son obligatorios.'], 422);
+        }
+
+        if (! $this->isSupportedOwnerType($ownerType)) {
+            return response()->json(['message' => 'Owner type no soportado.'], 501);
+        }
+
+        if ($ownerType === (string)ScopeType::GLOBAL->value) {
+            $ownerId    = 0;
+            $param      = SiteParam::find('homepage');
+            $homePageId = $param ? (int)$param->value : null;
+        } else {
+            $owner = $this->resolveOwnerBySlug($ownerType, $ownerSlug);
+
+            if (! $owner) {
+                return response()->json(['message' => 'Propietario no encontrado.'], 404);
+            }
+
+            $ownerId    = $owner->id;
+            $homePageId = $owner->homePageId ?? null;
+        }
+
+        $pages = Page::query()
+            ->where('owner_type', $ownerType)
+            ->where('owner_id', $ownerId)
+            ->where('published', true)
+            ->orderBy('title')
+            ->get()
+            ->map(fn(Page $page) => [
+                'id'    => $page->id,
+                'slug'  => $page->slug,
+                'title' => $page->title,
+                'home'  => $homePageId !== null && $page->id === $homePageId,
+            ]);
+
+        return response()->json($pages);
     }
 
     /**
