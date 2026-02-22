@@ -350,6 +350,17 @@
     font-size: 14px;
   }
 
+  @media (max-width: 767px) {
+    .ds-nav {
+      position: fixed;
+      width: 100%;
+      transition: top 0.3s ease;
+    }
+    .ds-nav--hidden {
+      top: -4rem;
+    }
+  }
+
   /* Contenedor interno de la barra de navegación */
   .ds-nav-inner {
     @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-7xl px-1.5 sm:px-2.5;

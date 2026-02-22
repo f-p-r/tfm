@@ -42,6 +42,8 @@ export class NavbarComponent {
   readonly associationMenuOpen = signal(false); // <--- Control del dropdown asociación
   readonly gamesQuery = signal('');
   readonly helpOpen = signal(false);
+  readonly scrolledDown = signal(false);
+  private lastScrollY = 0;
 
   // ... Inyecciones ...
   private readonly router = inject(Router);
@@ -126,6 +128,21 @@ export class NavbarComponent {
   constructor() {
     this.gamesStore.loadOnce().pipe(takeUntilDestroyed()).subscribe();
 
+    // Ocultar navbar al hacer scroll hacia abajo en mobile, mostrar al subir
+    fromEvent(window, 'scroll', { passive: true })
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        const currentY = window.scrollY;
+        if (currentY < 10) {
+          this.scrolledDown.set(false);
+        } else if (currentY > this.lastScrollY + 5) {
+          this.scrolledDown.set(true);
+        } else if (currentY < this.lastScrollY - 5) {
+          this.scrolledDown.set(false);
+        }
+        this.lastScrollY = currentY;
+      });
+
     this.router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -136,6 +153,9 @@ export class NavbarComponent {
         this.closeMobileMenu();
         this.closeAdminMenu();
         this.closeAssociationMenu();
+        // Restaurar navbar al navegar
+        this.scrolledDown.set(false);
+        this.lastScrollY = 0;
 
         // Cerrar sidebar en mobile al navegar
         if (window.innerWidth < 768) {

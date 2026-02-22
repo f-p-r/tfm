@@ -54,7 +54,7 @@
   }
 </ng-template>
 
-<nav class="ds-nav" aria-label="Navegación principal">
+<nav class="ds-nav" [class.ds-nav--hidden]="scrolledDown()" aria-label="Navegación principal">
   <div class="ds-nav-inner">
     <a routerLink="/" class="ds-nav-brand">
       <svg class="ds-nav-brand-card" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
