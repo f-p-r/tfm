@@ -55,11 +55,6 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
             }
           </div>
 
-          <!-- Texto introductorio -->
-          @if (n.text) {
-            <p class="ds-p-hero mb-6">{{ n.text }}</p>
-          }
-
           <!-- Contenido enriquecido -->
           @if (n.content) {
             <app-content-renderer [content]="n.content" />
