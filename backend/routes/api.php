@@ -20,6 +20,8 @@ use App\Http\Controllers\PublicPagesController;
 use App\Http\Controllers\PublicSiteParamsController;
 use App\Http\Controllers\RoleGrantController;
 use App\Http\Controllers\ContactInfoController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\UserEventController;
 use App\Http\Controllers\NewsController;
 
 // Ping endpoint (no DB, for diagnostics)
@@ -132,3 +134,20 @@ Route::post('contact-info', [ContactInfoController::class, 'store'])->middleware
 Route::put('contact-info/{contactInfo}', [ContactInfoController::class, 'update'])->middleware('auth:sanctum');
 Route::patch('contact-info/{contactInfo}', [ContactInfoController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('contact-info/{contactInfo}', [ContactInfoController::class, 'destroy'])->middleware('auth:sanctum');
+
+// Events endpoints
+Route::get('events', [EventController::class, 'index']);
+Route::get('events/{event}', [EventController::class, 'show']);
+Route::post('events', [EventController::class, 'store'])->middleware('auth:sanctum');
+Route::put('events/{event}', [EventController::class, 'update'])->middleware('auth:sanctum');
+Route::patch('events/{event}', [EventController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('events/{event}', [EventController::class, 'destroy'])->middleware('auth:sanctum');
+// User-Event (asistencias) endpoints — todos requieren autenticación
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('user-events', [UserEventController::class, 'index']);
+    Route::get('user-events/{userEvent}', [UserEventController::class, 'show']);
+    Route::post('user-events', [UserEventController::class, 'store']);
+    Route::put('user-events/{userEvent}', [UserEventController::class, 'update']);
+    Route::patch('user-events/{userEvent}', [UserEventController::class, 'update']);
+    Route::delete('user-events/{userEvent}', [UserEventController::class, 'destroy']);
+});
