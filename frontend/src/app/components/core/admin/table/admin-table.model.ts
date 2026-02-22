@@ -42,4 +42,6 @@ export interface AdminTableAction {
   action: string;
   /** Clase CSS para el botón (ej: 'text-brand-primary') */
   class?: string;
+  /** Función que recibe la fila y devuelve true si el botón debe estar deshabilitado */
+  disabledWhen?: (row: any) => boolean;
 }

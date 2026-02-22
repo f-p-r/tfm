@@ -1,0 +1,482 @@
+<!-- Admin Shell -->
+<div class="ds-admin-shell">
+
+  <!-- Sidebar -->
+  <app-admin-sidebar-container />
+
+  <!-- Main content -->
+  <main class="ds-admin-main">
+
+    @if (isEditMode() && isLoading()) {
+      <div class="ds-admin-form ds-container">
+        <div>
+          <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
+          <app-admin-page-subtitle />
+        </div>
+        <p>Cargando evento...</p>
+      </div>
+    } @else if (errorMessage() && isEditMode() && originalEvent() === null) {
+      <div class="ds-admin-form ds-container">
+        <div>
+          <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
+          <app-admin-page-subtitle />
+        </div>
+        <div class="ds-alert ds-alert-error">
+          <p class="mb-4">{{ errorMessage() }}</p>
+          <button class="ds-btn ds-btn-secondary" (click)="onCancel()">Volver</button>
+        </div>
+      </div>
+    } @else {
+
+      <div class="ds-admin-form ds-container">
+        <div>
+          <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
+          <app-admin-page-subtitle />
+        </div>
+
+        <!-- ── Sección 1: Datos básicos (colapsable) ──────────────────────── -->
+        <div class="form-section">
+          <button type="button" class="ds-form-section-toggle" (click)="dataCollapsed.set(!dataCollapsed())">
+            <span>Datos del evento</span>
+            <span class="ds-form-section-toggle-icon">{{ dataCollapsed() ? '▸' : '▾' }}</span>
+          </button>
+          <div class="ds-form-section-body" [class.collapsed]="dataCollapsed()">
+          <div class="space-y-4" style="margin: 0 4px 4px 4px;">
+
+            <!-- Título + Slug -->
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-4">
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="title">Título</label>
+                  <app-help-i helpKey="title"></app-help-i>
+                </div>
+                <input
+                  type="text"
+                  id="title"
+                  class="ds-input"
+                  [class.ds-control-error]="validationErrors()['title']"
+                  helpHover
+                  helpKey="title"
+                  [(ngModel)]="title"
+                  placeholder="Título del evento"
+                  [disabled]="isSaving()"
+                />
+                @if (validationErrors()['title']) {
+                  <div>
+                    @for (error of validationErrors()['title']; track error) {
+                      <p class="ds-error">{{ error }}</p>
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="slug">Slug (URL)</label>
+                  <app-help-i helpKey="slug"></app-help-i>
+                </div>
+                <input
+                  type="text"
+                  id="slug"
+                  class="ds-input"
+                  [class.ds-control-error]="validationErrors()['slug']"
+                  helpHover
+                  helpKey="slug"
+                  [(ngModel)]="slug"
+                  placeholder="torneo-primavera-2026"
+                  [disabled]="isSaving()"
+                />
+                @if (validationErrors()['slug']) {
+                  <div>
+                    @for (error of validationErrors()['slug']; track error) {
+                      <p class="ds-error">{{ error }}</p>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Texto introductorio -->
+            <div class="ds-field">
+              <div class="ds-label-with-help">
+                <label class="ds-label" for="text">Texto introductorio</label>
+                <app-help-i helpKey="text"></app-help-i>
+              </div>
+              <textarea
+                id="text"
+                class="ds-textarea"
+                [class.ds-control-error]="validationErrors()['text']"
+                helpHover
+                helpKey="text"
+                [(ngModel)]="text"
+                placeholder="Descripción breve del evento"
+                rows="2"
+                [disabled]="isSaving()"
+              ></textarea>
+              @if (validationErrors()['text']) {
+                <div>
+                  @for (error of validationErrors()['text']; track error) {
+                    <p class="ds-error">{{ error }}</p>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Checkboxes de estado: Publicado + Activo + Inscripción abierta -->
+            <div class="flex flex-wrap gap-6">
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-checkbox-label ds-label">
+                    <input type="checkbox" helpHover helpKey="published" [(ngModel)]="published" [disabled]="isSaving()" />
+                    <span>Publicado</span>
+                  </label>
+                  <app-help-i helpKey="published"></app-help-i>
+                </div>
+              </div>
+
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-checkbox-label ds-label">
+                    <input type="checkbox" helpHover helpKey="active" [(ngModel)]="active" [disabled]="isSaving()" />
+                    <span>Activo</span>
+                  </label>
+                  <app-help-i helpKey="active"></app-help-i>
+                </div>
+              </div>
+
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-checkbox-label ds-label">
+                    <input type="checkbox" helpHover helpKey="registrationOpen" [(ngModel)]="registrationOpen" [disabled]="isSaving()" />
+                    <span>Inscripción abierta</span>
+                  </label>
+                  <app-help-i helpKey="registrationOpen"></app-help-i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Selector de juego (solo scopeType=2 ASSOCIATION) -->
+            @if (scopeType() === 2) {
+              <div class="ds-field" style="width: fit-content;">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="gameId">Juego</label>
+                  <app-help-i helpKey="gameId"></app-help-i>
+                </div>
+                <select
+                  id="gameId"
+                  class="ds-input"
+                  style="width: auto;"
+                  helpHover
+                  helpKey="gameId"
+                  [(ngModel)]="gameId"
+                  [disabled]="isSaving()"
+                >
+                  <option [ngValue]="null">— Sin juego —</option>
+                  @for (game of associationGames(); track game.id) {
+                    <option [ngValue]="game.id">{{ game.name }}</option>
+                  }
+                </select>
+              </div>
+            }
+
+          </div><!-- /space-y-4 -->
+          </div><!-- /ds-form-section-body -->
+        </div>
+
+        <!-- ── Sección 2: Lugar y fechas (colapsable) ─────────────────────── -->
+        <div class="form-section">
+          <button type="button" class="ds-form-section-toggle" (click)="locationCollapsed.set(!locationCollapsed())">
+            <span>Lugar y fechas</span>
+            <span class="ds-form-section-toggle-icon">{{ locationCollapsed() ? '▸' : '▾' }}</span>
+          </button>
+          <div class="ds-form-section-body" [class.collapsed]="locationCollapsed()">
+          <div class="space-y-4" style="margin: 0 4px 4px 4px;">
+
+            <!-- Fecha de inicio + Fecha de fin -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="startsAt">Fecha de inicio *</label>
+                  <app-help-i helpKey="startsAt"></app-help-i>
+                </div>
+                <input
+                  type="datetime-local"
+                  id="startsAt"
+                  class="ds-input"
+                  [class.ds-control-error]="validationErrors()['starts_at']"
+                  helpHover
+                  helpKey="startsAt"
+                  [(ngModel)]="startsAt"
+                  [disabled]="isSaving()"
+                />
+                @if (validationErrors()['starts_at']) {
+                  <div>
+                    @for (error of validationErrors()['starts_at']; track error) {
+                      <p class="ds-error">{{ error }}</p>
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="endsAt">Fecha de fin</label>
+                  <app-help-i helpKey="endsAt"></app-help-i>
+                </div>
+                <input
+                  type="datetime-local"
+                  id="endsAt"
+                  class="ds-input"
+                  [class.ds-control-error]="validationErrors()['ends_at']"
+                  helpHover
+                  helpKey="endsAt"
+                  [(ngModel)]="endsAt"
+                  [disabled]="isSaving()"
+                />
+                @if (validationErrors()['ends_at']) {
+                  <div>
+                    @for (error of validationErrors()['ends_at']; track error) {
+                      <p class="ds-error">{{ error }}</p>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- País + Región -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="countryCode">País</label>
+                  <app-help-i helpKey="countryCode"></app-help-i>
+                </div>
+                <select
+                  id="countryCode"
+                  class="ds-select"
+                  helpHover
+                  helpKey="countryCode"
+                  [(ngModel)]="countryCode"
+                  [disabled]="isSaving()"
+                >
+                  <option [ngValue]="null">— Sin país —</option>
+                  @for (country of countries(); track country.id) {
+                    <option [ngValue]="country.id">{{ country.name }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="regionId">Región / Comunidad autónoma</label>
+                  <app-help-i helpKey="regionId"></app-help-i>
+                </div>
+                <select
+                  id="regionId"
+                  class="ds-select"
+                  helpHover
+                  helpKey="regionId"
+                  [(ngModel)]="regionId"
+                  [disabled]="isSaving() || !countryCode()"
+                >
+                  <option [ngValue]="null">— Sin región —</option>
+                  @for (region of filteredRegions(); track region.id) {
+                    <option [ngValue]="region.id">{{ region.name }}</option>
+                  }
+                </select>
+                @if (!countryCode()) {
+                  <p class="ds-help">Selecciona un país primero.</p>
+                }
+              </div>
+            </div>
+
+            <!-- Provincia + Municipio + CP -->
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_130px] gap-4">
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="provinceName">Provincia</label>
+                  <app-help-i helpKey="provinceName"></app-help-i>
+                </div>
+                <input
+                  type="text"
+                  id="provinceName"
+                  class="ds-input"
+                  helpHover
+                  helpKey="provinceName"
+                  [(ngModel)]="provinceName"
+                  placeholder="Ej: Madrid"
+                  [disabled]="isSaving()"
+                />
+              </div>
+
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="municipalityName">Municipio</label>
+                  <app-help-i helpKey="municipalityName"></app-help-i>
+                </div>
+                <input
+                  type="text"
+                  id="municipalityName"
+                  class="ds-input"
+                  helpHover
+                  helpKey="municipalityName"
+                  [(ngModel)]="municipalityName"
+                  placeholder="Ej: Getafe"
+                  [disabled]="isSaving()"
+                />
+              </div>
+
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="postalCode">CP</label>
+                  <app-help-i helpKey="postalCode"></app-help-i>
+                </div>
+                <input
+                  type="text"
+                  id="postalCode"
+                  class="ds-input"
+                  [class.ds-control-error]="validationErrors()['postal_code']"
+                  helpHover
+                  helpKey="postalCode"
+                  [(ngModel)]="postalCode"
+                  placeholder="28001"
+                  maxlength="5"
+                  [disabled]="isSaving()"
+                />
+                @if (validationErrors()['postal_code']) {
+                  <div>
+                    @for (error of validationErrors()['postal_code']; track error) {
+                      <p class="ds-error">{{ error }}</p>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Calle + Número -->
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_160px] gap-4">
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="streetName">Calle / Vía</label>
+                  <app-help-i helpKey="streetName"></app-help-i>
+                </div>
+                <input
+                  type="text"
+                  id="streetName"
+                  class="ds-input"
+                  helpHover
+                  helpKey="streetName"
+                  [(ngModel)]="streetName"
+                  placeholder="Ej: Calle Gran Vía"
+                  [disabled]="isSaving()"
+                />
+              </div>
+
+              <div class="ds-field">
+                <div class="ds-label-with-help">
+                  <label class="ds-label" for="streetNumber">Número</label>
+                  <app-help-i helpKey="streetNumber"></app-help-i>
+                </div>
+                <input
+                  type="text"
+                  id="streetNumber"
+                  class="ds-input"
+                  helpHover
+                  helpKey="streetNumber"
+                  [(ngModel)]="streetNumber"
+                  placeholder="Ej: 12 bis"
+                  maxlength="20"
+                  [disabled]="isSaving()"
+                />
+              </div>
+            </div>
+
+          </div><!-- /space-y-4 -->
+          </div><!-- /ds-form-section-body -->
+        </div>
+
+        <!-- ── Sección 3: Contenido (colapsable) ──────────────────────────── -->
+        <div class="form-section">
+          <button type="button" class="ds-form-section-toggle" (click)="contentCollapsed.set(!contentCollapsed())">
+            <span>Contenido</span>
+            <span class="ds-form-section-toggle-icon">{{ contentCollapsed() ? '▸' : '▾' }}</span>
+          </button>
+
+          <!-- Clases CSS: siempre visible, justo bajo el título -->
+          <div class="ds-field" style="margin-bottom: 0.75rem;">
+            <div class="ds-label-with-help">
+              <label class="ds-label" for="classNames">Clases CSS del contenido (avanzado)</label>
+              <app-help-i helpKey="classNames"></app-help-i>
+            </div>
+            <input
+              type="text"
+              id="classNames"
+              class="ds-input"
+              helpHover
+              helpKey="classNames"
+              [(ngModel)]="classNames"
+              placeholder="ds-clase-1 ds-clase-2"
+              [disabled]="isSaving()"
+            />
+          </div>
+
+          <div class="ds-form-section-body" [class.collapsed]="contentCollapsed()">
+            <div class="space-y-4">
+              <app-content-segments-editor
+                [initialContent]="editorInitialContent()"
+                [scopeType]="scopeType()"
+                [scopeId]="scopeId() ?? 0"
+                (contentChange)="onContentChange($event)"
+                (editingStateChange)="onEditingStateChange($event)"
+              />
+              @if (content().segments.length === 0) {
+                <p class="ds-help" style="display: block; margin-top: 0.5rem;">
+                  El contenido enriquecido es opcional para los eventos.
+                </p>
+              }
+            </div>
+          </div><!-- /ds-form-section-body -->
+        </div>
+
+      </div>
+
+      <!-- Acciones (sticky, hijo directo de ds-admin-main) -->
+      <div class="ds-actions-section ds-container">
+        @if (errorMessage()) {
+          <div class="ds-alert ds-alert-error">{{ errorMessage() }}</div>
+        }
+
+        <div class="ds-actions-buttons">
+          <button
+            class="ds-btn"
+            [class.ds-btn-danger]="!isEditingSegment() && !isSaving()"
+            [class.ds-btn-disabled]="isEditingSegment() || isSaving()"
+            (click)="onCancel()"
+            [disabled]="isEditingSegment() || isSaving()"
+          >
+            Cancelar
+          </button>
+          <button
+            class="ds-btn"
+            [class.ds-btn-secondary]="!isEditingSegment() && !isSaving()"
+            [class.ds-btn-disabled]="isEditingSegment() || isSaving()"
+            (click)="openPreview()"
+            [disabled]="isEditingSegment() || isSaving()"
+          >
+            Vista previa
+          </button>
+          <button
+            class="ds-btn"
+            [class.ds-btn-primary]="!isSubmitDisabled()"
+            [class.ds-btn-disabled]="isSubmitDisabled()"
+            (click)="onSubmit()"
+            [disabled]="isSubmitDisabled()"
+          >
+            {{ isSaving() ? (isEditMode() ? 'Guardando...' : 'Creando...') : (isEditMode() ? 'Guardar cambios' : 'Crear evento') }}
+          </button>
+        </div>
+      </div>
+
+    }
+  </main>
+
+</div>

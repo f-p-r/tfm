@@ -1,0 +1,49 @@
+<!-- Shell de administración con sidebar -->
+<div class="ds-admin-shell">
+
+  <!-- Sidebar contextual -->
+  <app-admin-sidebar-container />
+
+  <!-- Contenido principal -->
+  <main class="ds-admin-main ds-container">
+
+    <!-- Cabecera: título + subtítulo de scope + botón crear -->
+    <div class="flex items-start justify-between gap-4 py-6">
+      <div>
+        <h2 class="h2">Eventos</h2>
+        <app-admin-page-subtitle />
+      </div>
+      <button class="ds-btn ds-btn-primary mt-1" (click)="onNuevoEvento()">
+        + Nuevo evento
+      </button>
+    </div>
+
+    <!-- Estado: cargando -->
+    @if (isLoading()) {
+      <p class="text-neutral-dark py-8 text-center">Cargando eventos...</p>
+    }
+
+    <!-- Estado: error -->
+    @else if (errorMessage()) {
+      <div class="ds-alert ds-alert-error">{{ errorMessage() }}</div>
+    }
+
+    <!-- Estado: sin resultados -->
+    @else if (tableRows().length === 0) {
+      <p class="text-neutral-dark py-8 text-center">No hay eventos en este ámbito.</p>
+    }
+
+    <!-- Tabla de eventos -->
+    @else {
+      <div class="ds-table-card flex-1 min-h-0 mb-4">
+        <app-admin-table
+          [columns]="columns"
+          [data]="tableRows()"
+          [actions]="tableActions"
+          (action)="onTableAction($event)"
+        />
+      </div>
+    }
+
+  </main>
+</div>

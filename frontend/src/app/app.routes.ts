@@ -33,6 +33,8 @@ import { requireAuth } from './guards/auth.guard';
 import { resolveScopeGuard } from './guards/resolve-scope.guard';
 import { NewsFormAdminPage } from './pages/admin/news/news-form-admin.page';
 import { NewsListAdminPage } from './pages/admin/news/news-list-admin.page';
+import { EventsListAdminPage } from './pages/admin/events/events-list-admin.page';
+import { EventsFormAdminPage } from './pages/admin/events/events-form-admin.page';
 import { NewsListPage } from './pages/news/news-list.page';
 import { NewsDetailPage } from './pages/news/news-detail.page';
 import { PERM } from './core/authz/permissions.constants';
@@ -323,6 +325,58 @@ export const routes: Routes = [
     path: 'admin/juego/noticias/:newsId/editar',
     component: NewsFormAdminPage,
     canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.NEWS_EDIT)],
+  },
+
+  // Admin: gestión de eventos
+  // Eventos globales
+  {
+    path: 'admin/eventos',
+    component: EventsListAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+  // Eventos contextuales de asociación
+  {
+    path: 'admin/asociacion/eventos',
+    component: EventsListAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+  // Eventos contextuales de juego
+  {
+    path: 'admin/juego/eventos',
+    component: EventsListAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+
+  // Formulario de eventos (crear / editar)
+  {
+    path: 'admin/eventos/nuevo',
+    component: EventsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+  {
+    path: 'admin/eventos/:eventId/editar',
+    component: EventsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+  {
+    path: 'admin/asociacion/eventos/nuevo',
+    component: EventsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+  {
+    path: 'admin/asociacion/eventos/:eventId/editar',
+    component: EventsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+  {
+    path: 'admin/juego/eventos/nuevo',
+    component: EventsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
+  },
+  {
+    path: 'admin/juego/eventos/:eventId/editar',
+    component: EventsFormAdminPage,
+    canActivate: [resolveScopeGuard, requireAuth, requirePermission(PERM.EVENTS_EDIT)],
   },
 
   { path: '**', redirectTo: '' },

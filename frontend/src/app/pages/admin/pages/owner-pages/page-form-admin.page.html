@@ -8,7 +8,7 @@
   <main class="ds-admin-main">
 
     @if (isEditMode() && isLoading()) {
-      <div class="page-form-admin ds-container">
+      <div class="ds-admin-form ds-container">
         <div>
           <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
           <app-admin-page-subtitle />
@@ -16,7 +16,7 @@
         <p>Cargando página...</p>
       </div>
     } @else if (errorMessage() && (isEditMode() || ownerType() === null)) {
-      <div class="page-form-admin ds-container">
+      <div class="ds-admin-form ds-container">
         <div>
           <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
           <app-admin-page-subtitle />
@@ -28,19 +28,19 @@
       </div>
     } @else {
 
-      <div class="page-form-admin ds-container">
+      <div class="ds-admin-form ds-container">
         <div>
           <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
           <app-admin-page-subtitle />
         </div>
         <!-- Form section -->
         <div class="form-section">
-          <button class="form-section-toggle" type="button" (click)="dataCollapsed.set(!dataCollapsed())">
+          <button class="ds-form-section-toggle" type="button" (click)="dataCollapsed.set(!dataCollapsed())">
             <span>Datos de la página</span>
-            <span class="form-section-toggle-icon" [style.transform]="dataCollapsed() ? 'rotate(-90deg)' : ''">▾</span>
+            <span class="ds-form-section-toggle-icon" [style.transform]="dataCollapsed() ? 'rotate(-90deg)' : ''">▾</span>
           </button>
 
-          <div class="form-section-body" [class.collapsed]="dataCollapsed()">
+          <div class="ds-form-section-body" [class.collapsed]="dataCollapsed()">
           <div class="space-y-4" style="margin: 0 4px 4px 4px">
             <div class="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-4">
               <div class="ds-field">
@@ -121,12 +121,12 @@
 
         <!-- Editor section -->
         <div class="editor-section">
-          <button class="form-section-toggle" type="button" (click)="contentCollapsed.set(!contentCollapsed())">
+          <button class="ds-form-section-toggle" type="button" (click)="contentCollapsed.set(!contentCollapsed())">
             <span>Contenido</span>
-            <span class="form-section-toggle-icon" [style.transform]="contentCollapsed() ? 'rotate(-90deg)' : ''">▾</span>
+            <span class="ds-form-section-toggle-icon" [style.transform]="contentCollapsed() ? 'rotate(-90deg)' : ''">▾</span>
           </button>
 
-          <div class="form-section-body" [class.collapsed]="contentCollapsed()">
+          <div class="ds-form-section-body" [class.collapsed]="contentCollapsed()">
           <div>
             <app-content-segments-editor
               [initialContent]="editorInitialContent()"
@@ -147,12 +147,12 @@
       </div>
 
       <!-- Actions (sticky, hijo directo de ds-admin-main) -->
-      <div class="actions-section">
+      <div class="ds-actions-section ds-container">
         @if (errorMessage()) {
           <div class="ds-alert ds-alert-error">{{ errorMessage() }}</div>
         }
 
-        <div class="actions-buttons">
+        <div class="ds-actions-buttons">
           <button
             class="ds-btn"
             [class.ds-btn-danger]="!isEditingSegment() && !isSaving()"

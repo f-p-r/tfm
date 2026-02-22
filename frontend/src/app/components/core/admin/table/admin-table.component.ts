@@ -84,7 +84,11 @@ import { AdminTableColumn, AdminTableAction } from './admin-table.model';
                 @if (actions.length) {
                   <td class="px-4 py-3 text-center whitespace-nowrap">
                     @for (a of actions; track a.action) {
-                      <button class="ds-btn-sm ds-btn-primary ml-3" (click)="onAction(a.action, row); $event.stopPropagation()">{{ a.label }}</button>
+                      @let isDisabled = a.disabledWhen ? a.disabledWhen(row) : false;
+                      <button
+                        [class]="isDisabled ? 'ds-btn-sm ds-btn-disabled ml-3' : 'ds-btn-sm ds-btn-primary ml-3'"
+                        [disabled]="isDisabled"
+                        (click)="onAction(a.action, row); $event.stopPropagation()">{{ a.label }}</button>
                     }
                   </td>
                 }

@@ -243,6 +243,78 @@
     @apply border-red-300 focus-visible:ring-red-500;
   }
 
+  /* Formulario admin con secciones colapsables */
+  .ds-admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 5rem;
+  }
+
+  .ds-admin-form h1 {
+    @apply mt-8;
+  }
+  /* Cabecera del bloque colapsable */
+  .ds-form-section-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-neutral-dark);
+    user-select: none;
+  }
+
+  .ds-form-section-toggle:hover {
+    color: var(--color-brand-primary);
+  }
+
+  .ds-form-section-toggle-icon {
+    font-size: 0.9rem;
+    transition: transform 0.25s ease;
+    display: inline-block;
+    width: 1rem;
+    text-align: center;
+  }
+
+  /* Cuerpo colapsable con animación suave */
+  .ds-form-section-body {
+    max-height: 3000px;
+    overflow: hidden;
+    opacity: 1;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+  }
+
+  .ds-form-section-body.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  /* Barra de acciones sticky al fondo del área de contenido */
+  .ds-actions-section {
+    position: sticky;
+    bottom: 0;
+    background: var(--color-neutral-light);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-top: 2px solid var(--color-neutral-medium);
+    /*box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);*/
+  }
+
+  .ds-actions-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
   /* === Autocomplete === */
 
   /* Contenedor del autocomplete */

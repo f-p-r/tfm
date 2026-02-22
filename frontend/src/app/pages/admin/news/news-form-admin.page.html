@@ -8,7 +8,7 @@
   <main class="ds-admin-main">
 
     @if (isEditMode() && isLoading()) {
-      <div class="news-form-admin ds-container">
+      <div class="ds-admin-form ds-container">
         <div>
           <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
           <app-admin-page-subtitle />
@@ -16,7 +16,7 @@
         <p>Cargando noticia...</p>
       </div>
     } @else if (errorMessage() && isEditMode() && originalNews() === null) {
-      <div class="news-form-admin ds-container">
+      <div class="ds-admin-form ds-container">
         <div>
           <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
           <app-admin-page-subtitle />
@@ -28,7 +28,7 @@
       </div>
     } @else {
 
-      <div class="news-form-admin ds-container">
+      <div class="ds-admin-form ds-container">
         <div>
           <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
           <app-admin-page-subtitle />
@@ -36,11 +36,11 @@
 
         <!-- Sección de datos básicos (colapsable) -->
         <div class="form-section">
-          <button type="button" class="form-section-toggle" (click)="dataCollapsed.set(!dataCollapsed())">
+          <button type="button" class="ds-form-section-toggle" (click)="dataCollapsed.set(!dataCollapsed())">
             <span>Datos de la noticia</span>
-            <span class="form-section-toggle-icon">{{ dataCollapsed() ? '▸' : '▾' }}</span>
+            <span class="ds-form-section-toggle-icon">{{ dataCollapsed() ? '▸' : '▾' }}</span>
           </button>
-          <div class="form-section-body" [class.collapsed]="dataCollapsed()">
+          <div class="ds-form-section-body" [class.collapsed]="dataCollapsed()">
           <div class="space-y-4" style="margin: 0 4px 4px 4px;">
             <!-- Título + Slug + Publicada -->
             <div class="grid grid-cols-1 md:grid-cols-[1fr_300px_auto] gap-4">
@@ -155,14 +155,14 @@
               </div>
               }
             </div><!-- /space-y-4 -->
-          </div><!-- /form-section-body -->
+          </div><!-- /ds-form-section-body -->
         </div>
 
         <!-- Sección de contenido (colapsable) -->
         <div class="form-section">
-          <button type="button" class="form-section-toggle" (click)="contentCollapsed.set(!contentCollapsed())">
+          <button type="button" class="ds-form-section-toggle" (click)="contentCollapsed.set(!contentCollapsed())">
             <span>Contenido</span>
-            <span class="form-section-toggle-icon">{{ contentCollapsed() ? '▸' : '▾' }}</span>
+            <span class="ds-form-section-toggle-icon">{{ contentCollapsed() ? '▸' : '▾' }}</span>
           </button>
 
           <!-- Clases CSS: siempre visible, justo bajo el título -->
@@ -183,7 +183,7 @@
             />
           </div>
 
-          <div class="form-section-body" [class.collapsed]="contentCollapsed()">
+          <div class="ds-form-section-body" [class.collapsed]="contentCollapsed()">
             <div class="space-y-4">
 
               <!-- Editor de contenido (opcional) -->
@@ -203,18 +203,18 @@
               </div>
 
             </div>
-          </div><!-- /form-section-body -->
+          </div><!-- /ds-form-section-body -->
         </div>
 
       </div>
 
       <!-- Acciones (sticky, hijo directo de ds-admin-main) -->
-      <div class="actions-section">
+      <div class="ds-actions-section ds-container">
         @if (errorMessage()) {
           <div class="ds-alert ds-alert-error">{{ errorMessage() }}</div>
         }
 
-        <div class="actions-buttons">
+        <div class="ds-actions-buttons">
           <button
             class="ds-btn"
             [class.ds-btn-danger]="!isEditingSegment() && !isSaving()"

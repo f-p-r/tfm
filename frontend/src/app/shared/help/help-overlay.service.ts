@@ -24,7 +24,7 @@ export class HelpOverlayService {
     // Crear contenedor del popover
     const popover = document.createElement('div');
     popover.className = 'ds-popover';
-    popover.style.position = 'absolute';
+    popover.style.position = 'fixed';
     popover.style.zIndex = '10000';
 
     // Título
@@ -100,21 +100,25 @@ export class HelpOverlayService {
   private positionPopover(anchor: HTMLElement, popover: HTMLDivElement): void {
     const anchorRect = anchor.getBoundingClientRect();
     const popoverRect = popover.getBoundingClientRect();
-
-    // Posición inicial: debajo del anchor con margen 8px
-    let top = anchorRect.bottom + window.scrollY + 8;
-    let left = anchorRect.left + window.scrollX;
-
-    // Clamp horizontal: no salirse del viewport (margen 10px)
     const viewportWidth = window.innerWidth;
-    const minLeft = 10;
-    const maxLeft = viewportWidth - popoverRect.width - 10;
+    const viewportHeight = window.innerHeight;
+    const margin = 10;
 
-    if (left < minLeft) {
-      left = minLeft;
-    } else if (left > maxLeft) {
-      left = maxLeft;
+    // Posición inicial: debajo del anchor con margen 8px (coordenadas de viewport — fixed)
+    let top = anchorRect.bottom + 8;
+    let left = anchorRect.left;
+
+    // Clamp horizontal: no salirse del viewport
+    const maxLeft = viewportWidth - popoverRect.width - margin;
+    if (left < margin) left = margin;
+    else if (left > maxLeft) left = maxLeft;
+
+    // Clamp vertical: si no cabe abajo, abrir hacia arriba
+    if (top + popoverRect.height + margin > viewportHeight) {
+      top = anchorRect.top - popoverRect.height - 8;
     }
+    // Si tampoco cabe arriba, anclar al margen superior
+    if (top < margin) top = margin;
 
     popover.style.top = `${top}px`;
     popover.style.left = `${left}px`;
