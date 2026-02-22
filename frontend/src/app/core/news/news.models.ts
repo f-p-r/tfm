@@ -34,6 +34,8 @@ export interface NewsSummaryDTO {
   title: string;
   /** Texto introductorio para cards y listados */
   text: string;
+  /** Indica si la noticia tiene contenido enriquecido (content != null y segments no vacío) */
+  hasContent: boolean;
   published: boolean;
   publishedAt: string | null;
   createdBy: number;

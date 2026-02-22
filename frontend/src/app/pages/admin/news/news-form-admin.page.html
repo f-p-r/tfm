@@ -5,22 +5,34 @@
   <app-admin-sidebar-container />
 
   <!-- Main content -->
-  <main class="ds-admin-main ds-container">
-    <div class="news-form-admin">
-      <div>
-        <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
-        <app-admin-page-subtitle />
-      </div>
+  <main class="ds-admin-main">
 
-      <!-- Estado de carga (solo modo edición) -->
-      @if (isEditMode() && isLoading()) {
+    @if (isEditMode() && isLoading()) {
+      <div class="news-form-admin ds-container">
+        <div>
+          <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
+          <app-admin-page-subtitle />
+        </div>
         <p>Cargando noticia...</p>
-      } @else if (errorMessage() && isEditMode() && originalNews() === null) {
+      </div>
+    } @else if (errorMessage() && isEditMode() && originalNews() === null) {
+      <div class="news-form-admin ds-container">
+        <div>
+          <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
+          <app-admin-page-subtitle />
+        </div>
         <div class="ds-alert ds-alert-error">
           <p class="mb-4">{{ errorMessage() }}</p>
           <button class="ds-btn ds-btn-secondary" (click)="onCancel()">Volver</button>
         </div>
-      } @else {
+      </div>
+    } @else {
+
+      <div class="news-form-admin ds-container">
+        <div>
+          <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
+          <app-admin-page-subtitle />
+        </div>
 
         <!-- Sección de datos básicos (colapsable) -->
         <div class="form-section">
@@ -194,45 +206,46 @@
           </div><!-- /form-section-body -->
         </div>
 
-        <!-- Acciones -->
-        <div class="actions-section">
-          @if (errorMessage()) {
-            <div class="ds-alert ds-alert-error">{{ errorMessage() }}</div>
-          }
+      </div>
 
-          <div class="actions-buttons">
-            <button
-              class="ds-btn"
-              [class.ds-btn-danger]="!isEditingSegment() && !isSaving()"
-              [class.ds-btn-disabled]="isEditingSegment() || isSaving()"
-              (click)="onCancel()"
-              [disabled]="isEditingSegment() || isSaving()"
-            >
-              Cancelar
-            </button>
-            <button
-              class="ds-btn"
-              [class.ds-btn-secondary]="!isEditingSegment() && !isSaving()"
-              [class.ds-btn-disabled]="isEditingSegment() || isSaving()"
-              (click)="openPreview()"
-              [disabled]="isEditingSegment() || isSaving()"
-            >
-              Vista previa
-            </button>
-            <button
-              class="ds-btn"
-              [class.ds-btn-primary]="!isSubmitDisabled()"
-              [class.ds-btn-disabled]="isSubmitDisabled()"
-              (click)="onSubmit()"
-              [disabled]="isSubmitDisabled()"
-            >
-              {{ isSaving() ? (isEditMode() ? 'Guardando...' : 'Creando...') : (isEditMode() ? 'Guardar cambios' : 'Crear noticia') }}
-            </button>
-          </div>
+      <!-- Acciones (sticky, hijo directo de ds-admin-main) -->
+      <div class="actions-section">
+        @if (errorMessage()) {
+          <div class="ds-alert ds-alert-error">{{ errorMessage() }}</div>
+        }
+
+        <div class="actions-buttons">
+          <button
+            class="ds-btn"
+            [class.ds-btn-danger]="!isEditingSegment() && !isSaving()"
+            [class.ds-btn-disabled]="isEditingSegment() || isSaving()"
+            (click)="onCancel()"
+            [disabled]="isEditingSegment() || isSaving()"
+          >
+            Cancelar
+          </button>
+          <button
+            class="ds-btn"
+            [class.ds-btn-secondary]="!isEditingSegment() && !isSaving()"
+            [class.ds-btn-disabled]="isEditingSegment() || isSaving()"
+            (click)="openPreview()"
+            [disabled]="isEditingSegment() || isSaving()"
+          >
+            Vista previa
+          </button>
+          <button
+            class="ds-btn"
+            [class.ds-btn-primary]="!isSubmitDisabled()"
+            [class.ds-btn-disabled]="isSubmitDisabled()"
+            (click)="onSubmit()"
+            [disabled]="isSubmitDisabled()"
+          >
+            {{ isSaving() ? (isEditMode() ? 'Guardando...' : 'Creando...') : (isEditMode() ? 'Guardar cambios' : 'Crear noticia') }}
+          </button>
         </div>
+      </div>
 
-      }
-    </div>
+    }
   </main>
 
 </div>

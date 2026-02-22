@@ -116,8 +116,8 @@ export class NavbarComponent {
     }
 
     items.push(
-      { label: 'Eventos', type: 'link', route: '/events' },
-      { label: 'Noticias', type: 'link', route: '/news' }
+      { label: 'Eventos', type: 'link', route: '/eventos' },
+      { label: 'Noticias', type: 'link', route: '/noticias' }
     );
 
     return items;

@@ -33,6 +33,8 @@ import { requireAuth } from './guards/auth.guard';
 import { resolveScopeGuard } from './guards/resolve-scope.guard';
 import { NewsFormAdminPage } from './pages/admin/news/news-form-admin.page';
 import { NewsListAdminPage } from './pages/admin/news/news-list-admin.page';
+import { NewsListPage } from './pages/news/news-list.page';
+import { NewsDetailPage } from './pages/news/news-detail.page';
 import { PERM } from './core/authz/permissions.constants';
 
 export const routes: Routes = [
@@ -54,6 +56,10 @@ export const routes: Routes = [
   { path: 'juegos/:slug', component: PageViewerPage, canActivate: [gameBySlugGuard] },
   { path: 'juegos/:slug/asociaciones', component: GameAssociationsPage, canActivate: [gameBySlugGuard] },
   { path: 'juegos/:slug/:pagina', component: PageViewerPage, canActivate: [gameBySlugGuard], resolve:{ entity: PageEntityResolver } },
+
+  // Noticias públicas
+  { path: 'noticias', component: NewsListPage, canActivate: [resolveScopeGuard] },
+  { path: 'noticias/:id/:slug', component: NewsDetailPage, canActivate: [resolveScopeGuard] },
 
   // Rutas de asociaciones con páginas
   { path: 'asociaciones', component: AssociationsPage, canActivate: [resolveScopeGuard] },

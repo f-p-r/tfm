@@ -35,6 +35,7 @@ class StorePageRequest extends FormRequest
             'content' => ['required', 'array'],
             'content.schemaVersion' => ['required', 'integer', Rule::in([1])],
             'content.segments' => ['required', 'array'],
+            'content.classNames' => ['sometimes', 'nullable', 'string'],
         ];
     }
 }

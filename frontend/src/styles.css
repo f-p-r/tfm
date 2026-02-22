@@ -123,6 +123,16 @@
     @apply bg-neutral-medium text-neutral-dark opacity-60;
   }
 
+  /* Juego: Azul (usado en cards de noticias) */
+  .ds-badge-game {
+    @apply bg-blue-100 text-blue-800;
+  }
+
+  /* Asociación: Verde (usado en cards de noticias) */
+  .ds-badge-association {
+    @apply bg-green-100 text-green-800;
+  }
+
   /* === Alertas / Notificaciones === */
 
   /* Clase base para alertas */
@@ -682,7 +692,7 @@
 
   /* Ajuste para el contenido principal para que no quede tapado por el navbar fijo */
   .ds-admin-main {
-    @apply w-full flex flex-col overflow-hidden px-1.5 sm:px-2.5 flex-1 min-h-0;
+    @apply w-full flex flex-col overflow-x-hidden overflow-y-auto px-1.5 sm:px-2.5 flex-1 min-h-0;
   }
 
   /* Subtítulo de página administrativa (ej: nombre de contexto bajo el título principal) */
@@ -751,12 +761,40 @@
 
   /* Header de card de asociación con fondo brand-primary y bordes redondeados superiores */
   .ds-card-assoc-header {
-    @apply bg-brand-primary px-4 sm:px-6 py-3 -m-4 sm:-m-6 mb-4 sm:mb-6 rounded-t-lg;
+    @apply bg-brand-primary px-4 sm:px-6 py-3 -m-4 sm:-m-6 mb-4 sm:mb-6 rounded-t-lg cursor-pointer;
+  }
+
+  /* Cambiar color del título al hacer hover sobre toda la cabecera */
+  .ds-card-assoc-header:hover .ds-card-assoc-title {
+    @apply text-brand-secondary;
   }
 
   /* Título de card de asociación (enlace) */
   .ds-card-assoc-title {
-    @apply text-lg sm:text-xl font-semibold text-neutral-light hover:text-brand-secondary transition-colors;
+    @apply text-lg sm:text-xl font-semibold text-neutral-light transition-colors;
+  }
+
+  /* Título de card de noticia: siempre 18px (text-lg sin override responsive) */
+  .ds-card-news-title {
+    @apply text-lg font-semibold text-neutral-light transition-colors;
+  }
+
+  /* Header de noticia con contenido: pointer y cambia color del título al hacer hover sobre la cabecera */
+  .ds-card-news-header-linked {
+    cursor: pointer;
+  }
+
+  .ds-card-news-header-linked:hover .ds-card-news-title {
+    @apply text-brand-secondary;
+  }
+
+  /* Enlace 'Leer más' al pie del body de la card de noticia */
+  .ds-card-news-ellipsis {
+    @apply text-brand-primary font-bold hover:text-brand-accent transition-colors;
+    font-size: 1.4rem;
+    line-height: 1;
+    vertical-align: middle;
+    margin-left: 0.25rem;
   }
 
   /* === Tablas de datos === */

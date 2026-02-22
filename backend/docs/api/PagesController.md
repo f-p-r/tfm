@@ -10,8 +10,11 @@ API para gestión de páginas editables por segmentos (admin) y lectura pública
   - `"3"` = Game
 - `content` es **objeto JSON** con forma:
   ```json
-  { "schemaVersion": 1, "segments": [] }
+  { "schemaVersion": 1, "segments": [], "classNames": "css-class otra-clase" }
   ```
+  - `schemaVersion`: requerido, debe ser `1`
+  - `segments`: requerido, array de bloques de contenido
+  - `classNames`: opcional, string de clases CSS aplicadas al contenedor de la página
 - Unicidad de slug: **unique(owner_type, owner_id, slug)**
 - Reglas `published` / `publishedAt`:
   - Si `published` pasa a `true` y `publishedAt` es `null`, se setea `publishedAt = now()`.
@@ -106,6 +109,7 @@ Crear página.
 - `content`: required, array
 - `content.schemaVersion`: required, integer, in:1
 - `content.segments`: required, array
+- `content.classNames`: sometimes, nullable, string
 
 **Respuestas:**
 - **201 Created** - Página creada

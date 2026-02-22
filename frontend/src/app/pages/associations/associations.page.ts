@@ -45,10 +45,10 @@ import { forkJoin, of } from 'rxjs';
               <div class="ds-cards-container">
                 @for (assoc of myAssociations(); track assoc.id) {
                   <article class="ds-card">
-                    <div class="ds-card-assoc-header">
-                      <a [routerLink]="['/asociaciones', assoc.slug]" class="ds-card-assoc-title">
+                    <div class="ds-card-assoc-header" [routerLink]="['/asociaciones', assoc.slug]">
+                      <span class="ds-card-assoc-title">
                         {{ getDisplayName(assoc) }}
-                      </a>
+                      </span>
                     </div>
                     <div class="ds-card-body">
                       <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
@@ -89,10 +89,10 @@ import { forkJoin, of } from 'rxjs';
             <div class="ds-cards-container">
               @for (assoc of otherAssociations(); track assoc.id) {
                 <article class="ds-card">
-                  <div class="ds-card-assoc-header">
-                    <a [routerLink]="['/asociaciones', assoc.slug]" class="ds-card-assoc-title">
+                  <div class="ds-card-assoc-header" [routerLink]="['/asociaciones', assoc.slug]">
+                    <span class="ds-card-assoc-title">
                       {{ getDisplayName(assoc) }}
-                    </a>
+                    </span>
                   </div>
                   <div class="ds-card-body">
                     <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">

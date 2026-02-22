@@ -272,6 +272,7 @@ class NewsController extends Controller
             'slug' => $news->slug,
             'title' => $news->title,
             'text' => $news->text,
+            'hasContent' => $news->content !== null && !empty($news->content['segments'] ?? []),
             'published' => $news->published,
             'publishedAt' => $news->published_at?->toISOString(),
             'createdBy' => $news->created_by,

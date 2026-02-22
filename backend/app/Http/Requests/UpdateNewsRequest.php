@@ -70,6 +70,7 @@ class UpdateNewsRequest extends FormRequest
             'content' => ['sometimes', 'nullable', 'array'],
             'content.schemaVersion' => ['required_with:content', 'integer', Rule::in([1])],
             'content.segments' => ['required_with:content', 'array'],
+            'content.classNames' => ['sometimes', 'nullable', 'string'],
             'published' => ['sometimes', 'boolean'],
             'published_at' => ['sometimes', 'nullable', 'date'],
         ];

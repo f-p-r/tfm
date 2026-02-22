@@ -48,22 +48,18 @@
 }
 
 
-/* Barra de acciones fija al fondo de la ventana, alineada con el contenido principal */
+/* Barra de acciones sticky al fondo del área de contenido */
 .actions-section {
-  position: fixed;
+  position: sticky;
   bottom: 0;
-  /* Se desplaza a la derecha del sidebar usando la variable CSS del shell */
-  left: var(--admin-sidebar-w, 17rem);
-  right: 0;
   background: var(--color-white);
-  z-index: 60;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding: 0.75rem 1.5rem;
   border-top: 2px solid var(--color-neutral-medium);
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
-  transition: left 0.3s ease;
 }
 
 .actions-buttons {

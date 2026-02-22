@@ -16,10 +16,14 @@ API para gestión de noticias con autenticación y permisos por scope.
 - **slug** (string): Identificador URL-friendly, **NO es único globalmente**
   - URL final: `/noticias/{id}/{slug}`
 - **text** (string): Texto introductorio para cards/listados
+- **hasContent** (boolean): Indica si la noticia tiene contenido (`content != null` y `segments` no vacío). Solo aparece en el listado (GET /api/news). Útil para mostrar un enlace "Leer más" en cards sin necesitar cargar el detalle.
 - **content** (object, nullable): Contenido completo de la noticia en formato JSON estructurado
   ```json
-  { "schemaVersion": 1, "segments": [] }
+  { "schemaVersion": 1, "segments": [], "classNames": "css-class otra-clase" }
   ```
+  - `schemaVersion`: requerido, debe ser `1`
+  - `segments`: requerido, array de bloques de contenido
+  - `classNames`: opcional, string de clases CSS aplicadas al contenedor de la noticia
 - **Reglas `published` / `publishedAt`:**
   - Si `published` pasa a `true` y `publishedAt` es `null`, se setea `publishedAt = now()`
   - Si `published` pasa a `false`, **no** se limpia `publishedAt`
@@ -64,6 +68,7 @@ Listar noticias.
       "slug": "nueva-temporada",
       "title": "Nueva Temporada 2026",
       "text": "Anunciamos el inicio de la nueva temporada competitiva...",
+      "hasContent": true,
       "published": true,
       "publishedAt": "2026-02-01T12:00:00.000000Z",
       "createdBy": 1,
@@ -85,7 +90,7 @@ Listar noticias.
 
 **Orden:** `published_at` desc, `created_at` desc
 
-**⚠️ IMPORTANTE:** El listado NO incluye el campo `content` (solo `text`). Para obtener el contenido completo usar GET /api/news/{id}.
+**⚠️ IMPORTANTE:** El listado NO incluye el campo `content` (solo `text`). Incluye `hasContent` (boolean) para saber si la noticia tiene contenido sin tener que cargar el detalle. Para obtener el contenido completo usar GET /api/news/{id}.
 
 **Notas:**
 - Por defecto solo muestra noticias con `published = true`
@@ -182,6 +187,7 @@ Crear noticia.
 - `content`: nullable, array
 - `content.schemaVersion`: required_with:content, integer, in:[1]
 - `content.segments`: required_with:content, array
+- `content.classNames`: sometimes, nullable, string
 - `published`: required, boolean
 - `published_at`: nullable, date
 
@@ -253,6 +259,7 @@ Actualizar noticia (parcial).
 - `content`: sometimes, nullable, array
 - `content.schemaVersion`: required_with:content, integer, in:[1]
 - `content.segments`: required_with:content, array
+- `content.classNames`: sometimes, nullable, string
 - `published`: sometimes, boolean
 - `published_at`: sometimes, nullable, date
 
