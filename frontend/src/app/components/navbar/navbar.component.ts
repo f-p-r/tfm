@@ -122,6 +122,11 @@ export class NavbarComponent {
       { label: 'Noticias', type: 'link', route: '/noticias' }
     );
 
+    // Solo mostrar 'Contacto' si NO estamos en scope de asociación
+    if (this.contextStore.scopeType() !== WebScope.ASSOCIATION) {
+      items.push({ label: 'Contacto', type: 'link', route: '/contacto' });
+    }
+
     return items;
   });
 

@@ -69,7 +69,7 @@
     </a>
 
     @if (isAdmin()) {
-      <span class="ds-nav-link font-semibold hidden md:inline">{{ displayName }}</span>
+      <span class="ds-nav-link font-semibold hidden xl:inline">{{ displayName }}</span>
     }
 
     <div class="ds-nav-links">
@@ -81,7 +81,7 @@
 
         <!-- Dropdown de asociación: solo si estamos en scope de asociación -->
         @if (isAssociationScope() && associationShortname()) {
-          <div class="ds-menu relative hidden md:inline-block">
+          <div class="ds-menu relative hidden xl:inline-block">
             <button
               type="button"
               class="ds-nav-link flex items-center gap-1 font-semibold"

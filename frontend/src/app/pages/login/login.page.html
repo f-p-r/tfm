@@ -63,19 +63,28 @@
           }
         </div>
 
-        <!-- Botón Iniciar sesión -->
-        <button
-          type="submit"
-          [disabled]="form.invalid || isSubmitting()"
-          class="ds-btn ds-btn-primary w-full"
-          [class.ds-btn-disabled]="form.invalid || isSubmitting()"
-        >
-          @if (isSubmitting()) {
-            Iniciando sesión...
-          } @else {
-            Iniciar sesión
-          }
-        </button>
+        <!-- Botones -->
+        <div class="flex gap-3 justify-center">
+          <button
+            type="submit"
+            [disabled]="form.invalid || isSubmitting()"
+            class="ds-btn ds-btn-primary flex-1"
+            [class.ds-btn-disabled]="form.invalid || isSubmitting()"
+          >
+            @if (isSubmitting()) {
+              Iniciando sesión...
+            } @else {
+              Iniciar sesión
+            }
+          </button>
+          <button
+            type="button"
+            class="ds-btn ds-btn-secondary flex-1"
+            (click)="cancel()"
+          >
+            Cancelar
+          </button>
+        </div>
       </form>
 
       <!-- Separador -->

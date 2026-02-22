@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, signal, PLATFORM_ID, OnInit } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
@@ -19,6 +20,7 @@ export class LoginPage implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly location = inject(Location);
   private readonly platformId = inject(PLATFORM_ID);
 
   readonly form = this.fb.nonNullable.group({
@@ -112,6 +114,10 @@ export class LoginPage implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       window.location.href = `${environment.apiBaseUrl}/api/auth/facebook/redirect`;
     }
+  }
+
+  cancel(): void {
+    this.location.back();
   }
 
   getFieldError(field: string): string | null {

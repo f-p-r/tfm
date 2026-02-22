@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
 use App\Models\RoleGrant;
 use App\Models\User;
+use App\Models\UserEvent;
 use App\Services\AuthorizationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -112,9 +113,23 @@ class EventController extends Controller
         }
 
         // Orden: más próximos primero
-        $events = $query->orderBy('starts_at')
-            ->get()
-            ->map(fn(Event $event) => $this->mapEventSummary($event));
+        $eventCollection = $query->orderBy('starts_at')->get();
+
+        // Cargar asistencias del usuario autenticado en una sola consulta
+        $myAttendances = [];
+        if ($request->user()) {
+            $eventIds = $eventCollection->pluck('id')->all();
+            $myAttendances = UserEvent::where('user_id', $request->user()->id)
+                ->whereIn('event_id', $eventIds)
+                ->with('statusType')
+                ->get()
+                ->keyBy('event_id')
+                ->all();
+        }
+
+        $events = $eventCollection->map(
+            fn(Event $event) => $this->mapEventSummary($event, $myAttendances[$event->id] ?? null)
+        );
 
         return response()->json($events);
     }
@@ -192,8 +207,15 @@ class EventController extends Controller
             }
         }
 
+        $myAttendance = Auth::id()
+            ? UserEvent::where('user_id', Auth::id())
+                ->where('event_id', $event->id)
+                ->with('statusType')
+                ->first()
+            : null;
+
         return response()->json(
-            $this->mapEvent($event->load(['creator', 'game', 'country', 'region']))
+            $this->mapEvent($event->load(['creator', 'game', 'country', 'region']), $myAttendance)
         );
     }
 
@@ -295,9 +317,29 @@ class EventController extends Controller
     }
 
     /**
+     * Construir el objeto myAttendance para la respuesta.
+     */
+    private function mapMyAttendance(?UserEvent $userEvent): ?array
+    {
+        if (!$userEvent) {
+            return null;
+        }
+
+        return [
+            'id'         => $userEvent->id,
+            'status'     => $userEvent->status,
+            'statusDate' => $userEvent->status_date?->toISOString(),
+            'statusType' => $userEvent->statusType ? [
+                'id'   => $userEvent->statusType->id,
+                'name' => $userEvent->statusType->name,
+            ] : null,
+        ];
+    }
+
+    /**
      * Mapear Event a respuesta de listado (sin content, con hasContent).
      */
-    private function mapEventSummary(Event $event): array
+    private function mapEventSummary(Event $event, ?UserEvent $myAttendance = null): array
     {
         return [
             'id'               => $event->id,
@@ -342,18 +384,19 @@ class EventController extends Controller
                 'username' => $event->creator->username,
                 'name'     => $event->creator->name,
             ] : null,
-            'game'             => $event->game ? [
+            'game'         => $event->game ? [
                 'id'   => $event->game->id,
                 'name' => $event->game->name,
                 'slug' => $event->game->slug,
             ] : null,
+            'myAttendance' => $this->mapMyAttendance($myAttendance),
         ];
     }
 
     /**
      * Mapear Event a respuesta de detalle (con content completo).
      */
-    private function mapEvent(Event $event): array
+    private function mapEvent(Event $event, ?UserEvent $myAttendance = null): array
     {
         return [
             'id'               => $event->id,
@@ -398,11 +441,12 @@ class EventController extends Controller
                 'username' => $event->creator->username,
                 'name'     => $event->creator->name,
             ] : null,
-            'game'             => $event->game ? [
+            'game'         => $event->game ? [
                 'id'   => $event->game->id,
                 'name' => $event->game->name,
                 'slug' => $event->game->slug,
             ] : null,
+            'myAttendance' => $this->mapMyAttendance($myAttendance),
         ];
     }
 }

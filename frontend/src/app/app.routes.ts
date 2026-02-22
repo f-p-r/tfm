@@ -37,6 +37,8 @@ import { EventsListAdminPage } from './pages/admin/events/events-list-admin.page
 import { EventsFormAdminPage } from './pages/admin/events/events-form-admin.page';
 import { NewsListPage } from './pages/news/news-list.page';
 import { NewsDetailPage } from './pages/news/news-detail.page';
+import { EventsListPage } from './pages/events/events-list.page';
+import { EventDetailPage } from './pages/events/event-detail.page';
 import { PERM } from './core/authz/permissions.constants';
 
 export const routes: Routes = [
@@ -62,6 +64,10 @@ export const routes: Routes = [
   // Noticias públicas
   { path: 'noticias', component: NewsListPage, canActivate: [resolveScopeGuard] },
   { path: 'noticias/:id/:slug', component: NewsDetailPage, canActivate: [resolveScopeGuard] },
+
+  // Eventos públicos
+  { path: 'eventos', component: EventsListPage, canActivate: [resolveScopeGuard] },
+  { path: 'eventos/:id/:slug', component: EventDetailPage, canActivate: [resolveScopeGuard] },
 
   // Rutas de asociaciones con páginas
   { path: 'asociaciones', component: AssociationsPage, canActivate: [resolveScopeGuard] },

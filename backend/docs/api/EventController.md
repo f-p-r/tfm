@@ -112,12 +112,20 @@ Listar eventos.
       "createdAt": "2026-02-10T08:00:00.000000Z",
       "updatedAt": "2026-02-15T09:00:00.000000Z",
       "creator": { "id": 1, "username": "admin", "name": "Administrador" },
-      "game": { "id": 5, "name": "Counter-Strike 2", "slug": "cs2" }
+      "game": { "id": 5, "name": "Counter-Strike 2", "slug": "cs2" },
+      "myAttendance": {
+        "id": 7,
+        "status": 1,
+        "statusDate": "2026-02-22T10:00:00.000000Z",
+        "statusType": { "id": 1, "name": "Solicitud pendiente" }
+      }
     }
   ]
   ```
 
 **⚠️ IMPORTANTE:** El listado NO incluye el campo `content` (solo `text`). Incluye `hasContent` para saber si hay contenido web sin cargar el detalle.
+
+**Campo `myAttendance`:** Si hay usuario autenticado, cada evento incluye su asistencia registrada (`null` si no tiene ninguna). Se calcula en una sola consulta adicional para todo el listado (sin N+1).
 
 **Notas sobre `include_unpublished`:**
 - Usuario con `events.edit` global → ve todos (publicados + no publicados)
@@ -166,12 +174,19 @@ Obtener detalle de un evento.
     "createdAt": "2026-02-10T08:00:00.000000Z",
     "updatedAt": "2026-02-15T09:00:00.000000Z",
     "creator": { "id": 1, "username": "admin", "name": "Administrador" },
-    "game": { "id": 5, "name": "Counter-Strike 2", "slug": "cs2" }
+    "game": { "id": 5, "name": "Counter-Strike 2", "slug": "cs2" },
+    "myAttendance": {
+      "id": 7,
+      "status": 1,
+      "statusDate": "2026-02-22T10:00:00.000000Z",
+      "statusType": { "id": 1, "name": "Solicitud pendiente" }
+    }
   }
   ```
 - **404 Not Found** — Evento no encontrado o no publicado sin permisos
 
 **Notas:**
+- `myAttendance`: presente solo si hay usuario autenticado y tiene una asistencia registrada para el evento; `null` en caso contrario.
 - Si el evento NO está publicado: requiere autenticación y permiso `events.edit` en su scope; en caso contrario devuelve 404
 
 ---

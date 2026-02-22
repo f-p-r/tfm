@@ -1,0 +1,244 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+
+import { WebScope } from '../../core/web-scope.constants';
+import { EventsApiService } from '../../core/events/events-api.service';
+import { EventDTO, EventAttendanceDTO } from '../../core/events/event.models';
+import { UserEventsApiService } from '../../core/events/user-events-api.service';
+import { AuthService } from '../../core/auth/auth.service';
+import { AssociationsResolveService } from '../../core/associations/associations-resolve.service';
+import { ContentRendererComponent } from '../../shared/content/content-renderer/content-renderer.component';
+
+@Component({
+  selector: 'app-event-detail-page',
+  imports: [DatePipe, ContentRendererComponent],
+  template: `
+    <div class="ds-container">
+      <div class="pt-6 pb-10">
+
+        @if (loading()) {
+          <p class="text-neutral-dark">Cargando...</p>
+        } @else if (error()) {
+          <p class="text-red-600">{{ error() }}</p>
+        } @else if (event(); as e) {
+
+          <!-- Cabecera: título + botón cerrar -->
+          <header class="flex items-start justify-between gap-4 border-b border-neutral-medium pb-4 mb-6">
+            <h1 class="h1 flex-1">{{ e.title }}</h1>
+            <button
+              type="button"
+              class="ds-btn ds-btn-secondary shrink-0 mt-1"
+              (click)="goBack()"
+            >✕ Cerrar</button>
+          </header>
+
+          <!-- Metadatos -->
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
+
+            <!-- Fechas -->
+            <div class="flex items-baseline gap-x-2">
+              <span class="ds-card-label">Inicio:</span>
+              <span class="ds-card-text">{{ e.startsAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            @if (e.endsAt) {
+              <div class="flex items-baseline gap-x-2">
+                <span class="ds-card-label">Fin:</span>
+                <span class="ds-card-text">{{ e.endsAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+
+            <!-- Ubicación (en la misma línea) -->
+            @if (locationLabel(e)) {
+              <a
+                [href]="mapsUrl(e)"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ds-card-link"
+              >📍 {{ locationLabel(e) }}</a>
+            }
+
+            <!-- Juego -->
+            @if (e.game) {
+              <span class="ds-badge ds-badge-game">{{ e.game.name }}</span>
+            }
+
+            <!-- Asociación -->
+            @if (e.scopeType === WebScope.ASSOCIATION && e.scopeId) {
+              <span class="ds-badge ds-badge-association">{{ associationLabel() }}</span>
+            }
+
+          </div>
+
+          <!-- Estado de asistencia o botón de inscripción -->
+          <div class="mb-6">
+            @if (attendance(); as att) {
+              <!-- Usuario ya tiene asistencia registrada -->
+              <span [class]="'ds-badge ' + attendanceBadgeClass(att.status)">
+                {{ att.statusType.name }}
+              </span>
+            } @else if (e.registrationOpen) {
+              <!-- Inscripción abierta: el botón siempre visible; si no hay sesión redirige al login -->
+              <button
+                type="button"
+                class="ds-btn ds-btn-primary"
+                [disabled]="enrolling()"
+                (click)="requestAttendance(e.id)"
+              >
+                {{ enrolling() ? 'Enviando...' : 'Solicitar inscripción' }}
+              </button>
+              @if (enrollError()) {
+                <p class="ds-error mt-2">{{ enrollError() }}</p>
+              }
+            } @else {
+              <span class="ds-badge ds-badge-inactive">Inscripción no disponible</span>
+            }
+          </div>
+
+          <!-- Contenido enriquecido -->
+          @if (e.content) {
+            <app-content-renderer [content]="e.content" />
+          }
+
+        }
+      </div>
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class EventDetailPage implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly eventsApi = inject(EventsApiService);
+  private readonly userEventsApi = inject(UserEventsApiService);
+  private readonly associationsResolve = inject(AssociationsResolveService);
+  private readonly location = inject(Location);
+
+  private readonly authService = inject(AuthService);
+  readonly WebScope = WebScope;
+
+  readonly loading = signal(true);
+  readonly error = signal<string | null>(null);
+  readonly event = signal<EventDTO | null>(null);
+
+  /** Asistencia actual del usuario (sincronizada con el evento o actualizada tras inscripción) */
+  readonly attendance = signal<EventAttendanceDTO | null>(null);
+
+  readonly enrolling = signal(false);
+  readonly enrollError = signal<string | null>(null);
+
+  /** Label de la asociación, resuelto del caché o de forma asíncrona */
+  readonly associationLabel = computed<string>(() => {
+    const e = this.event();
+    if (!e || e.scopeType !== WebScope.ASSOCIATION || !e.scopeId) return '';
+    const cached = this.associationsResolve.getById(e.scopeId);
+    if (cached) return cached.shortname ?? cached.name;
+    this.associationsResolve.resolveById(e.scopeId).subscribe(() => {
+      this.event.update((v) => (v ? { ...v } : v));
+    });
+    return `Asociación #${e.scopeId}`;
+  });
+
+  ngOnInit(): void {
+    const rawId = this.route.snapshot.paramMap.get('id');
+    const numId = Number(rawId);
+
+    if (!rawId || isNaN(numId)) {
+      this.error.set('ID de evento no válido.');
+      this.loading.set(false);
+      return;
+    }
+
+    this.eventsApi.getById(numId).subscribe({
+      next: (e) => {
+        this.event.set(e);
+        this.attendance.set(e.myAttendance);
+        this.loading.set(false);
+      },
+      error: (err: unknown) => {
+        const msg = err instanceof Error ? err.message : 'Error al cargar el evento.';
+        this.error.set(msg);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  /** Envía la solicitud de inscripción al evento */
+  requestAttendance(eventId: number): void {
+    const user = this.authService.currentUser();
+    if (!user) {
+      this.router.navigateByUrl('/login');
+      return;
+    }
+
+    this.enrolling.set(true);
+    this.enrollError.set(null);
+
+    this.userEventsApi.requestAttendance(user.id!, eventId).subscribe({
+      next: (result) => {
+        this.attendance.set({
+          id: result.id,
+          status: result.status,
+          statusDate: result.statusDate,
+          statusType: result.statusType,
+        });
+        this.enrolling.set(false);
+      },
+      error: () => {
+        this.enrollError.set('No se pudo enviar la solicitud. Inténtalo de nuevo.');
+        this.enrolling.set(false);
+      },
+    });
+  }
+
+  /** Clase CSS del badge de asistencia según el status */
+  attendanceBadgeClass(status: 1 | 2 | 3): string {
+    switch (status) {
+      case 1: return 'ds-badge-warning';
+      case 2: return 'ds-badge-success';
+      case 3: return 'ds-badge-error';
+    }
+  }
+
+  /** Etiqueta corta de ubicación para mostrar junto a las fechas */
+  locationLabel(e: EventDTO): string {
+    if (e.streetName) {
+      const street = e.streetNumber ? `${e.streetName} ${e.streetNumber}` : e.streetName;
+      const parts = [street];
+      if (e.municipalityName) parts.push(e.municipalityName);
+      if (e.provinceName && e.provinceName !== e.municipalityName) parts.push(e.provinceName);
+      return parts.join(', ');
+    }
+    if (e.municipalityName) {
+      return e.provinceName && e.provinceName !== e.municipalityName
+        ? `${e.municipalityName}, ${e.provinceName}`
+        : e.municipalityName;
+    }
+    return '';
+  }
+
+  /** Construye URL de Google Maps con los campos de ubicación disponibles */
+  mapsUrl(e: EventDTO): string {
+    const parts: string[] = [];
+    if (e.streetName) {
+      parts.push(e.streetNumber ? `${e.streetName} ${e.streetNumber}` : e.streetName);
+    }
+    if (e.municipalityName) parts.push(e.municipalityName);
+    if (e.provinceName && e.provinceName !== e.municipalityName) parts.push(e.provinceName);
+    if (e.region) parts.push(e.region.name);
+    if (e.country) parts.push(e.country.name);
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(parts.join(', '))}`;
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+}

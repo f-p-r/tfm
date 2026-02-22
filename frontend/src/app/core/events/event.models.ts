@@ -1,6 +1,18 @@
 import { PageContentDTO } from '../../shared/content/page-content.dto';
 
 /**
+ * Estado de asistencia del usuario autenticado a un evento.
+ * Solo presente en el listado público cuando hay sesión activa.
+ */
+export interface EventAttendanceDTO {
+  id: number;
+  /** 1 = Solicitud pendiente, 2 = Admitido, 3 = Rechazado */
+  status: 1 | 2 | 3;
+  statusDate: string;
+  statusType: { id: number; name: string };
+}
+
+/**
  * Información reducida del creador de un evento.
  */
 export interface EventCreatorDTO {
@@ -73,6 +85,11 @@ export interface EventSummaryDTO {
   creator: EventCreatorDTO;
   /** Juego relacionado (null si el evento no tiene gameId) */
   game: EventGameDTO | null;
+  /**
+   * Asistencia del usuario autenticado a este evento.
+   * null si el usuario no tiene asistencia registrada o no está autenticado.
+   */
+  myAttendance: EventAttendanceDTO | null;
 }
 
 /**

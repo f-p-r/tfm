@@ -133,6 +133,21 @@
     @apply bg-green-100 text-green-800;
   }
 
+  /* Asistencia: Solicitud pendiente (amarillo/aviso) */
+  .ds-badge-warning {
+    @apply bg-amber-100 text-amber-800;
+  }
+
+  /* Asistencia: Admitido (verde éxito) */
+  .ds-badge-success {
+    @apply bg-emerald-100 text-emerald-800;
+  }
+
+  /* Asistencia: Rechazado (rojo error) */
+  .ds-badge-error {
+    @apply bg-red-100 text-red-700;
+  }
+
   /* === Alertas / Notificaciones === */
 
   /* Clase base para alertas */
@@ -438,13 +453,13 @@
     @apply flex items-center justify-between gap-3 h-full mx-auto w-full max-w-7xl px-1.5 sm:px-2.5;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 1279px) {
     .ds-nav-inner {
       @apply pr-1.5;
     }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1280px) {
     .ds-nav-inner {
       @apply pr-2.5;
     }
@@ -480,7 +495,7 @@
   }
 
   /* Vista móvil: reducir icono y texto al 70% / tamaño más compacto */
-  @media (max-width: 767px) {
+  @media (max-width: 1279px) {
     .ds-nav-brand-card {
       width: 21px;
       height: 26.6px;
@@ -492,7 +507,7 @@
 
   /* Enlaces de navegación desktop */
   .ds-nav-links {
-    @apply hidden md:flex items-center gap-1;
+    @apply hidden xl:flex items-center gap-1;
   }
 
   /* Estilo individual de link de navegación */
@@ -507,12 +522,12 @@
 
   /* Botón hamburguesa para móvil */
   .ds-nav-toggle {
-    @apply md:hidden p-2 rounded-md hover:bg-neutral-light focus-visible:outline-2 focus-visible:outline-brand-primary text-neutral-dark;
+    @apply xl:hidden p-2 rounded-md hover:bg-neutral-light focus-visible:outline-2 focus-visible:outline-brand-primary text-neutral-dark;
   }
 
   /* Panel de navegación móvil */
   .ds-nav-mobile {
-    @apply md:hidden bg-white border-b border-neutral-medium;
+    @apply xl:hidden bg-white border-b border-neutral-medium;
   }
 
   /* Lista de enlaces móvil con centrado y ancho máximo */
