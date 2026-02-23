@@ -56,7 +56,7 @@
 
 <nav class="ds-nav" [class.ds-nav--hidden]="scrolledDown()" aria-label="Navegación principal">
   <div class="ds-nav-inner">
-    <a routerLink="/" class="ds-nav-brand">
+    <a [routerLink]="homeRoute()" class="ds-nav-brand">
       <svg class="ds-nav-brand-card" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <rect width="30" height="38" rx="4" fill="#1B4F72"/>
         <!-- Oros: anillo exterior + núcleo central -->

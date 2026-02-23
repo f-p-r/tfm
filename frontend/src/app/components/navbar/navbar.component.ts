@@ -103,6 +103,21 @@ export class NavbarComponent {
    */
   readonly backToAssociationsRoute = computed(() => ['/asociaciones']);
 
+  /** Ruta home contextual: / en global, /juegos/:slug en game, /asociaciones/:slug en association */
+  readonly homeRoute = computed(() => {
+    const type = this.contextStore.scopeType();
+    const id = this.contextStore.scopeId();
+    if (type === WebScope.GAME && id) {
+      const game = this.gamesStore.getById(id);
+      if (game?.slug) return ['/juegos', game.slug];
+    }
+    if (type === WebScope.ASSOCIATION && id) {
+      const assoc = this.associationsResolve.getById(id);
+      if (assoc?.slug) return ['/asociaciones', assoc.slug];
+    }
+    return ['/'];
+  });
+
   /**
    * Elementos de navegación ESTÁNDAR.
    * NOTA: Ya no incluimos aquí las adminActions, se gestionan aparte en el HTML
