@@ -52,6 +52,7 @@ export class HasPermissionDirective {
   private mode: PermissionMode = 'any';
   private elseTemplateRef: TemplateRef<any> | null = null;
   private hasView = false;
+  private hasElseView = false;
 
   /**
    * Permiso o permisos requeridos para mostrar el contenido.
@@ -103,18 +104,24 @@ export class HasPermissionDirective {
       // Tiene permiso → mostrar contenido principal
       if (!this.hasView) {
         this.viewContainer.clear();
-        this.viewContainer.createEmbeddedView(this.templateRef);
         this.hasView = true;
+        this.hasElseView = false;
+        this.viewContainer.createEmbeddedView(this.templateRef);
       }
     } else {
       // NO tiene permiso → mostrar template else o limpiar
       if (this.hasView) {
         this.viewContainer.clear();
         this.hasView = false;
+        this.hasElseView = false;
       }
 
-      if (this.elseTemplateRef) {
-        this.viewContainer.createEmbeddedView(this.elseTemplateRef);
+      if (!this.hasElseView) {
+        this.viewContainer.clear(); // garantiza que no haya vistas huérfanas
+        if (this.elseTemplateRef) {
+          this.viewContainer.createEmbeddedView(this.elseTemplateRef);
+          this.hasElseView = true;
+        }
       }
     }
   }

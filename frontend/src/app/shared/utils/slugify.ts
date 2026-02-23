@@ -13,7 +13,7 @@
  * Ejemplos:
  * - "Siete y medio" → "siete-y-medio"
  * - "Guiñote" → "guinote"
- * - "Póker Texas Hold'em" → "poker-texas-hold-em"
+ * - "Póker Texas Hold'em" → "poker-texas-holdem"
  *
  * @param text Texto a convertir en slug.
  * @returns Slug generado (max 64 caracteres).

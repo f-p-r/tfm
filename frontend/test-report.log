@@ -1,0 +1,691 @@
+Using Vitest configuration file: C:\master\tfm-src\frontend\vitest-base.config.ts
+[33m❯[39m Building...
+[32m✔[39m Building...
+[1mInitial chunk files[22m                                                          [2m | [22m[1mNames[22m                                                                     [2m | [22m [1mRaw size[22m
+[32mspec-app-styleguide-styleguide.page.js[39m                                       [2m | [22m[2mspec-app-styleguide-styleguide.page[22m                                       [2m | [22m[36m119.35 kB[39m[2m | [22m
+[32mstyles.css[39m                                                                   [2m | [22m[2mstyles[22m                                                                    [2m | [22m[36m105.73 kB[39m[2m | [22m
+[32mspec-app-pages-page-viewer-page-viewer.page.js[39m                               [2m | [22m[2mspec-app-pages-page-viewer-page-viewer.page[22m                               [2m | [22m [36m77.46 kB[39m[2m | [22m
+[32mchunk-HMEZJVWX.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m [36m57.13 kB[39m[2m | [22m
+[32mspec-app-pages-registro-registro.page.js[39m                                     [2m | [22m[2mspec-app-pages-registro-registro.page[22m                                     [2m | [22m [36m34.06 kB[39m[2m | [22m
+[32mspec-app-pages-login-login.page.js[39m                                           [2m | [22m[2mspec-app-pages-login-login.page[22m                                           [2m | [22m [36m31.18 kB[39m[2m | [22m
+[32mchunk-5XNYFSPP.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m [36m28.56 kB[39m[2m | [22m
+[32mspec-app-components-navbar-navbar.component.js[39m                               [2m | [22m[2mspec-app-components-navbar-navbar.component[22m                               [2m | [22m [36m20.94 kB[39m[2m | [22m
+[32mspec-app-components-core-admin-table-admin-table.component.js[39m                [2m | [22m[2mspec-app-components-core-admin-table-admin-table.component[22m                [2m | [22m [36m15.27 kB[39m[2m | [22m
+[32mchunk-SHS2YBYB.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m [36m15.06 kB[39m[2m | [22m
+[32mspec-app-shared-directives-has-permission.directive.js[39m                       [2m | [22m[2mspec-app-shared-directives-has-permission.directive[22m                       [2m | [22m [36m14.93 kB[39m[2m | [22m
+[32mspec-app-core-games-games.store.js[39m                                           [2m | [22m[2mspec-app-core-games-games.store[22m                                           [2m | [22m [36m13.80 kB[39m[2m | [22m
+[32mspec-app-app.js[39m                                                              [2m | [22m[2mspec-app-app[22m                                                              [2m | [22m [36m13.62 kB[39m[2m | [22m
+[32mspec-app-components-user-menu-user-menu.component.js[39m                         [2m | [22m[2mspec-app-components-user-menu-user-menu.component[22m                         [2m | [22m [36m11.10 kB[39m[2m | [22m
+[32mspec-app-core-context-context.service.js[39m                                     [2m | [22m[2mspec-app-core-context-context.service[22m                                     [2m | [22m [36m10.69 kB[39m[2m | [22m
+[32mspec-app-core-auth-auth.service.js[39m                                           [2m | [22m[2mspec-app-core-auth-auth.service[22m                                           [2m | [22m  [36m9.99 kB[39m[2m | [22m
+[32mspec-app-shared-help-help-i-help-i.component.js[39m                              [2m | [22m[2mspec-app-shared-help-help-i-help-i.component[22m                              [2m | [22m  [36m9.95 kB[39m[2m | [22m
+[32mchunk-V2LQOTOR.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m9.87 kB[39m[2m | [22m
+[32mchunk-MFF5JEQS.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m9.70 kB[39m[2m | [22m
+[32mchunk-53MJ2BHP.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m9.55 kB[39m[2m | [22m
+[32mspec-app-core-associations-associations-resolve.service.js[39m                   [2m | [22m[2mspec-app-core-associations-associations-resolve.service[22m                   [2m | [22m  [36m9.35 kB[39m[2m | [22m
+[32mspec-app-core-authz-permissions.store.js[39m                                     [2m | [22m[2mspec-app-core-authz-permissions.store[22m                                     [2m | [22m  [36m7.42 kB[39m[2m | [22m
+[32mspec-app-guards-permission.guard.js[39m                                          [2m | [22m[2mspec-app-guards-permission.guard[22m                                          [2m | [22m  [36m7.39 kB[39m[2m | [22m
+[32mchunk-7ZM4DCRL.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m7.11 kB[39m[2m | [22m
+[32mspec-app-shared-help-help-hover.directive.js[39m                                 [2m | [22m[2mspec-app-shared-help-help-hover.directive[22m                                 [2m | [22m  [36m6.76 kB[39m[2m | [22m
+[32mspec-app-core-context-context.store.js[39m                                       [2m | [22m[2mspec-app-core-context-context.store[22m                                       [2m | [22m  [36m6.73 kB[39m[2m | [22m
+[32mspec-app-core-authz-authz.service.js[39m                                         [2m | [22m[2mspec-app-core-authz-authz.service[22m                                         [2m | [22m  [36m6.54 kB[39m[2m | [22m
+[32mchunk-E6OWIXFS.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m6.46 kB[39m[2m | [22m
+[32mspec-app-core-games-games-api.service.js[39m                                     [2m | [22m[2mspec-app-core-games-games-api.service[22m                                     [2m | [22m  [36m6.28 kB[39m[2m | [22m
+[32mchunk-Z4T3DFKK.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m6.06 kB[39m[2m | [22m
+[32mchunk-XNDA3IA4.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m5.67 kB[39m[2m | [22m
+[32mchunk-QBJP3VKU.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m5.57 kB[39m[2m | [22m
+[32mspec-app-core-associations-associations-api.service.js[39m                       [2m | [22m[2mspec-app-core-associations-associations-api.service[22m                       [2m | [22m  [36m5.46 kB[39m[2m | [22m
+[32mchunk-UU7BZFME.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m5.15 kB[39m[2m | [22m
+[32mspec-app-core-interceptors-session.interceptor.js[39m                            [2m | [22m[2mspec-app-core-interceptors-session.interceptor[22m                            [2m | [22m  [36m5.13 kB[39m[2m | [22m
+[32mspec-app-core-authz-authz-api.service.js[39m                                     [2m | [22m[2mspec-app-core-authz-authz-api.service[22m                                     [2m | [22m  [36m5.13 kB[39m[2m | [22m
+[32mchunk-KJT75F5B.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m5.11 kB[39m[2m | [22m
+[32mspec-app-components-core-admin-table-toolbar-admin-table-toolbar.component.js[39m[2m | [22m[2mspec-app-components-core-admin-table-toolbar-admin-table-toolbar.component[22m[2m | [22m  [36m5.08 kB[39m[2m | [22m
+[32mspec-app-shared-help-help-overlay.service.js[39m                                 [2m | [22m[2mspec-app-shared-help-help-overlay.service[22m                                 [2m | [22m  [36m4.91 kB[39m[2m | [22m
+[32mspec-app-shared-help-help-panel-help-panel.component.js[39m                      [2m | [22m[2mspec-app-shared-help-help-panel-help-panel.component[22m                      [2m | [22m  [36m4.77 kB[39m[2m | [22m
+[32mchunk-25COZ652.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m4.75 kB[39m[2m | [22m
+[32mchunk-AX23SLKY.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m4.14 kB[39m[2m | [22m
+[32mspec-app-core-interceptors-xsrf.interceptor.js[39m                               [2m | [22m[2mspec-app-core-interceptors-xsrf.interceptor[22m                               [2m | [22m  [36m3.96 kB[39m[2m | [22m
+[32mspec-app-shared-help-help-content.service.js[39m                                 [2m | [22m[2mspec-app-shared-help-help-content.service[22m                                 [2m | [22m  [36m3.85 kB[39m[2m | [22m
+[32mspec-app-shared-help-help-prefs.service.js[39m                                   [2m | [22m[2mspec-app-shared-help-help-prefs.service[22m                                   [2m | [22m  [36m3.34 kB[39m[2m | [22m
+[32mchunk-K6YZV6C3.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m3.25 kB[39m[2m | [22m
+[32mchunk-P3NE4YT5.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m2.89 kB[39m[2m | [22m
+[32mchunk-H5S243WF.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m2.65 kB[39m[2m | [22m
+[32mspec-app-pages-home-home.page.js[39m                                             [2m | [22m[2mspec-app-pages-home-home.page[22m                                             [2m | [22m  [36m2.57 kB[39m[2m | [22m
+[32mspec-app-guards-auth.guard.js[39m                                                [2m | [22m[2mspec-app-guards-auth.guard[22m                                                [2m | [22m  [36m2.52 kB[39m[2m | [22m
+[32mchunk-IYUDGOGT.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m2.44 kB[39m[2m | [22m
+[32mchunk-F2OGXA4N.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m2.28 kB[39m[2m | [22m
+[32mspec-app-shared-utils-slugify.js[39m                                             [2m | [22m[2mspec-app-shared-utils-slugify[22m                                             [2m | [22m  [36m2.25 kB[39m[2m | [22m
+[32mspec-app-core-interceptors-credentials.interceptor.js[39m                        [2m | [22m[2mspec-app-core-interceptors-credentials.interceptor[22m                        [2m | [22m  [36m2.14 kB[39m[2m | [22m
+[32mspec-app-shared-help-page-help.service.js[39m                                    [2m | [22m[2mspec-app-shared-help-page-help.service[22m                                    [2m | [22m  [36m2.05 kB[39m[2m | [22m
+[32mchunk-R2RJ2TDA.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m  [36m1.84 kB[39m[2m | [22m
+[32minit-testbed.js[39m                                                              [2m | [22m[2minit-testbed[22m                                                              [2m | [22m  [36m1.27 kB[39m[2m | [22m
+[32mchunk-UR574R4A.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m[36m677 bytes[39m[2m | [22m
+[32mchunk-4ET3ERVN.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m[36m493 bytes[39m[2m | [22m
+[32mchunk-3CR7XHSS.js[39m                                                            [2m | [22m[2m-[22m                                                                         [2m | [22m[36m381 bytes[39m[2m | [22m
+[32mpolyfills.js[39m                                                                 [2m | [22m[2mpolyfills[22m                                                                 [2m | [22m[36m121 bytes[39m[2m | [22m
+
+[1m [22m                                                                            [2m | [22m[1mInitial total[22m                                                             [2m | [22m[1m789.85 kB[22m
+
+[1mLazy chunk files[22m                                                             [2m | [22m[1mNames[22m                                                                     [2m | [22m [1mRaw size[22m
+[32mchunk-FFYTLM6B.js[39m                                                            [2m | [22m[2mpermissions-store[22m                                                         [2m | [22m[36m394 bytes[39m[2m | [22m
+[32mchunk-HRTBS3QE.js[39m                                                            [2m | [22m[2mauthz-service[22m                                                             [2m | [22m[36m258 bytes[39m[2m | [22m
+
+Application bundle generation complete. [2.285 seconds] - 2026-02-23T13:27:32.663Z
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mC:/master/tfm-src/frontend[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+[90mstdout[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2mloadForCurrentScope()[2m > [22m[2mcombina permisos wildcard y específicos del scope
+[22m[39m[>] [PermissionsStore] Cargando permisos para scope 2:42
+[OK] [PermissionsStore] 2 permisos cargados: [ [32m'global.perm'[39m, [32m'local.perm'[39m ]
+
+[90mstdout[2m | src/app/core/auth/auth.service.spec.ts[2m > [22m[2mAuthService[2m > [22m[2mlogout()[2m > [22m[2mlogout correcto → limpia currentUser
+[22m[39m🧹 [AuthService] Iniciando limpieza de logout...
+🧹 [AuthService] Usuario limpiado
+[OK] [AuthService] Logout completo: usuario y permisos limpiados
+
+[90mstdout[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2mloadForCurrentScope()[2m > [22m[2mno duplica permisos si wildcard y scope tienen el mismo permiso
+[22m[39m[>] [PermissionsStore] Cargando permisos para scope 1:0
+[OK] [PermissionsStore] 1 permisos cargados: [ [32m'shared.perm'[39m ]
+
+[90mstdout[2m | src/app/core/auth/auth.service.spec.ts[2m > [22m[2mAuthService[2m > [22m[2mlogout()[2m > [22m[2mlogout correcto → completa sin error
+[22m[39m🧹 [AuthService] Iniciando limpieza de logout...
+🧹 [AuthService] Usuario limpiado
+[OK] [AuthService] Logout completo: usuario y permisos limpiados
+
+[90mstdout[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2mloadForCurrentScope()[2m > [22m[2mestablece permisos vacíos y loading=false si hay error
+[22m[39m[>] [PermissionsStore] Cargando permisos para scope 1:0
+
+[90mstderr[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2mloadForCurrentScope()[2m > [22m[2mestablece permisos vacíos y loading=false si hay error
+[22m[39m[ERROR] [PermissionsStore] Error al cargar permisos: HttpErrorResponse {
+  headers: HttpHeaders {
+    headers: Map(0) {},
+    normalizedNames: Map(0) {},
+    lazyInit: [90mundefined[39m,
+    lazyUpdate: [1mnull[22m
+  },
+  status: [33m500[39m,
+  statusText: [32m'Unknown Error'[39m,
+  url: [1mnull[22m,
+  ok: [33mfalse[39m,
+  type: [90mundefined[39m,
+  redirected: [90mundefined[39m,
+  responseType: [90mundefined[39m,
+  name: [32m'HttpErrorResponse'[39m,
+  message: [32m'Http failure response for (unknown url): 500 undefined'[39m,
+  error: [1mnull[22m
+}
+
+[90mstdout[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2mloadForCurrentScope()[2m > [22m[2mllama a clearCache si el error es 401
+[22m[39m[>] [PermissionsStore] Cargando permisos para scope 1:0
+
+[90mstderr[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2mloadForCurrentScope()[2m > [22m[2mllama a clearCache si el error es 401
+[22m[39m[ERROR] [PermissionsStore] Error al cargar permisos: HttpErrorResponse {
+  headers: HttpHeaders {
+    headers: Map(0) {},
+    normalizedNames: Map(0) {},
+    lazyInit: [90mundefined[39m,
+    lazyUpdate: [1mnull[22m
+  },
+  status: [33m401[39m,
+  statusText: [32m'Unknown Error'[39m,
+  url: [1mnull[22m,
+  ok: [33mfalse[39m,
+  type: [90mundefined[39m,
+  redirected: [90mundefined[39m,
+  responseType: [90mundefined[39m,
+  name: [32m'HttpErrorResponse'[39m,
+  message: [32m'Http failure response for (unknown url): 401 undefined'[39m,
+  error: [1mnull[22m
+}
+
+[90mstdout[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2mwaitForLoad()[2m > [22m[2mespera hasta que la carga termina si loading=true
+[22m[39m[>] [PermissionsStore] Cargando permisos para scope 1:0
+[>] [PermissionsStore] Cargando permisos para scope 1:0
+
+[90mstdout[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2mclear()[2m > [22m[2mvacía los permisos y pone loading=false
+[22m[39m🧹 [PermissionsStore] Limpiando permisos manualmente
+🧹 [PermissionsStore] Permisos antes de limpiar: [ [32m'admin'[39m, [32m'pages.edit'[39m ]
+🧹 [PermissionsStore] Permisos después de limpiar: []
+
+[90mstdout[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2meffects (reactividad)[2m > [22m[2mlimpia permisos al desloguear (currentUser → null)
+[22m[39m🧹 [PermissionsStore] Usuario deslogueado → Limpiando permisos
+
+[90mstderr[2m | src/app/core/games/games.store.spec.ts[2m > [22m[2mGamesStore[2m > [22m[2mloadOnce() — carga exitosa[2m > [22m[2mlimpia el error al completarse con éxito
+[22m[39mError al cargar juegos: Error: fallo
+    at C:/master/tfm-src/frontend/src/app/core/games/games.store.spec.ts:159:61
+    at Observable.init [as _subscribe] [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\observable\throwError.js:8:64[90m)[39m
+    at Observable._trySubscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:41:25[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:35:31
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+    at Observable.subscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:26:24[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\operators\tap.js:18:20
+    at OperatorSubscriber.<anonymous> [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\lift.js:14:28[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:30:30
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+
+[90mstdout[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2meffects (reactividad)[2m > [22m[2mrecarga al cambiar el scope si hay usuario autenticado
+[22m[39m[OK] [PermissionsStore] Usuario autenticado: tester → Recargando permisos
+[>] [PermissionsStore] Cargando permisos para scope 1:0
+[OK] [PermissionsStore] 0 permisos cargados: []
+[OK] [PermissionsStore] Usuario autenticado: tester → Recargando permisos
+[>] [PermissionsStore] Cargando permisos para scope 3:7
+[OK] [PermissionsStore] 0 permisos cargados: []
+
+[90mstdout[2m | src/app/core/authz/permissions.store.spec.ts[2m > [22m[2mPermissionsStore[2m > [22m[2meffects (reactividad)[2m > [22m[2mNO recarga al cambiar scope si no hay usuario
+[22m[39m🧹 [PermissionsStore] Usuario deslogueado → Limpiando permisos
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/shared/help/help-overlay.service.spec.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 124[2mms[22m[39m
+[90mstderr[2m | src/app/core/games/games.store.spec.ts[2m > [22m[2mGamesStore[2m > [22m[2mloadOnce() — errores[2m > [22m[2merror HTTP → establece el mensaje de error
+[22m[39mError al cargar juegos: Error: Network error
+    at C:/master/tfm-src/frontend/src/app/core/games/games.store.spec.ts:264:61
+    at Observable.init [as _subscribe] [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\observable\throwError.js:8:64[90m)[39m
+    at Observable._trySubscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:41:25[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:35:31
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+    at Observable.subscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:26:24[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\operators\tap.js:18:20
+    at OperatorSubscriber.<anonymous> [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\lift.js:14:28[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:30:30
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+
+[90mstderr[2m | src/app/core/games/games.store.spec.ts[2m > [22m[2mGamesStore[2m > [22m[2mloadOnce() — errores[2m > [22m[2merror HTTP → loading vuelve a false
+[22m[39mError al cargar juegos: Error: Network error
+    at C:/master/tfm-src/frontend/src/app/core/games/games.store.spec.ts:273:61
+    at Observable.init [as _subscribe] [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\observable\throwError.js:8:64[90m)[39m
+    at Observable._trySubscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:41:25[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:35:31
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+    at Observable.subscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:26:24[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\operators\tap.js:18:20
+    at OperatorSubscriber.<anonymous> [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\lift.js:14:28[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:30:30
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+
+[90mstderr[2m | src/app/core/games/games.store.spec.ts[2m > [22m[2mGamesStore[2m > [22m[2mloadOnce() — errores[2m > [22m[2merror HTTP → devuelve array vacío sin propagar el error
+[22m[39mError al cargar juegos: Error: Network error
+    at C:/master/tfm-src/frontend/src/app/core/games/games.store.spec.ts:282:61
+    at Observable.init [as _subscribe] [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\observable\throwError.js:8:64[90m)[39m
+    at Observable._trySubscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:41:25[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:35:31
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+    at Observable.subscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:26:24[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\operators\tap.js:18:20
+    at OperatorSubscriber.<anonymous> [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\lift.js:14:28[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:30:30
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+
+[90mstderr[2m | src/app/core/games/games.store.spec.ts[2m > [22m[2mGamesStore[2m > [22m[2mloadOnce() — errores[2m > [22m[2merror HTTP → games permanece vacío
+[22m[39mError al cargar juegos: Error: Network error
+    at C:/master/tfm-src/frontend/src/app/core/games/games.store.spec.ts:298:61
+    at Observable.init [as _subscribe] [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\observable\throwError.js:8:64[90m)[39m
+    at Observable._trySubscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:41:25[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:35:31
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+    at Observable.subscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:26:24[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\operators\tap.js:18:20
+    at OperatorSubscriber.<anonymous> [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\lift.js:14:28[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:30:30
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/associations/associations-resolve.service.spec.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 96[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/auth/auth.service.spec.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 115[2mms[22m[39m
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — cambios de usuario[2m > [22m[2musuario null → emite []
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: [90mundefined[39m Permisos: [33m0[39m Loading: [33mfalse[39m Scope: 1:null
+
+[90mstderr[2m | Object.api.onUnhandledError (C:\master\tfm-src\frontend\node_modules\zone.js\fesm2015\zone.js:2316:29)
+[22m[39mRuntimeError: NG0205: Injector has already been destroyed.
+    at assertNotDestroyed [90m(file:///C:/master/tfm-src/frontend/[39mnode_modules/[4m@angular[24m/core/fesm2022/_untracked-chunk.mjs:1409:11[90m)[39m
+    at R3Injector.get [90m(file:///C:/master/tfm-src/frontend/[39mnode_modules/[4m@angular[24m/core/fesm2022/_untracked-chunk.mjs:1169:5[90m)[39m
+    at C:/master/tfm-src/frontend/src/app/core/auth/auth.service.ts:107:48
+    at _ZoneDelegate.invoke [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:398:28[90m)[39m
+    at ZoneImpl.run [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:113:43[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:2537:40
+    at _ZoneDelegate.invokeTask [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:431:33[90m)[39m
+    at ZoneImpl.runTask [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:161:47[90m)[39m
+    at drainMicroTaskQueue [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:612:35[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m {
+  code: [33m205[39m
+}
+RuntimeError: NG0205: Injector has already been destroyed.
+    at assertNotDestroyed [90m(file:///C:/master/tfm-src/frontend/[39mnode_modules/[4m@angular[24m/core/fesm2022/_untracked-chunk.mjs:1409:11[90m)[39m
+    at R3Injector.get [90m(file:///C:/master/tfm-src/frontend/[39mnode_modules/[4m@angular[24m/core/fesm2022/_untracked-chunk.mjs:1169:5[90m)[39m
+    at C:/master/tfm-src/frontend/src/app/core/auth/auth.service.ts:107:48
+    at _ZoneDelegate.invoke [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:398:28[90m)[39m
+    at ZoneImpl.run [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:113:43[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:2537:40
+    at _ZoneDelegate.invokeTask [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:431:33[90m)[39m
+    at ZoneImpl.runTask [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:161:47[90m)[39m
+    at drainMicroTaskQueue [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:612:35[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m {
+  code: [33m205[39m
+}
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — cambios de usuario[2m > [22m[2musuario autenticado sin permisos → no genera acciones
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m0[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 5. Permisos en scope actual: []
+[>] [ContextService] 5. ¿Tiene algún permiso?: NO
+🔄 [ContextService] Acciones calculadas en effect: []
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/authz/permissions.store.spec.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+[90mstderr[2m | Object.api.onUnhandledError (C:\master\tfm-src\frontend\node_modules\zone.js\fesm2015\zone.js:2316:29)
+[22m[39mRuntimeError: NG0205: Injector has already been destroyed.
+    at assertNotDestroyed [90m(file:///C:/master/tfm-src/frontend/[39mnode_modules/[4m@angular[24m/core/fesm2022/_untracked-chunk.mjs:1409:11[90m)[39m
+    at R3Injector.get [90m(file:///C:/master/tfm-src/frontend/[39mnode_modules/[4m@angular[24m/core/fesm2022/_untracked-chunk.mjs:1169:5[90m)[39m
+    at C:/master/tfm-src/frontend/src/app/core/auth/auth.service.ts:101:52
+    at _ZoneDelegate.invoke [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:398:28[90m)[39m
+    at ZoneImpl.run [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:113:43[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:2537:40
+    at _ZoneDelegate.invokeTask [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:431:33[90m)[39m
+    at ZoneImpl.runTask [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:161:47[90m)[39m
+    at drainMicroTaskQueue [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:612:35[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m {
+  code: [33m205[39m
+}
+RuntimeError: NG0205: Injector has already been destroyed.
+    at assertNotDestroyed [90m(file:///C:/master/tfm-src/frontend/[39mnode_modules/[4m@angular[24m/core/fesm2022/_untracked-chunk.mjs:1409:11[90m)[39m
+    at R3Injector.get [90m(file:///C:/master/tfm-src/frontend/[39mnode_modules/[4m@angular[24m/core/fesm2022/_untracked-chunk.mjs:1169:5[90m)[39m
+    at C:/master/tfm-src/frontend/src/app/core/auth/auth.service.ts:101:52
+    at _ZoneDelegate.invoke [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:398:28[90m)[39m
+    at ZoneImpl.run [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:113:43[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:2537:40
+    at _ZoneDelegate.invokeTask [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:431:33[90m)[39m
+    at ZoneImpl.runTask [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:161:47[90m)[39m
+    at drainMicroTaskQueue [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mzone.js[24m\fesm2015\zone.js:612:35[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m {
+  code: [33m205[39m
+}
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — cambios de usuario[2m > [22m[2musuario autenticado con permisos → genera acción de administración
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [ { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m } ]
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — cambios de usuario[2m > [22m[2mal desloguear con permisos previos → limpia las acciones
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [ { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m } ]
+🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: [90mundefined[39m Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/shared/help/help-i/help-i.component.spec.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 125[2mms[22m[39m
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — cambios de usuario[2m > [22m[2msi los permisos están cargando → no emite nuevas acciones
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [ { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m } ]
+🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m0[39m Loading: [33mtrue[39m Scope: 1:null
+⏳ [ContextService] Permisos cargando... Esperando...
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/shared/help/help-hover.directive.spec.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 118[2mms[22m[39m
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — etiqueta de acción según scope[2m > [22m[2mscope GLOBAL → label "Administración"
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [ { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m } ]
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — etiqueta de acción según scope[2m > [22m[2mscope ASSOCIATION → label "Administrar Asociación"
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 2:42
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [
+  {
+    label: [32m'Administrar Asociación'[39m,
+    route: [ [32m'/admin'[39m ],
+    isVisible: [33mtrue[39m
+  }
+]
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — etiqueta de acción según scope[2m > [22m[2mscope GAME → label "Administrar Juego"
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 3:7
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [
+  { label: [32m'Administrar Juego'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m }
+]
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — etiqueta de acción según scope[2m > [22m[2mruta de la acción siempre apunta a ["/admin"]
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [ { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m } ]
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — acción "Editar Página" (entity en route.data)[2m > [22m[2mcon pages.edit + data.entity → genera acción "Editar Página"
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 4. Permiso Edición (pages.edit): APROBADO
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [
+  {
+    label: [32m'Editar Página'[39m,
+    route: [ [32m'/admin'[39m, [32m'pages'[39m, [33m2[39m, [33m42[39m, [32m'edit'[39m, [33m5[39m ],
+    isVisible: [33mtrue[39m
+  },
+  { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m }
+]
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — acción "Editar Página" (entity en route.data)[2m > [22m[2mla ruta de edición contiene ownerType, ownerId e id de la entidad
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 4. Permiso Edición (pages.edit): APROBADO
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [
+  {
+    label: [32m'Editar Página'[39m,
+    route: [ [32m'/admin'[39m, [32m'pages'[39m, [33m2[39m, [33m42[39m, [32m'edit'[39m, [33m5[39m ],
+    isVisible: [33mtrue[39m
+  },
+  { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m }
+]
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — acción "Editar Página" (entity en route.data)[2m > [22m[2msin pages.edit pero con data.entity → NO genera acción de edición
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 4. Permiso Edición (pages.edit): DENEGADO
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'news.create'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [ { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m } ]
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — acción "Editar Página" (entity en route.data)[2m > [22m[2msin data.entity → NO genera acción de edición aunque tenga pages.edit
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [ { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m } ]
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2meffect — acción "Editar Página" (entity en route.data)[2m > [22m[2mcon data.entity + pages.edit → genera TANTO edición COMO administración
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 4. Permiso Edición (pages.edit): APROBADO
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [
+  {
+    label: [32m'Editar Página'[39m,
+    route: [ [32m'/admin'[39m, [32m'pages'[39m, [33m1[39m, [33m0[39m, [32m'edit'[39m, [33m5[39m ],
+    isVisible: [33mtrue[39m
+  },
+  { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m }
+]
+
+[90mstdout[2m | src/app/core/context/context.service.spec.ts[2m > [22m[2mContextService[2m > [22m[2mNavigationEnd — suscripción al router[2m > [22m[2musuario autenticado: NavigationEnd con permisos → genera acciones
+[22m[39m🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: tester Permisos: [33m1[39m Loading: [33mfalse[39m Scope: 1:null
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+🔄 [ContextService] Acciones calculadas en effect: [ { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m } ]
+[>] [ContextService] 3. Scope actual: 1:0 (establecido por guards)
+[>] [ContextService] -> Verificando admin de contexto (Type: 1, ID: 0)...
+[>] [ContextService] 5. Permisos en scope actual: [ [32m'pages.edit'[39m ]
+[>] [ContextService] 5. ¿Tiene algún permiso?: SÍ
+[>] [ContextService] 4. Acciones finales calculadas: [ { label: [32m'Administración'[39m, route: [ [32m'/admin'[39m ], isVisible: [33mtrue[39m } ]
+
+[90mstderr[2m | src/app/components/user-menu/user-menu.component.spec.ts[2m > [22m[2mUserMenuComponent[2m > [22m[2mlogout()[2m > [22m[2mlogout con error → cierra el menú y navega a "/" igualmente
+[22m[39mError al cerrar sesión: { status: [33m500[39m }
+
+[90mstderr[2m | src/app/pages/page-viewer/page-viewer.page.spec.ts[2m > [22m[2mPageViewerPage[2m > [22m[2mGlobal homepage (empty URL)[2m > [22m[2mshould show error when siteParamsService throws
+[22m[39mError loading homepage: Error: network
+    at C:/master/tfm-src/frontend/src/app/pages/page-viewer/page-viewer.page.spec.ts:149:63
+    at Observable.init [as _subscribe] [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\observable\throwError.js:8:64[90m)[39m
+    at Observable._trySubscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:41:25[90m)[39m
+    at [90mC:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:35:31
+    at Object.errorContext [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+    at Observable.subscribe [90m(C:\master\tfm-src\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:26:24[90m)[39m
+    at _PageViewerPage.loadGlobalHomepage (C:/master/tfm-src/frontend/src/app/pages/page-viewer/page-viewer.page.ts:220:50)
+    at _PageViewerPage.loadPage (C:/master/tfm-src/frontend/src/app/pages/page-viewer/page-viewer.page.ts:113:12)
+    at _PageViewerPage.loadCurrentPage (C:/master/tfm-src/frontend/src/app/pages/page-viewer/page-viewer.page.ts:99:10)
+    at _PageViewerPage.ngOnInit (C:/master/tfm-src/frontend/src/app/pages/page-viewer/page-viewer.page.ts:81:10)
+
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mllamada HTTP básica[2m > [22m[2mllama al API y devuelve la respuesta
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mcaché en memoria[2m > [22m[2mla segunda solicitud idéntica NO llama al API
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+💾 [AuthzService] Usando caché para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mcaché en memoria[2m > [22m[2mdevuelve el mismo valor desde caché
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+💾 [AuthzService] Usando caché para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mcaché en memoria[2m > [22m[2mrequests con parámetros distintos hacen llamadas independientes
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=2|perms=news.edit
+
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mcaché en memoria[2m > [22m[2mel orden de scopeIds NO afecta a la clave de caché
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1,2,3|perms=news.edit
+💾 [AuthzService] Usando caché para: scopeType=2|breakdown=true|scopeIds=1,2,3|perms=news.edit
+
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mcaché en memoria[2m > [22m[2mel orden de permissions NO afecta a la clave de caché
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=a,b
+💾 [AuthzService] Usando caché para: scopeType=2|breakdown=true|scopeIds=1|perms=a,b
+
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mexpiración de caché (TTL)[2m > [22m[2mtras expirar el TTL, hace una nueva llamada al API
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mexpiración de caché (TTL)[2m > [22m[2mantes de expirar el TTL, sigue usando la caché
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+💾 [AuthzService] Usando caché para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/shared/directives/has-permission.directive.spec.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 165[2mms[22m[39m
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mdeduplicación (inFlight)[2m > [22m[2mdos suscriptores concurrentes comparten la misma llamada HTTP
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+⏳ [AuthzService] Reutilizando petición en vuelo para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mmanejo de errores[2m > [22m[2mun error 401 limpia toda la caché
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=99|perms=news.edit
+🧹 [AuthzService] Caché limpiada: 1 entradas, 1 peticiones en vuelo eliminadas
+🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/shared/help/help-prefs.service.spec.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/context/context.service.spec.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mmanejo de errores[2m > [22m[2mun error no-401 NO limpia la caché
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=99|perms=news.edit
+💾 [AuthzService] Usando caché para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mmanejo de errores[2m > [22m[2mpropaga el error al suscriptor
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+
+[90mstderr[2m | src/app/components/core/admin/table/admin-table.component.spec.ts[2m > [22m[2mAdminTableComponent[2m > [22m[2mpagination[2m > [22m[2mnavigates to next page via > button
+[22m[39mNG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 5. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v21.angular.dev/errors/NG0956
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/games/games.store.spec.ts [2m([22m[2m43 tests[22m[2m)[22m[32m 221[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/games/games-api.service.spec.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 58[2mms[22m[39m
+[90mstdout[2m | src/app/core/authz/authz.service.spec.ts[2m > [22m[2mAuthzService[2m > [22m[2mclearCache()[2m > [22m[2mfuerza una nueva llamada HTTP tras limpiar la caché
+[22m[39m🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+🧹 [AuthzService] Caché limpiada: 1 entradas, 0 peticiones en vuelo eliminadas
+🌐 [AuthzService] Nueva petición HTTP para: scopeType=2|breakdown=true|scopeIds=1|perms=news.edit
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/authz/authz-api.service.spec.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+[90mstdout[2m | src/app/guards/permission.guard.spec.ts[2m > [22m[2mrequirePermission()[2m > [22m[2mdevuelve true cuando el usuario tiene el permiso requerido
+[22m[39m[OK] [PermissionGuard] Acceso permitido: permiso 'pages.edit' concedido
+
+[90mstderr[2m | src/app/guards/permission.guard.spec.ts[2m > [22m[2mrequirePermission()[2m > [22m[2mdevuelve false cuando el usuario NO tiene el permiso requerido
+[22m[39m[DENY] [PermissionGuard] Acceso denegado: permiso 'pages.edit' requerido
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/authz/authz.service.spec.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+[90mstderr[2m | src/app/guards/permission.guard.spec.ts[2m > [22m[2mrequirePermission()[2m > [22m[2mdevuelve false con lista de permisos vacía
+[22m[39m[DENY] [PermissionGuard] Acceso denegado: permiso 'admin' requerido
+
+[90mstderr[2m | src/app/components/core/admin/table/admin-table.component.spec.ts[2m > [22m[2mAdminTableComponent[2m > [22m[2mpagination[2m > [22m[2mnavigates back to previous page via < button
+[22m[39mNG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 5. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v21.angular.dev/errors/NG0956
+NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 5. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v21.angular.dev/errors/NG0956
+
+[90mstdout[2m | src/app/guards/permission.guard.spec.ts[2m > [22m[2mrequirePermission()[2m > [22m[2mdevuelve true con wildcard "*" para cualquier permiso
+[22m[39m[OK] [PermissionGuard] Acceso permitido: permiso 'any.perm' concedido
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/interceptors/xsrf.interceptor.spec.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+[90mstderr[2m | src/app/guards/permission.guard.spec.ts[2m > [22m[2mrequirePermission()[2m > [22m[2mnavega a "/" cuando el permiso es denegado
+[22m[39m[DENY] [PermissionGuard] Acceso denegado: permiso 'admin' requerido
+
+[90mstdout[2m | src/app/guards/permission.guard.spec.ts[2m > [22m[2mrequirePermission()[2m > [22m[2mespera a que waitForLoad() complete antes de resolver
+[22m[39m[OK] [PermissionGuard] Acceso permitido: permiso 'pages.edit' concedido
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/components/core/admin/table-toolbar/admin-table-toolbar.component.spec.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 196[2mms[22m[39m
+[90mstdout[2m | src/app/guards/permission.guard.spec.ts[2m > [22m[2mrequireAnyPermission()[2m > [22m[2mdevuelve true cuando el usuario tiene al menos un permiso
+[22m[39m[OK] [PermissionGuard] Acceso permitido: usuario tiene 1 permisos
+
+[90mstdout[2m | src/app/guards/permission.guard.spec.ts[2m > [22m[2mrequireAnyPermission()[2m > [22m[2mdevuelve true con múltiples permisos
+[22m[39m[OK] [PermissionGuard] Acceso permitido: usuario tiene 3 permisos
+
+[90mstderr[2m | src/app/core/interceptors/session.interceptor.spec.ts[2m > [22m[2msessionInterceptor[2m > [22m[2m401 en URL protegida con usuario autenticado[2m > [22m[2mpone currentUser a null
+[22m[39m[SessionInterceptor] 401 detectado — limpiando sesión frontend
+
+[90mstderr[2m | src/app/guards/permission.guard.spec.ts[2m > [22m[2mrequireAnyPermission()[2m > [22m[2mdevuelve false cuando no tiene ningún permiso
+[22m[39m[DENY] [PermissionGuard] Acceso denegado: se requiere al menos un permiso en este scope
+
+[90mstderr[2m | src/app/core/interceptors/session.interceptor.spec.ts[2m > [22m[2msessionInterceptor[2m > [22m[2m401 en URL protegida con usuario autenticado[2m > [22m[2mllama a authzService.clearCache()
+[22m[39m[SessionInterceptor] 401 detectado — limpiando sesión frontend
+
+[90mstderr[2m | src/app/guards/permission.guard.spec.ts[2m > [22m[2mrequireAnyPermission()[2m > [22m[2mnavega a "/" cuando no tiene permisos
+[22m[39m[DENY] [PermissionGuard] Acceso denegado: se requiere al menos un permiso en este scope
+
+[90mstderr[2m | src/app/core/interceptors/session.interceptor.spec.ts[2m > [22m[2msessionInterceptor[2m > [22m[2m401 en URL protegida con usuario autenticado[2m > [22m[2mre-lanza el error al suscriptor
+[22m[39m[SessionInterceptor] 401 detectado — limpiando sesión frontend
+
+[90mstdout[2m | src/app/app.spec.ts[2m > [22m[2mApp (root component)[2m > [22m[2mngOnInit — visibilitychange handler[2m > [22m[2mcalls checkSession when tab becomes visible and user is logged in
+[22m[39m[App] Pestaña visible — re-verificando sesión
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/guards/permission.guard.spec.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/interceptors/credentials.interceptor.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/shared/help/help-content.service.spec.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/interceptors/session.interceptor.spec.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/context/context.store.spec.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/components/user-menu/user-menu.component.spec.ts [2m([22m[2m29 tests[22m[2m)[22m[33m 349[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/core/associations/associations-api.service.spec.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/pages/registro/registro.page.spec.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 366[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/shared/utils/slugify.spec.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/app.spec.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 374[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/pages/home/home.page.spec.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/guards/auth.guard.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/shared/help/page-help.service.spec.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/shared/help/help-panel/help-panel.component.spec.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 435[2mms[22m[39m
+[90mstderr[2m | src/app/components/core/admin/table/admin-table.component.spec.ts[2m > [22m[2mAdminTableComponent[2m > [22m[2msorting[2m > [22m[2mresets to page 1 when sort changes
+[22m[39mNG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 5. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v21.angular.dev/errors/NG0956
+NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 5. This is an expensive operation requiring destruction and subsequent creation of DOM nodes, directives, components etc. Please review the "track expression" and make sure that it uniquely identifies items in a collection. Find more at https://v21.angular.dev/errors/NG0956
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/pages/page-viewer/page-viewer.page.spec.ts [2m([22m[2m29 tests[22m[2m)[22m[33m 402[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/pages/login/login.page.spec.ts [2m([22m[2m25 tests[22m[2m)[22m[33m 401[2mms[22m[39m
+[90mstdout[2m | src/app/styleguide/styleguide.page.spec.ts[2m > [22m[2mStyleguidePage[2m > [22m[2mshould create
+[22m[39m🧹 [PermissionsStore] Usuario deslogueado → Limpiando permisos
+🔄 [ContextService] Cambio detectado → Recalculando admin actions
+🔄 [ContextService] Usuario: [90mundefined[39m Permisos: [33m0[39m Loading: [33mfalse[39m Scope: 1:null
+
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/styleguide/styleguide.page.spec.ts [2m([22m[2m1 test[22m[2m)[22m[33m 420[2mms[22m[39m
+     [33m[2m✓[22m[39m should create [33m 418[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/components/core/admin/table/admin-table.component.spec.ts [2m([22m[2m41 tests[22m[2m)[22m[33m 739[2mms[22m[39m
+ [32m✓[39m [30m[43m frontend [49m[39m src/app/components/navbar/navbar.component.spec.ts [2m([22m[2m51 tests[22m[2m)[22m[33m 820[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m34 passed[39m[22m[90m (34)[39m
+[2m      Tests [22m [1m[32m588 passed[39m[22m[90m (588)[39m
+[2m   Start at [22m 14:27:33
+[2m   Duration [22m 3.60s[2m (transform 2.79s, setup 11.94s, import 6.57s, tests 6.23s, environment 38.79s)[22m
+
+[34m % [39m[2mCoverage report from [22m[33mv8[39m
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |    80.4 |    74.89 |   71.39 |   79.64 |                   
+ app               |      70 |    66.66 |     100 |   74.28 |                   
+  app.html         |       0 |        0 |     100 |       0 | 1-17              
+  app.ts           |   96.55 |    78.26 |     100 |     100 | 16-20             
+ ...min/admin-menu |   89.74 |       85 |      50 |   96.42 |                   
+  ....component.ts |   89.74 |       85 |      50 |   96.42 | 46                
+ ...re/admin/table |   96.89 |    91.48 |     100 |   98.36 |                   
+  ....component.ts |   96.89 |    91.48 |     100 |   98.36 | 93-95             
+ .../table-toolbar |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...ponents/navbar |   69.84 |    77.84 |   59.61 |      75 |                   
+  ...omponent.html |    57.2 |    67.39 |       0 |   60.58 | ...72,189,211-235 
+  ....component.ts |   88.05 |    81.81 |   88.57 |   88.43 | ...91,216,270,276 
+ ...ents/user-menu |   89.69 |      100 |   72.22 |   92.75 |                   
+  ...omponent.html |   84.37 |      100 |   16.66 |    87.8 | 24,32,54,66,73    
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ app/core          |     100 |      100 |     100 |     100 |                   
+  ....constants.ts |     100 |      100 |     100 |     100 |                   
+ ...e/associations |     100 |      100 |     100 |     100 |                   
+  ...pi.service.ts |     100 |      100 |     100 |     100 |                   
+  ...ve.service.ts |     100 |      100 |     100 |     100 |                   
+ app/core/auth     |     100 |    90.32 |     100 |     100 |                   
+  auth.service.ts  |     100 |    86.95 |     100 |     100 | 125-131           
+  ...tion-error.ts |     100 |      100 |     100 |     100 |                   
+ app/core/authz    |   96.55 |    92.75 |   97.14 |   96.18 |                   
+  ...pi.service.ts |     100 |      100 |     100 |     100 |                   
+  authz.models.ts  |     100 |      100 |     100 |     100 |                   
+  authz.service.ts |     100 |    89.47 |     100 |     100 | 147-148           
+  ...ions.store.ts |   93.75 |     92.3 |   94.44 |   93.05 | 107-108,238-240   
+ app/core/context  |   95.17 |    93.75 |   94.44 |   94.92 |                   
+  ...xt.service.ts |   92.55 |    89.74 |   91.66 |   92.39 | ...68,183-184,266 
+  context.store.ts |     100 |    97.56 |     100 |     100 | 110               
+ app/core/games    |   98.82 |    98.03 |     100 |     100 |                   
+  ...pi.service.ts |     100 |      100 |     100 |     100 |                   
+  games.store.ts   |   98.59 |    97.67 |     100 |     100 | 166               
+ ...e/interceptors |     100 |    94.73 |     100 |     100 |                   
+  ...nterceptor.ts |     100 |      100 |     100 |     100 |                   
+  ...nterceptor.ts |     100 |      100 |     100 |     100 |                   
+  ...nterceptor.ts |     100 |     90.9 |     100 |     100 | 28                
+ app/core/pages    |    7.27 |    11.11 |       0 |    9.09 |                   
+  pages.service.ts |    7.27 |    11.11 |       0 |    9.09 | 13-221            
+ ...re/site-params |      12 |    27.27 |       0 |      15 |                   
+  ...ms.service.ts |      12 |    27.27 |       0 |      15 | 15-81             
+ app/core/users    |   27.27 |       60 |       0 |   33.33 |                   
+  users.service.ts |   27.27 |       60 |       0 |   33.33 | 30-62             
+ app/guards        |     100 |      100 |     100 |     100 |                   
+  auth.guard.ts    |     100 |      100 |     100 |     100 |                   
+  ...sion.guard.ts |     100 |      100 |     100 |     100 |                   
+ app/pages/home    |     100 |      100 |     100 |     100 |                   
+  home.page.html   |     100 |      100 |     100 |     100 |                   
+  home.page.ts     |     100 |      100 |     100 |     100 |                   
+ app/pages/login   |   38.68 |     60.6 |   66.66 |   41.12 |                   
+  login.page.html  |       0 |        0 |       0 |       0 | 1-143             
+  login.page.ts    |   92.98 |    76.92 |    90.9 |   94.44 | 109-115           
+ ...es/page-viewer |   75.43 |    77.92 |   82.05 |   80.92 |                   
+  ...iewer.page.ts |   75.43 |    77.92 |   82.05 |   80.92 | ...33,344,349-350 
+ ...pages/registro |   38.66 |    54.41 |      90 |   40.28 |                   
+  ...tro.page.html |       0 |        0 |       0 |       0 | 1-170             
+  registro.page.ts |    98.3 |    80.43 |     100 |     100 | 12-28,59          
+ ...shared/content |    2.97 |     6.18 |       0 |    3.14 |                   
+  page.dto.ts      |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     1.8 |     6.18 |       0 |     1.6 | 10-130,137-251    
+ ...ntent-renderer |   14.81 |       25 |       0 |   13.63 |                   
+  ...omponent.html |       0 |        0 |     100 |       0 | 1-40              
+  ....component.ts |   44.44 |       60 |       0 |      50 | 19-24             
+ ...red/directives |   93.75 |       84 |     100 |   93.47 |                   
+  ....directive.ts |   93.75 |       84 |     100 |   93.47 | 135,146,158       
+ app/shared/help   |    95.8 |     91.5 |   96.55 |   99.28 |                   
+  ...nt.service.ts |     100 |      100 |     100 |     100 |                   
+  ....directive.ts |   93.61 |    97.56 |    87.5 |     100 | 82                
+  ...ay.service.ts |   94.28 |    78.57 |     100 |   98.43 | 118               
+  ...fs.service.ts |     100 |    81.81 |     100 |     100 | 24,33             
+  ...lp.service.ts |     100 |      100 |     100 |     100 |                   
+ ...ed/help/help-i |      95 |    86.04 |      80 |   97.05 |                   
+  ....component.ts |      95 |    86.04 |      80 |   97.05 | 35                
+ ...elp/help-panel |   90.38 |    94.44 |      70 |   97.36 |                   
+  ....component.ts |   90.38 |    94.44 |      70 |   97.36 | 51                
+ ...p/page-content |     100 |      100 |     100 |     100 |                   
+  default.help.ts  |     100 |      100 |     100 |     100 |                   
+ app/shared/utils  |     100 |      100 |     100 |     100 |                   
+  slugify.ts       |     100 |      100 |     100 |     100 |                   
+ app/styleguide    |   99.49 |    91.66 |   16.66 |   99.55 |                   
+  ...ide.page.html |   99.79 |      100 |       0 |     100 |                   
+  ...guide.page.ts |   82.35 |    91.66 |      25 |   84.61 | 134-138           
+ environments      |     100 |      100 |     100 |     100 |                   
+  ...evelopment.ts |     100 |      100 |     100 |     100 |                   
+-------------------|---------|----------|---------|---------|-------------------
