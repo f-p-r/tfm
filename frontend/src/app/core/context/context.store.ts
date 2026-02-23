@@ -38,6 +38,12 @@ export class ContextStore {
   /** Timestamp de la última actualización (útil para depuración) */
   readonly updatedAt = signal<number>(Date.now());
 
+  /** Tipo de alcance ANTERIOR al actual (para navegación "Volver") */
+  readonly previousScopeType = signal<WebScope | null>(null);
+
+  /** ID del alcance ANTERIOR al actual (para navegación "Volver") */
+  readonly previousScopeId = signal<number | null>(null);
+
   /** Indica si el contexto actual es global */
   readonly isGlobal = computed(() => this.scopeType() === WebScope.GLOBAL);
 
@@ -60,6 +66,10 @@ export class ContextStore {
    * @param source Fuente del cambio. Por defecto 'manual'.
    */
   setGlobal(source: ContextSource = 'manual'): void {
+    if (this.scopeType() !== WebScope.GLOBAL) {
+      this.previousScopeType.set(this.scopeType());
+      this.previousScopeId.set(this.scopeId());
+    }
     this.scopeType.set(WebScope.GLOBAL);
     this.scopeId.set(null);
     this.source.set(source);
@@ -79,8 +89,15 @@ export class ContextStore {
    * @param source Fuente del cambio. Por defecto 'manual', se fuerza a 'unknown' si scopeId es null en scope no-global.
    */
   setScope(scopeType: WebScope, scopeId: number | null, source: ContextSource = 'manual'): void {
+    // Solo guardar el scope anterior cuando el TIPO cambia (no al actualizar sólo el ID)
+    const typeIsChanging = this.scopeType() !== scopeType;
+
     // Si es GLOBAL, forzar scopeId a null
     if (scopeType === WebScope.GLOBAL) {
+      if (typeIsChanging) {
+        this.previousScopeType.set(this.scopeType());
+        this.previousScopeId.set(this.scopeId());
+      }
       this.scopeType.set(WebScope.GLOBAL);
       this.scopeId.set(null);
       this.source.set(source);
@@ -90,6 +107,10 @@ export class ContextStore {
 
     // Si no es GLOBAL pero scopeId es null, mantener pero marcar como 'unknown'
     if (scopeId === null) {
+      if (typeIsChanging) {
+        this.previousScopeType.set(this.scopeType());
+        this.previousScopeId.set(this.scopeId());
+      }
       this.scopeType.set(scopeType);
       this.scopeId.set(null);
       this.source.set('unknown');
@@ -98,6 +119,10 @@ export class ContextStore {
     }
 
     // Caso normal: scope con tipo e ID válidos
+    if (typeIsChanging) {
+      this.previousScopeType.set(this.scopeType());
+      this.previousScopeId.set(this.scopeId());
+    }
     this.scopeType.set(scopeType);
     this.scopeId.set(scopeId);
     this.source.set(source);

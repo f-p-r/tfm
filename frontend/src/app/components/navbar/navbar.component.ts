@@ -97,6 +97,13 @@ export class NavbarComponent {
   );
 
   /**
+   * Ruta a la que vuelve el botón "Volver a Asociaciones".
+   * Siempre navega a /asociaciones; el resolveScopeGuard se encarga de
+   * restaurar el scope correcto (GAME o GLOBAL) según el contexto anterior.
+   */
+  readonly backToAssociationsRoute = computed(() => ['/asociaciones']);
+
+  /**
    * Elementos de navegación ESTÁNDAR.
    * NOTA: Ya no incluimos aquí las adminActions, se gestionan aparte en el HTML
    */

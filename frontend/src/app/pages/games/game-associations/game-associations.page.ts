@@ -2,13 +2,12 @@ import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/c
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
-import { NavbarComponent } from '../../../components/navbar/navbar.component';
 import { GamesStore } from '../../../core/games/games.store';
 import { slugify } from '../../../shared/utils/slugify';
 
 @Component({
   selector: 'app-game-associations-page',
-  imports: [NavbarComponent],
+  imports: [],
   templateUrl: './game-associations.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
