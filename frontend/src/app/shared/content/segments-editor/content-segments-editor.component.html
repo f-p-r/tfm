@@ -166,6 +166,17 @@
               <app-help-i helpKey="col_fullwidth_bg"></app-help-i>
             </div>
           </div>
+
+          <div class="ds-field ds-field-full">
+            <div class="ds-label-with-help">
+              <label class="ds-label">Clases CSS</label>
+              <app-help-i helpKey="col_class"></app-help-i>
+            </div>
+            <input type="text" class="ds-input" placeholder="ej: seg-hero mi-clase"
+                   helpHover [helpKey]="'col_class'"
+                   [ngModel]="draft.classNames"
+                   (ngModelChange)="updateProperty('classNames', $event || undefined)">
+          </div>
         </div>
 
         <div
@@ -218,6 +229,17 @@
             <div class="ds-field">
               <div class="ds-label-with-help"><label class="ds-label">Auto-play (seg)</label></div>
               <input type="number" class="ds-input" [ngModel]="draft.delaySeconds" (ngModelChange)="updateProperty('delaySeconds', $event)">
+            </div>
+
+            <div class="ds-field ds-field-full">
+              <div class="ds-label-with-help">
+                <label class="ds-label">Clases CSS</label>
+                <app-help-i helpKey="col_class"></app-help-i>
+              </div>
+              <input type="text" class="ds-input" placeholder="ej: seg-hero mi-clase"
+                     helpHover [helpKey]="'col_class'"
+                     [ngModel]="draft.classNames"
+                     (ngModelChange)="updateProperty('classNames', $event || undefined)">
             </div>
           </div>
 

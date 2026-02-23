@@ -91,6 +91,10 @@
   border-radius: 0.5rem;
 }
 
+.controls-grid .ds-field-full {
+  grid-column: span 2;
+}
+
 .edit-footer {
   margin-top: 2rem;
   padding-top: 1rem;
