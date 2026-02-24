@@ -82,7 +82,7 @@ export class ContentSegmentsEditorComponent implements OnDestroy {
       base_url: '/assets/tinymce',
       license_key: 'gpl',
       suffix: '.min',
-      height: 600,
+      height: 400,
       menubar: false,
       plugins: 'lists link image table code help wordcount quickbars',
       toolbar: 'undo redo | blocks styles | bold italic forecolor | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',

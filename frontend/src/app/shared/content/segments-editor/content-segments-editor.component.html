@@ -180,9 +180,8 @@
         </div>
 
         <div
-          class="preview-area"
           [class.ds-seg-wrapper-full]="draft.fullWidthBackground"
-          [class]="(draft.backgroundColor && draft.backgroundColor !== 'transparent' ? 'bg-' + draft.backgroundColor : '') + (draft.textColor && draft.textColor !== 'default' ? ' text-' + draft.textColor : '')">
+          [class]="'preview-area editing-mode' + (draft.backgroundColor && draft.backgroundColor !== 'transparent' ? ' bg-' + draft.backgroundColor : '') + (draft.textColor && draft.textColor !== 'default' ? ' text-' + draft.textColor : '')">
           <div
             class="ds-layout-grid"
             [attr.data-layout]="draft.distribution"

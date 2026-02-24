@@ -43,7 +43,7 @@ import { EventDetailPage } from './pages/events/event-detail.page';
 import { PERM } from './core/authz/permissions.constants';
 
 export const routes: Routes = [
-  // Public page viewer routes (must be before admin routes)
+  // Rutas del visor de páginas públicas (deben ir antes que las rutas de administración)
   { path: '', pathMatch: 'full', component: PageViewerPage, canActivate: [resolveScopeGuard] },
   { path: 'paginas/:slug', component: PageViewerPage, canActivate: [resolveScopeGuard], resolve: { entity: PageEntityResolver }},
   { path: 'login', component: LoginPage, canActivate: [resolveScopeGuard] },
@@ -51,10 +51,10 @@ export const routes: Routes = [
   { path: 'auth/callback', component: AuthCallbackPage, canActivate: [resolveScopeGuard] },
   { path: 'styleguide', component: StyleguidePage, canActivate: [resolveScopeGuard] },
 
-  // User profile
+  // Perfil de usuario
   { path: 'perfil', component: PerfilPage, canActivate: [resolveScopeGuard, requireAuth] },
 
-  // Contact page
+  // Página de contacto
   { path: 'contacto', component: ContactPage, canActivate: [resolveScopeGuard] },
 
   // Ruta de juegos con páginas

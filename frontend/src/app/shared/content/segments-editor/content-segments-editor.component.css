@@ -1,6 +1,14 @@
 /* Importamos nuestro Grid Layout */
 @import '../../../../styles/_ds-content-layout.css';
 
+/* Suprime el padding vertical dentro del panel de edición */
+.editing-mode .ds-seg-pad-small,
+.editing-mode .ds-seg-pad-normal,
+.editing-mode .ds-seg-pad-large {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .segments-editor {
   display: flex;
   flex-direction: column;

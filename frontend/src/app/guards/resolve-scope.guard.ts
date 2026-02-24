@@ -186,29 +186,6 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
       })
     );
   }
-/****** @@@ borrar cuando se compruebe que funcionan rutas admin/asociacion y admin/juego
-  // Prioridad 5: Rutas /admin/{scopeType}/* (contextuales con número)
-  // Ejemplo: /admin/2/socios, /admin/3/configuracion
-  // Verifican que el scope actual coincida con el scopeType de la URL
-  const adminScopeMatch = url.match(/^\/admin\/(\d+)/);
-  if (adminScopeMatch) {
-    const urlScopeType = parseInt(adminScopeMatch[1], 10);
-    const currentScopeType = contextStore.scopeType();
-    const currentScopeId = contextStore.scopeId();
-
-    console.log(`[>] [resolveScopeGuard] Ruta /admin/${urlScopeType} → Verificando scope actual ${currentScopeType}:${currentScopeId}`);
-
-    // Verificar que el scope actual coincide con la URL y tiene scopeId definido
-    if (currentScopeType === urlScopeType && currentScopeId !== null && currentScopeId !== undefined) {
-      console.log(`[OK] [resolveScopeGuard] Scope coincide → Manteniendo ${currentScopeType}:${currentScopeId}`);
-      return permissionsStore.waitForLoad().pipe(map(() => true));
-    } else {
-      console.warn(`[WARN] [resolveScopeGuard] Scope no coincide o sin scopeId → Redirect a /`);
-      router.navigateByUrl('/');
-      return of(false);
-    }
-  }
-@@@ ********/
 
   // Prioridad 5: Rutas /admin/{scopeName}/* (contextuales con nombre semántico)
   // Ejemplo: /admin/asociacion/members, /admin/juego/tournaments

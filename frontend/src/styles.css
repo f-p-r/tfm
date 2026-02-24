@@ -782,6 +782,55 @@
     }
   }
 
+  /* En pantallas ≥1400px: sidebar siempre colapsado (iconos), hover para expandir como overlay */
+  @media (min-width: 1400px) {
+    /* Siempre en modo icono independientemente del estado JS */
+    .ds-admin-sidebar {
+      width: 3rem;
+    }
+
+    /* Ocultar labels y categorías por defecto */
+    .ds-admin-sidebar .ds-admin-nav-item span:not(:first-child),
+    .ds-admin-sidebar .ds-admin-nav-item .font-medium {
+      display: none;
+    }
+    .ds-admin-sidebar nav > div {
+      display: none;
+    }
+
+    /* Centrar iconos */
+    .ds-admin-sidebar .ds-admin-nav-item {
+      @apply justify-center px-1;
+    }
+
+    /* Ocultar botón hamburguesa (no tiene función en modo hover) */
+    .ds-admin-sidebar .ds-sidebar-header {
+      display: none;
+    }
+
+    /* Hover: expandir como overlay sin empujar el contenido */
+    .ds-admin-sidebar:hover {
+      width: 17rem;
+      z-index: 60;
+    }
+
+    /* Hover: mostrar labels */
+    .ds-admin-sidebar:hover .ds-admin-nav-item span:not(:first-child),
+    .ds-admin-sidebar:hover .ds-admin-nav-item .font-medium {
+      display: inline;
+    }
+    .ds-admin-sidebar:hover nav > div {
+      display: block;
+    }
+
+    /* Hover: restaurar alineación de items */
+    .ds-admin-sidebar:hover .ds-admin-nav-item {
+      @apply justify-start;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+
   /* Navbar: Ocupa todo el ancho, z-index superior al sidebar */
   .ds-admin-header {
     @apply h-16 bg-white border-b border-neutral-medium px-6 flex items-center justify-between fixed top-0 left-0 right-0 z-[100] w-full;
