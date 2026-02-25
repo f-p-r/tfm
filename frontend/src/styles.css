@@ -73,6 +73,11 @@
     @apply border border-neutral-200 rounded-lg overflow-hidden bg-white hover:ring-2 hover:ring-brand-primary transition;
   }
 
+  /* Botón de cierre - muestra solo una X, colores del botón primario */
+  .ds-btn-close {
+    @apply flex items-center justify-center w-8 h-8 rounded-lg border border-brand-primary bg-brand-primary text-white hover:bg-brand-accent hover:border-brand-accent transition leading-none;
+  }
+
   /* Botones de flechas */
   .ds-btn-arrow {
     font-size: 1.4rem;

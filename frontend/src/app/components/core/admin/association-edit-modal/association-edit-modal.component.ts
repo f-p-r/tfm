@@ -12,7 +12,7 @@
  * - Estado (activo/deshabilitado)
  */
 
-import { Component, input, output, signal, effect, inject, computed } from '@angular/core';
+import { Component, input, output, signal, effect, inject, computed, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserAutocompleteComponent } from '../user-autocomplete/user-autocomplete.component';
 import { Association } from '../../../../core/associations/associations.models';
@@ -21,6 +21,8 @@ import { HelpContentService } from '../../../../shared/help/help-content.service
 import { HelpIComponent } from '../../../../shared/help/help-i/help-i.component';
 import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive';
 import { ASSOCIATION_EDIT_HELP } from './association-edit-modal.help';
+import { PageHelpService } from '../../../../shared/help/page-help.service';
+import { ADMIN_ASSOCIATIONS_PAGE_HELP, ADMIN_ASSOCIATION_FORM_PAGE_HELP } from '../../../../shared/help/page-content/admin-associations.help';
 
 @Component({
   selector: 'app-association-edit-modal',
@@ -250,9 +252,10 @@ import { ASSOCIATION_EDIT_HELP } from './association-edit-modal.help';
     </div>
   `
 })
-export class AssociationEditModalComponent {
+export class AssociationEditModalComponent implements OnDestroy {
   private readonly fb = new FormBuilder();
   private readonly helpContent = inject(HelpContentService);
+  private readonly pageHelp = inject(PageHelpService);
 
   // Inputs
   readonly mode = input<'create' | 'edit'>('create');
@@ -279,8 +282,10 @@ export class AssociationEditModalComponent {
   protected readonly form: FormGroup;
 
   constructor() {
-    // Establecer pack de ayuda
+    // Establecer pack de ayuda de campos (hover + iconos ⓘ)
     this.helpContent.setPack(ASSOCIATION_EDIT_HELP);
+    // Actualizar el panel de ayuda de página con el contexto del formulario
+    this.pageHelp.set(ADMIN_ASSOCIATION_FORM_PAGE_HELP);
 
     this.form = this.fb.group({
       name: ['', [Validators.required]],
@@ -318,6 +323,11 @@ export class AssociationEditModalComponent {
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    // Restaurar la ayuda del listado cuando el modal se cierra
+    this.pageHelp.set(ADMIN_ASSOCIATIONS_PAGE_HELP);
   }
 
   protected onOwnerChange(userId: number | null) {

@@ -5,6 +5,34 @@ import { HelpPack } from '../../../../shared/help/help.types';
  * Contiene textos de ayuda contextual para los campos del formulario.
  */
 export const ASSOCIATION_EDIT_HELP: HelpPack = {
+  screen: {
+    title: 'Crear / Editar asociación',
+    intro: 'Completa los campos del formulario. Los marcados con * son obligatorios.',
+    sections: [
+      {
+        title: 'Identificación',
+        items: [
+          'El nombre es el título completo visible para los usuarios.',
+          'El slug define la URL pública (ej: /asociaciones/mi-club).',
+          'El nombre corto se usa en espacios reducidos (máx. 20 caracteres).',
+        ],
+      },
+      {
+        title: 'Ubicación y Contacto',
+        items: [
+          'Selecciona primero el país para habilitar el selector de región.',
+          'La web externa es opcional y debe comenzar por https://.',
+        ],
+      },
+      {
+        title: 'Configuración',
+        items: [
+          'El responsable es el usuario que administra la asociación.',
+          'Las asociaciones deshabilitadas no son visibles públicamente.',
+        ],
+      },
+    ],
+  },
   items: {
     name: {
       title: 'Nombre',

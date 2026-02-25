@@ -26,9 +26,7 @@ import { getAdminPageHelp } from '../../shared/help/page-content/admin.help';
   selector: 'app-admin-page',
   imports: [
     AdminSidebarContainerComponent,
-    AdminPageSubtitleComponent,
-    JsonPipe,
-    HasPermissionDirective
+    AdminPageSubtitleComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -54,97 +52,10 @@ import { getAdminPageHelp } from '../../shared/help/page-content/admin.help';
             <p class="p mb-4">
               Utiliza el menú lateral para acceder a las diferentes secciones de gestión.
             </p>
-            <p class="p text-neutral-medium text-sm">
-              El contenido de esta página se adaptará según el contexto actual
-              (Global, Asociación o Juego) y mostrará información relevante del scope activo.
-            </p>
 
-            <!-- Ejemplo de uso de directiva *hasPermission -->
-            <div class="mt-6 border-t border-neutral-light pt-6">
-              <h3 class="h4 mb-4">Acciones rápidas</h3>
-              <div class="flex gap-3 flex-wrap">
-                <!-- Botón visible solo con permiso pages.edit -->
-                <button
-                  *hasPermission="'pages.edit'"
-                  type="button"
-                  class="ds-button ds-button-primary"
-                >
-                  Gestionar páginas
-                </button>
 
-                <!-- Botón visible solo con permiso users.manage -->
-                <button
-                  *hasPermission="'users.manage'"
-                  type="button"
-                  class="ds-button ds-button-secondary"
-                >
-                  Gestionar usuarios
-                </button>
 
-                <!-- Botón visible si tiene AL MENOS UNO de estos permisos -->
-                <button
-                  *hasPermission="['games.manage', 'associations.manage']"
-                  type="button"
-                  class="ds-button ds-button-secondary"
-                >
-                  Gestionar entidades
-                </button>
-
-                <!-- Botón visible solo si tiene TODOS estos permisos -->
-                <button
-                  *hasPermission="['admin', 'config.manage']; mode: 'all'"
-                  type="button"
-                  class="ds-button ds-button-danger"
-                >
-                  Configuración avanzada
-                </button>
-              </div>
-            </div>
           </div>
-
-          <!-- Debug info -->
-          <div class="mt-6 bg-gray-100 rounded-lg border border-gray-300 p-4 text-sm">
-            <h3 class="font-bold mb-2"><span class="material-symbols-outlined" style="vertical-align: middle;">search</span> Debug - Contexto actual:</h3>
-            <div class="space-y-1 font-mono">
-              <div>scopeType: <strong>{{ contextStore.scopeType() }}</strong></div>
-              <div>scopeId: <strong>{{ contextStore.scopeId() }}</strong></div>
-            </div>
-          </div>
-
-          <!-- Debug permisos -->
-          <div class="mt-4 bg-blue-50 rounded-lg border border-blue-300 p-4 text-sm">
-            <h3 class="font-bold mb-2"><span class="material-symbols-outlined" style="vertical-align: middle;">lock</span> Debug - Permisos del usuario:</h3>
-            @if (userPermissions(); as perms) {
-              <div class="space-y-2">
-                <div class="font-mono">
-                  <strong>Todos los permisos en este scope:</strong>
-                  <div class="ml-4 text-xs">{{ perms | json }}</div>
-                </div>
-              </div>
-            }
-          </div>
-
-          <!-- Debug verificación -->
-          <div class="mt-4 bg-yellow-50 rounded-lg border border-yellow-300 p-4 text-sm">
-            <h3 class="font-bold mb-2"><span class="material-symbols-outlined" style="vertical-align: middle;">settings</span> Debug - Verificación de acciones:</h3>
-            @if (debugPermissions(); as debug) {
-              <div class="space-y-2">
-                <div class="font-mono">
-                  <strong>Permisos requeridos por acciones:</strong>
-                  <div class="ml-4 text-xs">{{ debug.requested | json }}</div>
-                </div>
-                <div class="font-mono">
-                  <strong>Permisos concedidos:</strong>
-                  <div class="ml-4 text-xs">{{ debug.granted | json }}</div>
-                </div>
-                <div class="font-mono">
-                  <strong>Acciones autorizadas:</strong>
-                  <div class="ml-4 text-xs">{{ debug.authorizedCount }} de {{ debug.totalCount }}</div>
-                </div>
-              </div>
-            }
-          </div>
-
         </div>
       </main>
 

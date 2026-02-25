@@ -147,6 +147,46 @@ export const routes: Routes = [
             (m) => m.AssociationsCardsPrototypePage,
           ),
       },
+      {
+        // Prototipo event-detail-demo: equivalente a /eventos/{id}/{slug}
+        path: 'event-detail-demo',
+        loadComponent: () =>
+          import('./prototypes/event-detail-demo/event-detail-demo.page').then(
+            (m) => m.EventDetailDemoPage,
+          ),
+      },
+      {
+        // Prototipo association-form-demo: equivalente al formulario crear/editar asociación
+        path: 'association-form-demo',
+        loadComponent: () =>
+          import('./prototypes/association-form-demo/association-form-demo.page').then(
+            (m) => m.AssociationFormDemoPage,
+          ),
+      },
+      {
+        // Prototipo perfil-demo: equivalente a /perfil (página de perfil de usuario)
+        path: 'perfil-demo',
+        loadComponent: () =>
+          import('./prototypes/perfil-demo/perfil-demo.page').then(
+            (m) => m.PerfilDemoPage,
+          ),
+      },
+      {
+        // Prototipo registro-form-demo: equivalente a /registro (formulario de registro de usuario)
+        path: 'registro-form-demo',
+        loadComponent: () =>
+          import('./prototypes/registro-form-demo/registro-form-demo.page').then(
+            (m) => m.RegistroFormDemoPage,
+          ),
+      },
+      {
+        // Prototipo event-form-demo: equivalente al formulario crear/editar evento
+        path: 'event-form-demo',
+        loadComponent: () =>
+          import('./prototypes/event-form-demo/event-form-demo.page').then(
+            (m) => m.EventFormDemoPage,
+          ),
+      },
       { path: '**', component: PrototypeHostPage },
     ],
   },

@@ -32,13 +32,14 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
         } @else if (event(); as e) {
 
           <!-- Cabecera: título + botón cerrar -->
-          <header class="flex items-start justify-between gap-4 border-b border-neutral-medium pb-4 mb-6">
-            <h1 class="h1 flex-1">{{ e.title }}</h1>
+          <header class="flex items-start gap-16 border-b border-neutral-medium pb-4 mb-6">
+            <h1 class="h1">{{ e.title }}</h1>
             <button
               type="button"
-              class="ds-btn ds-btn-secondary shrink-0 mt-1"
+              class="ds-btn-close shrink-0 mt-1"
+              aria-label="Cerrar"
               (click)="goBack()"
-            >✕ Cerrar</button>
+            ><span class="material-symbols-outlined text-base">close</span></button>
           </header>
 
           <!-- Metadatos + estado de asistencia / botón de inscripción -->
@@ -84,7 +85,7 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
             } @else if (e.registrationOpen) {
               <button
                 type="button"
-                class="ds-btn ds-btn-primary"
+                class="ds-btn-sm ds-btn-primary"
                 [disabled]="enrolling()"
                 (click)="requestAttendance(e.id)"
               >
