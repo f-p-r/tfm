@@ -107,14 +107,14 @@ export class PageViewerPage implements OnInit, OnDestroy {
     // Determinar el tipo de página según la URL
     const firstSegment = urlSegments[0];
 
-    // Global homepage: /
+    // Página de inicio global: /
     if (!firstSegment || firstSegment === '') {
       this.loadNavPages(PageOwnerScope.GLOBAL, 'global');
       this.loadGlobalHomepage();
       return;
     }
 
-    // Global page: /paginas/:slug
+    // Página global: /paginas/:slug
     if (firstSegment === 'paginas') {
       const pageSlug = params['slug'];
       if (!pageSlug) {
@@ -126,7 +126,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
       return;
     }
 
-    // Game pages: /juegos/:slug or /juegos/:slug/:pagina
+    // Páginas de juego: /juegos/:slug o /juegos/:slug/:pagina
     if (firstSegment === 'juegos') {
       const gameSlug = params['slug'];
       if (!gameSlug) {
@@ -137,16 +137,16 @@ export class PageViewerPage implements OnInit, OnDestroy {
 
       const pageSlug = params['pagina'];
       if (pageSlug) {
-        // Game page by slug
+        // Página de juego por slug
         this.loadGamePage(gameSlug, pageSlug);
       } else {
-        // Game homepage
+        // Página de inicio del juego
         this.loadGameHomepage(gameSlug);
       }
       return;
     }
 
-    // Association pages: /asociaciones/:slug or /asociaciones/:slug/:pagina
+    // Páginas de asociación: /asociaciones/:slug o /asociaciones/:slug/:pagina
     if (firstSegment === 'asociaciones') {
       const associationSlug = params['slug'];
       if (!associationSlug) {
@@ -157,10 +157,10 @@ export class PageViewerPage implements OnInit, OnDestroy {
 
       const pageSlug = params['pagina'];
       if (pageSlug) {
-        // Association page by slug
+        // Página de asociación por slug
         this.loadAssociationPage(associationSlug, pageSlug);
       } else {
-        // Association homepage
+        // Página de inicio de la asociación
         this.loadAssociationHomepage(associationSlug);
       }
       return;

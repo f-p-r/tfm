@@ -1,16 +1,16 @@
-<!-- Admin Shell -->
+<!-- Shell de administración -->
 <div class="ds-admin-shell">
 
   <!-- Sidebar -->
   <app-admin-sidebar-container />
 
-  <!-- Main content -->
+  <!-- Contenido principal -->
   <main class="ds-admin-main">
 
     @if (isEditMode() && isLoading()) {
       <div class="ds-admin-form ds-container">
         <div>
-          <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
+          <h2 class="h2 mb-4 mt-6">{{ pageTitle() }}</h2>
           <app-admin-page-subtitle />
         </div>
         <p>Cargando página...</p>
@@ -18,7 +18,7 @@
     } @else if (errorMessage() && (isEditMode() || ownerType() === null)) {
       <div class="ds-admin-form ds-container">
         <div>
-          <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
+          <h2 class="h2 mb-4 mt-6">{{ pageTitle() }}</h2>
           <app-admin-page-subtitle />
         </div>
         <div class="ds-alert ds-alert-error">
@@ -30,10 +30,10 @@
 
       <div class="ds-admin-form ds-container">
         <div>
-          <h1 class="h1 mb-4">{{ pageTitle() }}</h1>
+          <h2 class="h2 mb-4 mt-6">{{ pageTitle() }}</h2>
           <app-admin-page-subtitle />
         </div>
-        <!-- Form section -->
+        <!-- Sección del formulario -->
         <div class="form-section">
           <button class="ds-form-section-toggle" type="button" (click)="dataCollapsed.set(!dataCollapsed())">
             <span>Datos de la página</span>
@@ -119,7 +119,7 @@
           </div>
         </div>
 
-        <!-- Editor section -->
+        <!-- Sección del editor -->
         <div class="editor-section">
           <button class="ds-form-section-toggle" type="button" (click)="contentCollapsed.set(!contentCollapsed())">
             <span>Contenido</span>
@@ -146,7 +146,7 @@
 
       </div>
 
-      <!-- Actions (sticky, hijo directo de ds-admin-main) -->
+      <!-- Acciones (sticky, hijo directo de ds-admin-main) -->
       <div class="ds-actions-section ds-container">
         @if (errorMessage()) {
           <div class="ds-alert ds-alert-error">{{ errorMessage() }}</div>

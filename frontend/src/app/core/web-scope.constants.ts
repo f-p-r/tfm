@@ -14,16 +14,6 @@ export enum WebScope {
 }
 
 /**
- * Mapeo de string a número para convertir WebScopeType a valor numérico.
- * @deprecated Use WebScope enum directly instead of string types.
- */
-export const WEB_SCOPE_VALUE: Record<WebScopeType, number> = {
-  'global': WebScope.GLOBAL,
-  'association': WebScope.ASSOCIATION,
-  'game': WebScope.GAME,
-};
-
-/**
  * Mapeo inverso: de número a string.
  */
 export const WEB_SCOPE_NAME: Record<number, WebScopeType | undefined> = {

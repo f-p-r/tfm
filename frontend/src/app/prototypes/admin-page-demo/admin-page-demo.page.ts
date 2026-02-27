@@ -34,24 +34,24 @@ import { isBreakdownResponse } from '../../core/authz/authz.models';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <!-- Navbar admin sticky -->
+    <!-- Navbar admin fija -->
     <div class="h-16 sticky top-0 z-[60]">
       <app-navbar [isAdmin]="true" />
     </div>
 
-    <!-- Admin Shell -->
+    <!-- Shell de administración -->
     <div class="ds-admin-shell">
 
-      <!-- Sidebar -->
+      <!-- Barra lateral -->
       <aside id="admin-sidebar" class="ds-admin-sidebar">
         <app-admin-menu [items]="menuItems" />
       </aside>
 
-      <!-- Main content -->
+      <!-- Contenido principal -->
       <main class="ds-admin-main ds-container">
         <div class="flex-1 flex flex-col pt-6 min-h-0">
 
-          <!-- Page header -->
+          <!-- Cabecera de página -->
           <div class="mb-4 flex justify-between items-end shrink-0">
             <div>
               <h1 class="h3">Listado de Socios</h1>
@@ -84,7 +84,7 @@ import { isBreakdownResponse } from '../../core/authz/authz.models';
 
             </app-admin-table-toolbar>
 
-            <!-- Table -->
+            <!-- Tabla -->
             <app-admin-table
               [columns]="tableColumns"
               [data]="tableData"

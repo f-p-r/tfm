@@ -154,7 +154,7 @@ describe('PageViewerPage', () => {
   });
 
   // ---------------------------------------------------------------
-  // /paginas/:slug — global page by slug
+  // /paginas/:slug — página global por slug
   // ---------------------------------------------------------------
 
   describe('/paginas/:slug — global page', () => {
@@ -203,7 +203,7 @@ describe('PageViewerPage', () => {
   });
 
   // ---------------------------------------------------------------
-  // /juegos/:slug — game homepage
+  // /juegos/:slug — página de inicio del juego
   // ---------------------------------------------------------------
 
   describe('/juegos/:slug — game homepage', () => {
@@ -237,7 +237,7 @@ describe('PageViewerPage', () => {
   });
 
   // ---------------------------------------------------------------
-  // /juegos/:slug/:pagina — game page by slug
+  // /juegos/:slug/:pagina — página de juego por slug
   // ---------------------------------------------------------------
 
   describe('/juegos/:slug/:pagina — specific game page', () => {
@@ -257,7 +257,7 @@ describe('PageViewerPage', () => {
   });
 
   // ---------------------------------------------------------------
-  // /asociaciones/:slug — association homepage
+  // /asociaciones/:slug — página de inicio de la asociación
   // ---------------------------------------------------------------
 
   describe('/asociaciones/:slug — association homepage', () => {
@@ -281,7 +281,7 @@ describe('PageViewerPage', () => {
   });
 
   // ---------------------------------------------------------------
-  // /asociaciones/:slug/:pagina — specific association page
+  // /asociaciones/:slug/:pagina — página específica de asociación
   // ---------------------------------------------------------------
 
   describe('/asociaciones/:slug/:pagina', () => {

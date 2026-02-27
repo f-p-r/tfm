@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { App } from './app';
 import { AuthService } from './core/auth/auth.service';
 
-// Stub page so all routes resolve → NavigationEnd fires for every URL
+// Página stub para que todas las rutas resuelvan → NavigationEnd se dispara para cada URL
 @Component({ template: '', standalone: true })
 class StubPage {}
 
@@ -28,7 +28,7 @@ async function setup(loggedIn = false) {
     ],
   });
 
-  // Override template & imports to remove NavbarComponent dependency chain
+  // Sobreescribir template e imports para eliminar la cadena de dependencias de NavbarComponent
   TestBed.overrideComponent(App, {
     set: {
       imports: [RouterOutlet],
@@ -55,7 +55,7 @@ describe('App (root component)', () => {
     expect(fixture.nativeElement.querySelector('router-outlet')).toBeTruthy();
   });
 
-  // ------------------------------------------------------------------ noNavbar (via private hasNoNavbar method)
+  // ------------------------------------------------------------------ noNavbar (a través del método privado hasNoNavbar)
   describe('hasNoNavbar private logic', () => {
     it('returns false for root route "/"', async () => {
       const { component } = await setup();
@@ -98,7 +98,7 @@ describe('App (root component)', () => {
     });
   });
 
-  // ------------------------------------------------------------------ freeLayout (via private hasFreeLayout method)
+  // ------------------------------------------------------------------ freeLayout (a través del método privado hasFreeLayout)
   describe('hasFreeLayout private logic', () => {
     it('returns true for root route "/" (non-admin)', async () => {
       const { component } = await setup();
@@ -121,7 +121,7 @@ describe('App (root component)', () => {
     });
   });
 
-  // ------------------------------------------------------------------ isAdminMode signal (via router navigation)
+  // ------------------------------------------------------------------ señal isAdminMode (vía navegación del router)
   describe('isAdminMode signal', () => {
     it('is false on root route', async () => {
       const { component } = await setup();
@@ -143,11 +143,11 @@ describe('App (root component)', () => {
     });
   });
 
-  // ------------------------------------------------------------------ ngOnInit (visibilitychange)
+  // ------------------------------------------------------------------ ngOnInit (evento visibilitychange)
   describe('ngOnInit — visibilitychange handler', () => {
     it('calls checkSession when tab becomes visible and user is logged in', async () => {
       const { mockAuth } = await setup(true /* loggedIn */);
-      // ngOnInit already ran via detectChanges() during setup
+      // ngOnInit ya se ejecutó mediante detectChanges() durante el setup
 
       Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
       document.dispatchEvent(new Event('visibilitychange'));
@@ -156,7 +156,7 @@ describe('App (root component)', () => {
     });
 
     it('does NOT call checkSession when tab becomes visible but user is NOT logged in', async () => {
-      const { mockAuth } = await setup(false /* not logged in */);
+      const { mockAuth } = await setup(false /* sin sesión iniciada */);
 
       Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
       document.dispatchEvent(new Event('visibilitychange'));

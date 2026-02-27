@@ -32,17 +32,17 @@ export class OwnerPagesAdminPage implements OnInit {
   private readonly router = inject(Router);
   private readonly contextStore = inject(ContextStore);
 
-  // Route params
+  // Parámetros de ruta
   readonly ownerType = signal<PageOwnerType | null>(null);
   readonly ownerId = signal<number | null>(null);
 
-  // Data
+  // Datos
   readonly pages = signal<PageSummaryDTO[]>([]);
   readonly homePageId = signal<number | null>(null);
   readonly selectedPageId = signal<number | null>(null);
   readonly selectedPageContent = signal<PageDTO | null>(null);
 
-  // Loading states
+  // Estados de carga
   readonly isLoadingPages = signal(false);
   readonly isLoadingHomePage = signal(false);
   readonly isLoadingPageContent = signal(false);
@@ -64,7 +64,7 @@ export class OwnerPagesAdminPage implements OnInit {
 
   constructor() {
     inject(PageHelpService).set(getAdminPagesListHelp(inject(ContextStore).scopeType()));
-    // Load page content when selectedPageId changes
+    // Cargar contenido de página cuando selectedPageId cambia
     effect(() => {
       const pageId = this.selectedPageId();
       if (pageId === null) {
@@ -86,7 +86,7 @@ export class OwnerPagesAdminPage implements OnInit {
   }
 
   ngOnInit(): void {
-    // Parse route params
+    // Parsear parámetros de ruta
     let ownerTypeParam = this.route.snapshot.paramMap.get('ownerType');
     let ownerIdParam = this.route.snapshot.paramMap.get('ownerId');
 
@@ -146,7 +146,7 @@ export class OwnerPagesAdminPage implements OnInit {
     this.ownerType.set(parsedOwnerType);
     this.ownerId.set(parsedOwnerId);
 
-    // Load data
+    // Cargar datos
     this.loadPages();
     this.loadHomePageId();
   }
@@ -178,7 +178,7 @@ export class OwnerPagesAdminPage implements OnInit {
         this.pages.set(pages);
         this.isLoadingPages.set(false);
 
-        // Auto-select first page if none selected
+        // Seleccionar automáticamente la primera página si no hay ninguna seleccionada
         if (this.selectedPageId() === null && pages.length > 0) {
           this.selectedPageId.set(pages[0].id);
         }

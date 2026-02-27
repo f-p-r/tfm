@@ -42,18 +42,18 @@ export class PageFormAdminPage implements OnInit {
   private readonly helpContent = inject(HelpContentService);
   private readonly contextStore = inject(ContextStore);
 
-  // Route params
+  // Parámetros de ruta
   readonly pageId = signal<number | null>(null);
   readonly ownerType = signal<PageOwnerType | null>(null);
   readonly ownerId = signal<number | null>(null);
 
-  // Mode detection
+  // Detección de modo
   readonly isEditMode = computed(() => this.pageId() !== null);
 
   // Datos originales (solo en edit)
   readonly originalPage = signal<PageDTO | null>(null);
 
-  // Form fields
+  // Campos del formulario
   readonly title = signal('');
   readonly slug = signal('');
   readonly published = signal(false);
@@ -128,7 +128,7 @@ export class PageFormAdminPage implements OnInit {
     // Establecer el pack de ayuda para esta pantalla
     this.helpContent.setPack(PAGE_CREATE_PACK);
 
-    // Sync classNames changes to content
+    // Sincronizar cambios de classNames con el contenido
     effect(() => {
       const classNamesValue = this.classNames();
       this.content.update(c => ({ ...c, classNames: classNamesValue || undefined }));
@@ -143,7 +143,7 @@ export class PageFormAdminPage implements OnInit {
   }
 
   ngOnInit(): void {
-    // Parse route params
+    // Parsear parámetros de ruta
     let pageIdParam = this.route.snapshot.paramMap.get('pageId');
     let ownerTypeParam = this.route.snapshot.paramMap.get('ownerType');
     let ownerIdParam = this.route.snapshot.paramMap.get('ownerId');
@@ -174,7 +174,7 @@ export class PageFormAdminPage implements OnInit {
       }
     }
 
-    // Validate and set ownerType
+    // Validar y establecer ownerType
     if (!ownerTypeParam) {
       this.errorMessage.set('Parámetro ownerType no válido');
       return;
@@ -186,7 +186,7 @@ export class PageFormAdminPage implements OnInit {
       return;
     }
 
-    // Parse ownerId
+    // Parsear ownerId
     // 1. Si es global (tipo 1): ownerId es null
     // 2. Si hay ownerId en la URL: usar ese
     // 3. Si NO hay ownerId en la URL pero es tipo 2/3: leer del ContextStore
@@ -217,7 +217,7 @@ export class PageFormAdminPage implements OnInit {
       }
     }
 
-    // Parse pageId if in edit mode
+    // Parsear pageId si estamos en modo edición
     if (pageIdParam) {
       const parsedPageId = parseInt(pageIdParam, 10);
       if (isNaN(parsedPageId)) {
@@ -230,7 +230,7 @@ export class PageFormAdminPage implements OnInit {
     this.ownerType.set(parsedOwnerType);
     this.ownerId.set(parsedOwnerId);
 
-    // Load page if in edit mode
+    // Cargar página si estamos en modo edición
     if (this.isEditMode()) {
       this.loadPage();
     }
@@ -345,7 +345,7 @@ export class PageFormAdminPage implements OnInit {
     this.pagesService.create(input).subscribe({
       next: (createdPage) => {
         this.isSaving.set(false);
-        // Navigate to edit page
+        // Navegar a la página de edición
         if (ownerType === '1') {
           this.router.navigate(['/admin/pages', '1', 'edit', createdPage.id]);
         } else {

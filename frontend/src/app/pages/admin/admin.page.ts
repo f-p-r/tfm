@@ -30,23 +30,23 @@ import { getAdminPageHelp } from '../../shared/help/page-content/admin.help';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <!-- Admin Shell -->
+    <!-- Shell de administración -->
     <div class="ds-admin-shell">
 
       <!-- Sidebar -->
       <app-admin-sidebar-container />
 
-      <!-- Main content -->
+      <!-- Contenido principal -->
       <main class="ds-admin-main ds-container">
-        <div class="flex-1 flex flex-col pt-6 min-h-0">
+        <div class="flex-1 flex flex-col min-h-0">
 
-          <!-- Page header -->
-          <div class="mb-6 shrink-0">
-            <h1 class="h1">Panel de Administración</h1>
+          <!-- Cabecera de página -->
+          <div class="py-6">
+            <h2 class="h2">Panel de Administración</h2>
             <app-admin-page-subtitle />
           </div>
 
-          <!-- Content area -->
+          <!-- Área de contenido -->
           <div class="bg-white rounded-lg border border-neutral-medium p-6 shadow-sm">
             <h2 class="h3 mb-4">Bienvenido al panel de administración</h2>
             <p class="p mb-4">

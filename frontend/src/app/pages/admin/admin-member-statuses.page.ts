@@ -33,26 +33,26 @@ import { ADMIN_MEMBER_STATUSES_PAGE_HELP } from '../../shared/help/page-content/
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <!-- Admin Shell -->
+    <!-- Shell de administración -->
     <div class="ds-admin-shell">
 
       <!-- Sidebar -->
       <app-admin-sidebar-container />
 
-      <!-- Main content -->
+      <!-- Contenido principal -->
       <main class="ds-admin-main ds-container">
-        <div class="flex-1 flex flex-col pt-6 min-h-0">
+        <div class="flex-1 flex flex-col min-h-0">
 
-          <!-- Page header -->
-          <div class="mb-6 shrink-0 flex justify-between items-start">
+          <!-- Cabecera de página -->
+          <div class="flex items-start justify-between gap-4 py-6">
             <div>
-              <h1 class="h1">Gestión de Estados de Miembros</h1>
+              <h2 class="h2">Gestión de Estados de Miembros</h2>
               <app-admin-page-subtitle />
               <p class="text-neutral-medium mt-2">
                 Configura los estados disponibles para los miembros de esta asociación
               </p>
             </div>
-            <button class="ds-btn ds-btn-primary" (click)="onCreateStatus()">
+            <button class="ds-btn ds-btn-primary mt-1" (click)="onCreateStatus()">
               Crear estado
             </button>
           </div>

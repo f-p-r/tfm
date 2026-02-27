@@ -29,26 +29,26 @@ import { ADMIN_GAMES_PAGE_HELP } from '../../shared/help/page-content/admin-game
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <!-- Admin Shell -->
+    <!-- Shell de administración -->
     <div class="ds-admin-shell">
 
       <!-- Sidebar -->
       <app-admin-sidebar-container />
 
-      <!-- Main content -->
+      <!-- Contenido principal -->
       <main class="ds-admin-main ds-container">
-        <div class="flex-1 flex flex-col pt-6 min-h-0">
+        <div class="flex-1 flex flex-col min-h-0">
 
-          <!-- Page header -->
-          <div class="mb-6 shrink-0 flex justify-between items-start">
+          <!-- Cabecera de página -->
+          <div class="flex items-start justify-between gap-4 py-6">
             <div>
-              <h1 class="h1">Gestión de Juegos</h1>
+              <h2 class="h2">Gestión de Juegos</h2>
               <app-admin-page-subtitle />
               <p class="text-neutral-medium mt-2">
                 Administra los juegos disponibles en la plataforma
               </p>
             </div>
-            <button class="ds-btn ds-btn-primary" (click)="onCreateGame()">
+            <button class="ds-btn ds-btn-primary mt-1" (click)="onCreateGame()">
               Crear juego
             </button>
           </div>

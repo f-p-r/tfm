@@ -42,12 +42,12 @@ const STATUS_OPTIONS = [
       <app-admin-sidebar-container />
 
       <main class="ds-admin-main ds-container">
-        <div class="flex-1 flex flex-col pt-6 min-h-0">
+        <div class="flex-1 flex flex-col min-h-0">
 
           <!-- Cabecera -->
-          <div class="mb-6 shrink-0 flex items-start justify-between gap-4">
+          <div class="flex items-start justify-between gap-4 py-6">
             <div>
-              <h1 class="h1">Inscripciones</h1>
+              <h2 class="h2">Inscripciones</h2>
               @if (eventTitle()) {
                 <p class="text-sm text-neutral-dark mt-1">{{ eventTitle() }}</p>
               }
