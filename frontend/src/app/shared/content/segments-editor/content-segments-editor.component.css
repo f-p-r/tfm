@@ -112,14 +112,4 @@
   gap: 1rem;
 }
 
-/* Ajustes visuales dentro del editor */
-.ds-layout-cell .ql-container {
-  min-height: 200px;
-  background: white;
-  font-size: 1rem;
-}
 
-.ds-layout-cell .ql-toolbar {
-  background: #f8fafc;
-  border-color: #e2e8f0;
-}
