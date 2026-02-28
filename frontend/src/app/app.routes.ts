@@ -7,7 +7,6 @@ import { AuthCallbackPage } from './pages/auth-callback/auth-callback.page';
 import { StyleguidePage } from './styleguide/styleguide.page';
 import { PrototypeHostPage } from './prototypes/prototype-host.page';
 import { GamePage } from './pages/games/game/game.page';
-import { GameAssociationsPage } from './pages/games/game-associations/game-associations.page';
 import { gameBySlugGuard } from './guards/game-by-slug.guard';
 import { AssociationsPage } from './pages/associations/associations.page';
 import { AssociationPage } from './pages/associations/association/association.page';
@@ -59,7 +58,7 @@ export const routes: Routes = [
 
   // Ruta de juegos con páginas
   { path: 'juegos/:slug', component: PageViewerPage, canActivate: [gameBySlugGuard] },
-  { path: 'juegos/:slug/asociaciones', component: GameAssociationsPage, canActivate: [gameBySlugGuard] },
+  { path: 'juegos/:slug/asociaciones', component: AssociationsPage, canActivate: [gameBySlugGuard] },
   { path: 'juegos/:slug/noticias', component: NewsListPage, canActivate: [gameBySlugGuard] },
   { path: 'juegos/:slug/eventos', component: EventsListPage, canActivate: [gameBySlugGuard] },
   { path: 'juegos/:slug/:pagina', component: PageViewerPage, canActivate: [gameBySlugGuard], resolve:{ entity: PageEntityResolver } },
