@@ -27,8 +27,7 @@ export const GLOBAL_ADMIN_ACTIONS: ReadonlyArray<AdminAction> = [
   { label: 'Asociaciones', route: '/admin/asociaciones', permission: PERM.ADMIN, icon: 'account_balance', category: 'Gestión' },
   { label: 'Juegos', route: '/admin/juegos', permission: PERM.ADMIN, icon: 'casino', category: 'Gestión' },
   { label: 'Usuarios', route: '/admin/usuarios', permission: PERM.ADMIN, icon: 'group', category: 'Gestión' },
-  { label: 'Medios', route: '/admin/media', permission: PERM.GLOBAL_MEDIA_VIEW, icon: 'photo_library', category: 'Contenido' },
-  { label: 'Parámetros del Sitio', route: '/admin/site-params', permission: PERM.ADMIN, icon: 'settings', category: 'Sistema', iconClass: 'hover:rotate-90 transition-transform duration-500' },
+  { label: 'Medios', route: '/admin/media', permission: PERM.GLOBAL_MEDIA_VIEW, icon: 'photo_library', category: 'Contenido' }
 ] as const;
 
 /**
