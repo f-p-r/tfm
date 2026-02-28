@@ -60,6 +60,8 @@ export const routes: Routes = [
   // Ruta de juegos con páginas
   { path: 'juegos/:slug', component: PageViewerPage, canActivate: [gameBySlugGuard] },
   { path: 'juegos/:slug/asociaciones', component: GameAssociationsPage, canActivate: [gameBySlugGuard] },
+  { path: 'juegos/:slug/noticias', component: NewsListPage, canActivate: [gameBySlugGuard] },
+  { path: 'juegos/:slug/eventos', component: EventsListPage, canActivate: [gameBySlugGuard] },
   { path: 'juegos/:slug/:pagina', component: PageViewerPage, canActivate: [gameBySlugGuard], resolve:{ entity: PageEntityResolver } },
 
   // Noticias públicas
@@ -75,6 +77,8 @@ export const routes: Routes = [
   { path: 'asociaciones/:slug', component: PageViewerPage, canActivate: [associationBySlugGuard] },
   { path: 'asociaciones/:slug/socios', component: AssociationMembersPage, canActivate: [associationBySlugGuard, requireAuth] },
   { path: 'asociaciones/:slug/contacto', component: AssociationContactPage, canActivate: [associationBySlugGuard] },
+  { path: 'asociaciones/:slug/noticias', component: NewsListPage, canActivate: [associationBySlugGuard] },
+  { path: 'asociaciones/:slug/eventos', component: EventsListPage, canActivate: [associationBySlugGuard] },
   { path: 'asociaciones/:slug/:pagina', component: PageViewerPage, canActivate: [associationBySlugGuard], resolve:{ entity: PageEntityResolver } },
   {
     path: 'prototypes',
