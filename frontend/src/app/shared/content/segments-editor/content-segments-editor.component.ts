@@ -85,7 +85,8 @@ export class ContentSegmentsEditorComponent implements OnDestroy {
       height: 400,
       menubar: false,
       plugins: 'lists link image table code help wordcount quickbars',
-      toolbar: 'undo redo | blocks styles | bold italic forecolor | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',
+      toolbar: 'undo redo | blocks styles fontsize | bold italic forecolor | alignleft aligncenter alignright | bullist numlist | customImage | removeformat',
+      font_size_formats: '12px 14px 16px 18px 20px 24px 28px 32px 36px 48px',
       style_formats: [
         { title: 'Parrafo hero (20px)', block: 'p', classes: 'ds-p-hero' }
       ],
