@@ -46,6 +46,12 @@ p {
   line-height: 1.625;
 }
 
+/* Espaciado entre párrafos en contenido generado por el editor (Tailwind preflight elimina los márgenes por defecto) */
+.ds-user-content p,
+.segment-wrapper p {
+  margin-bottom: 1em;
+}
+
 
 /* Estilos específicos para el tipo de párrafo "hero" */
 p.ds-p-hero {

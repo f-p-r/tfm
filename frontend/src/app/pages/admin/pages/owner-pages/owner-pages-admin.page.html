@@ -50,7 +50,7 @@
               {{ getPublishedLabel(page.published) }}
             </span>
           </td>
-          <td>{{ page.updatedAt | date: 'short' }}</td>
+          <td>{{ page.updatedAt | date: 'dd/MM/yy, HH:mm' }}</td>
           <td>
             <button class="ds-btn-sm ds-btn-primary" (click)="onEditPage(page.id); $event.stopPropagation()">
               Editar

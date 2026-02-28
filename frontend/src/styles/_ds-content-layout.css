@@ -59,6 +59,8 @@
   width: 100%;
   max-width: 48rem; /* ~768px (Lectura) */
   margin: 0 auto;
+  padding-left: 0.625rem;  /* 10px */
+  padding-right: 0.625rem;
 }
 .ds-seg-width-full {
   width: 100%;
