@@ -277,9 +277,10 @@ export const resolveScopeGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
   }
 
   // Prioridad 7b: /noticias y /eventos — preservar scope actual (GAME, ASSOCIATION o GLOBAL)
+  // Cubre tanto el listado como el detalle (/noticias/:id/:slug, /eventos/:id/:slug)
   const isContentListing =
-    url === '/noticias' || url === '/noticias/' || url.startsWith('/noticias?') ||
-    url === '/eventos'  || url === '/eventos/'  || url.startsWith('/eventos?');
+    url === '/noticias' || url === '/noticias/' || url.startsWith('/noticias?') || url.startsWith('/noticias/') ||
+    url === '/eventos'  || url === '/eventos/'  || url.startsWith('/eventos?')  || url.startsWith('/eventos/');
 
   if (isContentListing) {
     const currentScopeType = contextStore.scopeType();
