@@ -61,10 +61,40 @@ p.ds-p-hero {
 }
 /* Configuración de espaciado de imágenes en el editor y segmentos */
 body.mce-content-body,
-.segment-wrapper {
-  --img-gap: 0.75em;     /* separación “general” */
+.segment-wrapper,
+.ds-user-content {
+  --img-gap: 0.75em;     /* separación "general" */
   --img-gap-side: 0.75em;/* separación lateral cuando hay float */
   --img-pad: 0;          /* padding  */
+}
+
+/* .ds-user-content como bloque para que los floats fluyan entre párrafos hermanos
+   y para que contenga los floats (clearfix).
+   Usa !important para sobreescribir display:flex que hereda de .ds-layout-cell
+   cuando ambas clases coinciden en el mismo elemento. */
+.ds-user-content {
+  display: block !important;
+  overflow: auto;
+}
+
+/* Imágenes siempre responsivas */
+body.mce-content-body img,
+.segment-wrapper img,
+.ds-user-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* En mobile, cancelar float para que la imagen ocupe todo el ancho */
+@media (max-width: 768px) {
+  .ds-user-content img[style*="float: left"],
+  .ds-user-content img[style*="float: right"] {
+    float: none !important;
+    display: block;
+    margin: 0 auto 1em auto !important;
+    width: 100% !important;
+    height: auto !important;
+  }
 }
 
 /* Listas (Tailwind preflight elimina estilos nativos de ul/ol) */
@@ -115,13 +145,15 @@ body.mce-content-body img,
 
 /* Ajustes por alineación (float) */
 body.mce-content-body img[style*="float: left"],
-.segment-wrapper img[style*="float: left"] {
+.segment-wrapper img[style*="float: left"],
+.ds-user-content img[style*="float: left"] {
   margin-left: 0 !important;
   margin-right: var(--img-gap-side);
 }
 
 body.mce-content-body img[style*="float: right"],
-.segment-wrapper img[style*="float: right"] {
+.segment-wrapper img[style*="float: right"],
+.ds-user-content img[style*="float: right"] {
   margin-right: 0 !important;
   margin-left: var(--img-gap-side);
 }
