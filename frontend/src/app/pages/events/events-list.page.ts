@@ -81,14 +81,14 @@ import { getEventsListHelp } from '../../shared/help/page-content/events-list.he
                     <div class="flex items-baseline gap-x-2">
                       <span class="ds-card-label">Inicio:</span>
                       <span class="ds-card-text">
-                        {{ event.startsAt | date:'dd/MM/yyyy' }}
+                        {{ event.startsAt | date:'dd/MM/yyyy':'UTC' }}
                       </span>
                     </div>
                     @if (event.endsAt) {
                       <div class="flex items-baseline gap-x-2">
                         <span class="ds-card-label">Fin:</span>
                         <span class="ds-card-text">
-                          {{ event.endsAt | date:'dd/MM/yyyy' }}
+                          {{ event.endsAt | date:'dd/MM/yyyy':'UTC' }}
                         </span>
                       </div>
                     }

@@ -48,12 +48,12 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
             <!-- Fechas -->
             <div class="flex items-baseline gap-x-2">
               <span class="ds-card-label">Inicio:</span>
-              <span class="ds-card-text">{{ e.startsAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              <span class="ds-card-text">{{ e.startsAt | date:'dd/MM/yyyy HH:mm':'UTC' }}</span>
             </div>
             @if (e.endsAt) {
               <div class="flex items-baseline gap-x-2">
                 <span class="ds-card-label">Fin:</span>
-                <span class="ds-card-text">{{ e.endsAt | date:'dd/MM/yyyy HH:mm' }}</span>
+                <span class="ds-card-text">{{ e.endsAt | date:'dd/MM/yyyy HH:mm':'UTC' }}</span>
               </div>
             }
 
