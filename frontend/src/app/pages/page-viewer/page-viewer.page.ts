@@ -41,6 +41,11 @@ import { filter } from 'rxjs/operators';
     }
     @if (loading()) {
       <div class="ds-loading">Cargando...</div>
+    } @else if (notFound()) {
+      <div class="ds-under-construction">
+        <span class="material-symbols-outlined">construction</span>
+        <p>Página en construcción</p>
+      </div>
     } @else if (error()) {
       <div class="ds-error">{{ error() }}</div>
     } @else if (page()) {
@@ -55,6 +60,19 @@ import { filter } from 'rxjs/operators';
       padding: 2rem;
       text-align: center;
     }
+    .ds-under-construction {
+      padding: 4rem 2rem;
+      text-align: center;
+      color: #6b7280;
+    }
+    .ds-under-construction .material-symbols-outlined {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+    .ds-under-construction p {
+      font-size: 1.125rem;
+    }
   `]
 })
 export class PageViewerPage implements OnInit, OnDestroy {
@@ -68,6 +86,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
   readonly page = signal<PageDTO | null>(null);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  readonly notFound = signal(false);
 
   /** Lista de páginas del owner para el selector de navegación */
   readonly navPages = signal<PageNavItemDTO[]>([]);
@@ -102,6 +121,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
   private loadPage(params: any, urlSegments: string[]): void {
     this.loading.set(true);
     this.error.set(null);
+    this.notFound.set(false);
     this.page.set(null);
 
     // Determinar el tipo de página según la URL
@@ -242,7 +262,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
         if (page) {
           this.page.set(page);
         } else {
-          this.showError('Página no encontrada');
+          this.showNotFound();
         }
         this.loading.set(false);
       },
@@ -262,7 +282,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
         if (page) {
           this.page.set(page);
         } else {
-          this.showError('Página de inicio del juego no encontrada');
+          this.showNotFound();
         }
         this.loading.set(false);
       },
@@ -283,7 +303,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
         if (page) {
           this.page.set(page);
         } else {
-          this.showError('Página del juego no encontrada');
+          this.showNotFound();
         }
         this.loading.set(false);
       },
@@ -303,7 +323,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
         if (page) {
           this.page.set(page);
         } else {
-          this.showError('Página de inicio de la asociación no encontrada');
+          this.showNotFound();
         }
         this.loading.set(false);
       },
@@ -324,7 +344,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
         if (page) {
           this.page.set(page);
         } else {
-          this.showError('Página de la asociación no encontrada');
+          this.showNotFound();
         }
         this.loading.set(false);
       },
@@ -341,7 +361,7 @@ export class PageViewerPage implements OnInit, OnDestroy {
         if (page) {
           this.page.set(page);
         } else {
-          this.showError('Página no encontrada');
+          this.showNotFound();
         }
         this.loading.set(false);
       },
@@ -352,7 +372,14 @@ export class PageViewerPage implements OnInit, OnDestroy {
     });
   }
 
+  private showNotFound(): void {
+    this.notFound.set(true);
+    this.error.set(null);
+    this.loading.set(false);
+  }
+
   private showError(message: string): void {
+    this.notFound.set(false);
     this.error.set(message);
     this.loading.set(false);
   }

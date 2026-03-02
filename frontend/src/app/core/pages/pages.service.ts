@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PageDTO, PageSummaryDTO, PageCreateDTO, PageUpdateDTO, PageOwnerType, PageNavItemDTO } from '../../shared/content/page.dto';
 import { isLaravelValidationError } from '../auth/laravel-validation-error';
@@ -60,10 +60,7 @@ export class PagesService {
       .pipe(
         catchError((error) => {
           if (error.status === 404) {
-            return throwError(() => ({
-              status: 404,
-              message: 'Página no encontrada o no publicada',
-            }));
+            return of(null);
           }
           return this.handleError(error);
         })
@@ -137,10 +134,7 @@ export class PagesService {
       .pipe(
         catchError((error) => {
           if (error.status === 404) {
-            return throwError(() => ({
-              status: 404,
-              message: 'Página no encontrada',
-            }));
+            return of(null);
           }
           return this.handleError(error);
         })
@@ -182,10 +176,7 @@ export class PagesService {
       .pipe(
         catchError((error) => {
           if (error.status === 404) {
-            return throwError(() => ({
-              status: 404,
-              message: 'Página de inicio no encontrada',
-            }));
+            return of(null);
           }
           return this.handleError(error);
         })
