@@ -697,10 +697,13 @@
     }
   }
 
-  /* En móvil el sidebar se oculta del todo */
+  /* En móvil el sidebar se oculta del todo: variable a 0 por defecto, 17rem cuando está abierto */
   @media (max-width: 1399px) {
-    .ds-admin-shell:has(.ds-admin-sidebar-closed) {
+    .ds-admin-shell {
       --admin-sidebar-w: 0rem;
+    }
+    .ds-admin-shell:has(.ds-admin-sidebar-open) {
+      --admin-sidebar-w: 17rem;
     }
   }
 
@@ -746,12 +749,17 @@
 
   /* En pantallas con ancho inferior a 1400px: comportamiento drawer completo */
   @media (max-width: 1399px) {
-    /* Estado cerrado: ocultar completamente */
-    .ds-admin-sidebar-closed {
+    /* Oculto por defecto (antes de que JS cargue y siempre que esté cerrado) */
+    .ds-admin-sidebar {
       @apply -translate-x-full;
     }
 
-    /* Mostrar botón flotante cuando sidebar está cerrado */
+    /* Visible al hacer toggle */
+    .ds-admin-sidebar-open {
+      @apply translate-x-0;
+    }
+
+    /* Mostrar botón flotante siempre (el sidebar está cerrado por defecto) */
     .ds-mobile-sidebar-toggle {
       display: block;
     }

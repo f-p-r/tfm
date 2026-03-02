@@ -1,5 +1,5 @@
 @if (content?.segments; as segments) {
-<div class="content-renderer">
+<div [class]="'content-renderer' + (content?.classNames ? ' ' + content?.classNames : '')">
   @for (seg of segments; track seg.id) {
 
     @if (seg.type === 'columns') {

@@ -31,10 +31,10 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
 
           <!-- Cabecera: título + botón cerrar -->
           <header class="flex items-start gap-16 border-b border-neutral-medium pb-4 mb-6">
-            <h1 class="h1">{{ n.title }}</h1>
+            <h3 class="h3">{{ n.title }}</h3>
             <button
               type="button"
-              class="ds-btn-close shrink-0 mt-1"
+              class="ds-btn-close shrink-0"
               aria-label="Cerrar"
               (click)="goBack()"
             ><span class="material-symbols-outlined text-base">close</span></button>

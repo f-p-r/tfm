@@ -45,7 +45,8 @@ import { AdminMenuComponent } from '../core/admin/admin-menu/admin-menu.componen
     <aside
       id="admin-sidebar"
       class="ds-admin-sidebar"
-      [class.ds-admin-sidebar-closed]="sidebarCollapsed()">
+      [class.ds-admin-sidebar-closed]="sidebarCollapsed()"
+      [class.ds-admin-sidebar-open]="!sidebarCollapsed()">
       <app-admin-menu
         [items]="authorizedMenuItems()"
         [collapsed]="sidebarCollapsed()"
@@ -57,8 +58,8 @@ export class AdminSidebarContainerComponent {
   private contextStore = inject(ContextStore);
   private permissionsStore = inject(PermissionsStore);
 
-  // Estado del sidebar (false = expandido por defecto)
-  readonly sidebarCollapsed = signal(false);
+  // Estado del sidebar: cerrado por defecto
+  readonly sidebarCollapsed = signal(true);
 
   /**
    * Items del menú autorizados según el scope y permisos del usuario.
