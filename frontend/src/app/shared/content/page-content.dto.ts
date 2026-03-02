@@ -13,8 +13,8 @@ export interface ColumnsSegmentDTO {
   columns: ColumnBlock[];
   verticalPadding?: 'none' | 'small' | 'normal' | 'large';
   backgroundColor?: 'transparent' | 'white' | 'neutral' | 'brand-light' | 'brand-dark' |
-                    'brand-primary' | 'brand-secondary' | 'brand-accent' | 'danger' |
-                    'brand-primary-light' | 'brand-secondary-light' | 'brand-accent-light' | 'danger-light' |
+                    'brand-primary' | 'brand-secondary' | 'brand-accent' | 'brand-tertiary' | 'danger' |
+                    'brand-primary-light' | 'brand-secondary-light' | 'brand-accent-light' | 'brand-tertiary-light' | 'danger-light' |
                     'neutral-dark' | 'neutral-medium' | 'neutral-light';
   textColor?: 'default' | 'white' | 'brand';
   containerWidth?: 'standard' | 'narrow' | 'full';

@@ -17,13 +17,6 @@ interface ThemeColorCard {
 
 const THEME_COLORS: ThemeColor[] = [
   {
-    token: 'transparent',
-    cssVar: '--color-transparent',
-    hex: 'transparent',
-    bgClass: 'bg-transparent',
-    textClass: 'text-transparent',
-  },
-  {
     token: 'brand-primary',
     cssVar: '--color-brand-primary',
     hex: '#1B4F72',
@@ -45,6 +38,13 @@ const THEME_COLORS: ThemeColor[] = [
     textClass: 'text-brand-accent',
   },
   {
+    token: 'brand-tertiary',
+    cssVar: '--color-brand-tertiary',
+    hex: '#6B2C3E',
+    bgClass: 'bg-brand-tertiary',
+    textClass: 'text-brand-tertiary',
+  },
+  {
     token: 'brand-primary-light',
     cssVar: '--color-brand-primary-light',
     hex: '#C5D7E4',
@@ -64,6 +64,13 @@ const THEME_COLORS: ThemeColor[] = [
     hex: '#D0F0E8',
     bgClass: 'bg-brand-accent-light',
     textClass: 'text-brand-accent-light',
+  },
+  {
+    token: 'brand-tertiary-light',
+    cssVar: '--color-brand-tertiary-light',
+    hex: '#EBD7DD',
+    bgClass: 'bg-brand-tertiary-light',
+    textClass: 'text-brand-tertiary-light',
   },
   {
     token: 'danger',

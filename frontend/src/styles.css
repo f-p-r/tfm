@@ -8,11 +8,13 @@
   --color-brand-primary: #1B4F72;
   --color-brand-secondary: #F4CB42;
   --color-brand-accent: #48C9B0;
+  --color-brand-tertiary: #6B2C3E;
 
   /* Colores claros para fondos */
   --color-brand-primary-light: #C5D7E4;
   --color-brand-secondary-light: #FDF3D7;
   --color-brand-accent-light: #D0F0E8;
+  --color-brand-tertiary-light: #EBD7DD;
 
   /* Colores de alerta/error */
   --color-danger: #DC3545;
@@ -1049,4 +1051,3 @@
     @apply text-base leading-relaxed text-neutral-dark;
   }
 }
-
