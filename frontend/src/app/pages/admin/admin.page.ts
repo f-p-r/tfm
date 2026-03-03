@@ -47,14 +47,14 @@ import { getAdminPageHelp } from '../../shared/help/page-content/admin.help';
           </div>
 
           <!-- Área de contenido -->
-          <div class="bg-white rounded-lg border border-neutral-medium p-6 shadow-sm">
+          <div class="bg-white rounded-lg border border-neutral-medium p-6 shadow-sm w-fit">
             <h2 class="h3 mb-4">Bienvenido al panel de administración</h2>
             <p class="p mb-4">
               Utiliza el menú lateral para acceder a las diferentes secciones de gestión.
             </p>
-
-
-
+            <p class="p mb-4">
+              Si la pantalla tiene poco ancho, activa el menú lateral con el botón ☰ de arriba a la izquierda.
+            </p>
           </div>
         </div>
       </main>
