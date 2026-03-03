@@ -5,6 +5,11 @@ const BASE = `
     <li>Activa <strong>Inscripción abierta</strong> para que los usuarios puedan solicitar asistencia.</li>
     <li>El evento debe estar <strong>activo y publicado</strong> para aparecer en el listado público.</li>
     <li>Desde el listado puedes acceder a la gestión de inscripciones de cada evento.</li>
+    <li>Añade bloques de contenido con el botón <strong>+ Bloque Contenido</strong>.</li>
+    <li>Añade bloques de carrusel para mostrar varias imágenes</li>
+    <li>Define el estilo de los bloques. Ordénalos con las flechas de desplazamiento ⬆⬇</li>
+    <li>Los cambios no se guardarán hasta que pulses el botón <strong>Guardar cambios</strong>, en la parte inferior de la pantalla. Recuerda guardar periódicamente si vas a hacer muchos cambios.</li>
+
   </ul>
 `;
 
