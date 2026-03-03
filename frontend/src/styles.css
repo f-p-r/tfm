@@ -737,16 +737,16 @@
     display: none;
   }
 
-  /* Botón hamburguesa flotante para móvil */
+  /* Botón hamburguesa flotante para móvil: mini-tab semitransparente adosada al borde izquierdo */
   .ds-mobile-sidebar-toggle {
-    @apply fixed z-50 bg-brand-primary text-white rounded-full p-2 shadow-lg transition-all;
+    @apply fixed z-50 bg-brand-primary/60 hover:bg-brand-primary text-white rounded-r-md px-1.5 py-0.5 shadow transition-all;
     top: 4rem;
     left: 0;
     display: none;
   }
 
   .ds-mobile-sidebar-toggle:hover {
-    @apply brightness-90 scale-110;
+    @apply brightness-90;
   }
 
   /* En pantallas con ancho inferior a 1400px: comportamiento drawer completo */
