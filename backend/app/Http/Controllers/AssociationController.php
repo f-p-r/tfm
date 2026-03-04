@@ -56,7 +56,6 @@ class AssociationController extends Controller
             'region_id' => [
                 'nullable',
                 'exists:regions,id',
-                'required_with:country_id',
                 function ($attribute, $value, $fail) use ($request) {
                     if ($value && $request->input('country_id')) {
                         $region = \App\Models\Region::find($value);
@@ -180,7 +179,21 @@ class AssociationController extends Controller
             'game_ids.*' => 'integer|exists:games,id',
         ]);
 
+        // Si el payload incluye campos del formulario completo (name/slug), la ausencia de
+        // web/external_url significa que el usuario los dejó en blanco → se limpian a null.
+        $isFullUpdate = $request->has('name') || $request->has('slug');
+
+        // Normalizar campos URL opcionales: cadena vacía/blancos → null
+        foreach (['web', 'external_url'] as $field) {
+            if (array_key_exists($field, $validated)) {
+                $validated[$field] = filled($validated[$field]) ? $validated[$field] : null;
+            } elseif ($isFullUpdate) {
+                $validated[$field] = null;
+            }
+        }
+
         // Update association attributes
+        // Se usa array_key_exists para distinguir "no enviado en actualización parcial" de "enviado como null"
         $association->update([
             'name' => $validated['name'] ?? $association->name,
             'shortname' => $validated['shortname'] ?? $association->shortname,
@@ -188,8 +201,8 @@ class AssociationController extends Controller
             'description' => $validated['description'] ?? $association->description,
             'country_id' => $validated['country_id'] ?? $association->country_id,
             'region_id' => $validated['region_id'] ?? $association->region_id,
-            'web' => $validated['web'] ?? $association->web,
-            'external_url' => $validated['external_url'] ?? $association->external_url,
+            'web' => array_key_exists('web', $validated) ? $validated['web'] : $association->web,
+            'external_url' => array_key_exists('external_url', $validated) ? $validated['external_url'] : $association->external_url,
             'disabled' => $validated['disabled'] ?? $association->disabled,
             'management' => $validated['management'] ?? $association->management,
             'province' => $validated['province'] ?? $association->province,

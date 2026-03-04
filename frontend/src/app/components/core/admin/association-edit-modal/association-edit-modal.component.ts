@@ -16,7 +16,7 @@ import { Component, input, output, signal, effect, inject, computed, OnDestroy }
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserAutocompleteComponent } from '../user-autocomplete/user-autocomplete.component';
 import { Association } from '../../../../core/associations/associations.models';
-import { COUNTRIES, getRegionsByCountry } from '../../../../shared/utils';
+import { getRegionsByCountry } from '../../../../shared/utils';
 import { HelpContentService } from '../../../../shared/help/help-content.service';
 import { HelpIComponent } from '../../../../shared/help/help-i/help-i.component';
 import { HelpHoverDirective } from '../../../../shared/help/help-hover.directive';
@@ -137,10 +137,7 @@ import { ADMIN_ASSOCIATIONS_PAGE_HELP, ADMIN_ASSOCIATION_FORM_PAGE_HELP } from '
                   helpHover
                   helpKey="country"
                 >
-                  <option [value]="null">Selecciona un país</option>
-                  @for (country of countries; track country.id) {
-                    <option [value]="country.id">{{ country.name }}</option>
-                  }
+                  <option value="ES">España</option>
                 </select>
               </div>
 
@@ -155,11 +152,8 @@ import { ADMIN_ASSOCIATIONS_PAGE_HELP, ADMIN_ASSOCIATION_FORM_PAGE_HELP } from '
                   class="ds-select ds-select-scrollable"
                   helpHover
                   helpKey="region"
-                  [disabled]="!form.get('country_id')?.value"
                 >
-                  <option [value]="null">
-                    {{ form.get('country_id')?.value ? 'Selecciona una región' : 'Primero selecciona un país' }}
-                  </option>
+                  <option [value]="null">Selecciona una región</option>
                   @for (region of filteredRegions(); track region.id) {
                     <option [value]="region.id">{{ region.name }}</option>
                   }
@@ -269,17 +263,16 @@ export class AssociationEditModalComponent implements OnDestroy {
   protected readonly isSubmitting = signal(false);
   protected readonly serverError = signal<string | null>(null);
 
-  // Catálogos
-  protected readonly countries = COUNTRIES;
-
-  // Regiones filtradas según el país seleccionado
-  protected readonly filteredRegions = computed(() => {
-    const countryId = this.form.get('country_id')?.value;
-    return getRegionsByCountry(countryId);
-  });
-
   // Formulario
   protected readonly form: FormGroup;
+
+  // País seleccionado como signal para que computed() pueda reaccionar a cambios
+  private readonly selectedCountryId = signal<string | null>('ES');
+
+  // Regiones filtradas según el país seleccionado
+  protected readonly filteredRegions = computed(() =>
+    getRegionsByCountry(this.selectedCountryId())
+  );
 
   constructor() {
     // Establecer pack de ayuda de campos (hover + iconos ⓘ)
@@ -292,7 +285,7 @@ export class AssociationEditModalComponent implements OnDestroy {
       slug: ['', [Validators.required]],
       shortname: [''],
       description: [''],
-      country_id: [null],
+      country_id: ['ES'],
       region_id: [null],
       owner_id: [null],
       web: [''],
@@ -300,8 +293,9 @@ export class AssociationEditModalComponent implements OnDestroy {
       disabled: [false]
     });
 
-    // Limpiar región cuando cambia el país
-    this.form.get('country_id')?.valueChanges.subscribe(() => {
+    // Actualizar signal de país y limpiar región cuando cambia el país
+    this.form.get('country_id')?.valueChanges.subscribe((val: string | null) => {
+      this.selectedCountryId.set(val);
       this.form.patchValue({ region_id: null });
     });
 
