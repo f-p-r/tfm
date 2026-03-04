@@ -56,14 +56,16 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
             }
           </div>
 
-          <!-- Contenido enriquecido -->
-          @if (n.content) {
-            <app-content-renderer [content]="n.content" />
-          }
-
         }
       </div>
     </div>
+
+    <!-- Contenido enriquecido -->
+    @if (news(); as n) {
+      @if (n.content) {
+        <app-content-renderer [content]="n.content" />
+      }
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

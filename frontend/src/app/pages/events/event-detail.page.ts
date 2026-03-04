@@ -115,14 +115,16 @@ import { ContentRendererComponent } from '../../shared/content/content-renderer/
             <p class="ds-error mb-6">{{ enrollError() }}</p>
           }
 
-          <!-- Contenido enriquecido -->
-          @if (e.content) {
-            <app-content-renderer [content]="e.content" />
-          }
-
         }
       </div>
     </div>
+
+    <!-- Contenido enriquecido -->
+    @if (event(); as e) {
+      @if (e.content) {
+        <app-content-renderer [content]="e.content" />
+      }
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
